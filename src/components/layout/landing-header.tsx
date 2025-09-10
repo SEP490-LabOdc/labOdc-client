@@ -14,21 +14,21 @@ export default function LandingHeader() {
                     <Link to="/" className="text-muted-foreground hover:text-primary transition-colors">
                         Home
                     </Link>
-                    <a href="#solutions" className="text-muted-foreground hover:text-primary transition-colors">
+                    <Link to="/solutions" className="text-muted-foreground hover:text-primary transition-colors">
                         Solutions
-                    </a>
-                    <a href="#process" className="text-muted-foreground hover:text-primary transition-colors">
+                    </Link>
+                    <Link to="/process" className="text-muted-foreground hover:text-primary transition-colors">
                         Process
-                    </a>
-                    <a href="#team" className="text-muted-foreground hover:text-primary transition-colors">
+                    </Link>
+                    <Link to="/team" className="text-muted-foreground hover:text-primary transition-colors">
                         Team
-                    </a>
-                    <a href="#testimonials" className="text-muted-foreground hover:text-primary transition-colors">
+                    </Link>
+                    <Link to="/testimonials" className="text-muted-foreground hover:text-primary transition-colors">
                         Testimonials
-                    </a>
-                    <a href="#contact" className="text-muted-foreground hover:text-primary transition-colors">
+                    </Link>
+                    <Link to="/contact" className="text-muted-foreground hover:text-primary transition-colors">
                         Contact
-                    </a>
+                    </Link>
                 </nav>
 
                 <div className="flex items-center space-x-4">

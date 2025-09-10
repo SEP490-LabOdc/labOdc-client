@@ -15,6 +15,11 @@ import { Route as errors500RouteImport } from './routes/(errors)/500'
 import { Route as errors404RouteImport } from './routes/(errors)/404'
 import { Route as errors403RouteImport } from './routes/(errors)/403'
 import { Route as errors401RouteImport } from './routes/(errors)/401'
+import { Route as publicTestimonialsIndexRouteImport } from './routes/(public)/testimonials/index'
+import { Route as publicTeamIndexRouteImport } from './routes/(public)/team/index'
+import { Route as publicSolutionsIndexRouteImport } from './routes/(public)/solutions/index'
+import { Route as publicProcessIndexRouteImport } from './routes/(public)/process/index'
+import { Route as publicContactIndexRouteImport } from './routes/(public)/contact/index'
 
 const publicRouteRoute = publicRouteRouteImport.update({
   id: '/(public)',
@@ -45,6 +50,31 @@ const errors401Route = errors401RouteImport.update({
   path: '/401',
   getParentRoute: () => rootRouteImport,
 } as any)
+const publicTestimonialsIndexRoute = publicTestimonialsIndexRouteImport.update({
+  id: '/testimonials/',
+  path: '/testimonials/',
+  getParentRoute: () => publicRouteRoute,
+} as any)
+const publicTeamIndexRoute = publicTeamIndexRouteImport.update({
+  id: '/team/',
+  path: '/team/',
+  getParentRoute: () => publicRouteRoute,
+} as any)
+const publicSolutionsIndexRoute = publicSolutionsIndexRouteImport.update({
+  id: '/solutions/',
+  path: '/solutions/',
+  getParentRoute: () => publicRouteRoute,
+} as any)
+const publicProcessIndexRoute = publicProcessIndexRouteImport.update({
+  id: '/process/',
+  path: '/process/',
+  getParentRoute: () => publicRouteRoute,
+} as any)
+const publicContactIndexRoute = publicContactIndexRouteImport.update({
+  id: '/contact/',
+  path: '/contact/',
+  getParentRoute: () => publicRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof publicIndexRoute
@@ -52,6 +82,11 @@ export interface FileRoutesByFullPath {
   '/403': typeof errors403Route
   '/404': typeof errors404Route
   '/500': typeof errors500Route
+  '/contact': typeof publicContactIndexRoute
+  '/process': typeof publicProcessIndexRoute
+  '/solutions': typeof publicSolutionsIndexRoute
+  '/team': typeof publicTeamIndexRoute
+  '/testimonials': typeof publicTestimonialsIndexRoute
 }
 export interface FileRoutesByTo {
   '/401': typeof errors401Route
@@ -59,6 +94,11 @@ export interface FileRoutesByTo {
   '/404': typeof errors404Route
   '/500': typeof errors500Route
   '/': typeof publicIndexRoute
+  '/contact': typeof publicContactIndexRoute
+  '/process': typeof publicProcessIndexRoute
+  '/solutions': typeof publicSolutionsIndexRoute
+  '/team': typeof publicTeamIndexRoute
+  '/testimonials': typeof publicTestimonialsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -68,12 +108,37 @@ export interface FileRoutesById {
   '/(errors)/404': typeof errors404Route
   '/(errors)/500': typeof errors500Route
   '/(public)/': typeof publicIndexRoute
+  '/(public)/contact/': typeof publicContactIndexRoute
+  '/(public)/process/': typeof publicProcessIndexRoute
+  '/(public)/solutions/': typeof publicSolutionsIndexRoute
+  '/(public)/team/': typeof publicTeamIndexRoute
+  '/(public)/testimonials/': typeof publicTestimonialsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/401' | '/403' | '/404' | '/500'
+  fullPaths:
+    | '/'
+    | '/401'
+    | '/403'
+    | '/404'
+    | '/500'
+    | '/contact'
+    | '/process'
+    | '/solutions'
+    | '/team'
+    | '/testimonials'
   fileRoutesByTo: FileRoutesByTo
-  to: '/401' | '/403' | '/404' | '/500' | '/'
+  to:
+    | '/401'
+    | '/403'
+    | '/404'
+    | '/500'
+    | '/'
+    | '/contact'
+    | '/process'
+    | '/solutions'
+    | '/team'
+    | '/testimonials'
   id:
     | '__root__'
     | '/(public)'
@@ -82,6 +147,11 @@ export interface FileRouteTypes {
     | '/(errors)/404'
     | '/(errors)/500'
     | '/(public)/'
+    | '/(public)/contact/'
+    | '/(public)/process/'
+    | '/(public)/solutions/'
+    | '/(public)/team/'
+    | '/(public)/testimonials/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -136,15 +206,60 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof errors401RouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/(public)/testimonials/': {
+      id: '/(public)/testimonials/'
+      path: '/testimonials'
+      fullPath: '/testimonials'
+      preLoaderRoute: typeof publicTestimonialsIndexRouteImport
+      parentRoute: typeof publicRouteRoute
+    }
+    '/(public)/team/': {
+      id: '/(public)/team/'
+      path: '/team'
+      fullPath: '/team'
+      preLoaderRoute: typeof publicTeamIndexRouteImport
+      parentRoute: typeof publicRouteRoute
+    }
+    '/(public)/solutions/': {
+      id: '/(public)/solutions/'
+      path: '/solutions'
+      fullPath: '/solutions'
+      preLoaderRoute: typeof publicSolutionsIndexRouteImport
+      parentRoute: typeof publicRouteRoute
+    }
+    '/(public)/process/': {
+      id: '/(public)/process/'
+      path: '/process'
+      fullPath: '/process'
+      preLoaderRoute: typeof publicProcessIndexRouteImport
+      parentRoute: typeof publicRouteRoute
+    }
+    '/(public)/contact/': {
+      id: '/(public)/contact/'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof publicContactIndexRouteImport
+      parentRoute: typeof publicRouteRoute
+    }
   }
 }
 
 interface publicRouteRouteChildren {
   publicIndexRoute: typeof publicIndexRoute
+  publicContactIndexRoute: typeof publicContactIndexRoute
+  publicProcessIndexRoute: typeof publicProcessIndexRoute
+  publicSolutionsIndexRoute: typeof publicSolutionsIndexRoute
+  publicTeamIndexRoute: typeof publicTeamIndexRoute
+  publicTestimonialsIndexRoute: typeof publicTestimonialsIndexRoute
 }
 
 const publicRouteRouteChildren: publicRouteRouteChildren = {
   publicIndexRoute: publicIndexRoute,
+  publicContactIndexRoute: publicContactIndexRoute,
+  publicProcessIndexRoute: publicProcessIndexRoute,
+  publicSolutionsIndexRoute: publicSolutionsIndexRoute,
+  publicTeamIndexRoute: publicTeamIndexRoute,
+  publicTestimonialsIndexRoute: publicTestimonialsIndexRoute,
 }
 
 const publicRouteRouteWithChildren = publicRouteRoute._addFileChildren(
