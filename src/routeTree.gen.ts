@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as publicRouteRouteImport } from './routes/(public)/route'
 import { Route as publicIndexRouteImport } from './routes/(public)/index'
+import { Route as errors503RouteImport } from './routes/(errors)/503'
 import { Route as errors500RouteImport } from './routes/(errors)/500'
 import { Route as errors404RouteImport } from './routes/(errors)/404'
 import { Route as errors403RouteImport } from './routes/(errors)/403'
@@ -29,6 +30,11 @@ const publicIndexRoute = publicIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => publicRouteRoute,
+} as any)
+const errors503Route = errors503RouteImport.update({
+  id: '/(errors)/503',
+  path: '/503',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const errors500Route = errors500RouteImport.update({
   id: '/(errors)/500',
@@ -82,6 +88,7 @@ export interface FileRoutesByFullPath {
   '/403': typeof errors403Route
   '/404': typeof errors404Route
   '/500': typeof errors500Route
+  '/503': typeof errors503Route
   '/contact': typeof publicContactIndexRoute
   '/process': typeof publicProcessIndexRoute
   '/solutions': typeof publicSolutionsIndexRoute
@@ -93,6 +100,7 @@ export interface FileRoutesByTo {
   '/403': typeof errors403Route
   '/404': typeof errors404Route
   '/500': typeof errors500Route
+  '/503': typeof errors503Route
   '/': typeof publicIndexRoute
   '/contact': typeof publicContactIndexRoute
   '/process': typeof publicProcessIndexRoute
@@ -107,6 +115,7 @@ export interface FileRoutesById {
   '/(errors)/403': typeof errors403Route
   '/(errors)/404': typeof errors404Route
   '/(errors)/500': typeof errors500Route
+  '/(errors)/503': typeof errors503Route
   '/(public)/': typeof publicIndexRoute
   '/(public)/contact/': typeof publicContactIndexRoute
   '/(public)/process/': typeof publicProcessIndexRoute
@@ -122,6 +131,7 @@ export interface FileRouteTypes {
     | '/403'
     | '/404'
     | '/500'
+    | '/503'
     | '/contact'
     | '/process'
     | '/solutions'
@@ -133,6 +143,7 @@ export interface FileRouteTypes {
     | '/403'
     | '/404'
     | '/500'
+    | '/503'
     | '/'
     | '/contact'
     | '/process'
@@ -146,6 +157,7 @@ export interface FileRouteTypes {
     | '/(errors)/403'
     | '/(errors)/404'
     | '/(errors)/500'
+    | '/(errors)/503'
     | '/(public)/'
     | '/(public)/contact/'
     | '/(public)/process/'
@@ -160,6 +172,7 @@ export interface RootRouteChildren {
   errors403Route: typeof errors403Route
   errors404Route: typeof errors404Route
   errors500Route: typeof errors500Route
+  errors503Route: typeof errors503Route
 }
 
 declare module '@tanstack/react-router' {
@@ -177,6 +190,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof publicIndexRouteImport
       parentRoute: typeof publicRouteRoute
+    }
+    '/(errors)/503': {
+      id: '/(errors)/503'
+      path: '/503'
+      fullPath: '/503'
+      preLoaderRoute: typeof errors503RouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/(errors)/500': {
       id: '/(errors)/500'
@@ -272,6 +292,7 @@ const rootRouteChildren: RootRouteChildren = {
   errors403Route: errors403Route,
   errors404Route: errors404Route,
   errors500Route: errors500Route,
+  errors503Route: errors503Route,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -1,4 +1,4 @@
-import { LinkProps } from '@tanstack/react-router'
+import type { LinkProps } from '@tanstack/react-router'
 
 interface User {
   name: string
@@ -41,4 +41,9 @@ interface SidebarData {
   navGroups: NavGroup[]
 }
 
-export type { SidebarData, NavGroup, NavItem, NavCollapsible, NavLink }
+interface LandingHeader {
+  title: string
+  url: LinkProps['to']
+}
+
+export type { SidebarData, NavGroup, NavItem, NavCollapsible, NavLink, LandingHeader }
