@@ -6,6 +6,10 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
+export function sleep(ms: number = 1000) {
+  return new Promise((resolve) => setTimeout(resolve, ms))
+}
+
 export function checkIsActive(href: string, item: NavItem, mainNav = false) {
   return (
     href === item.url || // /endpoint?search=param

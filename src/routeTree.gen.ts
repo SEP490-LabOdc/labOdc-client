@@ -21,6 +21,8 @@ import { Route as publicTeamIndexRouteImport } from './routes/(public)/team/inde
 import { Route as publicSolutionsIndexRouteImport } from './routes/(public)/solutions/index'
 import { Route as publicProcessIndexRouteImport } from './routes/(public)/process/index'
 import { Route as publicContactIndexRouteImport } from './routes/(public)/contact/index'
+import { Route as authSignInIndexRouteImport } from './routes/(auth)/sign-in/index'
+import { Route as authForgotPasswordIndexRouteImport } from './routes/(auth)/forgot-password/index'
 
 const publicRouteRoute = publicRouteRouteImport.update({
   id: '/(public)',
@@ -81,6 +83,16 @@ const publicContactIndexRoute = publicContactIndexRouteImport.update({
   path: '/contact/',
   getParentRoute: () => publicRouteRoute,
 } as any)
+const authSignInIndexRoute = authSignInIndexRouteImport.update({
+  id: '/(auth)/sign-in/',
+  path: '/sign-in/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const authForgotPasswordIndexRoute = authForgotPasswordIndexRouteImport.update({
+  id: '/(auth)/forgot-password/',
+  path: '/forgot-password/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof publicIndexRoute
@@ -89,6 +101,8 @@ export interface FileRoutesByFullPath {
   '/404': typeof errors404Route
   '/500': typeof errors500Route
   '/503': typeof errors503Route
+  '/forgot-password': typeof authForgotPasswordIndexRoute
+  '/sign-in': typeof authSignInIndexRoute
   '/contact': typeof publicContactIndexRoute
   '/process': typeof publicProcessIndexRoute
   '/solutions': typeof publicSolutionsIndexRoute
@@ -102,6 +116,8 @@ export interface FileRoutesByTo {
   '/500': typeof errors500Route
   '/503': typeof errors503Route
   '/': typeof publicIndexRoute
+  '/forgot-password': typeof authForgotPasswordIndexRoute
+  '/sign-in': typeof authSignInIndexRoute
   '/contact': typeof publicContactIndexRoute
   '/process': typeof publicProcessIndexRoute
   '/solutions': typeof publicSolutionsIndexRoute
@@ -117,6 +133,8 @@ export interface FileRoutesById {
   '/(errors)/500': typeof errors500Route
   '/(errors)/503': typeof errors503Route
   '/(public)/': typeof publicIndexRoute
+  '/(auth)/forgot-password/': typeof authForgotPasswordIndexRoute
+  '/(auth)/sign-in/': typeof authSignInIndexRoute
   '/(public)/contact/': typeof publicContactIndexRoute
   '/(public)/process/': typeof publicProcessIndexRoute
   '/(public)/solutions/': typeof publicSolutionsIndexRoute
@@ -132,6 +150,8 @@ export interface FileRouteTypes {
     | '/404'
     | '/500'
     | '/503'
+    | '/forgot-password'
+    | '/sign-in'
     | '/contact'
     | '/process'
     | '/solutions'
@@ -145,6 +165,8 @@ export interface FileRouteTypes {
     | '/500'
     | '/503'
     | '/'
+    | '/forgot-password'
+    | '/sign-in'
     | '/contact'
     | '/process'
     | '/solutions'
@@ -159,6 +181,8 @@ export interface FileRouteTypes {
     | '/(errors)/500'
     | '/(errors)/503'
     | '/(public)/'
+    | '/(auth)/forgot-password/'
+    | '/(auth)/sign-in/'
     | '/(public)/contact/'
     | '/(public)/process/'
     | '/(public)/solutions/'
@@ -173,6 +197,8 @@ export interface RootRouteChildren {
   errors404Route: typeof errors404Route
   errors500Route: typeof errors500Route
   errors503Route: typeof errors503Route
+  authForgotPasswordIndexRoute: typeof authForgotPasswordIndexRoute
+  authSignInIndexRoute: typeof authSignInIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -261,6 +287,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof publicContactIndexRouteImport
       parentRoute: typeof publicRouteRoute
     }
+    '/(auth)/sign-in/': {
+      id: '/(auth)/sign-in/'
+      path: '/sign-in'
+      fullPath: '/sign-in'
+      preLoaderRoute: typeof authSignInIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(auth)/forgot-password/': {
+      id: '/(auth)/forgot-password/'
+      path: '/forgot-password'
+      fullPath: '/forgot-password'
+      preLoaderRoute: typeof authForgotPasswordIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -293,6 +333,8 @@ const rootRouteChildren: RootRouteChildren = {
   errors404Route: errors404Route,
   errors500Route: errors500Route,
   errors503Route: errors503Route,
+  authForgotPasswordIndexRoute: authForgotPasswordIndexRoute,
+  authSignInIndexRoute: authSignInIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
