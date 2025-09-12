@@ -1,52 +1,45 @@
 :root {
-  --background: oklch(1 0 0); /* #ffffff */
-  --foreground: oklch(0.25 0 0); /* #374151 */
-  --card: oklch(0.97 0 0); /* #f1f5f9 */
-  --card-foreground: oklch(0.25 0 0); /* #374151 */
-  --popover: oklch(1 0 0); /* #ffffff */
-  --popover-foreground: oklch(0.25 0 0); /* #374151 */
+  /* Added Lab ODC Platform brand colors */
+  --color-brand-dark-teal: #264653;
+  --color-brand-green-teal: #2a9d8f;
+  --color-brand-warm-yellow: #e9c46a;
+  --color-brand-orange: #f4a261;
+  --color-brand-light-cream: #f1faee;
 
-  /* Updated color palette to match design brief with earthy + modern theme */
-  --primary: oklch(0.35 0.08 180); /* #264653 Dark Teal - trust, stability */
-  --primary-foreground: oklch(1 0 0); /* #ffffff */
-  --secondary: oklch(0.55 0.12 175); /* #2a9d8f Green Teal - growth, fresh talent */
-  --secondary-foreground: oklch(1 0 0); /* #ffffff */
-
-  --muted: oklch(0.97 0 0); /* #f1f5f9 */
-  --muted-foreground: oklch(0.25 0 0); /* #374151 */
-
-  /* Added new accent colors from design brief */
-  --accent: oklch(0.75 0.15 85); /* #e9c46a Warm Yellow - energy, learning focus */
-  --accent-foreground: oklch(0.25 0 0); /* Dark text for contrast */
-
-  /* Updated destructive to use coral red from design brief */
-  --destructive: oklch(0.65 0.18 25); /* #e76f51 Coral Red - important highlights */
-  --destructive-foreground: oklch(1 0 0);
-
-  --border: oklch(0.9 0 0); /* #e5e7eb */
-  --input: oklch(0.97 0 0); /* #f1f5f9 */
-  --ring: oklch(0.35 0.08 180); /* Match primary */
-
-  /* Updated chart colors to use new palette */
-  --chart-1: oklch(0.35 0.08 180); /* Dark Teal */
-  --chart-2: oklch(0.55 0.12 175); /* Green Teal */
-  --chart-3: oklch(0.75 0.15 85); /* Warm Yellow */
-  --chart-4: oklch(0.7 0.16 45); /* #f4a261 Orange - CTA buttons */
-  --chart-5: oklch(0.65 0.18 25); /* Coral Red */
-
-  --radius: 0.5rem;
-  --sidebar: oklch(0.97 0 0); /* #f1f5f9 */
-  --sidebar-foreground: oklch(0.25 0 0); /* #374151 */
-  --sidebar-primary: oklch(0.35 0.08 180); /* Dark Teal */
-  --sidebar-primary-foreground: oklch(1 0 0); /* #ffffff */
-  --sidebar-accent: oklch(0.55 0.12 175); /* Green Teal */
-  --sidebar-accent-foreground: oklch(1 0 0); /* #ffffff */
-  --sidebar-border: oklch(0.9 0 0); /* #e5e7eb */
-  --sidebar-ring: oklch(0.35 0.08 180); /* Dark Teal */
-
-  /* Added custom orange color for CTA buttons */
-  --orange: oklch(0.7 0.16 45); /* #f4a261 Orange - call-to-action buttons */
-  --orange-foreground: oklch(1 0 0);
+  /* Updated primary colors to use brand palette */
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: #264653; /* Dark Teal */
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: #2a9d8f; /* Green Teal */
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: #e9c46a; /* Warm Yellow */
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --destructive-foreground: oklch(0.577 0.245 27.325);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: #2a9d8f; /* Green Teal for focus rings */
+  --chart-1: #264653;
+  --chart-2: #2a9d8f;
+  --chart-3: #e9c46a;
+  --chart-4: #f4a261;
+  --chart-5: #f1faee;
+  --radius: 0.625rem;
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: #264653;
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: #2a9d8f;
 }
 
 .dark {
@@ -56,42 +49,45 @@
   --card-foreground: oklch(0.985 0 0);
   --popover: oklch(0.145 0 0);
   --popover-foreground: oklch(0.985 0 0);
-
-  /* Updated dark mode colors to maintain design consistency */
-  --primary: oklch(0.55 0.12 175); /* Lighter Green Teal for dark mode */
-  --primary-foreground: oklch(0.145 0 0);
-  --secondary: oklch(0.269 0 0);
+  --primary: #2a9d8f; /* Lighter brand color for dark mode */
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: #264653;
   --secondary-foreground: oklch(0.985 0 0);
-
   --muted: oklch(0.269 0 0);
   --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.75 0.15 85); /* Warm Yellow */
-  --accent-foreground: oklch(0.145 0 0);
-  --destructive: oklch(0.65 0.18 25); /* Coral Red */
-  --destructive-foreground: oklch(1 0 0);
+  --accent: #e9c46a;
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.396 0.141 25.723);
+  --destructive-foreground: oklch(0.637 0.237 25.331);
   --border: oklch(0.269 0 0);
   --input: oklch(0.269 0 0);
-  --ring: oklch(0.55 0.12 175);
-  --chart-1: oklch(0.55 0.12 175);
-  --chart-2: oklch(0.75 0.15 85);
-  --chart-3: oklch(0.7 0.16 45);
-  --chart-4: oklch(0.65 0.18 25);
-  --chart-5: oklch(0.35 0.08 180);
+  --ring: #e9c46a;
+  --chart-1: #2a9d8f;
+  --chart-2: #e9c46a;
+  --chart-3: #f4a261;
+  --chart-4: #264653;
+  --chart-5: #f1faee;
   --sidebar: oklch(0.205 0 0);
   --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.55 0.12 175);
-  --sidebar-primary-foreground: oklch(0.145 0 0);
+  --sidebar-primary: #2a9d8f;
+  --sidebar-primary-foreground: oklch(0.985 0 0);
   --sidebar-accent: oklch(0.269 0 0);
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(0.269 0 0);
-  --sidebar-ring: oklch(0.55 0.12 175);
-  --orange: oklch(0.7 0.16 45);
-  --orange-foreground: oklch(1 0 0);
+  --sidebar-ring: #e9c46a;
 }
 
 @theme inline {
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+
+  /* Added brand color utilities */
+  --color-brand-dark-teal: var(--color-brand-dark-teal);
+  --color-brand-green-teal: var(--color-brand-green-teal);
+  --color-brand-warm-yellow: var(--color-brand-warm-yellow);
+  --color-brand-orange: var(--color-brand-orange);
+  --color-brand-light-cream: var(--color-brand-light-cream);
+
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -128,8 +124,4 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
-
-  /* Added orange color to theme */
-  --color-orange: var(--orange);
-  --color-orange-foreground: var(--orange-foreground);
 }

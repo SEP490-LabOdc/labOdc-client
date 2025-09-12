@@ -16,11 +16,13 @@ import { Route as errors500RouteImport } from './routes/(errors)/500'
 import { Route as errors404RouteImport } from './routes/(errors)/404'
 import { Route as errors403RouteImport } from './routes/(errors)/403'
 import { Route as errors401RouteImport } from './routes/(errors)/401'
-import { Route as publicTestimonialsIndexRouteImport } from './routes/(public)/testimonials/index'
-import { Route as publicTeamIndexRouteImport } from './routes/(public)/team/index'
-import { Route as publicSolutionsIndexRouteImport } from './routes/(public)/solutions/index'
-import { Route as publicProcessIndexRouteImport } from './routes/(public)/process/index'
+import { Route as publicTalentPoolIndexRouteImport } from './routes/(public)/talent-pool/index'
+import { Route as publicMarketplaceIndexRouteImport } from './routes/(public)/marketplace/index'
+import { Route as publicLearningIndexRouteImport } from './routes/(public)/learning/index'
+import { Route as publicForEnterprisesIndexRouteImport } from './routes/(public)/for-enterprises/index'
 import { Route as publicContactIndexRouteImport } from './routes/(public)/contact/index'
+import { Route as authSignInIndexRouteImport } from './routes/(auth)/sign-in/index'
+import { Route as authForgotPasswordIndexRouteImport } from './routes/(auth)/forgot-password/index'
 
 const publicRouteRoute = publicRouteRouteImport.update({
   id: '/(public)',
@@ -56,30 +58,41 @@ const errors401Route = errors401RouteImport.update({
   path: '/401',
   getParentRoute: () => rootRouteImport,
 } as any)
-const publicTestimonialsIndexRoute = publicTestimonialsIndexRouteImport.update({
-  id: '/testimonials/',
-  path: '/testimonials/',
+const publicTalentPoolIndexRoute = publicTalentPoolIndexRouteImport.update({
+  id: '/talent-pool/',
+  path: '/talent-pool/',
   getParentRoute: () => publicRouteRoute,
 } as any)
-const publicTeamIndexRoute = publicTeamIndexRouteImport.update({
-  id: '/team/',
-  path: '/team/',
+const publicMarketplaceIndexRoute = publicMarketplaceIndexRouteImport.update({
+  id: '/marketplace/',
+  path: '/marketplace/',
   getParentRoute: () => publicRouteRoute,
 } as any)
-const publicSolutionsIndexRoute = publicSolutionsIndexRouteImport.update({
-  id: '/solutions/',
-  path: '/solutions/',
+const publicLearningIndexRoute = publicLearningIndexRouteImport.update({
+  id: '/learning/',
+  path: '/learning/',
   getParentRoute: () => publicRouteRoute,
 } as any)
-const publicProcessIndexRoute = publicProcessIndexRouteImport.update({
-  id: '/process/',
-  path: '/process/',
-  getParentRoute: () => publicRouteRoute,
-} as any)
+const publicForEnterprisesIndexRoute =
+  publicForEnterprisesIndexRouteImport.update({
+    id: '/for-enterprises/',
+    path: '/for-enterprises/',
+    getParentRoute: () => publicRouteRoute,
+  } as any)
 const publicContactIndexRoute = publicContactIndexRouteImport.update({
   id: '/contact/',
   path: '/contact/',
   getParentRoute: () => publicRouteRoute,
+} as any)
+const authSignInIndexRoute = authSignInIndexRouteImport.update({
+  id: '/(auth)/sign-in/',
+  path: '/sign-in/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const authForgotPasswordIndexRoute = authForgotPasswordIndexRouteImport.update({
+  id: '/(auth)/forgot-password/',
+  path: '/forgot-password/',
+  getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
@@ -89,11 +102,13 @@ export interface FileRoutesByFullPath {
   '/404': typeof errors404Route
   '/500': typeof errors500Route
   '/503': typeof errors503Route
+  '/forgot-password': typeof authForgotPasswordIndexRoute
+  '/sign-in': typeof authSignInIndexRoute
   '/contact': typeof publicContactIndexRoute
-  '/process': typeof publicProcessIndexRoute
-  '/solutions': typeof publicSolutionsIndexRoute
-  '/team': typeof publicTeamIndexRoute
-  '/testimonials': typeof publicTestimonialsIndexRoute
+  '/for-enterprises': typeof publicForEnterprisesIndexRoute
+  '/learning': typeof publicLearningIndexRoute
+  '/marketplace': typeof publicMarketplaceIndexRoute
+  '/talent-pool': typeof publicTalentPoolIndexRoute
 }
 export interface FileRoutesByTo {
   '/401': typeof errors401Route
@@ -102,11 +117,13 @@ export interface FileRoutesByTo {
   '/500': typeof errors500Route
   '/503': typeof errors503Route
   '/': typeof publicIndexRoute
+  '/forgot-password': typeof authForgotPasswordIndexRoute
+  '/sign-in': typeof authSignInIndexRoute
   '/contact': typeof publicContactIndexRoute
-  '/process': typeof publicProcessIndexRoute
-  '/solutions': typeof publicSolutionsIndexRoute
-  '/team': typeof publicTeamIndexRoute
-  '/testimonials': typeof publicTestimonialsIndexRoute
+  '/for-enterprises': typeof publicForEnterprisesIndexRoute
+  '/learning': typeof publicLearningIndexRoute
+  '/marketplace': typeof publicMarketplaceIndexRoute
+  '/talent-pool': typeof publicTalentPoolIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -117,11 +134,13 @@ export interface FileRoutesById {
   '/(errors)/500': typeof errors500Route
   '/(errors)/503': typeof errors503Route
   '/(public)/': typeof publicIndexRoute
+  '/(auth)/forgot-password/': typeof authForgotPasswordIndexRoute
+  '/(auth)/sign-in/': typeof authSignInIndexRoute
   '/(public)/contact/': typeof publicContactIndexRoute
-  '/(public)/process/': typeof publicProcessIndexRoute
-  '/(public)/solutions/': typeof publicSolutionsIndexRoute
-  '/(public)/team/': typeof publicTeamIndexRoute
-  '/(public)/testimonials/': typeof publicTestimonialsIndexRoute
+  '/(public)/for-enterprises/': typeof publicForEnterprisesIndexRoute
+  '/(public)/learning/': typeof publicLearningIndexRoute
+  '/(public)/marketplace/': typeof publicMarketplaceIndexRoute
+  '/(public)/talent-pool/': typeof publicTalentPoolIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -132,11 +151,13 @@ export interface FileRouteTypes {
     | '/404'
     | '/500'
     | '/503'
+    | '/forgot-password'
+    | '/sign-in'
     | '/contact'
-    | '/process'
-    | '/solutions'
-    | '/team'
-    | '/testimonials'
+    | '/for-enterprises'
+    | '/learning'
+    | '/marketplace'
+    | '/talent-pool'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/401'
@@ -145,11 +166,13 @@ export interface FileRouteTypes {
     | '/500'
     | '/503'
     | '/'
+    | '/forgot-password'
+    | '/sign-in'
     | '/contact'
-    | '/process'
-    | '/solutions'
-    | '/team'
-    | '/testimonials'
+    | '/for-enterprises'
+    | '/learning'
+    | '/marketplace'
+    | '/talent-pool'
   id:
     | '__root__'
     | '/(public)'
@@ -159,11 +182,13 @@ export interface FileRouteTypes {
     | '/(errors)/500'
     | '/(errors)/503'
     | '/(public)/'
+    | '/(auth)/forgot-password/'
+    | '/(auth)/sign-in/'
     | '/(public)/contact/'
-    | '/(public)/process/'
-    | '/(public)/solutions/'
-    | '/(public)/team/'
-    | '/(public)/testimonials/'
+    | '/(public)/for-enterprises/'
+    | '/(public)/learning/'
+    | '/(public)/marketplace/'
+    | '/(public)/talent-pool/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -173,6 +198,8 @@ export interface RootRouteChildren {
   errors404Route: typeof errors404Route
   errors500Route: typeof errors500Route
   errors503Route: typeof errors503Route
+  authForgotPasswordIndexRoute: typeof authForgotPasswordIndexRoute
+  authSignInIndexRoute: typeof authSignInIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -226,32 +253,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof errors401RouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/(public)/testimonials/': {
-      id: '/(public)/testimonials/'
-      path: '/testimonials'
-      fullPath: '/testimonials'
-      preLoaderRoute: typeof publicTestimonialsIndexRouteImport
+    '/(public)/talent-pool/': {
+      id: '/(public)/talent-pool/'
+      path: '/talent-pool'
+      fullPath: '/talent-pool'
+      preLoaderRoute: typeof publicTalentPoolIndexRouteImport
       parentRoute: typeof publicRouteRoute
     }
-    '/(public)/team/': {
-      id: '/(public)/team/'
-      path: '/team'
-      fullPath: '/team'
-      preLoaderRoute: typeof publicTeamIndexRouteImport
+    '/(public)/marketplace/': {
+      id: '/(public)/marketplace/'
+      path: '/marketplace'
+      fullPath: '/marketplace'
+      preLoaderRoute: typeof publicMarketplaceIndexRouteImport
       parentRoute: typeof publicRouteRoute
     }
-    '/(public)/solutions/': {
-      id: '/(public)/solutions/'
-      path: '/solutions'
-      fullPath: '/solutions'
-      preLoaderRoute: typeof publicSolutionsIndexRouteImport
+    '/(public)/learning/': {
+      id: '/(public)/learning/'
+      path: '/learning'
+      fullPath: '/learning'
+      preLoaderRoute: typeof publicLearningIndexRouteImport
       parentRoute: typeof publicRouteRoute
     }
-    '/(public)/process/': {
-      id: '/(public)/process/'
-      path: '/process'
-      fullPath: '/process'
-      preLoaderRoute: typeof publicProcessIndexRouteImport
+    '/(public)/for-enterprises/': {
+      id: '/(public)/for-enterprises/'
+      path: '/for-enterprises'
+      fullPath: '/for-enterprises'
+      preLoaderRoute: typeof publicForEnterprisesIndexRouteImport
       parentRoute: typeof publicRouteRoute
     }
     '/(public)/contact/': {
@@ -261,25 +288,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof publicContactIndexRouteImport
       parentRoute: typeof publicRouteRoute
     }
+    '/(auth)/sign-in/': {
+      id: '/(auth)/sign-in/'
+      path: '/sign-in'
+      fullPath: '/sign-in'
+      preLoaderRoute: typeof authSignInIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(auth)/forgot-password/': {
+      id: '/(auth)/forgot-password/'
+      path: '/forgot-password'
+      fullPath: '/forgot-password'
+      preLoaderRoute: typeof authForgotPasswordIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 interface publicRouteRouteChildren {
   publicIndexRoute: typeof publicIndexRoute
   publicContactIndexRoute: typeof publicContactIndexRoute
-  publicProcessIndexRoute: typeof publicProcessIndexRoute
-  publicSolutionsIndexRoute: typeof publicSolutionsIndexRoute
-  publicTeamIndexRoute: typeof publicTeamIndexRoute
-  publicTestimonialsIndexRoute: typeof publicTestimonialsIndexRoute
+  publicForEnterprisesIndexRoute: typeof publicForEnterprisesIndexRoute
+  publicLearningIndexRoute: typeof publicLearningIndexRoute
+  publicMarketplaceIndexRoute: typeof publicMarketplaceIndexRoute
+  publicTalentPoolIndexRoute: typeof publicTalentPoolIndexRoute
 }
 
 const publicRouteRouteChildren: publicRouteRouteChildren = {
   publicIndexRoute: publicIndexRoute,
   publicContactIndexRoute: publicContactIndexRoute,
-  publicProcessIndexRoute: publicProcessIndexRoute,
-  publicSolutionsIndexRoute: publicSolutionsIndexRoute,
-  publicTeamIndexRoute: publicTeamIndexRoute,
-  publicTestimonialsIndexRoute: publicTestimonialsIndexRoute,
+  publicForEnterprisesIndexRoute: publicForEnterprisesIndexRoute,
+  publicLearningIndexRoute: publicLearningIndexRoute,
+  publicMarketplaceIndexRoute: publicMarketplaceIndexRoute,
+  publicTalentPoolIndexRoute: publicTalentPoolIndexRoute,
 }
 
 const publicRouteRouteWithChildren = publicRouteRoute._addFileChildren(
@@ -293,6 +334,8 @@ const rootRouteChildren: RootRouteChildren = {
   errors404Route: errors404Route,
   errors500Route: errors500Route,
   errors503Route: errors503Route,
+  authForgotPasswordIndexRoute: authForgotPasswordIndexRoute,
+  authSignInIndexRoute: authSignInIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

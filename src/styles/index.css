@@ -38,6 +38,57 @@
   }
 }
 
+/* Added utility classes for brand colors */
+@layer utilities {
+  .bg-brand-dark-teal {
+    background-color: var(--color-brand-dark-teal);
+  }
+  .bg-brand-green-teal {
+    background-color: var(--color-brand-green-teal);
+  }
+  .bg-brand-warm-yellow {
+    background-color: var(--color-brand-warm-yellow);
+  }
+  .bg-brand-orange {
+    background-color: var(--color-brand-orange);
+  }
+  .bg-brand-light-cream {
+    background-color: var(--color-brand-light-cream);
+  }
+
+  .text-brand-dark-teal {
+    color: var(--color-brand-dark-teal);
+  }
+  .text-brand-green-teal {
+    color: var(--color-brand-green-teal);
+  }
+  .text-brand-warm-yellow {
+    color: var(--color-brand-warm-yellow);
+  }
+  .text-brand-orange {
+    color: var(--color-brand-orange);
+  }
+  .text-brand-light-cream {
+    color: var(--color-brand-light-cream);
+  }
+
+  .border-brand-dark-teal {
+    border-color: var(--color-brand-dark-teal);
+  }
+  .border-brand-green-teal {
+    border-color: var(--color-brand-green-teal);
+  }
+  .border-brand-warm-yellow {
+    border-color: var(--color-brand-warm-yellow);
+  }
+  .border-brand-orange {
+    border-color: var(--color-brand-orange);
+  }
+  .border-brand-light-cream {
+    border-color: var(--color-brand-light-cream);
+  }
+}
+
 @utility container {
   margin-inline: auto;
   padding-inline: 2rem;
