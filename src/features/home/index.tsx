@@ -1,102 +1,20 @@
+import React from 'react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
-import { ArrowRight, BookOpen, Building2, Handshake, Quote, Shield, Star, TrendingUp, Users, Users2, Zap } from 'lucide-react'
-import React from 'react'
+import { Quote, Shield, Star, TrendingUp, Zap } from 'lucide-react'
+import { HeroSection } from './components/hero-section'
+import { FeatureSection } from './components/feature-section'
 
 export default function Home() {
     return (
         <div>
             {/* Hero Section */}
-            <section className="py-20 lg:py-32 bg-[#F5F9FA]">
-                <div className="container mx-auto px-4">
-                    <div className="grid lg:grid-cols-2 gap-12 items-center">
-                        <div className="space-y-8">
-                            <div className="space-y-4">
-                                <h1 className="text-4xl lg:text-6xl font-bold text-balance leading-tight">
-                                    Bridge Talent to Enterprise Success with <span className="text-primary">Lab-based ODC Platform</span>
-                                </h1>
-                                <p className="text-xl text-muted-foreground text-pretty">
-                                    Our Lab-based ODC model empowers your enterprise with highly trained, dedicated development teams,
-                                    managed within a flexible, scalable framework for optimal project delivery.
-                                </p>
-                            </div>
-
-                            <div className="flex flex-col sm:flex-row gap-4">
-                                <Button
-                                    size="lg"
-                                    className="text-lg px-8"
-                                >
-                                    Get Started
-                                    <ArrowRight className="ml-2 h-5 w-5" />
-                                </Button>
-                                <Button variant="outline" size="lg" className="text-lg px-8 bg-transparent">
-                                    Request Demo
-                                </Button>
-                            </div>
-                        </div>
-
-                        <div className="relative">
-                            <div className="aspect-square bg-gradient-to-br from-primary/20 to-secondary/20 rounded-3xl p-8 flex items-center justify-center">
-                                <img src="/placeholder-xab8b.png" alt="ODC Platform Workspace" className="rounded-2xl shadow-2xl" />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            {/* Core Strengths */}
-            <section id="solutions" className="py-20 bg-background">
-                <div className="container mx-auto px-4">
-                    <div className="text-center space-y-4 mb-16">
-                        <h2 className="text-3xl lg:text-4xl font-bold text-balance">
-                            Transform Your Enterprise with Our Core Strengths
-                        </h2>
-                    </div>
-
-                    <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-8">
-                        {[
-                            {
-                                icon: Users,
-                                title: "Global Talent Pool",
-                                description: "Access a curated network of skilled developers from around the world with your team.",
-                            },
-                            {
-                                icon: BookOpen,
-                                title: "Customized Training",
-                                description: "Tailor development programs to match your specific technology stack and best practices.",
-                            },
-                            {
-                                icon: Users2,
-                                title: "Mini-ODC Teams",
-                                description: "Form small, agile, dedicated teams that scale with your project needs.",
-                            },
-                            {
-                                icon: Building2,
-                                title: "Enterprise Management",
-                                description: "Robust platform for seamless project monitoring, and team coordination.",
-                            },
-                            {
-                                icon: Handshake,
-                                title: "Flexible Contracts",
-                                description: "Enjoy adaptable contract terms that evolve with your business objectives and budget.",
-                            },
-                        ].map((strength, index) => (
-                            <Card key={index} className="text-center hover:shadow-lg transition-shadow border-border/50">
-                                <CardContent className="p-6 space-y-4">
-                                    <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mx-auto">
-                                        <strength.icon className="h-6 w-6 text-primary" />
-                                    </div>
-                                    <h3 className="font-semibold text-lg">{strength.title}</h3>
-                                    <p className="text-muted-foreground text-sm">{strength.description}</p>
-                                </CardContent>
-                            </Card>
-                        ))}
-                    </div>
-                </div>
-            </section>
+            <HeroSection />
+            {/* Features Section */}
+            <FeatureSection />
 
             {/* ODC Journey */}
             <section id="process" className="py-20 bg-muted/30">
