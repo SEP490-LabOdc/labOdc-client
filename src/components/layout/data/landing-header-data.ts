@@ -6,20 +6,20 @@ export const landingHeaderData: LandingHeader[] = [
         url: '/'
     },
     {
-        title: 'Solutions',
-        url: '/solutions'
+        title: 'Talent Pool',
+        url: '/talent-pool'
     },
     {
-        title: 'Process',
-        url: '/process'
+        title: 'Marketplace',
+        url: '/marketplace'
     },
     {
-        title: 'Team',
-        url: '/team'
+        title: 'Learning',
+        url: '/learning'
     },
     {
-        title: 'Testimonials',
-        url: '/testimonials'
+        title: 'For Enterprises',
+        url: '/for-enterprises'
     },
     {
         title: 'Contact',

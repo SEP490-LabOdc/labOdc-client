@@ -17,7 +17,7 @@ export default function LandingHeader() {
 
                 <nav className="hidden md:flex items-center space-x-8">
                     {landingHeaderData.map((item) => (
-                        <Link to={item.url} className={`${checkIsActive(href, item) ? 'text-primary' : ''} hover:text-primary transition-colors font-bold`} key={item.title}>
+                        <Link to={item.url} className={`${checkIsActive(href, item) ? "text-brand-orange font-bold" : "text-brand-dark-teal hover:text-brand-green-teal"} transition-colors`} key={item.title}>
                             {item.title}
                         </Link>
                     ))}

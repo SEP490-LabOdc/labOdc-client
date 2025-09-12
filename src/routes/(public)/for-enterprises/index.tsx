@@ -1,6 +1,6 @@
 import ComingSoon from "@/components/coming-soon";
 import { createFileRoute } from "@tanstack/react-router";
 
-export const Route = createFileRoute('/(public)/process/')({
+export const Route = createFileRoute('/(public)/for-enterprises/')({
     component: ComingSoon
 })
