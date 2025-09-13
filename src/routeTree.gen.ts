@@ -10,22 +10,30 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as publicRouteRouteImport } from './routes/(public)/route'
+import { Route as authRouteRouteImport } from './routes/(auth)/route'
 import { Route as publicIndexRouteImport } from './routes/(public)/index'
 import { Route as errors503RouteImport } from './routes/(errors)/503'
 import { Route as errors500RouteImport } from './routes/(errors)/500'
 import { Route as errors404RouteImport } from './routes/(errors)/404'
 import { Route as errors403RouteImport } from './routes/(errors)/403'
 import { Route as errors401RouteImport } from './routes/(errors)/401'
+import { Route as publicTermsIndexRouteImport } from './routes/(public)/terms/index'
 import { Route as publicTalentPoolIndexRouteImport } from './routes/(public)/talent-pool/index'
+import { Route as publicPrivacyIndexRouteImport } from './routes/(public)/privacy/index'
 import { Route as publicMarketplaceIndexRouteImport } from './routes/(public)/marketplace/index'
 import { Route as publicLearningIndexRouteImport } from './routes/(public)/learning/index'
 import { Route as publicForEnterprisesIndexRouteImport } from './routes/(public)/for-enterprises/index'
 import { Route as publicContactIndexRouteImport } from './routes/(public)/contact/index'
+import { Route as authSignUpIndexRouteImport } from './routes/(auth)/sign-up/index'
 import { Route as authSignInIndexRouteImport } from './routes/(auth)/sign-in/index'
 import { Route as authForgotPasswordIndexRouteImport } from './routes/(auth)/forgot-password/index'
 
 const publicRouteRoute = publicRouteRouteImport.update({
   id: '/(public)',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const authRouteRoute = authRouteRouteImport.update({
+  id: '/(auth)',
   getParentRoute: () => rootRouteImport,
 } as any)
 const publicIndexRoute = publicIndexRouteImport.update({
@@ -58,9 +66,19 @@ const errors401Route = errors401RouteImport.update({
   path: '/401',
   getParentRoute: () => rootRouteImport,
 } as any)
+const publicTermsIndexRoute = publicTermsIndexRouteImport.update({
+  id: '/terms/',
+  path: '/terms/',
+  getParentRoute: () => publicRouteRoute,
+} as any)
 const publicTalentPoolIndexRoute = publicTalentPoolIndexRouteImport.update({
   id: '/talent-pool/',
   path: '/talent-pool/',
+  getParentRoute: () => publicRouteRoute,
+} as any)
+const publicPrivacyIndexRoute = publicPrivacyIndexRouteImport.update({
+  id: '/privacy/',
+  path: '/privacy/',
   getParentRoute: () => publicRouteRoute,
 } as any)
 const publicMarketplaceIndexRoute = publicMarketplaceIndexRouteImport.update({
@@ -84,15 +102,20 @@ const publicContactIndexRoute = publicContactIndexRouteImport.update({
   path: '/contact/',
   getParentRoute: () => publicRouteRoute,
 } as any)
+const authSignUpIndexRoute = authSignUpIndexRouteImport.update({
+  id: '/sign-up/',
+  path: '/sign-up/',
+  getParentRoute: () => authRouteRoute,
+} as any)
 const authSignInIndexRoute = authSignInIndexRouteImport.update({
-  id: '/(auth)/sign-in/',
+  id: '/sign-in/',
   path: '/sign-in/',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => authRouteRoute,
 } as any)
 const authForgotPasswordIndexRoute = authForgotPasswordIndexRouteImport.update({
-  id: '/(auth)/forgot-password/',
+  id: '/forgot-password/',
   path: '/forgot-password/',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => authRouteRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
@@ -104,29 +127,36 @@ export interface FileRoutesByFullPath {
   '/503': typeof errors503Route
   '/forgot-password': typeof authForgotPasswordIndexRoute
   '/sign-in': typeof authSignInIndexRoute
+  '/sign-up': typeof authSignUpIndexRoute
   '/contact': typeof publicContactIndexRoute
   '/for-enterprises': typeof publicForEnterprisesIndexRoute
   '/learning': typeof publicLearningIndexRoute
   '/marketplace': typeof publicMarketplaceIndexRoute
+  '/privacy': typeof publicPrivacyIndexRoute
   '/talent-pool': typeof publicTalentPoolIndexRoute
+  '/terms': typeof publicTermsIndexRoute
 }
 export interface FileRoutesByTo {
+  '/': typeof publicIndexRoute
   '/401': typeof errors401Route
   '/403': typeof errors403Route
   '/404': typeof errors404Route
   '/500': typeof errors500Route
   '/503': typeof errors503Route
-  '/': typeof publicIndexRoute
   '/forgot-password': typeof authForgotPasswordIndexRoute
   '/sign-in': typeof authSignInIndexRoute
+  '/sign-up': typeof authSignUpIndexRoute
   '/contact': typeof publicContactIndexRoute
   '/for-enterprises': typeof publicForEnterprisesIndexRoute
   '/learning': typeof publicLearningIndexRoute
   '/marketplace': typeof publicMarketplaceIndexRoute
+  '/privacy': typeof publicPrivacyIndexRoute
   '/talent-pool': typeof publicTalentPoolIndexRoute
+  '/terms': typeof publicTermsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
+  '/(auth)': typeof authRouteRouteWithChildren
   '/(public)': typeof publicRouteRouteWithChildren
   '/(errors)/401': typeof errors401Route
   '/(errors)/403': typeof errors403Route
@@ -136,11 +166,14 @@ export interface FileRoutesById {
   '/(public)/': typeof publicIndexRoute
   '/(auth)/forgot-password/': typeof authForgotPasswordIndexRoute
   '/(auth)/sign-in/': typeof authSignInIndexRoute
+  '/(auth)/sign-up/': typeof authSignUpIndexRoute
   '/(public)/contact/': typeof publicContactIndexRoute
   '/(public)/for-enterprises/': typeof publicForEnterprisesIndexRoute
   '/(public)/learning/': typeof publicLearningIndexRoute
   '/(public)/marketplace/': typeof publicMarketplaceIndexRoute
+  '/(public)/privacy/': typeof publicPrivacyIndexRoute
   '/(public)/talent-pool/': typeof publicTalentPoolIndexRoute
+  '/(public)/terms/': typeof publicTermsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -153,28 +186,35 @@ export interface FileRouteTypes {
     | '/503'
     | '/forgot-password'
     | '/sign-in'
+    | '/sign-up'
     | '/contact'
     | '/for-enterprises'
     | '/learning'
     | '/marketplace'
+    | '/privacy'
     | '/talent-pool'
+    | '/terms'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | '/'
     | '/401'
     | '/403'
     | '/404'
     | '/500'
     | '/503'
-    | '/'
     | '/forgot-password'
     | '/sign-in'
+    | '/sign-up'
     | '/contact'
     | '/for-enterprises'
     | '/learning'
     | '/marketplace'
+    | '/privacy'
     | '/talent-pool'
+    | '/terms'
   id:
     | '__root__'
+    | '/(auth)'
     | '/(public)'
     | '/(errors)/401'
     | '/(errors)/403'
@@ -184,22 +224,24 @@ export interface FileRouteTypes {
     | '/(public)/'
     | '/(auth)/forgot-password/'
     | '/(auth)/sign-in/'
+    | '/(auth)/sign-up/'
     | '/(public)/contact/'
     | '/(public)/for-enterprises/'
     | '/(public)/learning/'
     | '/(public)/marketplace/'
+    | '/(public)/privacy/'
     | '/(public)/talent-pool/'
+    | '/(public)/terms/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
+  authRouteRoute: typeof authRouteRouteWithChildren
   publicRouteRoute: typeof publicRouteRouteWithChildren
   errors401Route: typeof errors401Route
   errors403Route: typeof errors403Route
   errors404Route: typeof errors404Route
   errors500Route: typeof errors500Route
   errors503Route: typeof errors503Route
-  authForgotPasswordIndexRoute: typeof authForgotPasswordIndexRoute
-  authSignInIndexRoute: typeof authSignInIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -209,6 +251,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof publicRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(auth)': {
+      id: '/(auth)'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof authRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/(public)/': {
@@ -253,11 +302,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof errors401RouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/(public)/terms/': {
+      id: '/(public)/terms/'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof publicTermsIndexRouteImport
+      parentRoute: typeof publicRouteRoute
+    }
     '/(public)/talent-pool/': {
       id: '/(public)/talent-pool/'
       path: '/talent-pool'
       fullPath: '/talent-pool'
       preLoaderRoute: typeof publicTalentPoolIndexRouteImport
+      parentRoute: typeof publicRouteRoute
+    }
+    '/(public)/privacy/': {
+      id: '/(public)/privacy/'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof publicPrivacyIndexRouteImport
       parentRoute: typeof publicRouteRoute
     }
     '/(public)/marketplace/': {
@@ -288,22 +351,45 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof publicContactIndexRouteImport
       parentRoute: typeof publicRouteRoute
     }
+    '/(auth)/sign-up/': {
+      id: '/(auth)/sign-up/'
+      path: '/sign-up'
+      fullPath: '/sign-up'
+      preLoaderRoute: typeof authSignUpIndexRouteImport
+      parentRoute: typeof authRouteRoute
+    }
     '/(auth)/sign-in/': {
       id: '/(auth)/sign-in/'
       path: '/sign-in'
       fullPath: '/sign-in'
       preLoaderRoute: typeof authSignInIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof authRouteRoute
     }
     '/(auth)/forgot-password/': {
       id: '/(auth)/forgot-password/'
       path: '/forgot-password'
       fullPath: '/forgot-password'
       preLoaderRoute: typeof authForgotPasswordIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof authRouteRoute
     }
   }
 }
+
+interface authRouteRouteChildren {
+  authForgotPasswordIndexRoute: typeof authForgotPasswordIndexRoute
+  authSignInIndexRoute: typeof authSignInIndexRoute
+  authSignUpIndexRoute: typeof authSignUpIndexRoute
+}
+
+const authRouteRouteChildren: authRouteRouteChildren = {
+  authForgotPasswordIndexRoute: authForgotPasswordIndexRoute,
+  authSignInIndexRoute: authSignInIndexRoute,
+  authSignUpIndexRoute: authSignUpIndexRoute,
+}
+
+const authRouteRouteWithChildren = authRouteRoute._addFileChildren(
+  authRouteRouteChildren,
+)
 
 interface publicRouteRouteChildren {
   publicIndexRoute: typeof publicIndexRoute
@@ -311,7 +397,9 @@ interface publicRouteRouteChildren {
   publicForEnterprisesIndexRoute: typeof publicForEnterprisesIndexRoute
   publicLearningIndexRoute: typeof publicLearningIndexRoute
   publicMarketplaceIndexRoute: typeof publicMarketplaceIndexRoute
+  publicPrivacyIndexRoute: typeof publicPrivacyIndexRoute
   publicTalentPoolIndexRoute: typeof publicTalentPoolIndexRoute
+  publicTermsIndexRoute: typeof publicTermsIndexRoute
 }
 
 const publicRouteRouteChildren: publicRouteRouteChildren = {
@@ -320,7 +408,9 @@ const publicRouteRouteChildren: publicRouteRouteChildren = {
   publicForEnterprisesIndexRoute: publicForEnterprisesIndexRoute,
   publicLearningIndexRoute: publicLearningIndexRoute,
   publicMarketplaceIndexRoute: publicMarketplaceIndexRoute,
+  publicPrivacyIndexRoute: publicPrivacyIndexRoute,
   publicTalentPoolIndexRoute: publicTalentPoolIndexRoute,
+  publicTermsIndexRoute: publicTermsIndexRoute,
 }
 
 const publicRouteRouteWithChildren = publicRouteRoute._addFileChildren(
@@ -328,14 +418,13 @@ const publicRouteRouteWithChildren = publicRouteRoute._addFileChildren(
 )
 
 const rootRouteChildren: RootRouteChildren = {
+  authRouteRoute: authRouteRouteWithChildren,
   publicRouteRoute: publicRouteRouteWithChildren,
   errors401Route: errors401Route,
   errors403Route: errors403Route,
   errors404Route: errors404Route,
   errors500Route: errors500Route,
   errors503Route: errors503Route,
-  authForgotPasswordIndexRoute: authForgotPasswordIndexRoute,
-  authSignInIndexRoute: authSignInIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -10,7 +10,6 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Loader2, LogIn } from 'lucide-react'
-import { IconBrandFacebook, IconBrandGithub } from '@tabler/icons-react'
 import { PasswordInput } from '@/components/password-input'
 
 
@@ -81,6 +80,16 @@ export function UserAuthForm({
                 className={cn('grid gap-3', className)}
                 {...props}
             >
+                <div className='relative my-2'>
+                    <div className='absolute inset-0 flex items-center'>
+                        <span className='w-full border-t' />
+                    </div>
+                    <div className='relative flex justify-center text-xs uppercase'>
+                        <span className='bg-background text-muted-foreground px-2'>
+                            Or continue with
+                        </span>
+                    </div>
+                </div>
                 <FormField
                     control={form.control}
                     name='email'
@@ -113,30 +122,11 @@ export function UserAuthForm({
                         </FormItem>
                     )}
                 />
-                <Button className='mt-2' disabled={isLoading}>
+                <Button className='mt-2' disabled={isLoading} size='lg'>
                     {isLoading ? <Loader2 className='animate-spin' /> : <LogIn />}
                     Sign in
                 </Button>
-
-                <div className='relative my-2'>
-                    <div className='absolute inset-0 flex items-center'>
-                        <span className='w-full border-t' />
-                    </div>
-                    <div className='relative flex justify-center text-xs uppercase'>
-                        <span className='bg-background text-muted-foreground px-2'>
-                            Or continue with
-                        </span>
-                    </div>
-                </div>
-
-                <div className='grid grid-cols-2 gap-2'>
-                    <Button variant='outline' type='button' disabled={isLoading}>
-                        <IconBrandGithub className='h-4 w-4' /> GitHub
-                    </Button>
-                    <Button variant='outline' type='button' disabled={isLoading}>
-                        <IconBrandFacebook className='h-4 w-4' /> Facebook
-                    </Button>
-                </div>
+                <p className='text-center font-semibold'>Do not have an account? <Link to='/sign-up'>Sign Up now</Link></p>
             </form>
         </Form>
     )
