@@ -1,2 +1,2 @@
-export * from './route-groups'
+export * from './routes'
 export * from './paths'
