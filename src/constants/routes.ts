@@ -1,5 +1,6 @@
 export const ROUTES = {
     auth: {
+        layout: '/(auth)',
         sign_in: '/(auth)/sign-in/',
         sign_up: '/(auth)/sign-up/',
         forgot_password: '/(auth)/forgot-password/',
@@ -12,6 +13,7 @@ export const ROUTES = {
         maintenance: '/(errors)/503'
     },
     public: {
+        layout: '/(public)',
         contact: '/(public)/contact/',
         for_enterprises: '/(public)/for-enterprises/',
         learning: '/(public)/learning/',
@@ -19,6 +21,10 @@ export const ROUTES = {
         privacy: '/(public)/privacy/',
         talent_pool: '/(public)/talent-pool/',
         terms: '/(public)/terms/'
+    },
+    admin: {
+        layout: '/_authenticated/admin',
+        dashboard: '/_authenticated/admin/'
     },
 } as const
 

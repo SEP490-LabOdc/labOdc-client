@@ -17,6 +17,8 @@ import { Route as errors500RouteImport } from './routes/(errors)/500'
 import { Route as errors404RouteImport } from './routes/(errors)/404'
 import { Route as errors403RouteImport } from './routes/(errors)/403'
 import { Route as errors401RouteImport } from './routes/(errors)/401'
+import { Route as AuthenticatedAdminRouteRouteImport } from './routes/_authenticated/admin/route'
+import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin/index'
 import { Route as publicTermsIndexRouteImport } from './routes/(public)/terms/index'
 import { Route as publicTalentPoolIndexRouteImport } from './routes/(public)/talent-pool/index'
 import { Route as publicPrivacyIndexRouteImport } from './routes/(public)/privacy/index'
@@ -65,6 +67,16 @@ const errors401Route = errors401RouteImport.update({
   id: '/(errors)/401',
   path: '/401',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedAdminRouteRoute = AuthenticatedAdminRouteRouteImport.update({
+  id: '/_authenticated/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AuthenticatedAdminRouteRoute,
 } as any)
 const publicTermsIndexRoute = publicTermsIndexRouteImport.update({
   id: '/terms/',
@@ -120,6 +132,7 @@ const authForgotPasswordIndexRoute = authForgotPasswordIndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof publicIndexRoute
+  '/admin': typeof AuthenticatedAdminRouteRouteWithChildren
   '/401': typeof errors401Route
   '/403': typeof errors403Route
   '/404': typeof errors404Route
@@ -135,6 +148,7 @@ export interface FileRoutesByFullPath {
   '/privacy': typeof publicPrivacyIndexRoute
   '/talent-pool': typeof publicTalentPoolIndexRoute
   '/terms': typeof publicTermsIndexRoute
+  '/admin/': typeof AuthenticatedAdminIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof publicIndexRoute
@@ -153,11 +167,13 @@ export interface FileRoutesByTo {
   '/privacy': typeof publicPrivacyIndexRoute
   '/talent-pool': typeof publicTalentPoolIndexRoute
   '/terms': typeof publicTermsIndexRoute
+  '/admin': typeof AuthenticatedAdminIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/(auth)': typeof authRouteRouteWithChildren
   '/(public)': typeof publicRouteRouteWithChildren
+  '/_authenticated/admin': typeof AuthenticatedAdminRouteRouteWithChildren
   '/(errors)/401': typeof errors401Route
   '/(errors)/403': typeof errors403Route
   '/(errors)/404': typeof errors404Route
@@ -174,11 +190,13 @@ export interface FileRoutesById {
   '/(public)/privacy/': typeof publicPrivacyIndexRoute
   '/(public)/talent-pool/': typeof publicTalentPoolIndexRoute
   '/(public)/terms/': typeof publicTermsIndexRoute
+  '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/admin'
     | '/401'
     | '/403'
     | '/404'
@@ -194,6 +212,7 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/talent-pool'
     | '/terms'
+    | '/admin/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -212,10 +231,12 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/talent-pool'
     | '/terms'
+    | '/admin'
   id:
     | '__root__'
     | '/(auth)'
     | '/(public)'
+    | '/_authenticated/admin'
     | '/(errors)/401'
     | '/(errors)/403'
     | '/(errors)/404'
@@ -232,11 +253,13 @@ export interface FileRouteTypes {
     | '/(public)/privacy/'
     | '/(public)/talent-pool/'
     | '/(public)/terms/'
+    | '/_authenticated/admin/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   authRouteRoute: typeof authRouteRouteWithChildren
   publicRouteRoute: typeof publicRouteRouteWithChildren
+  AuthenticatedAdminRouteRoute: typeof AuthenticatedAdminRouteRouteWithChildren
   errors401Route: typeof errors401Route
   errors403Route: typeof errors403Route
   errors404Route: typeof errors404Route
@@ -301,6 +324,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/401'
       preLoaderRoute: typeof errors401RouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/admin': {
+      id: '/_authenticated/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AuthenticatedAdminRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/admin/': {
+      id: '/_authenticated/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
     }
     '/(public)/terms/': {
       id: '/(public)/terms/'
@@ -417,9 +454,24 @@ const publicRouteRouteWithChildren = publicRouteRoute._addFileChildren(
   publicRouteRouteChildren,
 )
 
+interface AuthenticatedAdminRouteRouteChildren {
+  AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
+}
+
+const AuthenticatedAdminRouteRouteChildren: AuthenticatedAdminRouteRouteChildren =
+  {
+    AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
+  }
+
+const AuthenticatedAdminRouteRouteWithChildren =
+  AuthenticatedAdminRouteRoute._addFileChildren(
+    AuthenticatedAdminRouteRouteChildren,
+  )
+
 const rootRouteChildren: RootRouteChildren = {
   authRouteRoute: authRouteRouteWithChildren,
   publicRouteRoute: publicRouteRouteWithChildren,
+  AuthenticatedAdminRouteRoute: AuthenticatedAdminRouteRouteWithChildren,
   errors401Route: errors401Route,
   errors403Route: errors403Route,
   errors404Route: errors404Route,
