@@ -56,7 +56,7 @@ export const sidebarData: SidebarData = {
         },
         {
           title: 'Tasks',
-          url: '/tasks',
+          url: '/admin/tasks',
           icon: IconChecklist,
         },
         {

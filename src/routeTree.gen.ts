@@ -29,6 +29,7 @@ import { Route as publicContactIndexRouteImport } from './routes/(public)/contac
 import { Route as authSignUpIndexRouteImport } from './routes/(auth)/sign-up/index'
 import { Route as authSignInIndexRouteImport } from './routes/(auth)/sign-in/index'
 import { Route as authForgotPasswordIndexRouteImport } from './routes/(auth)/forgot-password/index'
+import { Route as AuthenticatedAdminTasksIndexRouteImport } from './routes/_authenticated/admin/tasks/index'
 
 const publicRouteRoute = publicRouteRouteImport.update({
   id: '/(public)',
@@ -129,6 +130,12 @@ const authForgotPasswordIndexRoute = authForgotPasswordIndexRouteImport.update({
   path: '/forgot-password/',
   getParentRoute: () => authRouteRoute,
 } as any)
+const AuthenticatedAdminTasksIndexRoute =
+  AuthenticatedAdminTasksIndexRouteImport.update({
+    id: '/tasks/',
+    path: '/tasks/',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof publicIndexRoute
@@ -149,6 +156,7 @@ export interface FileRoutesByFullPath {
   '/talent-pool': typeof publicTalentPoolIndexRoute
   '/terms': typeof publicTermsIndexRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
+  '/admin/tasks': typeof AuthenticatedAdminTasksIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof publicIndexRoute
@@ -168,6 +176,7 @@ export interface FileRoutesByTo {
   '/talent-pool': typeof publicTalentPoolIndexRoute
   '/terms': typeof publicTermsIndexRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
+  '/admin/tasks': typeof AuthenticatedAdminTasksIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -191,6 +200,7 @@ export interface FileRoutesById {
   '/(public)/talent-pool/': typeof publicTalentPoolIndexRoute
   '/(public)/terms/': typeof publicTermsIndexRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
+  '/_authenticated/admin/tasks/': typeof AuthenticatedAdminTasksIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -213,6 +223,7 @@ export interface FileRouteTypes {
     | '/talent-pool'
     | '/terms'
     | '/admin/'
+    | '/admin/tasks'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -232,6 +243,7 @@ export interface FileRouteTypes {
     | '/talent-pool'
     | '/terms'
     | '/admin'
+    | '/admin/tasks'
   id:
     | '__root__'
     | '/(auth)'
@@ -254,6 +266,7 @@ export interface FileRouteTypes {
     | '/(public)/talent-pool/'
     | '/(public)/terms/'
     | '/_authenticated/admin/'
+    | '/_authenticated/admin/tasks/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -409,6 +422,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof authForgotPasswordIndexRouteImport
       parentRoute: typeof authRouteRoute
     }
+    '/_authenticated/admin/tasks/': {
+      id: '/_authenticated/admin/tasks/'
+      path: '/tasks'
+      fullPath: '/admin/tasks'
+      preLoaderRoute: typeof AuthenticatedAdminTasksIndexRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
   }
 }
 
@@ -456,11 +476,13 @@ const publicRouteRouteWithChildren = publicRouteRoute._addFileChildren(
 
 interface AuthenticatedAdminRouteRouteChildren {
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
+  AuthenticatedAdminTasksIndexRoute: typeof AuthenticatedAdminTasksIndexRoute
 }
 
 const AuthenticatedAdminRouteRouteChildren: AuthenticatedAdminRouteRouteChildren =
   {
     AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
+    AuthenticatedAdminTasksIndexRoute: AuthenticatedAdminTasksIndexRoute,
   }
 
 const AuthenticatedAdminRouteRouteWithChildren =
