@@ -1,14 +1,12 @@
-import React from 'react'
 import { IconBrandFacebook, IconBrandGithub, IconBrandLinkedin, IconBrandTwitter } from '@tabler/icons-react'
 import { Link } from '@tanstack/react-router'
-import logo from '@/assets/logo-test-1.png'
+import logo from '@/assets/logo-white-text.png'
 
 const footerLinks = {
     platform: [
         { name: "Home", href: "/" },
         { name: "Talent Pool", href: "/talent-pool" },
         { name: "Marketplace", href: "/marketplace" },
-        { name: "Learning Hub", href: "/learning-hub" },
     ],
     enterprises: [
         { name: "How It Works", href: "/how-it-works" },
@@ -150,8 +148,7 @@ export function Footer() {
                 <div className="container mx-auto px-4 py-6">
                     <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
                         <div className="flex items-center space-x-2">
-                            <img src={logo} alt="logo" className='w-18 h-19' />
-                            <span className="font-bold text-xl text-white">Lab-based ODC Platform</span>
+                            <img src={logo} alt="logo" className='w-20 h-20' />
                         </div>
 
                         <p className="text-slate-200 text-sm">© 2025 Lab-based ODC Platform. All rights reserved.</p>

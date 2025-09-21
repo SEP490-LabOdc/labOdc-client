@@ -14,10 +14,6 @@ export const landingHeaderData: LandingHeader[] = [
         url: '/marketplace'
     },
     {
-        title: 'Learning',
-        url: '/learning'
-    },
-    {
         title: 'For Enterprises',
         url: '/for-enterprises'
     },

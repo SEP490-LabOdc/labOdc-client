@@ -3,7 +3,7 @@ import { Button } from '../ui/button'
 import { Link, useLocation } from '@tanstack/react-router'
 import { landingHeaderData } from './data/landing-header-data'
 import { checkIsActive } from '@/lib/utils'
-import logo from '@/assets/logo-test-1.png'
+import logo from '@/assets/logo-black-text.png'
 
 export default function LandingHeader() {
     const href = useLocation({ select: (location) => location.href })

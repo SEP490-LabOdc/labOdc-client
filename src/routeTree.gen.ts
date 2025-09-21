@@ -23,7 +23,6 @@ import { Route as publicTermsIndexRouteImport } from './routes/(public)/terms/in
 import { Route as publicTalentPoolIndexRouteImport } from './routes/(public)/talent-pool/index'
 import { Route as publicPrivacyIndexRouteImport } from './routes/(public)/privacy/index'
 import { Route as publicMarketplaceIndexRouteImport } from './routes/(public)/marketplace/index'
-import { Route as publicLearningIndexRouteImport } from './routes/(public)/learning/index'
 import { Route as publicForEnterprisesIndexRouteImport } from './routes/(public)/for-enterprises/index'
 import { Route as publicContactIndexRouteImport } from './routes/(public)/contact/index'
 import { Route as authSignUpIndexRouteImport } from './routes/(auth)/sign-up/index'
@@ -98,11 +97,6 @@ const publicMarketplaceIndexRoute = publicMarketplaceIndexRouteImport.update({
   path: '/marketplace/',
   getParentRoute: () => publicRouteRoute,
 } as any)
-const publicLearningIndexRoute = publicLearningIndexRouteImport.update({
-  id: '/learning/',
-  path: '/learning/',
-  getParentRoute: () => publicRouteRoute,
-} as any)
 const publicForEnterprisesIndexRoute =
   publicForEnterprisesIndexRouteImport.update({
     id: '/for-enterprises/',
@@ -143,7 +137,6 @@ export interface FileRoutesByFullPath {
   '/sign-up': typeof authSignUpIndexRoute
   '/contact': typeof publicContactIndexRoute
   '/for-enterprises': typeof publicForEnterprisesIndexRoute
-  '/learning': typeof publicLearningIndexRoute
   '/marketplace': typeof publicMarketplaceIndexRoute
   '/privacy': typeof publicPrivacyIndexRoute
   '/talent-pool': typeof publicTalentPoolIndexRoute
@@ -162,7 +155,6 @@ export interface FileRoutesByTo {
   '/sign-up': typeof authSignUpIndexRoute
   '/contact': typeof publicContactIndexRoute
   '/for-enterprises': typeof publicForEnterprisesIndexRoute
-  '/learning': typeof publicLearningIndexRoute
   '/marketplace': typeof publicMarketplaceIndexRoute
   '/privacy': typeof publicPrivacyIndexRoute
   '/talent-pool': typeof publicTalentPoolIndexRoute
@@ -185,7 +177,6 @@ export interface FileRoutesById {
   '/(auth)/sign-up/': typeof authSignUpIndexRoute
   '/(public)/contact/': typeof publicContactIndexRoute
   '/(public)/for-enterprises/': typeof publicForEnterprisesIndexRoute
-  '/(public)/learning/': typeof publicLearningIndexRoute
   '/(public)/marketplace/': typeof publicMarketplaceIndexRoute
   '/(public)/privacy/': typeof publicPrivacyIndexRoute
   '/(public)/talent-pool/': typeof publicTalentPoolIndexRoute
@@ -207,7 +198,6 @@ export interface FileRouteTypes {
     | '/sign-up'
     | '/contact'
     | '/for-enterprises'
-    | '/learning'
     | '/marketplace'
     | '/privacy'
     | '/talent-pool'
@@ -226,7 +216,6 @@ export interface FileRouteTypes {
     | '/sign-up'
     | '/contact'
     | '/for-enterprises'
-    | '/learning'
     | '/marketplace'
     | '/privacy'
     | '/talent-pool'
@@ -248,7 +237,6 @@ export interface FileRouteTypes {
     | '/(auth)/sign-up/'
     | '/(public)/contact/'
     | '/(public)/for-enterprises/'
-    | '/(public)/learning/'
     | '/(public)/marketplace/'
     | '/(public)/privacy/'
     | '/(public)/talent-pool/'
@@ -367,13 +355,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof publicMarketplaceIndexRouteImport
       parentRoute: typeof publicRouteRoute
     }
-    '/(public)/learning/': {
-      id: '/(public)/learning/'
-      path: '/learning'
-      fullPath: '/learning'
-      preLoaderRoute: typeof publicLearningIndexRouteImport
-      parentRoute: typeof publicRouteRoute
-    }
     '/(public)/for-enterprises/': {
       id: '/(public)/for-enterprises/'
       path: '/for-enterprises'
@@ -432,7 +413,6 @@ interface publicRouteRouteChildren {
   publicIndexRoute: typeof publicIndexRoute
   publicContactIndexRoute: typeof publicContactIndexRoute
   publicForEnterprisesIndexRoute: typeof publicForEnterprisesIndexRoute
-  publicLearningIndexRoute: typeof publicLearningIndexRoute
   publicMarketplaceIndexRoute: typeof publicMarketplaceIndexRoute
   publicPrivacyIndexRoute: typeof publicPrivacyIndexRoute
   publicTalentPoolIndexRoute: typeof publicTalentPoolIndexRoute
@@ -443,7 +423,6 @@ const publicRouteRouteChildren: publicRouteRouteChildren = {
   publicIndexRoute: publicIndexRoute,
   publicContactIndexRoute: publicContactIndexRoute,
   publicForEnterprisesIndexRoute: publicForEnterprisesIndexRoute,
-  publicLearningIndexRoute: publicLearningIndexRoute,
   publicMarketplaceIndexRoute: publicMarketplaceIndexRoute,
   publicPrivacyIndexRoute: publicPrivacyIndexRoute,
   publicTalentPoolIndexRoute: publicTalentPoolIndexRoute,
