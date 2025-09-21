@@ -1,5 +1,4 @@
 import React from 'react'
-import logo from '@/assets/logo-test-1.png'
 
 type AuthLayoutProps = {
     children: React.ReactNode
@@ -7,12 +6,8 @@ type AuthLayoutProps = {
 
 export default function AuthLayout({ children }: AuthLayoutProps) {
     return (
-        <div className='container grid max-w-none items-center justify-center mb-20'>
+        <div className='container grid max-w-none items-center justify-center my-20'>
             <div className='mx-auto flex w-full flex-col justify-center space-y-2 py-8 sm:w-[580px] sm:p-8'>
-                <div className='mb-4 flex items-center justify-center'>
-                    <img src={logo} alt="logo" className='w-18 h-19' />
-                    <h1 className='text-xl font-medium'>LabOdc</h1>
-                </div>
                 {children}
             </div>
         </div>

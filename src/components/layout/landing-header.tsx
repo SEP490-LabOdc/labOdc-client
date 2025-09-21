@@ -4,9 +4,12 @@ import { Link, useLocation } from '@tanstack/react-router'
 import { landingHeaderData } from './data/landing-header-data'
 import { checkIsActive } from '@/lib/utils'
 import logo from '@/assets/logo-black-text.png'
+import { ProfileDropdown } from '../profile-dropdown'
+import { NotificationDropdown } from '../notification-dropdown'
 
 export default function LandingHeader() {
-    const href = useLocation({ select: (location) => location.href })
+    const href: string = useLocation({ select: (location) => location.href })
+    const isAuthenticated: boolean = true
 
     return (
         <header className="border-b backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50 w-full">
@@ -22,12 +25,20 @@ export default function LandingHeader() {
                         </Link>
                     ))}
                 </nav>
-
                 <div className="flex items-center space-x-4">
-                    <Link to='/sign-in' className='font-semibold'>
-                        Sign In
-                    </Link>
-                    <Button size="sm">Get Started</Button>
+                    {isAuthenticated ? (
+                        <>
+                            <NotificationDropdown />
+                            <ProfileDropdown />
+                        </>
+                    ) : (
+                        <>
+                            <Link to='/sign-in' className='font-semibold'>
+                                Sign In
+                            </Link>
+                            <Button size="sm">Get Started</Button>
+                        </>
+                    )}
                 </div>
             </div>
         </header>
