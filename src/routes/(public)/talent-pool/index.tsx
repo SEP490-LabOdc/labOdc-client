@@ -1,7 +1,6 @@
 import ComingSoon from "@/components/coming-soon";
-import { ROUTES } from "@/constants";
 import { createFileRoute } from "@tanstack/react-router";
 
-export const Route = createFileRoute(ROUTES.public.talent_pool)({
+export const Route = createFileRoute('/(public)/talent-pool/')({
     component: ComingSoon
 })

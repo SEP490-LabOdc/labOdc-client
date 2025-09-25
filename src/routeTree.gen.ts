@@ -22,10 +22,6 @@ import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authentic
 import { Route as publicTermsIndexRouteImport } from './routes/(public)/terms/index'
 import { Route as publicTalentPoolIndexRouteImport } from './routes/(public)/talent-pool/index'
 import { Route as publicPrivacyIndexRouteImport } from './routes/(public)/privacy/index'
-import { Route as publicMarketplaceIndexRouteImport } from './routes/(public)/marketplace/index'
-import { Route as publicLearningIndexRouteImport } from './routes/(public)/learning/index'
-import { Route as publicForEnterprisesIndexRouteImport } from './routes/(public)/for-enterprises/index'
-import { Route as publicContactIndexRouteImport } from './routes/(public)/contact/index'
 import { Route as authSignUpIndexRouteImport } from './routes/(auth)/sign-up/index'
 import { Route as authSignInIndexRouteImport } from './routes/(auth)/sign-in/index'
 import { Route as authForgotPasswordIndexRouteImport } from './routes/(auth)/forgot-password/index'
@@ -94,27 +90,6 @@ const publicPrivacyIndexRoute = publicPrivacyIndexRouteImport.update({
   path: '/privacy/',
   getParentRoute: () => publicRouteRoute,
 } as any)
-const publicMarketplaceIndexRoute = publicMarketplaceIndexRouteImport.update({
-  id: '/marketplace/',
-  path: '/marketplace/',
-  getParentRoute: () => publicRouteRoute,
-} as any)
-const publicLearningIndexRoute = publicLearningIndexRouteImport.update({
-  id: '/learning/',
-  path: '/learning/',
-  getParentRoute: () => publicRouteRoute,
-} as any)
-const publicForEnterprisesIndexRoute =
-  publicForEnterprisesIndexRouteImport.update({
-    id: '/for-enterprises/',
-    path: '/for-enterprises/',
-    getParentRoute: () => publicRouteRoute,
-  } as any)
-const publicContactIndexRoute = publicContactIndexRouteImport.update({
-  id: '/contact/',
-  path: '/contact/',
-  getParentRoute: () => publicRouteRoute,
-} as any)
 const authSignUpIndexRoute = authSignUpIndexRouteImport.update({
   id: '/sign-up/',
   path: '/sign-up/',
@@ -148,10 +123,6 @@ export interface FileRoutesByFullPath {
   '/forgot-password': typeof authForgotPasswordIndexRoute
   '/sign-in': typeof authSignInIndexRoute
   '/sign-up': typeof authSignUpIndexRoute
-  '/contact': typeof publicContactIndexRoute
-  '/for-enterprises': typeof publicForEnterprisesIndexRoute
-  '/learning': typeof publicLearningIndexRoute
-  '/marketplace': typeof publicMarketplaceIndexRoute
   '/privacy': typeof publicPrivacyIndexRoute
   '/talent-pool': typeof publicTalentPoolIndexRoute
   '/terms': typeof publicTermsIndexRoute
@@ -168,10 +139,6 @@ export interface FileRoutesByTo {
   '/forgot-password': typeof authForgotPasswordIndexRoute
   '/sign-in': typeof authSignInIndexRoute
   '/sign-up': typeof authSignUpIndexRoute
-  '/contact': typeof publicContactIndexRoute
-  '/for-enterprises': typeof publicForEnterprisesIndexRoute
-  '/learning': typeof publicLearningIndexRoute
-  '/marketplace': typeof publicMarketplaceIndexRoute
   '/privacy': typeof publicPrivacyIndexRoute
   '/talent-pool': typeof publicTalentPoolIndexRoute
   '/terms': typeof publicTermsIndexRoute
@@ -192,10 +159,6 @@ export interface FileRoutesById {
   '/(auth)/forgot-password/': typeof authForgotPasswordIndexRoute
   '/(auth)/sign-in/': typeof authSignInIndexRoute
   '/(auth)/sign-up/': typeof authSignUpIndexRoute
-  '/(public)/contact/': typeof publicContactIndexRoute
-  '/(public)/for-enterprises/': typeof publicForEnterprisesIndexRoute
-  '/(public)/learning/': typeof publicLearningIndexRoute
-  '/(public)/marketplace/': typeof publicMarketplaceIndexRoute
   '/(public)/privacy/': typeof publicPrivacyIndexRoute
   '/(public)/talent-pool/': typeof publicTalentPoolIndexRoute
   '/(public)/terms/': typeof publicTermsIndexRoute
@@ -215,10 +178,6 @@ export interface FileRouteTypes {
     | '/forgot-password'
     | '/sign-in'
     | '/sign-up'
-    | '/contact'
-    | '/for-enterprises'
-    | '/learning'
-    | '/marketplace'
     | '/privacy'
     | '/talent-pool'
     | '/terms'
@@ -235,10 +194,6 @@ export interface FileRouteTypes {
     | '/forgot-password'
     | '/sign-in'
     | '/sign-up'
-    | '/contact'
-    | '/for-enterprises'
-    | '/learning'
-    | '/marketplace'
     | '/privacy'
     | '/talent-pool'
     | '/terms'
@@ -258,10 +213,6 @@ export interface FileRouteTypes {
     | '/(auth)/forgot-password/'
     | '/(auth)/sign-in/'
     | '/(auth)/sign-up/'
-    | '/(public)/contact/'
-    | '/(public)/for-enterprises/'
-    | '/(public)/learning/'
-    | '/(public)/marketplace/'
     | '/(public)/privacy/'
     | '/(public)/talent-pool/'
     | '/(public)/terms/'
@@ -373,34 +324,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof publicPrivacyIndexRouteImport
       parentRoute: typeof publicRouteRoute
     }
-    '/(public)/marketplace/': {
-      id: '/(public)/marketplace/'
-      path: '/marketplace'
-      fullPath: '/marketplace'
-      preLoaderRoute: typeof publicMarketplaceIndexRouteImport
-      parentRoute: typeof publicRouteRoute
-    }
-    '/(public)/learning/': {
-      id: '/(public)/learning/'
-      path: '/learning'
-      fullPath: '/learning'
-      preLoaderRoute: typeof publicLearningIndexRouteImport
-      parentRoute: typeof publicRouteRoute
-    }
-    '/(public)/for-enterprises/': {
-      id: '/(public)/for-enterprises/'
-      path: '/for-enterprises'
-      fullPath: '/for-enterprises'
-      preLoaderRoute: typeof publicForEnterprisesIndexRouteImport
-      parentRoute: typeof publicRouteRoute
-    }
-    '/(public)/contact/': {
-      id: '/(public)/contact/'
-      path: '/contact'
-      fullPath: '/contact'
-      preLoaderRoute: typeof publicContactIndexRouteImport
-      parentRoute: typeof publicRouteRoute
-    }
     '/(auth)/sign-up/': {
       id: '/(auth)/sign-up/'
       path: '/sign-up'
@@ -450,10 +373,6 @@ const authRouteRouteWithChildren = authRouteRoute._addFileChildren(
 
 interface publicRouteRouteChildren {
   publicIndexRoute: typeof publicIndexRoute
-  publicContactIndexRoute: typeof publicContactIndexRoute
-  publicForEnterprisesIndexRoute: typeof publicForEnterprisesIndexRoute
-  publicLearningIndexRoute: typeof publicLearningIndexRoute
-  publicMarketplaceIndexRoute: typeof publicMarketplaceIndexRoute
   publicPrivacyIndexRoute: typeof publicPrivacyIndexRoute
   publicTalentPoolIndexRoute: typeof publicTalentPoolIndexRoute
   publicTermsIndexRoute: typeof publicTermsIndexRoute
@@ -461,10 +380,6 @@ interface publicRouteRouteChildren {
 
 const publicRouteRouteChildren: publicRouteRouteChildren = {
   publicIndexRoute: publicIndexRoute,
-  publicContactIndexRoute: publicContactIndexRoute,
-  publicForEnterprisesIndexRoute: publicForEnterprisesIndexRoute,
-  publicLearningIndexRoute: publicLearningIndexRoute,
-  publicMarketplaceIndexRoute: publicMarketplaceIndexRoute,
   publicPrivacyIndexRoute: publicPrivacyIndexRoute,
   publicTalentPoolIndexRoute: publicTalentPoolIndexRoute,
   publicTermsIndexRoute: publicTermsIndexRoute,

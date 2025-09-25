@@ -1,8 +1,7 @@
-import ComingSoon from '@/components/coming-soon'
-import { ROUTES } from '@/constants'
+import SignUp from '@/features/auth/sign-up'
 import { createFileRoute } from '@tanstack/react-router'
 
-export const Route = createFileRoute(ROUTES.auth.sign_up)({
-    component: ComingSoon,
+export const Route = createFileRoute('/(auth)/sign-up/')({
+    component: SignUp,
 })
 

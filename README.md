@@ -195,12 +195,6 @@ We welcome contributions!
 - Accessibility (WCAG compliance)  
 
 ---
-
-## 📄 License
-Distributed under the MIT License. See [LICENSE](LICENSE) for details.  
-
----
-
 ## 📞 Contact
 - **Project Lead**: [Lê Kim Bảo Nhật]  
 - **Frontend Team**: React/TypeScript specialists  
