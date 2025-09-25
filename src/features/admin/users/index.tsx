@@ -6,7 +6,7 @@ import { ProfileDropdown } from '@/components/profile-dropdown'
 import { Search } from '@/components/search'
 import { ThemeSwitch } from '@/components/theme-switch'
 import { UsersDialogs } from './components/users-dialogs'
-// import { UsersPrimaryButtons } from './components/users-primary-buttons'
+import { UsersPrimaryButtons } from './components/users-primary-buttons'
 import { UsersProvider } from './components/users-provider'
 // import { UsersTable } from './components/users-table'
 // import { users } from './data/users'
@@ -37,7 +37,7 @@ export default function Users() {
                                 Manage your users and their roles here.
                             </p>
                         </div>
-                        {/* <UsersPrimaryButtons /> */}
+                        <UsersPrimaryButtons />
                     </div>
                     <div className='-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-y-0 lg:space-x-12'>
                         {/* <UsersTable data={users} search={search} navigate={navigate} /> */}
