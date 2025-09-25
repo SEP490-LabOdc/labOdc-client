@@ -22,9 +22,12 @@ import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authentic
 import { Route as publicTermsIndexRouteImport } from './routes/(public)/terms/index'
 import { Route as publicTalentPoolIndexRouteImport } from './routes/(public)/talent-pool/index'
 import { Route as publicPrivacyIndexRouteImport } from './routes/(public)/privacy/index'
+import { Route as publicCompanyIndexRouteImport } from './routes/(public)/company/index'
+import { Route as publicCompaniesIndexRouteImport } from './routes/(public)/companies/index'
 import { Route as authSignUpIndexRouteImport } from './routes/(auth)/sign-up/index'
 import { Route as authSignInIndexRouteImport } from './routes/(auth)/sign-in/index'
 import { Route as authForgotPasswordIndexRouteImport } from './routes/(auth)/forgot-password/index'
+import { Route as AuthenticatedAdminUsersIndexRouteImport } from './routes/_authenticated/admin/users/index'
 import { Route as AuthenticatedAdminTasksIndexRouteImport } from './routes/_authenticated/admin/tasks/index'
 
 const publicRouteRoute = publicRouteRouteImport.update({
@@ -90,6 +93,16 @@ const publicPrivacyIndexRoute = publicPrivacyIndexRouteImport.update({
   path: '/privacy/',
   getParentRoute: () => publicRouteRoute,
 } as any)
+const publicCompanyIndexRoute = publicCompanyIndexRouteImport.update({
+  id: '/company/',
+  path: '/company/',
+  getParentRoute: () => publicRouteRoute,
+} as any)
+const publicCompaniesIndexRoute = publicCompaniesIndexRouteImport.update({
+  id: '/companies/',
+  path: '/companies/',
+  getParentRoute: () => publicRouteRoute,
+} as any)
 const authSignUpIndexRoute = authSignUpIndexRouteImport.update({
   id: '/sign-up/',
   path: '/sign-up/',
@@ -105,6 +118,12 @@ const authForgotPasswordIndexRoute = authForgotPasswordIndexRouteImport.update({
   path: '/forgot-password/',
   getParentRoute: () => authRouteRoute,
 } as any)
+const AuthenticatedAdminUsersIndexRoute =
+  AuthenticatedAdminUsersIndexRouteImport.update({
+    id: '/users/',
+    path: '/users/',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
 const AuthenticatedAdminTasksIndexRoute =
   AuthenticatedAdminTasksIndexRouteImport.update({
     id: '/tasks/',
@@ -123,11 +142,14 @@ export interface FileRoutesByFullPath {
   '/forgot-password': typeof authForgotPasswordIndexRoute
   '/sign-in': typeof authSignInIndexRoute
   '/sign-up': typeof authSignUpIndexRoute
+  '/companies': typeof publicCompaniesIndexRoute
+  '/company': typeof publicCompanyIndexRoute
   '/privacy': typeof publicPrivacyIndexRoute
   '/talent-pool': typeof publicTalentPoolIndexRoute
   '/terms': typeof publicTermsIndexRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
   '/admin/tasks': typeof AuthenticatedAdminTasksIndexRoute
+  '/admin/users': typeof AuthenticatedAdminUsersIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof publicIndexRoute
@@ -139,11 +161,14 @@ export interface FileRoutesByTo {
   '/forgot-password': typeof authForgotPasswordIndexRoute
   '/sign-in': typeof authSignInIndexRoute
   '/sign-up': typeof authSignUpIndexRoute
+  '/companies': typeof publicCompaniesIndexRoute
+  '/company': typeof publicCompanyIndexRoute
   '/privacy': typeof publicPrivacyIndexRoute
   '/talent-pool': typeof publicTalentPoolIndexRoute
   '/terms': typeof publicTermsIndexRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
   '/admin/tasks': typeof AuthenticatedAdminTasksIndexRoute
+  '/admin/users': typeof AuthenticatedAdminUsersIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -159,11 +184,14 @@ export interface FileRoutesById {
   '/(auth)/forgot-password/': typeof authForgotPasswordIndexRoute
   '/(auth)/sign-in/': typeof authSignInIndexRoute
   '/(auth)/sign-up/': typeof authSignUpIndexRoute
+  '/(public)/companies/': typeof publicCompaniesIndexRoute
+  '/(public)/company/': typeof publicCompanyIndexRoute
   '/(public)/privacy/': typeof publicPrivacyIndexRoute
   '/(public)/talent-pool/': typeof publicTalentPoolIndexRoute
   '/(public)/terms/': typeof publicTermsIndexRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/_authenticated/admin/tasks/': typeof AuthenticatedAdminTasksIndexRoute
+  '/_authenticated/admin/users/': typeof AuthenticatedAdminUsersIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -178,11 +206,14 @@ export interface FileRouteTypes {
     | '/forgot-password'
     | '/sign-in'
     | '/sign-up'
+    | '/companies'
+    | '/company'
     | '/privacy'
     | '/talent-pool'
     | '/terms'
     | '/admin/'
     | '/admin/tasks'
+    | '/admin/users'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -194,11 +225,14 @@ export interface FileRouteTypes {
     | '/forgot-password'
     | '/sign-in'
     | '/sign-up'
+    | '/companies'
+    | '/company'
     | '/privacy'
     | '/talent-pool'
     | '/terms'
     | '/admin'
     | '/admin/tasks'
+    | '/admin/users'
   id:
     | '__root__'
     | '/(auth)'
@@ -213,11 +247,14 @@ export interface FileRouteTypes {
     | '/(auth)/forgot-password/'
     | '/(auth)/sign-in/'
     | '/(auth)/sign-up/'
+    | '/(public)/companies/'
+    | '/(public)/company/'
     | '/(public)/privacy/'
     | '/(public)/talent-pool/'
     | '/(public)/terms/'
     | '/_authenticated/admin/'
     | '/_authenticated/admin/tasks/'
+    | '/_authenticated/admin/users/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -324,6 +361,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof publicPrivacyIndexRouteImport
       parentRoute: typeof publicRouteRoute
     }
+    '/(public)/company/': {
+      id: '/(public)/company/'
+      path: '/company'
+      fullPath: '/company'
+      preLoaderRoute: typeof publicCompanyIndexRouteImport
+      parentRoute: typeof publicRouteRoute
+    }
+    '/(public)/companies/': {
+      id: '/(public)/companies/'
+      path: '/companies'
+      fullPath: '/companies'
+      preLoaderRoute: typeof publicCompaniesIndexRouteImport
+      parentRoute: typeof publicRouteRoute
+    }
     '/(auth)/sign-up/': {
       id: '/(auth)/sign-up/'
       path: '/sign-up'
@@ -344,6 +395,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/forgot-password'
       preLoaderRoute: typeof authForgotPasswordIndexRouteImport
       parentRoute: typeof authRouteRoute
+    }
+    '/_authenticated/admin/users/': {
+      id: '/_authenticated/admin/users/'
+      path: '/users'
+      fullPath: '/admin/users'
+      preLoaderRoute: typeof AuthenticatedAdminUsersIndexRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
     }
     '/_authenticated/admin/tasks/': {
       id: '/_authenticated/admin/tasks/'
@@ -373,6 +431,8 @@ const authRouteRouteWithChildren = authRouteRoute._addFileChildren(
 
 interface publicRouteRouteChildren {
   publicIndexRoute: typeof publicIndexRoute
+  publicCompaniesIndexRoute: typeof publicCompaniesIndexRoute
+  publicCompanyIndexRoute: typeof publicCompanyIndexRoute
   publicPrivacyIndexRoute: typeof publicPrivacyIndexRoute
   publicTalentPoolIndexRoute: typeof publicTalentPoolIndexRoute
   publicTermsIndexRoute: typeof publicTermsIndexRoute
@@ -380,6 +440,8 @@ interface publicRouteRouteChildren {
 
 const publicRouteRouteChildren: publicRouteRouteChildren = {
   publicIndexRoute: publicIndexRoute,
+  publicCompaniesIndexRoute: publicCompaniesIndexRoute,
+  publicCompanyIndexRoute: publicCompanyIndexRoute,
   publicPrivacyIndexRoute: publicPrivacyIndexRoute,
   publicTalentPoolIndexRoute: publicTalentPoolIndexRoute,
   publicTermsIndexRoute: publicTermsIndexRoute,
@@ -392,12 +454,14 @@ const publicRouteRouteWithChildren = publicRouteRoute._addFileChildren(
 interface AuthenticatedAdminRouteRouteChildren {
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
   AuthenticatedAdminTasksIndexRoute: typeof AuthenticatedAdminTasksIndexRoute
+  AuthenticatedAdminUsersIndexRoute: typeof AuthenticatedAdminUsersIndexRoute
 }
 
 const AuthenticatedAdminRouteRouteChildren: AuthenticatedAdminRouteRouteChildren =
   {
     AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
     AuthenticatedAdminTasksIndexRoute: AuthenticatedAdminTasksIndexRoute,
+    AuthenticatedAdminUsersIndexRoute: AuthenticatedAdminUsersIndexRoute,
   }
 
 const AuthenticatedAdminRouteRouteWithChildren =
