@@ -17,6 +17,7 @@ export const companySchema = z.object({
     accountManagerId: z.string(),
     status: companyStatusSchema,
     lastInteraction: z.coerce.date(),
+    logoUrl: z.string(),
 })
 export type Company = z.infer<typeof companySchema>
 
