@@ -17,6 +17,7 @@ import { ThemeProvider } from './context/theme-provider'
 import { routeTree } from './routeTree.gen'
 // Styles
 import './styles/index.css'
+import { NotFoundError } from './features/errors/not-found-error'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -75,6 +76,8 @@ const router = createRouter({
   context: { queryClient },
   defaultPreload: 'intent',
   defaultPreloadStaleTime: 0,
+  notFoundMode: 'root',
+  defaultNotFoundComponent: NotFoundError,
 })
 
 // Register the router instance for type safety
