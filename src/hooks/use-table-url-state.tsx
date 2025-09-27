@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import type {
     ColumnFiltersState,
     OnChangeFn,
@@ -110,6 +110,17 @@ export function useTableUrlState(
     const [columnFilters, setColumnFilters] =
         useState<ColumnFiltersState>(initialColumnFilters)
 
+    // --- CRITICAL FIX: Synchronize local state with derived URL state ---
+    // Khi 'search' prop thay đổi (do điều hướng), đồng bộ lại state local.
+    useEffect(() => {
+        // Cần so sánh chuỗi JSON để kiểm tra deep equality, ngăn ngừa vòng lặp vô hạn
+        // do setColumnFilters re-render.
+        if (JSON.stringify(columnFilters) !== JSON.stringify(initialColumnFilters)) {
+            setColumnFilters(initialColumnFilters)
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [initialColumnFilters])
+
     const pagination: PaginationState = useMemo(() => {
         const rawPage = (search as SearchRecord)[pageKey]
         const rawPageSize = (search as SearchRecord)[pageSizeKey]
@@ -138,6 +149,19 @@ export function useTableUrlState(
         const raw = (search as SearchRecord)[globalFilterKey]
         return typeof raw === 'string' ? raw : ''
     })
+
+    // Đồng bộ global filter khi URL thay đổi
+    useEffect(() => {
+        if (!globalFilterEnabled) return
+        const raw = (search as SearchRecord)[globalFilterKey]
+        const urlValue = typeof raw === 'string' ? raw : ''
+
+        // Cập nhật state local nếu giá trị URL thay đổi
+        if (globalFilter !== urlValue) {
+            setGlobalFilter(urlValue)
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [search, globalFilterEnabled, globalFilterKey]) // Bỏ globalFilter khỏi dependency để tránh loop
 
     const onGlobalFilterChange: OnChangeFn<string> | undefined =
         globalFilterEnabled
