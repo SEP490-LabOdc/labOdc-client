@@ -107,11 +107,6 @@ export const sidebarData: SidebarData = {
               icon: IconUserSearch,
             },
             {
-              title: 'Tạo mới người dùng',
-              url: '/',
-              icon: IconUserCheck,
-            },
-            {
               title: 'Đang hoạt động',
               url: `/admin/users?status=["active"]`,
               icon: IconUserCheck,
