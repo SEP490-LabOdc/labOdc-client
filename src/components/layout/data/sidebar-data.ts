@@ -56,7 +56,7 @@ export const sidebarData: SidebarData = {
           items: [
             {
               title: 'Đang chờ phê duyệt',
-              url: '/',
+              url: '/admin/companies',
               icon: IconClockHour4,
             },
             {

@@ -1,4 +1,4 @@
-import { Shield, UserCheck, Users, CreditCard, LockKeyhole, FlaskConical, Building, GraduationCap, Sparkles } from 'lucide-react'
+import { LockKeyhole, FlaskConical, Building, GraduationCap, Sparkles } from 'lucide-react'
 import { type UserStatus } from './schema'
 
 export const callTypes = new Map<UserStatus, string>([
