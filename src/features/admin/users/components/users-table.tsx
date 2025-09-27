@@ -102,22 +102,22 @@ export function UsersTable({ data, search, navigate }: DataTableProps) {
         <div className='space-y-4 max-sm:has-[div[role="toolbar"]]:mb-16'>
             <DataTableToolbar
                 table={table}
-                searchPlaceholder='Filter users...'
+                searchPlaceholder='Tìm kiếm người dùng...'
                 searchKey='username'
                 filters={[
                     {
                         columnId: 'status',
-                        title: 'Status',
+                        title: 'Trạng thái',
                         options: [
-                            { label: 'Active', value: 'active' },
-                            { label: 'Inactive', value: 'inactive' },
-                            { label: 'Invited', value: 'invited' },
-                            { label: 'Suspended', value: 'suspended' },
+                            { label: 'Đang hoạt động', value: 'active' },
+                            { label: 'Không hoạt động', value: 'inactive' },
+                            { label: 'Đã mời', value: 'invited' },
+                            { label: 'Đã tạm khóa', value: 'suspended' },
                         ],
                     },
                     {
                         columnId: 'role',
-                        title: 'Role',
+                        title: 'Vai trò',
                         options: roles.map((role) => ({ ...role })),
                     },
                 ]}
@@ -179,7 +179,7 @@ export function UsersTable({ data, search, navigate }: DataTableProps) {
                                     colSpan={columns.length}
                                     className='h-24 text-center'
                                 >
-                                    No results.
+                                    Không có kết quả nào.
                                 </TableCell>
                             </TableRow>
                         )}

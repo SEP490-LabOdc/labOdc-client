@@ -26,11 +26,11 @@ export function DataTableViewOptions<TData>({
                     className='ms-auto hidden h-8 lg:flex'
                 >
                     <MixerHorizontalIcon className='size-4' />
-                    View
+                    Hiển thị
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align='end' className='w-[150px]'>
-                <DropdownMenuLabel>Toggle columns</DropdownMenuLabel>
+                <DropdownMenuLabel>Tùy chỉnh cột</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 {table
                     .getAllColumns()
@@ -46,7 +46,13 @@ export function DataTableViewOptions<TData>({
                                 checked={column.getIsVisible()}
                                 onCheckedChange={(value) => column.toggleVisibility(!!value)}
                             >
-                                {column.id}
+                                {typeof column.columnDef.header === 'function'
+                                    ? column.columnDef.header({
+                                        table: table,
+                                        header: undefined as any, // or provide the actual header if available
+                                        column: column,
+                                    })?.props?.title
+                                    : column.columnDef.header}
                             </DropdownMenuCheckboxItem>
                         )
                     })}

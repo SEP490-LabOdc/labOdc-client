@@ -55,7 +55,7 @@ export const usersColumns: ColumnDef<User>[] = [
     {
         id: 'fullName',
         header: ({ column }) => (
-            <DataTableColumnHeader column={column} title='Name' />
+            <DataTableColumnHeader column={column} title='Tên' />
         ),
         cell: ({ row }) => {
             const { firstName, lastName } = row.original
@@ -76,7 +76,7 @@ export const usersColumns: ColumnDef<User>[] = [
     {
         accessorKey: 'phoneNumber',
         header: ({ column }) => (
-            <DataTableColumnHeader column={column} title='Phone Number' />
+            <DataTableColumnHeader column={column} title='Số điện thoại' />
         ),
         cell: ({ row }) => <div>{row.getValue('phoneNumber')}</div>,
         enableSorting: false,
@@ -84,15 +84,22 @@ export const usersColumns: ColumnDef<User>[] = [
     {
         accessorKey: 'status',
         header: ({ column }) => (
-            <DataTableColumnHeader column={column} title='Status' />
+            <DataTableColumnHeader column={column} title='Trạng thái' />
         ),
         cell: ({ row }) => {
             const { status } = row.original
             const badgeColor = callTypes.get(status)
+            const STATUS_MAP = {
+                'active': 'Đang hoạt động',
+                'inactive': 'Không hoạt động',
+                'invited': 'Đã mời',
+                'suspended': 'Đã tạm khóa',
+            } as const;
+            const vietnameseStatusLabel = STATUS_MAP[status];
             return (
                 <div className='flex space-x-2'>
                     <Badge variant='outline' className={cn('capitalize', badgeColor)}>
-                        {row.getValue('status')}
+                        {vietnameseStatusLabel}
                     </Badge>
                 </div>
             )
@@ -106,7 +113,7 @@ export const usersColumns: ColumnDef<User>[] = [
     {
         accessorKey: 'role',
         header: ({ column }) => (
-            <DataTableColumnHeader column={column} title='Role' />
+            <DataTableColumnHeader column={column} title='Vai trò' />
         ),
         cell: ({ row }) => {
             const { role } = row.original

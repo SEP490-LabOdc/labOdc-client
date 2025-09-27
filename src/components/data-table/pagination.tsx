@@ -35,9 +35,6 @@ export function DataTablePagination<TData>({
             style={{ overflowClipMargin: 1 }}
         >
             <div className='flex w-full items-center justify-between'>
-                <div className='flex w-[100px] items-center justify-center text-sm font-medium @2xl/content:hidden'>
-                    Page {currentPage} of {totalPages}
-                </div>
                 <div className='flex items-center gap-2 @max-2xl/content:flex-row-reverse'>
                     <Select
                         value={`${table.getState().pagination.pageSize}`}
@@ -56,13 +53,13 @@ export function DataTablePagination<TData>({
                             ))}
                         </SelectContent>
                     </Select>
-                    <p className='hidden text-sm font-medium sm:block'>Rows per page</p>
+                    <p className='hidden text-sm font-medium sm:block'>Dòng mỗi trang</p>
                 </div>
             </div>
 
             <div className='flex items-center sm:space-x-6 lg:space-x-8'>
                 <div className='flex w-[100px] items-center justify-center text-sm font-medium @max-3xl/content:hidden'>
-                    Page {currentPage} of {totalPages}
+                    Trang {currentPage} / {totalPages}
                 </div>
                 <div className='flex items-center space-x-2'>
                     <Button
