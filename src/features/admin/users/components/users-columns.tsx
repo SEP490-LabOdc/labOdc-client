@@ -47,20 +47,18 @@ export const usersColumns: ColumnDef<User>[] = [
         meta: {
             className: cn(
                 'drop-shadow-[0_1px_2px_rgb(0_0_0_/_0.1)] dark:drop-shadow-[0_1px_2px_rgb(255_255_255_/_0.1)]',
-                'sticky start-6 @4xl/content:table-cell @4xl/content:drop-shadow-none'
+                'sticky start-6 @4xl/content:table-cell @4xl/content:drop-shadow-none m-0'
             ),
         },
         enableHiding: false,
     },
     {
-        id: 'fullName',
+        accessorKey: 'fullName',
         header: ({ column }) => (
-            <DataTableColumnHeader column={column} title='Tên' />
+            <DataTableColumnHeader className='m-0' column={column} title='Tên' />
         ),
         cell: ({ row }) => {
-            const { firstName, lastName } = row.original
-            const fullName = `${firstName} ${lastName}`
-            return <LongText className='max-w-36'>{fullName}</LongText>
+            return <LongText className='max-w-36'>{row.getValue('fullName')}</LongText>
         },
         meta: { className: 'w-36' },
     },
@@ -79,7 +77,6 @@ export const usersColumns: ColumnDef<User>[] = [
             <DataTableColumnHeader column={column} title='Số điện thoại' />
         ),
         cell: ({ row }) => <div>{row.getValue('phoneNumber')}</div>,
-        enableSorting: false,
     },
     {
         accessorKey: 'status',
@@ -108,7 +105,6 @@ export const usersColumns: ColumnDef<User>[] = [
             return value.includes(row.getValue(id))
         },
         enableHiding: false,
-        enableSorting: false,
     },
     {
         accessorKey: 'role',
@@ -122,20 +118,27 @@ export const usersColumns: ColumnDef<User>[] = [
             if (!userType) {
                 return null
             }
+            const STATUS_MAP = {
+                'admin': 'Quản trị viên',
+                'lab_manager': 'Quản lý Lab',
+                'company_admin': 'Quản lý công ty',
+                'mentor': 'Mentor',
+                'talent': 'Sinh viên',
+            } as const;
+            const vietnameseStatusLabel = STATUS_MAP[role];
 
             return (
                 <div className='flex items-center gap-x-2'>
                     {userType.icon && (
                         <userType.icon size={16} className='text-muted-foreground' />
                     )}
-                    <span className='text-sm capitalize'>{row.getValue('role')}</span>
+                    <span className='text-sm capitalize'>{vietnameseStatusLabel}</span>
                 </div>
             )
         },
         filterFn: (row, id, value) => {
             return value.includes(row.getValue(id))
         },
-        enableSorting: false,
         enableHiding: false,
     },
     {
