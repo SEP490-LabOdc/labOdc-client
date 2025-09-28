@@ -24,4 +24,5 @@ dist-ssr
 *.sw?
 
 .tanstack
-src/routeTree.gen.ts
+/src/routeTree.gen.ts
+
