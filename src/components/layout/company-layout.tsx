@@ -1,18 +1,19 @@
 import React from 'react'
-import LandingHeader from './landing-header'
 import { Outlet } from '@tanstack/react-router'
 import { Footer } from './footer'
+import { CompanyHeader } from './company-header'
 
-type PublicLayoutProps = {
+type CompanyLayoutProps = {
     children?: React.ReactNode
 }
 
-export function PublicLayout({ children }: PublicLayoutProps) {
+export function CompanyLayout({ children }: CompanyLayoutProps) {
     return (
         <div>
-            <LandingHeader />
+            <CompanyHeader />
             {children ?? <Outlet />}
             <Footer />
         </div>
     )
 }
+
