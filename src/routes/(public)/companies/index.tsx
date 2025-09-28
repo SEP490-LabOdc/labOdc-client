@@ -1,7 +1,8 @@
-import Companies from '@/features/companies'
 import { createFileRoute } from '@tanstack/react-router'
+import CompanyListPage from '@/features/companies/public/pages/CompanyListPage'
+
 
 export const Route = createFileRoute('/(public)/companies/')({
-    component: Companies,
+    component: CompanyListPage,
 })
 

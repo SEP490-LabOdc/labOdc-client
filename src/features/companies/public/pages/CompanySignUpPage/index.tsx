@@ -32,7 +32,7 @@ const Feature = ({ icon: Icon, title, desc }: { icon: React.ElementType; title: 
     </div>
 );
 
-export default function Company() {
+export default function CompanySignUpPage() {
     return (
         <div className="min-h-screen bg-background">
             {/* Hero */}

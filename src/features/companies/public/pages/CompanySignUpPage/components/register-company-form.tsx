@@ -17,8 +17,6 @@ const schema = z.object({
     phone: z.string().min(1, "Phone number is required"),
     website: z.string().optional(),
     industry: z.string().min(1, "Industry is required"),
-    size: z.string().min(1, "Company size is required"),
-    taxCode: z.string().min(1, "Tax code is required"),
     address: z.string().min(1, "Address is required"),
     about: z.string().optional(),
     password: z.string().min(8, "Password must be at least 8 characters"),
@@ -43,8 +41,6 @@ export function RegisterCompanyForm() {
             phone: '',
             website: '',
             industry: '',
-            size: '',
-            taxCode: '',
             address: '',
             about: '',
             password: '',
@@ -152,45 +148,6 @@ export function RegisterCompanyForm() {
                                     <SelectItem value="iot">IoT/Embedded</SelectItem>
                                 </SelectContent>
                             </Select>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-
-                <FormField
-                    control={form.control}
-                    name='size'
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Quy mô</FormLabel>
-                            <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                <FormControl>
-                                    <SelectTrigger className='w-full'>
-                                        <SelectValue placeholder="Chọn quy mô" />
-                                    </SelectTrigger>
-                                </FormControl>
-                                <SelectContent>
-                                    <SelectItem value="1-10">1–10</SelectItem>
-                                    <SelectItem value="11-50">11–50</SelectItem>
-                                    <SelectItem value="51-200">51–200</SelectItem>
-                                    <SelectItem value="201-500">201–500</SelectItem>
-                                    <SelectItem value=">500">Trên 500</SelectItem>
-                                </SelectContent>
-                            </Select>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-
-                <FormField
-                    control={form.control}
-                    name='taxCode'
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Mã số thuế</FormLabel>
-                            <FormControl>
-                                <Input placeholder='VD: 0312345678' {...field} />
-                            </FormControl>
                             <FormMessage />
                         </FormItem>
                     )}
