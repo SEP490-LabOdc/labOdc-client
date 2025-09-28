@@ -9,6 +9,7 @@ import { CompaniesProvider } from './components/companies-provider'
 import { CompaniesPrimaryButtons } from './components/companies-primary-buttons'
 import { CompaniesTable } from './components/companies-table'
 import { companies } from './data/companies'
+import { CompaniesDialogs } from './components/companies-dialogs'
 
 
 const route = getRouteApi('/_authenticated/admin/companies/')
@@ -43,7 +44,7 @@ export default function Companies() {
                     </div>
                 </Main>
             </>
-            {/* CompaniesDiaglog */}
+            <CompaniesDialogs />
         </CompaniesProvider>
     )
 }

@@ -101,7 +101,7 @@ export function CompaniesTable({ data, search, navigate }: DataTableProps) {
             <DataTableToolbar
                 table={table}
                 searchPlaceholder='Tìm kiếm công ty...'
-                searchKey='username'
+                searchKey='companyName'
                 filters={[
                     {
                         columnId: 'status',

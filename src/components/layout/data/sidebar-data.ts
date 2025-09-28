@@ -13,7 +13,8 @@ import {
   IconUserCode,      // For Sinh viên
   IconClipboardList,    // For Quản lý dự án
   IconCircleCheckFilled,// For Đã hoàn thành
-  IconHistory,         // For Lịch sử cập nhật
+  IconHistory,
+  IconList,         // For Lịch sử cập nhật
 } from '@tabler/icons-react'
 import { AudioWaveform, Command, GalleryVerticalEnd } from 'lucide-react'
 import { type SidebarData } from '../types'
@@ -55,18 +56,23 @@ export const sidebarData: SidebarData = {
           icon: IconBuildingStore,
           items: [
             {
-              title: 'Đang chờ phê duyệt',
+              title: 'Tất cả',
               url: '/admin/companies',
+              icon: IconList,
+            },
+            {
+              title: 'Đang chờ phê duyệt',
+              url: '/admin/companies?status=["approving"]',
               icon: IconClockHour4,
             },
             {
               title: 'Đang hoạt động',
-              url: '/',
+              url: '/admin/companies?status=["active"]',
               icon: IconCircleCheck,
             },
             {
               title: 'Đã ngừng hoạt động',
-              url: '/',
+              url: '/admin/companies?status=["inactive"]',
               icon: IconCircleX,
             },
           ]
