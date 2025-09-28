@@ -110,6 +110,8 @@ export function CompaniesTable({ data, search, navigate }: DataTableProps) {
                             { label: 'Đang hoạt động', value: 'active' },
                             { label: 'Không hoạt động', value: 'inactive' },
                             { label: 'Đã tạm khóa', value: 'suspended' },
+                            { label: 'Chờ phê duyệt', value: 'approving' },
+                            { label: 'Từ chối phê duyệt', value: 'rejected' },
                         ],
                     },
                 ]}

@@ -6,7 +6,7 @@ import { DataTableColumnHeader } from '@/components/data-table'
 import { LongText } from '@/components/long-text'
 import { callTypes } from '../data/data'
 import { type Company } from '../data/schema'
-//import { DataTableRowActions } from './data-table-row-actions'
+import { DataTableRowActions } from './data-table-row-actions'
 
 export const companiesColumns: ColumnDef<Company>[] = [
     {
@@ -53,6 +53,21 @@ export const companiesColumns: ColumnDef<Company>[] = [
         enableHiding: false,
     },
     {
+        accessorKey: 'description',
+        header: ({ column }) => (
+            <DataTableColumnHeader column={column} title='Mô tả' />
+        ),
+        cell: ({ row }) => (
+            <LongText className='max-w-36 ps-3'>{row.getValue('description')}</LongText>
+        ),
+        meta: {
+            className: cn(
+                'drop-shadow-[0_1px_2px_rgb(0_0_0_/_0.1)] dark:drop-shadow-[0_1px_2px_rgb(255_255_255_/_0.1)]',
+                'sticky start-6 @4xl/content:table-cell @4xl/content:drop-shadow-none m-0'
+            ),
+        },
+    },
+    {
         accessorKey: 'taxId',
         header: ({ column }) => (
             <DataTableColumnHeader className='m-0' column={column} title='Mã số thuế' />
@@ -67,9 +82,9 @@ export const companiesColumns: ColumnDef<Company>[] = [
         header: ({ column }) => (
             <DataTableColumnHeader column={column} title='Địa chỉ' />
         ),
-        cell: ({ row }) => (
-            <div className='w-fit text-nowrap'>{row.getValue('address')}</div>
-        ),
+        cell: ({ row }) => {
+            return <LongText className='max-w-36'>{row.getValue('address')}</LongText>
+        },
     },
     {
         accessorKey: 'industry',
@@ -87,6 +102,8 @@ export const companiesColumns: ColumnDef<Company>[] = [
             const { status } = row.original
             const badgeColor = callTypes.get(status)
             const STATUS_MAP = {
+                'approving': 'Chờ phê duyệt',
+                'rejected': 'Từ chối phê duyệt',
                 'active': 'Đang hoạt động',
                 'inactive': 'Không hoạt động',
                 'suspended': 'Đã tạm khóa',
@@ -105,8 +122,8 @@ export const companiesColumns: ColumnDef<Company>[] = [
         },
         enableHiding: false,
     },
-    // {
-    //     id: 'actions',
-    //     cell: DataTableRowActions,
-    // },
+    {
+        id: 'actions',
+        cell: DataTableRowActions,
+    },
 ]
