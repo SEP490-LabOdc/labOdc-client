@@ -7,6 +7,8 @@ import { Search } from '@/components/search'
 import { ThemeSwitch } from '@/components/theme-switch'
 import { CompaniesProvider } from './components/companies-provider'
 import { CompaniesPrimaryButtons } from './components/companies-primary-buttons'
+import { CompaniesTable } from './components/companies-table'
+import { companies } from './data/companies'
 
 
 const route = getRouteApi('/_authenticated/admin/companies/')
@@ -37,7 +39,7 @@ export default function Companies() {
                         <CompaniesPrimaryButtons />
                     </div>
                     <div className='-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-y-0 lg:space-x-12'>
-                        {/* <UsersTable data={users} search={search} navigate={navigate} /> */}
+                        <CompaniesTable data={companies} search={search} navigate={navigate} />
                     </div>
                 </Main>
             </>
