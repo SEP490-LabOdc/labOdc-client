@@ -1,20 +1,20 @@
-import { UsersActionDialog } from './users-action-dialog'
-import { UsersDeleteDialog } from './users-delete-dialog'
-import { useUsers } from './users-provider'
+import { CompaniesActionDialog } from './companies-action-dialog'
+import { CompaniesDeleteDialog } from './companies-delete-dialog'
+import { useCompanies } from './companies-provider'
 
-export function UsersDialogs() {
-    const { open, setOpen, currentRow, setCurrentRow } = useUsers()
+export function CompaniesDialogs() {
+    const { open, setOpen, currentRow, setCurrentRow } = useCompanies()
     return (
         <>
-            <UsersActionDialog
+            <CompaniesActionDialog
                 key='user-add'
                 open={open === 'add'}
                 onOpenChange={() => setOpen('add')}
             />
             {currentRow && (
                 <>
-                    <UsersActionDialog
-                        key={`user-edit-${currentRow.id}`}
+                    <CompaniesActionDialog
+                        key={`company-edit-${currentRow.id}`}
                         open={open === 'edit'}
                         onOpenChange={() => {
                             setOpen('edit')
@@ -25,8 +25,8 @@ export function UsersDialogs() {
                         currentRow={currentRow}
                     />
 
-                    <UsersDeleteDialog
-                        key={`user-delete-${currentRow.id}`}
+                    <CompaniesDeleteDialog
+                        key={`company-delete-${currentRow.id}`}
                         open={open === 'delete'}
                         onOpenChange={() => {
                             setOpen('delete')

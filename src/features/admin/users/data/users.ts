@@ -4,16 +4,15 @@ import { faker } from '@faker-js/faker'
 faker.seed(67890)
 
 export const users = Array.from({ length: 500 }, () => {
-    const firstName = faker.person.firstName()
-    const lastName = faker.person.lastName()
+    const userFullName = faker.person.fullName()
+    const lastName = userFullName.split(' ').pop() || userFullName;;
     return {
         id: faker.string.uuid(),
-        firstName,
-        lastName,
+        fullName: userFullName,
         username: faker.internet
-            .username({ firstName, lastName })
+            .username({ lastName })
             .toLocaleLowerCase(),
-        email: faker.internet.email({ firstName }).toLocaleLowerCase(),
+        email: faker.internet.email({ lastName }).toLocaleLowerCase(),
         phoneNumber: faker.phone.number({ style: 'international' }),
         status: faker.helpers.arrayElement([
             'active',
@@ -22,10 +21,11 @@ export const users = Array.from({ length: 500 }, () => {
             'suspended',
         ]),
         role: faker.helpers.arrayElement([
-            'superadmin',
             'admin',
-            'cashier',
-            'manager',
+            'lab_manager',
+            'company_admin',
+            'mentor',
+            'talent',
         ]),
         createdAt: faker.date.past(),
         updatedAt: faker.date.recent(),

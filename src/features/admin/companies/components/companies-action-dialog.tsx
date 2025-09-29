@@ -22,118 +22,71 @@ import {
     FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { PasswordInput } from '@/components/password-input'
-import { SelectDropdown } from '@/components/select-dropdown'
-import { roles } from '../data/data'
-import { type User } from '../data/schema'
+import { Textarea } from '@/components/ui/textarea' // Thêm Textarea cho Description
+import { type Company } from '../data/schema' // Đảm bảo đường dẫn này đúng
 
-const formSchema = z
-    .object({
-        firstName: z.string().min(1, 'Tên là bắt buộc.'),
-        lastName: z.string().min(1, 'Họ là bắt buộc.'),
-        username: z.string().min(1, 'Tên đăng nhập là bắt buộc.'),
-        phoneNumber: z.string().min(1, 'Số điện thoại là bắt buộc.'),
-        email: z.email({
-            error: (iss) => (iss.input === '' ? 'Email là bắt buộc.' : undefined),
-        }),
-        password: z.string().transform((pwd) => pwd.trim()),
-        role: z.string().min(1, 'Vai trò là bắt buộc.'),
-        confirmPassword: z.string().transform((pwd) => pwd.trim()),
-        isEdit: z.boolean(),
-    })
-    .refine(
-        (data) => {
-            if (data.isEdit && !data.password) return true
-            return data.password.length > 0
-        },
-        {
-            message: 'Mật khẩu là bắt buộc.',
-            path: ['password'],
-        }
-    )
-    .refine(
-        ({ isEdit, password }) => {
-            if (isEdit && !password) return true
-            return password.length >= 8
-        },
-        {
-            message: 'Mật khẩu phải dài tối thiểu 8 ký tự.',
-            path: ['password'],
-        }
-    )
-    .refine(
-        ({ isEdit, password }) => {
-            if (isEdit && !password) return true
-            return /[a-z]/.test(password)
-        },
-        {
-            message: 'Mật khẩu phải chứa ít nhất một chữ cái thường.',
-            path: ['password'],
-        }
-    )
-    .refine(
-        ({ isEdit, password }) => {
-            if (isEdit && !password) return true
-            return /\d/.test(password)
-        },
-        {
-            message: 'Mật khẩu phải chứa ít nhất một số.',
-            path: ['password'],
-        }
-    )
-    .refine(
-        ({ isEdit, password, confirmPassword }) => {
-            if (isEdit && !password) return true
-            return password === confirmPassword
-        },
-        {
-            message: "Mật khẩu không khớp.",
-            path: ['confirmPassword'],
-        }
-    )
-type UserForm = z.infer<typeof formSchema>
+const formSchema = z.object({
+    companyName: z.string().min(1, 'Tên công ty là bắt buộc.'),
+    description: z.string().min(1, 'Mô tả của công ty là bắt buộc.').max(500, 'Mô tả không được vượt quá 500 ký tự.'),
+    taxId: z.string().min(5, 'Mã số thuế là bắt buộc và phải có ít nhất 5 ký tự.'),
+    address: z.string().min(1, 'Địa chỉ là bắt buộc.'),
+    industry: z.string().min(1, 'Lĩnh vực công nghiệp là bắt buộc.'),
+    techStack: z.string().min(1, 'Ngăn xếp công nghệ là bắt buộc.'),
+    accountManagerId: z.string().min(1, 'Người quản lý tài khoản là bắt buộc.'),
+    logoUrl: z.string().url('URL logo phải là một địa chỉ hợp lệ.').min(1, 'URL logo là bắt buộc.'),
+    // Giữ isEdit để xử lý logic thêm/sửa, không cần trường password/confirmPassword vì đây là Company
+    isEdit: z.boolean(),
+})
+// Loại bỏ các refined validation liên quan đến mật khẩu vì đây là công ty, không phải người dùng.
 
-type UserActionDialogProps = {
-    currentRow?: User
+type CompaniesForm = z.infer<typeof formSchema>
+
+type CompaniesActionDialogProps = {
+    currentRow?: Company
     open: boolean
     onOpenChange: (open: boolean) => void
 }
 
-export function UsersActionDialog({
+export function CompaniesActionDialog({
     currentRow,
     open,
     onOpenChange,
-}: UserActionDialogProps) {
+}: CompaniesActionDialogProps) {
     const isEdit = !!currentRow
-    const form = useForm<UserForm>({
+    const form = useForm<CompaniesForm>({
         resolver: zodResolver(formSchema),
         defaultValues: isEdit
             ? {
-                ...currentRow,
-                password: '',
-                confirmPassword: '',
+                companyName: currentRow.companyName ?? '',
+                description: currentRow.description ?? '',
+                taxId: currentRow.taxId ?? '',
+                address: currentRow.address ?? '',
+                industry: currentRow.industry ?? '',
+                techStack: currentRow.techStack ?? '',
+                accountManagerId: currentRow.accountManagerId ?? '',
+                logoUrl: currentRow.logoUrl ?? '',
                 isEdit,
             }
             : {
-                firstName: '',
-                lastName: '',
-                username: '',
-                email: '',
-                role: '',
-                phoneNumber: '',
-                password: '',
-                confirmPassword: '',
+                companyName: '',
+                description: '',
+                taxId: '',
+                address: '',
+                industry: '',
+                techStack: '',
+                accountManagerId: '',
+                logoUrl: '',
                 isEdit,
             },
     })
 
-    const onSubmit = (values: UserForm) => {
+    const onSubmit = (values: CompaniesForm) => {
         form.reset()
         showSubmittedData(values)
         onOpenChange(false)
     }
 
-    const isPasswordTouched = !!form.formState.dirtyFields.password
+    // Đã xóa isPasswordTouched
 
     return (
         <Dialog
@@ -143,32 +96,33 @@ export function UsersActionDialog({
                 onOpenChange(state)
             }}
         >
-            <DialogContent className='sm:max-w-lg'>
+            <DialogContent className='sm:max-w-xl'> {/* Tăng kích thước dialog một chút */}
                 <DialogHeader className='text-start'>
-                    <DialogTitle>{isEdit ? 'Chỉnh sửa Người dùng' : 'Thêm Người dùng Mới'}</DialogTitle>
+                    <DialogTitle>{isEdit ? 'Chỉnh sửa Công ty' : 'Thêm Công ty Mới'}</DialogTitle>
                     <DialogDescription>
-                        {isEdit ? 'Cập nhật thông tin người dùng tại đây. ' : 'Tạo người dùng mới tại đây. '}
+                        {isEdit ? 'Cập nhật thông tin công ty tại đây. ' : 'Thêm công ty mới vào hệ thống tại đây. '}
                         Nhấn lưu khi bạn hoàn tất.
                     </DialogDescription>
                 </DialogHeader>
-                <div className='h-[26.25rem] w-[calc(100%+0.75rem)] overflow-y-auto py-1 pe-3'>
+                <div className='h-[30rem] w-[calc(100%+0.75rem)] overflow-y-auto py-1 pe-3'>
                     <Form {...form}>
                         <form
-                            id='user-form'
+                            id='company-form' // Đổi tên id
                             onSubmit={form.handleSubmit(onSubmit)}
                             className='space-y-4 px-0.5'
                         >
+                            {/* --- COMPANY NAME --- */}
                             <FormField
                                 control={form.control}
-                                name='firstName'
+                                name='companyName'
                                 render={({ field }) => (
                                     <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
                                         <FormLabel className='col-span-2 text-end'>
-                                            Tên
+                                            Tên công ty
                                         </FormLabel>
                                         <FormControl>
                                             <Input
-                                                placeholder='John'
+                                                placeholder='Acme Corp'
                                                 className='col-span-4'
                                                 autoComplete='off'
                                                 {...field}
@@ -178,19 +132,41 @@ export function UsersActionDialog({
                                     </FormItem>
                                 )}
                             />
+
+                            {/* --- DESCRIPTION (SỬ DỤNG TEXTAREA) --- */}
                             <FormField
                                 control={form.control}
-                                name='lastName'
+                                name='description'
+                                render={({ field }) => (
+                                    <FormItem className='grid grid-cols-6 items-start space-y-0 gap-x-4 gap-y-1'>
+                                        <FormLabel className='col-span-2 pt-2 text-end'>
+                                            Mô tả
+                                        </FormLabel>
+                                        <FormControl>
+                                            <Textarea
+                                                placeholder='Công ty chuyên về...'
+                                                className='col-span-4 resize-none'
+                                                {...field}
+                                            />
+                                        </FormControl>
+                                        <FormMessage className='col-span-4 col-start-3' />
+                                    </FormItem>
+                                )}
+                            />
+
+                            {/* --- TAX ID --- */}
+                            <FormField
+                                control={form.control}
+                                name='taxId'
                                 render={({ field }) => (
                                     <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
                                         <FormLabel className='col-span-2 text-end'>
-                                            Họ
+                                            Mã số thuế
                                         </FormLabel>
                                         <FormControl>
                                             <Input
-                                                placeholder='Doe'
+                                                placeholder='0123456789'
                                                 className='col-span-4'
-                                                autoComplete='off'
                                                 {...field}
                                             />
                                         </FormControl>
@@ -198,17 +174,19 @@ export function UsersActionDialog({
                                     </FormItem>
                                 )}
                             />
+
+                            {/* --- ADDRESS --- */}
                             <FormField
                                 control={form.control}
-                                name='username'
+                                name='address'
                                 render={({ field }) => (
                                     <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
                                         <FormLabel className='col-span-2 text-end'>
-                                            Tên đăng nhập
+                                            Địa chỉ
                                         </FormLabel>
                                         <FormControl>
                                             <Input
-                                                placeholder='john_doe'
+                                                placeholder='123 Main St, Anytown'
                                                 className='col-span-4'
                                                 {...field}
                                             />
@@ -217,34 +195,19 @@ export function UsersActionDialog({
                                     </FormItem>
                                 )}
                             />
+
+                            {/* --- INDUSTRY --- */}
                             <FormField
                                 control={form.control}
-                                name='email'
-                                render={({ field }) => (
-                                    <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
-                                        <FormLabel className='col-span-2 text-end'>Email</FormLabel>
-                                        <FormControl>
-                                            <Input
-                                                placeholder='john.doe@gmail.com'
-                                                className='col-span-4'
-                                                {...field}
-                                            />
-                                        </FormControl>
-                                        <FormMessage className='col-span-4 col-start-3' />
-                                    </FormItem>
-                                )}
-                            />
-                            <FormField
-                                control={form.control}
-                                name='phoneNumber'
+                                name='industry'
                                 render={({ field }) => (
                                     <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
                                         <FormLabel className='col-span-2 text-end'>
-                                            Số điện thoại
+                                            Lĩnh vực
                                         </FormLabel>
                                         <FormControl>
                                             <Input
-                                                placeholder='+123456789'
+                                                placeholder='Fintech / E-commerce'
                                                 className='col-span-4'
                                                 {...field}
                                             />
@@ -253,37 +216,19 @@ export function UsersActionDialog({
                                     </FormItem>
                                 )}
                             />
+
+                            {/* --- TECH STACK --- */}
                             <FormField
                                 control={form.control}
-                                name='role'
-                                render={({ field }) => (
-                                    <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
-                                        <FormLabel className='col-span-2 text-end'>Vai trò</FormLabel>
-                                        <SelectDropdown
-                                            defaultValue={field.value}
-                                            onValueChange={field.onChange}
-                                            placeholder='Chọn một vai trò'
-                                            className='col-span-4'
-                                            items={roles.map(({ label, value }) => ({
-                                                label,
-                                                value,
-                                            }))}
-                                        />
-                                        <FormMessage className='col-span-4 col-start-3' />
-                                    </FormItem>
-                                )}
-                            />
-                            <FormField
-                                control={form.control}
-                                name='password'
+                                name='techStack'
                                 render={({ field }) => (
                                     <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
                                         <FormLabel className='col-span-2 text-end'>
-                                            Mật khẩu
+                                            Tech Stack
                                         </FormLabel>
                                         <FormControl>
-                                            <PasswordInput
-                                                placeholder='VD: S3cur3P@ssw0rd'
+                                            <Input
+                                                placeholder='React/Node.js/AWS'
                                                 className='col-span-4'
                                                 {...field}
                                             />
@@ -292,18 +237,19 @@ export function UsersActionDialog({
                                     </FormItem>
                                 )}
                             />
+
+                            {/* --- ACCOUNT MANAGER ID --- */}
                             <FormField
                                 control={form.control}
-                                name='confirmPassword'
+                                name='accountManagerId'
                                 render={({ field }) => (
                                     <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
                                         <FormLabel className='col-span-2 text-end'>
-                                            Xác nhận Mật khẩu
+                                            Người QL Tài khoản
                                         </FormLabel>
                                         <FormControl>
-                                            <PasswordInput
-                                                disabled={!isPasswordTouched}
-                                                placeholder='VD: S3cur3P@ssw0rd'
+                                            <Input
+                                                placeholder='Jane Doe'
                                                 className='col-span-4'
                                                 {...field}
                                             />
@@ -311,12 +257,40 @@ export function UsersActionDialog({
                                         <FormMessage className='col-span-4 col-start-3' />
                                     </FormItem>
                                 )}
+                            />
+
+                            {/* --- LOGO URL --- */}
+                            <FormField
+                                control={form.control}
+                                name='logoUrl'
+                                render={({ field }) => (
+                                    <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
+                                        <FormLabel className='col-span-2 text-end'>
+                                            URL Logo
+                                        </FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                placeholder='https://example.com/logo.png'
+                                                className='col-span-4'
+                                                {...field}
+                                            />
+                                        </FormControl>
+                                        <FormMessage className='col-span-4 col-start-3' />
+                                    </FormItem>
+                                )}
+                            />
+
+                            {/* Trường ẩn isEdit được thêm vào Form để sử dụng trong Zod (nếu cần) */}
+                            <FormField
+                                control={form.control}
+                                name='isEdit'
+                                render={() => <FormControl><Input type="hidden" /></FormControl>}
                             />
                         </form>
                     </Form>
                 </div>
                 <DialogFooter>
-                    <Button type='submit' form='user-form'>
+                    <Button type='submit' form='company-form'>
                         Lưu thay đổi
                     </Button>
                 </DialogFooter>

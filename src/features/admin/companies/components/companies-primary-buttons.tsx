@@ -1,13 +1,13 @@
 import { UserPlus } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { useUsers } from './users-provider'
+import { useCompanies } from './companies-provider'
 
-export function UsersPrimaryButtons() {
-    const { setOpen } = useUsers()
+export function CompaniesPrimaryButtons() {
+    const { setOpen } = useCompanies()
     return (
         <div className='flex gap-2'>
             <Button className='space-x-1' onClick={() => setOpen('add')}>
-                <span>Tạo người dùng mới</span> <UserPlus size={18} />
+                <span>Tạo công ty</span> <UserPlus size={18} />
             </Button>
         </div>
     )

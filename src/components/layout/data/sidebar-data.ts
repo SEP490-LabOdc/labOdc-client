@@ -1,21 +1,6 @@
 import {
-  IconBarrierBlock,
-  IconBrowserCheck,
-  IconBug,
-  IconChecklist,
-  IconError404,
-  IconHelp,
   IconLayoutDashboard,
-  IconLock,
-  IconLockAccess,
-  IconMessages,
-  IconNotification,
-  IconPackages,
-  IconPalette,
-  IconServerOff,
   IconSettings,
-  IconTool,
-  IconUserCog,
   IconUserOff,      // For Đã ngừng users
   IconUsers,
   IconBuildingStore, // For Quản lý đối tác
@@ -28,7 +13,8 @@ import {
   IconUserCode,      // For Sinh viên
   IconClipboardList,    // For Quản lý dự án
   IconCircleCheckFilled,// For Đã hoàn thành
-  IconHistory,         // For Lịch sử cập nhật
+  IconHistory,
+  IconList,         // For Lịch sử cập nhật
 } from '@tabler/icons-react'
 import { AudioWaveform, Command, GalleryVerticalEnd } from 'lucide-react'
 import { type SidebarData } from '../types'
@@ -70,25 +56,30 @@ export const sidebarData: SidebarData = {
           icon: IconBuildingStore,
           items: [
             {
+              title: 'Tất cả',
+              url: '/admin/companies',
+              icon: IconList,
+            },
+            {
               title: 'Đang chờ phê duyệt',
-              url: '/',
+              url: '/admin/companies?status=["approving"]',
               icon: IconClockHour4,
             },
             {
               title: 'Đang hoạt động',
-              url: '/',
+              url: '/admin/companies?status=["active"]',
               icon: IconCircleCheck,
             },
             {
               title: 'Đã ngừng hoạt động',
-              url: '/',
+              url: '/admin/companies?status=["inactive"]',
               icon: IconCircleX,
             },
           ]
         },
         {
           title: 'Quản lý dự án',
-          icon: IconClipboardList, // Thay đổi icon này
+          icon: IconClipboardList,
           items: [
             {
               title: 'Đang chờ phê duyệt',
@@ -103,10 +94,10 @@ export const sidebarData: SidebarData = {
             {
               title: 'Đã hoàn thành',
               url: '/',
-              icon: IconCircleCheckFilled, // Thay đổi icon này
+              icon: IconCircleCheckFilled,
             },
             {
-              title: 'Đã hủy', // Fix typo '/hủy'
+              title: 'Đã hủy',
               url: '/',
               icon: IconCircleX,
             },
@@ -122,178 +113,39 @@ export const sidebarData: SidebarData = {
               icon: IconUserSearch,
             },
             {
-              title: 'Tạo mới người dùng',
-              url: '/',
-              icon: IconUserCheck,
-            },
-            {
               title: 'Đang hoạt động',
-              url: `/admin/users?status=%5B%22active%22%5D`,
+              url: `/admin/users?status=["active"]`,
               icon: IconUserCheck,
             },
             {
               title: 'Đã ngừng hoạt động',
-              url: '/',
+              url: '/admin/users?status=["inactive"]',
               icon: IconUserOff,
             },
             {
               title: 'Mentors',
-              url: '/',
+              url: '/admin/users?role=["mentor"]',
               icon: IconUserStar,
             },
             {
               title: 'Sinh viên',
-              url: '/',
+              url: '/admin/users?role=["talent"]',
               icon: IconUserCode,
             },
           ]
         },
         {
           title: 'Quản lý hệ thống',
-          icon: IconSettings,   // Thay đổi từ IconUsers sang IconSettings
+          icon: IconSettings,
           items: [
             {
               title: 'Lịch sử cập nhật',
               url: '/',
-              icon: IconHistory, // Thay đổi từ IconUserSearch sang IconHistory
+              icon: IconHistory,
             }
           ]
         }
       ]
     },
-    // {
-    //   title: 'General',
-    //   items: [
-    //     {
-    //       title: 'Dashboard',
-    //       url: '/',
-    //       icon: IconLayoutDashboard,
-    //     },
-    //     {
-    //       title: 'Tasks',
-    //       url: '/admin/tasks',
-    //       icon: IconChecklist,
-    //     },
-    //     {
-    //       title: 'Apps',
-    //       url: '/apps',
-    //       icon: IconPackages,
-    //     },
-    //     {
-    //       title: 'Chats',
-    //       url: '/chats',
-    //       badge: '3',
-    //       icon: IconMessages,
-    //     },
-    //     {
-    //       title: 'Users',
-    //       url: '/admin/users',
-    //       icon: IconUsers,
-    //     },
-    //   ],
-    // },
-    // {
-    //   title: 'Pages',
-    //   items: [
-    //     {
-    //       title: 'Auth',
-    //       icon: IconLockAccess,
-    //       items: [
-    //         {
-    //           title: 'Sign In',
-    //           url: '/sign-in',
-    //         },
-    //         {
-    //           title: 'Sign In (2 Col)',
-    //           url: '/sign-in-2',
-    //         },
-    //         {
-    //           title: 'Sign Up',
-    //           url: '/sign-up',
-    //         },
-    //         {
-    //           title: 'Forgot Password',
-    //           url: '/forgot-password',
-    //         },
-    //         {
-    //           title: 'OTP',
-    //           url: '/otp',
-    //         },
-    //       ],
-    //     },
-    //     {
-    //       title: 'Errors',
-    //       icon: IconBug,
-    //       items: [
-    //         {
-    //           title: 'Unauthorized',
-    //           url: '/401',
-    //           icon: IconLock,
-    //         },
-    //         {
-    //           title: 'Forbidden',
-    //           url: '/403',
-    //           icon: IconUserOff,
-    //         },
-    //         {
-    //           title: 'Not Found',
-    //           url: '/404',
-    //           icon: IconError404,
-    //         },
-    //         {
-    //           title: 'Internal Server Error',
-    //           url: '/500',
-    //           icon: IconServerOff,
-    //         },
-    //         {
-    //           title: 'Maintenance Error',
-    //           url: '/503',
-    //           icon: IconBarrierBlock,
-    //         },
-    //       ],
-    //     },
-    //   ],
-    // },
-    // {
-    //   title: 'Other',
-    //   items: [
-    //     {
-    //       title: 'Settings',
-    //       icon: IconSettings,
-    //       items: [
-    //         {
-    //           title: 'Profile',
-    //           url: '/settings',
-    //           icon: IconUserCog,
-    //         },
-    //         {
-    //           title: 'Account',
-    //           url: '/settings/account',
-    //           icon: IconTool,
-    //         },
-    //         {
-    //           title: 'Appearance',
-    //           url: '/settings/appearance',
-    //           icon: IconPalette,
-    //         },
-    //         {
-    //           title: 'Notifications',
-    //           url: '/settings/notifications',
-    //           icon: IconNotification,
-    //         },
-    //         {
-    //           title: 'Display',
-    //           url: '/settings/display',
-    //           icon: IconBrowserCheck,
-    //         },
-    //       ],
-    //     },
-    //     {
-    //       title: 'Help Center',
-    //       url: '/help-center',
-    //       icon: IconHelp,
-    //     },
-    //   ],
-    // },
   ],
 }

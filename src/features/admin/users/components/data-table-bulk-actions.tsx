@@ -51,8 +51,9 @@ export function DataTableBulkActions<TData>({
 
     return (
         <>
-            <BulkActionsToolbar table={table} entityName='user'>
-                <Tooltip>
+            <BulkActionsToolbar table={table} entityName='Người dùng'>
+                {/* entityName='user' */}
+                {/* <Tooltip>
                     <TooltipTrigger asChild>
                         <Button
                             variant='outline'
@@ -69,7 +70,7 @@ export function DataTableBulkActions<TData>({
                     <TooltipContent>
                         <p>Invite selected users</p>
                     </TooltipContent>
-                </Tooltip>
+                </Tooltip> */}
 
                 <Tooltip>
                     <TooltipTrigger asChild>
@@ -78,15 +79,19 @@ export function DataTableBulkActions<TData>({
                             size='icon'
                             onClick={() => handleBulkStatusChange('active')}
                             className='size-8'
-                            aria-label='Activate selected users'
-                            title='Activate selected users'
+                            // aria-label='Activate selected users'
+                            // title='Activate selected users'
+                            aria-label='Kích hoạt người dùng đã chọn'
+                            title='Kích hoạt người dùng đã chọn'
                         >
                             <UserCheck />
-                            <span className='sr-only'>Activate selected users</span>
+                            {/* <span className='sr-only'>Activate selected users</span> */}
+                            <span className='sr-only'>Kích hoạt người dùng đã chọn</span>
                         </Button>
                     </TooltipTrigger>
                     <TooltipContent>
-                        <p>Activate selected users</p>
+                        {/* <p>Activate selected users</p> */}
+                        <p>Kích hoạt người dùng đã chọn</p>
                     </TooltipContent>
                 </Tooltip>
 
@@ -97,15 +102,19 @@ export function DataTableBulkActions<TData>({
                             size='icon'
                             onClick={() => handleBulkStatusChange('inactive')}
                             className='size-8'
-                            aria-label='Deactivate selected users'
-                            title='Deactivate selected users'
+                            // aria-label='Deactivate selected users'
+                            // title='Deactivate selected users'
+                            aria-label='Khóa dùng đã chọn'
+                            title='Khóa dùng đã chọn'
                         >
                             <UserX />
-                            <span className='sr-only'>Deactivate selected users</span>
+                            {/* <span className='sr-only'>Deactivate selected users</span> */}
+                            <span className='sr-only'>Khóa dùng đã chọn</span>
                         </Button>
                     </TooltipTrigger>
                     <TooltipContent>
-                        <p>Deactivate selected users</p>
+                        {/* <p>Deactivate selected users</p> */}
+                        <p>Khóa dùng đã chọn</p>
                     </TooltipContent>
                 </Tooltip>
 
@@ -116,15 +125,19 @@ export function DataTableBulkActions<TData>({
                             size='icon'
                             onClick={() => setShowDeleteConfirm(true)}
                             className='size-8'
-                            aria-label='Delete selected users'
-                            title='Delete selected users'
+                            // aria-label='Delete selected users'
+                            // title='Delete selected users'
+                            aria-label='Xóa những người dùng đã chọn'
+                            title='Xóa những người dùng đã chọn'
                         >
                             <Trash2 />
-                            <span className='sr-only'>Delete selected users</span>
+                            {/* <span className='sr-only'>Delete selected users</span> */}
+                            <span className='sr-only'>Xóa những người dùng đã chọn</span>
                         </Button>
                     </TooltipTrigger>
                     <TooltipContent>
-                        <p>Delete selected users</p>
+                        {/* <p>Delete selected users</p> */}
+                        <p>Xóa những người dùng đã chọn</p>
                     </TooltipContent>
                 </Tooltip>
             </BulkActionsToolbar>

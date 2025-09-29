@@ -16,7 +16,8 @@ type UserMultiDeleteDialogProps<TData> = {
     table: Table<TData>
 }
 
-const CONFIRM_WORD = 'DELETE'
+// const CONFIRM_WORD = 'DELETE'
+const CONFIRM_WORD = 'XÓA'
 
 export function UsersMultiDeleteDialog<TData>({
     open,
@@ -29,7 +30,8 @@ export function UsersMultiDeleteDialog<TData>({
 
     const handleDelete = () => {
         if (value.trim() !== CONFIRM_WORD) {
-            toast.error(`Please type "${CONFIRM_WORD}" to confirm.`)
+            // toast.error(`Please type "${CONFIRM_WORD}" to confirm.`)
+            toast.error(`Hãy gõ "${CONFIRM_WORD}" để xóa.`)
             return
         }
 
@@ -64,30 +66,39 @@ export function UsersMultiDeleteDialog<TData>({
             }
             desc={
                 <div className='space-y-4'>
-                    <p className='mb-2'>
+                    {/* <p className='mb-2'>
                         Are you sure you want to delete the selected users? <br />
                         This action cannot be undone.
+                    </p>  */}
+                    <p className='mb-2'>
+                        Bạn có chắc chắn muốn xóa những người dùng đã chọn không?  <br />
+                        Hành động này không thể hoàn tác.
                     </p>
 
                     <Label className='my-4 flex flex-col items-start gap-1.5'>
-                        <span className=''>Confirm by typing "{CONFIRM_WORD}":</span>
+                        <span className=''>Xác nhận bằng cách gõ "{CONFIRM_WORD}":</span>
                         <Input
                             value={value}
                             onChange={(e) => setValue(e.target.value)}
-                            placeholder={`Type "${CONFIRM_WORD}" to confirm.`}
+                            // placeholder={`Type "${CONFIRM_WORD}" to confirm.`}
+                            placeholder={`Gõ "${CONFIRM_WORD}" để xác nhận.`}
                         />
                     </Label>
 
                     <Alert variant='destructive'>
-                        <AlertTitle>Warning!</AlertTitle>
+                        {/* <AlertTitle>Warning!</AlertTitle> */}
+                        <AlertTitle>Cảnh báo!</AlertTitle>
                         <AlertDescription>
-                            Please be careful, this operation can not be rolled back.
+                            {/* Please be careful, this operation can not be rolled back. */}
+                            Xin lưu ý, thao tác này không thể hoàn tác.
                         </AlertDescription>
                     </Alert>
                 </div>
             }
-            confirmText='Delete'
+            // confirmText='Delete'
+            confirmText='Xóa'
             destructive
+            cancelBtnText='Hủy'
         />
     )
 }
