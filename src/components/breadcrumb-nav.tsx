@@ -1,4 +1,3 @@
-import React from 'react'
 import { Breadcrumb, BreadcrumbItem, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from './ui/breadcrumb';
 import { isMatch, Link, useLocation, useMatches } from '@tanstack/react-router';
 
@@ -14,9 +13,10 @@ export function BreadcrumbNav() {
             label: loaderData?.crumb,
         }
     })
+
     return (
         <>
-            {items.length > 1 ? <Breadcrumb>
+            {items.length > 1 ? <Breadcrumb className='mx-auto max-w-6xl p-4'>
                 <BreadcrumbList>
                     {items.map((item, index) => {
                         return (

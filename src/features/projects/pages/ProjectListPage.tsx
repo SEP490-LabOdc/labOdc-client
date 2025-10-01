@@ -15,7 +15,7 @@ import {
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { projects } from "./data/project-data"
+import { projects } from "../data/project-data"
 
 const teams = [
     {
@@ -47,7 +47,7 @@ const teams = [
     },
 ]
 
-export default function MarketplacePage() {
+export default function ProjectListPage() {
     const [searchTerm, setSearchTerm] = useState("")
     const [selectedType, setSelectedType] = useState("all")
     const [selectedDuration, setSelectedDuration] = useState("all")

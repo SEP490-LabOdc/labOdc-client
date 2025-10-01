@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { useParams } from '@tanstack/react-router'
 import { Button } from '@/components/ui/button'
 import { Briefcase, Calendar, Globe, Heart, Mail, MapPin, Star, Users } from 'lucide-react'
@@ -8,12 +8,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import type { Company } from '@/features/companies/types'
 import { findCompanyById } from '@/features/companies/api/getCompanyById'
-
-type Props = {
-    company: Company
-    projects?: Array<{ id: string; name: string; summary: string }>
-    onToggleFollow?: (id: string) => void
-}
+import { GeneralError } from '@/features/errors/general-error'
 
 export default function CompanyDetailPage() {
     const [followed, setFollowed] = useState(false)
@@ -25,7 +20,7 @@ export default function CompanyDetailPage() {
         setFollowed(true)
     }
 
-    if(company)
+    if (!company) return <GeneralError />
 
     return (
         <div className="mx-auto max-w-6xl">
@@ -60,6 +55,13 @@ export default function CompanyDetailPage() {
                                 <div>
                                     <div className="text-sm text-muted-foreground">Projects mở</div>
                                     <div className="text-lg font-semibold">{company.openProjects}</div>
+                                </div>
+                            </div>
+                            <div className="p-4 flex items-center gap-3">
+                                <Users className="h-5 w-5 text-primary" />
+                                <div>
+                                    <div className="text-sm text-muted-foreground">Đã hợp tác</div>
+                                    <div className="text-lg font-semibold">{company.collaboratedTalents} talents</div>
                                 </div>
                             </div>
                         </div>
@@ -100,22 +102,6 @@ export default function CompanyDetailPage() {
             <div className="mt-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
                 {/* left/main */}
                 <div className="lg:col-span-2">
-                    {/* Stats */}
-                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-6">
-                        <Card>
-
-                        </Card>
-                        <Card>
-                            <CardContent className="p-4 flex items-center gap-3">
-                                <Users className="h-5 w-5 text-primary" />
-                                <div>
-                                    <div className="text-sm text-muted-foreground">Đã hợp tác</div>
-                                    <div className="text-lg font-semibold">{company.collaboratedTalents} talents</div>
-                                </div>
-                            </CardContent>
-                        </Card>
-                    </div>
-
                     {/* Tabs */}
                     <Tabs defaultValue="overview" className="w-full">
                         <TabsList>
