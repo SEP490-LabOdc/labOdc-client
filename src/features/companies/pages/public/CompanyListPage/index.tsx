@@ -4,24 +4,9 @@ import { Button } from "@/components/ui/button"
 import { FiltersBar, type Filters } from "./components/filters-bar"
 import { PaginationBar } from "./components/pagination-bar"
 import { CardCompany } from "./components/card-company"
-import { mockCompanies } from "./data/companies"
+import type { Company } from "@/features/companies/types"
+import { fetchCompanies } from "@/features/companies/api/fetchCompanies"
 // import { FiltersMobile } from "./components/filters-mobile"
-
-export type Company = {
-    id: string
-    name: string
-    coverUrl: string
-    logoUrl: string
-    industry: "IT Services" | "Fintech" | "E-commerce" | "Game" | "AI/ML" | "Other"
-    location: string
-    size: "1-10" | "11-50" | "51-200" | "200+"
-    rating: number
-    reviews: number
-    bio: string
-    openProjects: number
-    collaboratedTalents: number
-    isFollowed?: boolean
-}
 
 function applyFiltersSort(companies: Company[], filters: Filters): Company[] {
     const filtered = companies.filter((company) => {
@@ -59,7 +44,7 @@ function applyFiltersSort(companies: Company[], filters: Filters): Company[] {
 
 
 export default function CompanyListPage() {
-    const [companies, setCompanies] = useState<Company[]>(mockCompanies)
+    const [companies, setCompanies] = useState<Company[]>(fetchCompanies)
     const [filters, setFilters] = useState<Filters>({
         search: "",
         industry: "all",

@@ -1,10 +1,9 @@
-import React from 'react'
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Briefcase, Heart, MapPin, Star, Users } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Link } from '@tanstack/react-router';
-import type { Company } from '..';
+import type { Company } from '@/features/companies/types';
 
 export function CardCompany({ company, onToggleFollow }: { company: Company; onToggleFollow: (id: string) => void }) {
     return (
@@ -16,7 +15,11 @@ export function CardCompany({ company, onToggleFollow }: { company: Company; onT
                     className="w-full h-full object-cover"
                 />
                 <div className="absolute -bottom-6 left-4">
-                    <Link to='/' className="h-12 w-12 rounded-md overflow-hidden border border-gray-200 bg-white shadow-md flex items-center justify-center">
+                    <Link
+                        to='/companies/$companyId'
+                        params={{ companyId: company.id }}
+                        className="h-12 w-12 rounded-md overflow-hidden border border-gray-200 bg-white shadow-md flex items-center justify-center"
+                    >
                         <img
                             src={company.logoUrl || "/placeholder.svg"}
                             alt={`${company.name} logo`}
@@ -36,7 +39,13 @@ export function CardCompany({ company, onToggleFollow }: { company: Company; onT
 
             <CardContent className="px-4">
                 <div className="flex items-center justify-between mb-2">
-                    <Link to='/' className="font-semibold text-lg truncate hover:underline">{company.name}</Link>
+                    <Link
+                        to='/companies/$companyId'
+                        params={{ companyId: company.id }}
+                        className="font-semibold text-lg truncate hover:underline"
+                    >
+                        {company.name}
+                    </Link>
                     <div className="flex items-center gap-1">
                         <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
                         <span className="font-medium">{company.rating}</span>
