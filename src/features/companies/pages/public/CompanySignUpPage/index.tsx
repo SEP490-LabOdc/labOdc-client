@@ -47,7 +47,7 @@ export default function CompanySignUpPage() {
                             Tuyển đúng Người – Nhanh, Minh bạch, Tối ưu chi phí
                         </h1>
                         <p className="mt-4 text-muted-foreground max-w-xl">
-                            Kết nối với Talent Pool của các trường & cộng đồng lập trình. Đăng dự án theo mô hình ODC, quản lý tiến độ, và đánh giá hiệu suất ngay trên một nền tảng.
+                            Kết nối với Talent Pool của trường FPTU & cộng đồng lập trình. Đăng dự án theo mô hình ODC, quản lý tiến độ, và đánh giá hiệu suất ngay trên một nền tảng.
                         </p>
                         <div className="mt-6 flex flex-wrap gap-3">
                             <div className="flex items-center gap-2 text-sm text-muted-foreground"><CheckCircle2 className="h-4 w-4" /> SLA phản hồi 24h</div>
