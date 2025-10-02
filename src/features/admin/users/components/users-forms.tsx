@@ -142,7 +142,8 @@ export default function UsersForm({
             navigate({ to: '/admin/users' })
         } catch (e: any) {
             // Bạn có thể thay bằng toast UI của bạn
-            alert(e.message)
+            alert(e.message);
+            navigate({ to: '/admin/users' });
         }
     }
 
@@ -152,7 +153,7 @@ export default function UsersForm({
         <Form {...form}>
             <form
                 onSubmit={form.handleSubmit(onSubmit)}
-                className="grid grid-cols-1 md:grid-cols-2 gap-6"
+                className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2"
             >
                 {/* ===== CỘT TRÁI ===== */}
                 <div className="space-y-4 px-12">
@@ -162,7 +163,9 @@ export default function UsersForm({
                         render={({ field }) => (
                             <FormItem className="space-y-1">
                                 <div className="flex items-center gap-3">
-                                    <FormLabel className="w-40 flex justify-end text-base font-medium">First name</FormLabel>
+                                    <FormLabel className="w-40 block text-end text-base font-medium">
+                                        First name
+                                    </FormLabel>
                                     <FormControl className="flex-1">
                                         <Input placeholder="John" autoComplete="off" {...field} />
                                     </FormControl>
@@ -178,7 +181,9 @@ export default function UsersForm({
                         render={({ field }) => (
                             <FormItem className="space-y-1">
                                 <div className="flex items-center gap-3">
-                                    <FormLabel className="w-40 flex justify-end">Last name</FormLabel>
+                                    <FormLabel className="w-40 block text-end text-base font-medium">
+                                        Last name
+                                    </FormLabel>
                                     <FormControl className="flex-1">
                                         <Input placeholder="Doe" autoComplete="off" {...field} />
                                     </FormControl>
@@ -194,7 +199,9 @@ export default function UsersForm({
                         render={({ field }) => (
                             <FormItem className="space-y-1">
                                 <div className="flex items-center gap-3">
-                                    <FormLabel className="w-40 flex justify-end">User ID</FormLabel>
+                                    <FormLabel className="w-40 block text-end text-base font-medium">
+                                        User ID
+                                    </FormLabel>
                                     <FormControl className="flex-1">
                                         <Input placeholder="abel.tuter" {...field} />
                                     </FormControl>
@@ -210,7 +217,9 @@ export default function UsersForm({
                         render={({ field }) => (
                             <FormItem className="space-y-1">
                                 <div className="flex items-center gap-3">
-                                    <FormLabel className="w-40 flex justify-end">Business phone</FormLabel>
+                                    <FormLabel className="w-40 block text-end text-base font-medium">
+                                        Business phone
+                                    </FormLabel>
                                     <FormControl className="flex-1">
                                         <Input placeholder="+1 234 567 890" {...field} />
                                     </FormControl>
@@ -229,7 +238,9 @@ export default function UsersForm({
                         render={({ field }) => (
                             <FormItem className="space-y-1">
                                 <div className="flex items-center gap-3">
-                                    <FormLabel className="w-40 flex justify-end">Email</FormLabel>
+                                    <FormLabel className="w-40 block text-end text-base font-medium">
+                                        Email
+                                    </FormLabel>
                                     <FormControl className="flex-1">
                                         <Input placeholder="abel.tuter@example.com" {...field} />
                                     </FormControl>
@@ -245,7 +256,9 @@ export default function UsersForm({
                         render={({ field }) => (
                             <FormItem className="space-y-1">
                                 <div className="flex items-center gap-3">
-                                    <FormLabel className="w-40 flex justify-end">Language / Role</FormLabel>
+                                    <FormLabel className="w-40 block text-end text-base font-medium">
+                                        Language / Role
+                                    </FormLabel>
                                     <div className="flex-1">
                                         <SelectDropdown
                                             defaultValue={field.value}
@@ -267,7 +280,7 @@ export default function UsersForm({
                         render={({ field }) => (
                             <FormItem className="space-y-1">
                                 <div className="flex items-center gap-3">
-                                    <FormLabel className="w-40 flex justify-end">
+                                    <FormLabel className="w-40 block text-end text-base font-medium">
                                         Password{isEdit ? ' (để trống nếu không đổi)' : ''}
                                     </FormLabel>
                                     <FormControl className="flex-1">
@@ -285,7 +298,9 @@ export default function UsersForm({
                         render={({ field }) => (
                             <FormItem className="space-y-1">
                                 <div className="flex items-center gap-3">
-                                    <FormLabel className="w-40 flex justify-end">Confirm password</FormLabel>
+                                    <FormLabel className="w-40 block text-end text-base font-medium">
+                                        Confirm password
+                                    </FormLabel>
                                     <FormControl className="flex-1">
                                         <PasswordInput
                                             disabled={isEdit && !isPasswordTouched}
@@ -300,12 +315,19 @@ export default function UsersForm({
                     />
                 </div>
 
-                {/* Nút submit: span 2 cột */}
-                <div className="pt-2 md:col-span-2 px-12">
+                <div className="pt-2 md:col-span-2 px-12 flex gap-3">
                     <Button type="submit">Lưu thay đổi</Button>
+                    <Button
+                        type="button"
+                        variant="outline"
+                        onClick={() => navigate({ to: '/admin/users' })}
+                    >
+                        Hủy
+                    </Button>
                 </div>
             </form>
         </Form>
     )
+
 
 }
