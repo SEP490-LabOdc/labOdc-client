@@ -9,6 +9,10 @@ export default function SignUp() {
         <AuthLayout>
             <div className='gap-4'>
                 <div className=''>
+                    <div className='mb-4'>
+                        <h1 className='text-2xl text-[#2a9d8f] font-bold mb-2'>Chào mừng bạn đến với LabOdc</h1>
+                        <p className='text-sm text-muted-foreground'>Hãy biến kiến thức thành trải nghiệm thực tế cùng các dự án doanh nghiệp.</p>
+                    </div>
                     <p className='text-sm'>
                         By clicking sign up, you agree to our{' '}
                         <a

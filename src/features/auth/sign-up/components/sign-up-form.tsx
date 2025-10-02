@@ -100,7 +100,7 @@ export function SignUpForm({ className, ...props }: React.HTMLAttributes<HTMLFor
                         </FormItem>
                     )}
                 />
-                <Button className='mt-2' disabled={isLoading} size='lg'>
+                <Button className='mt-2 bg-[#2a9d8f]' disabled={isLoading} size='lg'>
                     {isLoading ? <Loader2 className='animate-spin' /> : <LogIn />}
                     Create account
                 </Button>
