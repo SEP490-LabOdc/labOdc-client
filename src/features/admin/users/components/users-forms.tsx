@@ -150,183 +150,184 @@ export default function UsersForm({
     const isPasswordTouched = !!form.formState.dirtyFields.password
 
     return (
-        <Form {...form}>
-            <form
-                onSubmit={form.handleSubmit(onSubmit)}
-                className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2"
-            >
-                {/* ===== CỘT TRÁI ===== */}
-                <div className="space-y-4 px-12">
-                    <FormField
-                        control={form.control}
-                        name="firstName"
-                        render={({ field }) => (
-                            <FormItem className="space-y-1">
-                                <div className="flex items-center gap-3">
-                                    <FormLabel className="w-40 block text-end text-base font-medium">
-                                        First name
-                                    </FormLabel>
-                                    <FormControl className="flex-1">
-                                        <Input placeholder="John" autoComplete="off" {...field} />
-                                    </FormControl>
-                                </div>
-                                <FormMessage className="ml-40" />
-                            </FormItem>
-                        )}
-                    />
-
-                    <FormField
-                        control={form.control}
-                        name="lastName"
-                        render={({ field }) => (
-                            <FormItem className="space-y-1">
-                                <div className="flex items-center gap-3">
-                                    <FormLabel className="w-40 block text-end text-base font-medium">
-                                        Last name
-                                    </FormLabel>
-                                    <FormControl className="flex-1">
-                                        <Input placeholder="Doe" autoComplete="off" {...field} />
-                                    </FormControl>
-                                </div>
-                                <FormMessage className="ml-40" />
-                            </FormItem>
-                        )}
-                    />
-
-                    <FormField
-                        control={form.control}
-                        name="username"
-                        render={({ field }) => (
-                            <FormItem className="space-y-1">
-                                <div className="flex items-center gap-3">
-                                    <FormLabel className="w-40 block text-end text-base font-medium">
-                                        User ID
-                                    </FormLabel>
-                                    <FormControl className="flex-1">
-                                        <Input placeholder="abel.tuter" {...field} />
-                                    </FormControl>
-                                </div>
-                                <FormMessage className="ml-40" />
-                            </FormItem>
-                        )}
-                    />
-
-                    <FormField
-                        control={form.control}
-                        name="phoneNumber"
-                        render={({ field }) => (
-                            <FormItem className="space-y-1">
-                                <div className="flex items-center gap-3">
-                                    <FormLabel className="w-40 block text-end text-base font-medium">
-                                        Business phone
-                                    </FormLabel>
-                                    <FormControl className="flex-1">
-                                        <Input placeholder="+1 234 567 890" {...field} />
-                                    </FormControl>
-                                </div>
-                                <FormMessage className="ml-40" />
-                            </FormItem>
-                        )}
-                    />
-                </div>
-
-                {/* ===== CỘT PHẢI ===== */}
-                <div className="space-y-4 px-12">
-                    <FormField
-                        control={form.control}
-                        name="email"
-                        render={({ field }) => (
-                            <FormItem className="space-y-1">
-                                <div className="flex items-center gap-3">
-                                    <FormLabel className="w-40 block text-end text-base font-medium">
-                                        Email
-                                    </FormLabel>
-                                    <FormControl className="flex-1">
-                                        <Input placeholder="abel.tuter@example.com" {...field} />
-                                    </FormControl>
-                                </div>
-                                <FormMessage className="ml-40" />
-                            </FormItem>
-                        )}
-                    />
-
-                    <FormField
-                        control={form.control}
-                        name="role"
-                        render={({ field }) => (
-                            <FormItem className="space-y-1">
-                                <div className="flex items-center gap-3">
-                                    <FormLabel className="w-40 block text-end text-base font-medium">
-                                        Language / Role
-                                    </FormLabel>
-                                    <div className="flex-1">
-                                        <SelectDropdown
-                                            defaultValue={field.value}
-                                            onValueChange={field.onChange}
-                                            placeholder="Chọn một vai trò"
-                                            items={roles.map(({ label, value }) => ({ label, value }))}
-                                            className="w-full"
-                                        />
+        <>
+            <Form {...form}>
+                <form
+                    onSubmit={form.handleSubmit(onSubmit)}
+                    className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2"
+                >
+                    {/* ===== CỘT TRÁI ===== */}
+                    <div className="space-y-4 px-12">
+                        <FormField
+                            control={form.control}
+                            name="firstName"
+                            render={({ field }) => (
+                                <FormItem className="space-y-1">
+                                    <div className="flex items-center gap-3">
+                                        <FormLabel className="w-40 block text-end text-base font-medium">
+                                            First name
+                                        </FormLabel>
+                                        <FormControl className="flex-1">
+                                            <Input placeholder="John" autoComplete="off" {...field} />
+                                        </FormControl>
                                     </div>
-                                </div>
-                                <FormMessage className="ml-40" />
-                            </FormItem>
-                        )}
-                    />
+                                    <FormMessage className="ml-40" />
+                                </FormItem>
+                            )}
+                        />
 
-                    <FormField
-                        control={form.control}
-                        name="password"
-                        render={({ field }) => (
-                            <FormItem className="space-y-1">
-                                <div className="flex items-center gap-3">
-                                    <FormLabel className="w-40 block text-end text-base font-medium">
-                                        Password{isEdit ? ' (để trống nếu không đổi)' : ''}
-                                    </FormLabel>
-                                    <FormControl className="flex-1">
-                                        <PasswordInput placeholder="VD: S3cur3P@ssw0rd" {...field} />
-                                    </FormControl>
-                                </div>
-                                <FormMessage className="ml-40" />
-                            </FormItem>
-                        )}
-                    />
+                        <FormField
+                            control={form.control}
+                            name="lastName"
+                            render={({ field }) => (
+                                <FormItem className="space-y-1">
+                                    <div className="flex items-center gap-3">
+                                        <FormLabel className="w-40 block text-end text-base font-medium">
+                                            Last name
+                                        </FormLabel>
+                                        <FormControl className="flex-1">
+                                            <Input placeholder="Doe" autoComplete="off" {...field} />
+                                        </FormControl>
+                                    </div>
+                                    <FormMessage className="ml-40" />
+                                </FormItem>
+                            )}
+                        />
 
-                    <FormField
-                        control={form.control}
-                        name="confirmPassword"
-                        render={({ field }) => (
-                            <FormItem className="space-y-1">
-                                <div className="flex items-center gap-3">
-                                    <FormLabel className="w-40 block text-end text-base font-medium">
-                                        Confirm password
-                                    </FormLabel>
-                                    <FormControl className="flex-1">
-                                        <PasswordInput
-                                            disabled={isEdit && !isPasswordTouched}
-                                            placeholder="VD: S3cur3P@ssw0rd"
-                                            {...field}
-                                        />
-                                    </FormControl>
-                                </div>
-                                <FormMessage className="ml-40" />
-                            </FormItem>
-                        )}
-                    />
-                </div>
+                        <FormField
+                            control={form.control}
+                            name="username"
+                            render={({ field }) => (
+                                <FormItem className="space-y-1">
+                                    <div className="flex items-center gap-3">
+                                        <FormLabel className="w-40 block text-end text-base font-medium">
+                                            User ID
+                                        </FormLabel>
+                                        <FormControl className="flex-1">
+                                            <Input placeholder="abel.tuter" {...field} />
+                                        </FormControl>
+                                    </div>
+                                    <FormMessage className="ml-40" />
+                                </FormItem>
+                            )}
+                        />
 
-                <div className="pt-2 md:col-span-2 px-12 flex gap-3">
-                    <Button type="submit">Lưu thay đổi</Button>
-                    <Button
-                        type="button"
-                        variant="outline"
-                        onClick={() => navigate({ to: '/admin/users' })}
-                    >
-                        Hủy
-                    </Button>
-                </div>
-            </form>
-        </Form>
+                        <FormField
+                            control={form.control}
+                            name="phoneNumber"
+                            render={({ field }) => (
+                                <FormItem className="space-y-1">
+                                    <div className="flex items-center gap-3">
+                                        <FormLabel className="w-40 block text-end text-base font-medium">
+                                            Business phone
+                                        </FormLabel>
+                                        <FormControl className="flex-1">
+                                            <Input placeholder="+1 234 567 890" {...field} />
+                                        </FormControl>
+                                    </div>
+                                    <FormMessage className="ml-40" />
+                                </FormItem>
+                            )}
+                        />
+                    </div>
+
+                    {/* ===== CỘT PHẢI ===== */}
+                    <div className="space-y-4 px-12">
+                        <FormField
+                            control={form.control}
+                            name="email"
+                            render={({ field }) => (
+                                <FormItem className="space-y-1">
+                                    <div className="flex items-center gap-3">
+                                        <FormLabel className="w-40 block text-end text-base font-medium">
+                                            Email
+                                        </FormLabel>
+                                        <FormControl className="flex-1">
+                                            <Input placeholder="abel.tuter@example.com" {...field} />
+                                        </FormControl>
+                                    </div>
+                                    <FormMessage className="ml-40" />
+                                </FormItem>
+                            )}
+                        />
+
+                        <FormField
+                            control={form.control}
+                            name="role"
+                            render={({ field }) => (
+                                <FormItem className="space-y-1">
+                                    <div className="flex items-center gap-3">
+                                        <FormLabel className="w-40 block text-end text-base font-medium">
+                                            Language / Role
+                                        </FormLabel>
+                                        <div className="flex-1">
+                                            <SelectDropdown
+                                                defaultValue={field.value}
+                                                onValueChange={field.onChange}
+                                                placeholder="Chọn một vai trò"
+                                                items={roles.map(({ label, value }) => ({ label, value }))}
+                                                className="w-full"
+                                            />
+                                        </div>
+                                    </div>
+                                    <FormMessage className="ml-40" />
+                                </FormItem>
+                            )}
+                        />
+
+                        <FormField
+                            control={form.control}
+                            name="password"
+                            render={({ field }) => (
+                                <FormItem className="space-y-1">
+                                    <div className="flex items-center gap-3">
+                                        <FormLabel className="w-40 block text-end text-base font-medium">
+                                            Password{isEdit ? ' (để trống nếu không đổi)' : ''}
+                                        </FormLabel>
+                                        <FormControl className="flex-1">
+                                            <PasswordInput placeholder="VD: S3cur3P@ssw0rd" {...field} />
+                                        </FormControl>
+                                    </div>
+                                    <FormMessage className="ml-40" />
+                                </FormItem>
+                            )}
+                        />
+
+                        <FormField
+                            control={form.control}
+                            name="confirmPassword"
+                            render={({ field }) => (
+                                <FormItem className="space-y-1">
+                                    <div className="flex items-center gap-3">
+                                        <FormLabel className="w-40 block text-end text-base font-medium">
+                                            Confirm password
+                                        </FormLabel>
+                                        <FormControl className="flex-1">
+                                            <PasswordInput
+                                                disabled={isEdit && !isPasswordTouched}
+                                                placeholder="VD: S3cur3P@ssw0rd"
+                                                {...field}
+                                            />
+                                        </FormControl>
+                                    </div>
+                                    <FormMessage className="ml-40" />
+                                </FormItem>
+                            )}
+                        />
+                    </div>
+                </form>
+            </Form>
+            <div className="pt-3 md:col-span-2 flex gap-3">
+                <Button type="submit">Lưu thay đổi</Button>
+                <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => navigate({ to: '/admin/users' })}
+                >
+                    Hủy
+                </Button>
+            </div>
+        </>
     )
 
 
