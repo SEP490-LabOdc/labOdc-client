@@ -25,6 +25,7 @@ import { DataTablePagination, DataTableToolbar } from '@/components/data-table'
 import { type Company } from '../data/schema'
 //import { DataTableBulkActions } from './data-table-bulk-actions'
 import { companiesColumns as columns } from './companies-columns'
+import { DataTableBulkActions } from './data-table-bulk-action'
 
 declare module '@tanstack/react-table' {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -181,7 +182,7 @@ export function CompaniesTable({ data, search, navigate }: DataTableProps) {
                 </Table>
             </div>
             <DataTablePagination table={table} />
-            {/* <DataTableBulkActions table={table} /> */}
+            <DataTableBulkActions table={table} />
         </div>
     )
 }
