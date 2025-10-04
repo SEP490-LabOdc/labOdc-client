@@ -2,11 +2,11 @@ import type { LandingHeader } from "../types";
 
 export const landingHeaderData: LandingHeader[] = [
     {
-        title: 'All Projects',
-        url: '/'
+        title: 'Danh sách dự án',
+        url: '/projects'
     },
     {
-        title: 'Companies',
+        title: 'Danh sách công ty',
         url: '/companies'
     },
 ]

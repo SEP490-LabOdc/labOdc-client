@@ -1,6 +1,6 @@
 import React from 'react'
 import { Outlet } from '@tanstack/react-router'
-import { Footer } from './footer'
+import { Footer } from '../../../components/layout/footer'
 import { CompanyHeader } from './company-header'
 
 type CompanyLayoutProps = {
