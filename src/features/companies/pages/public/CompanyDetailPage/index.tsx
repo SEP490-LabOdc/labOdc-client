@@ -14,7 +14,7 @@ export default function CompanyDetailPage() {
     const [followed, setFollowed] = useState(false)
     const { companyId } = useParams({ from: '/(public)/companies/$companyId' });
 
-    const company: Company = findCompanyById(companyId)
+    const company: Company | undefined = findCompanyById(companyId)
 
     const toggleFollow = () => {
         setFollowed(true)

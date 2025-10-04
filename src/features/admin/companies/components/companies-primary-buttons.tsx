@@ -1,10 +1,10 @@
 import { UserPlus } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { useCompanies } from './companies-provider'
+// import { useCompanies } from './companies-provider'
 import { useNavigate } from '@tanstack/react-router';
 
 export function CompaniesPrimaryButtons() {
-    const { setOpen } = useCompanies();
+    // const { setOpen } = useCompanies();
 
     const navigate = useNavigate();
 

@@ -1,5 +1,3 @@
-'use client'
-
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -61,10 +59,10 @@ export function CompaniesActionDialog({
                 description: currentRow.description ?? '',
                 taxId: currentRow.taxId ?? '',
                 address: currentRow.address ?? '',
-                industry: currentRow.industry ?? '',
-                techStack: currentRow.techStack ?? '',
-                accountManagerId: currentRow.accountManagerId ?? '',
-                logoUrl: currentRow.logoUrl ?? '',
+                // industry: currentRow.industry ?? '',
+                // techStack: currentRow.techStack ?? '',
+                // accountManagerId: currentRow.accountManagerId ?? '',
+                // logoUrl: currentRow.logoUrl ?? '',
                 isEdit,
             }
             : {

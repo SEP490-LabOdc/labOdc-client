@@ -9,13 +9,13 @@ import UsersForm from '../components/users-forms'
 // import { UsersDialogs } from './components/users-dialogs'
 // import { UsersProvider } from './components/users-provider'
 // import { UsersTable } from './components/users-table'
-import { users } from '../data/users'
+// import { users } from '../data/users'
 
 const route = getRouteApi('/_authenticated/admin/users/edit/')
 
 export default function EditUser() {
     const search = route.useSearch()
-    const navigate = route.useNavigate()
+    // const navigate = route.useNavigate()
 
     return (
         <>

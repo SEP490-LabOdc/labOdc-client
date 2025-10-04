@@ -14,4 +14,4 @@ export type Company = {
     website?: string
     email?: string
     foundedYear?: number
-} | undefined
+}
