@@ -165,7 +165,7 @@ export default function UsersForm({
                                 <FormItem className="space-y-1">
                                     <div className="flex items-center gap-3">
                                         <FormLabel className="w-40 block text-end text-base font-medium">
-                                            First name
+                                            Tên
                                         </FormLabel>
                                         <FormControl className="flex-1">
                                             <Input placeholder="John" autoComplete="off" {...field} />
@@ -183,7 +183,7 @@ export default function UsersForm({
                                 <FormItem className="space-y-1">
                                     <div className="flex items-center gap-3">
                                         <FormLabel className="w-40 block text-end text-base font-medium">
-                                            Last name
+                                            Họ
                                         </FormLabel>
                                         <FormControl className="flex-1">
                                             <Input placeholder="Doe" autoComplete="off" {...field} />
@@ -201,7 +201,7 @@ export default function UsersForm({
                                 <FormItem className="space-y-1">
                                     <div className="flex items-center gap-3">
                                         <FormLabel className="w-40 block text-end text-base font-medium">
-                                            User ID
+                                            Tên đăng nhập
                                         </FormLabel>
                                         <FormControl className="flex-1">
                                             <Input placeholder="abel.tuter" {...field} />
@@ -219,7 +219,7 @@ export default function UsersForm({
                                 <FormItem className="space-y-1">
                                     <div className="flex items-center gap-3">
                                         <FormLabel className="w-40 block text-end text-base font-medium">
-                                            Business phone
+                                            Số điện thoại
                                         </FormLabel>
                                         <FormControl className="flex-1">
                                             <Input placeholder="+1 234 567 890" {...field} />
@@ -258,7 +258,7 @@ export default function UsersForm({
                                 <FormItem className="space-y-1">
                                     <div className="flex items-center gap-3">
                                         <FormLabel className="w-40 block text-end text-base font-medium">
-                                            Language / Role
+                                            Vai trò
                                         </FormLabel>
                                         <div className="flex-1">
                                             <SelectDropdown
@@ -282,7 +282,7 @@ export default function UsersForm({
                                 <FormItem className="space-y-1">
                                     <div className="flex items-center gap-3">
                                         <FormLabel className="w-40 block text-end text-base font-medium">
-                                            Password{isEdit ? ' (để trống nếu không đổi)' : ''}
+                                            Mật khẩu{isEdit ? ' (để trống nếu không đổi)' : ''}
                                         </FormLabel>
                                         <FormControl className="flex-1">
                                             <PasswordInput placeholder="VD: S3cur3P@ssw0rd" {...field} />
@@ -300,7 +300,7 @@ export default function UsersForm({
                                 <FormItem className="space-y-1">
                                     <div className="flex items-center gap-3">
                                         <FormLabel className="w-40 block text-end text-base font-medium">
-                                            Confirm password
+                                            Xác nhận mật khẩu
                                         </FormLabel>
                                         <FormControl className="flex-1">
                                             <PasswordInput
@@ -317,6 +317,7 @@ export default function UsersForm({
                     </div>
                 </form>
             </Form>
+
             <div className="pt-3 md:col-span-2 flex gap-3">
                 <Button type="submit">Lưu thay đổi</Button>
                 <Button
@@ -329,6 +330,4 @@ export default function UsersForm({
             </div>
         </>
     )
-
-
 }
