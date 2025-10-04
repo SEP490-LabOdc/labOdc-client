@@ -12,6 +12,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { type User } from '../data/schema'
 import { useUsers } from './users-provider'
+import { useNavigate } from '@tanstack/react-router'
 
 type DataTableRowActionsProps = {
     row: Row<User>
@@ -19,6 +20,7 @@ type DataTableRowActionsProps = {
 
 export function DataTableRowActions({ row }: DataTableRowActionsProps) {
     const { setOpen, setCurrentRow } = useUsers()
+    const navigate = useNavigate()
     return (
         <>
             <DropdownMenu modal={false}>
@@ -32,10 +34,23 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align='end' className='w-[160px]'>
-                    <DropdownMenuItem
+                    {/* <DropdownMenuItem
                         onClick={() => {
                             setCurrentRow(row.original)
                             setOpen('edit')
+                        }}
+                    >
+                        Chỉnh sửa
+                        <DropdownMenuShortcut>
+                            <UserPen size={16} />
+                        </DropdownMenuShortcut>
+                    </DropdownMenuItem> */}
+                    <DropdownMenuItem
+                        onClick={() => {
+                            navigate({
+                                to: '/admin/users/edit',
+                                search: { user: row.original },
+                            })
                         }}
                     >
                         Chỉnh sửa
