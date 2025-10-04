@@ -180,12 +180,13 @@ export default function CompanyApprovingForm({
                                 <div className="flex items-center gap-3">
                                     <span className="w-40 block text-end text-base font-medium">File</span>
                                     <a
-                                        href={`http://localhost:5173/logo.png`}
-                                        download={'Sample file'}
-                                        className="flex-1 px-3 py-2 rounded-md border bg-muted/40 text-sm text-blue-600 underline"
+                                        href="http://localhost:5173/logo.png"
+                                        download="Sample file.png"
+                                        className="flex-1 px-3 py-2 rounded-md border bg-muted/40 text-sm text-blue-600 border-input underline"
                                     >
                                         Sample file.png
                                     </a>
+
                                 </div>
                             </div>
                         </div>
