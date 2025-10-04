@@ -1,5 +1,3 @@
-'use client'
-
 import { useEffect, useState } from 'react'
 import type { JSX } from 'react'
 import { Button } from '@/components/ui/button'
@@ -44,13 +42,13 @@ const CHECKLIST_ITEMS = [
     },
 ] as const
 
-const STATUS_LABELS: Record<string, string> = {
-    approving: 'Chờ phê duyệt',
-    rejected: 'Từ chối phê duyệt',
-    active: 'Đang hoạt động',
-    inactive: 'Không hoạt động',
-    suspended: 'Đã tạm khóa',
-}
+// const STATUS_LABELS: Record<string, string> = {
+//     approving: 'Chờ phê duyệt',
+//     rejected: 'Từ chối phê duyệt',
+//     active: 'Đang hoạt động',
+//     inactive: 'Không hoạt động',
+//     suspended: 'Đã tạm khóa',
+// }
 
 type ChecklistKey = (typeof CHECKLIST_ITEMS)[number]['id']
 type ChecklistState = Record<ChecklistKey, boolean>
@@ -103,6 +101,7 @@ export default function CompanyApprovingForm({
             //     body: JSON.stringify({ verification: updated }),
             // })
             // TODO: handle non-ok responses
+            console.log(updated)
         } catch (error: any) {
             setVerification(previous)
             alert(error?.message ?? 'Đã xảy ra lỗi, vui lòng thử lại.')

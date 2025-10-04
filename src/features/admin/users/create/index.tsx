@@ -1,4 +1,4 @@
-import { getRouteApi } from '@tanstack/react-router'
+// import { getRouteApi } from '@tanstack/react-router'
 import { ConfigDrawer } from '@/components/config-drawer'
 import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
@@ -11,11 +11,11 @@ import UsersForm from '../components/users-forms'
 // import { UsersTable } from './components/users-table'
 // import { users } from './data/users'
 
-const route = getRouteApi('/_authenticated/admin/users/create/')
+// const route = getRouteApi('/_authenticated/admin/users/create/')
 
 export default function CreateUser() {
-    const search = route.useSearch()
-    const navigate = route.useNavigate()
+    // const search = route.useSearch()
+    // const navigate = route.useNavigate()
 
     return (
         <>

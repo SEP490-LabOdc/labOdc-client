@@ -1,10 +1,10 @@
 import { UserPlus } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { useUsers } from './users-provider'
+// import { useUsers } from './users-provider'
 import { useNavigate } from '@tanstack/react-router';
 
 export function UsersPrimaryButtons() {
-    const { setOpen } = useUsers();
+    // const { setOpen } = useUsers();
 
     const navigate = useNavigate();
 

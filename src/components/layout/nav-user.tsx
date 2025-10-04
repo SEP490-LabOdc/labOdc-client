@@ -1,9 +1,9 @@
-import { Link } from '@tanstack/react-router'
+// import { Link } from '@tanstack/react-router'
 import {
-  BadgeCheck,
-  Bell,
+  // BadgeCheck,
+  // Bell,
   ChevronsUpDown,
-  CreditCard,
+  // CreditCard,
   LogOut,
   Sparkles,
 } from 'lucide-react'
@@ -81,26 +81,26 @@ export function NavUser({
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-              <DropdownMenuItem asChild>
-                <Link to='/settings/account'>
-                  <BadgeCheck />
-                  Account
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link to='/settings'>
-                  <CreditCard />
-                  Billing
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link to='/settings/notifications'>
-                  <Bell />
-                  Notifications
-                </Link>
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
+            {/*<DropdownMenuGroup>*/}
+            {/*  <DropdownMenuItem asChild>*/}
+            {/*    <Link to='/settings/account'>*/}
+            {/*      <BadgeCheck />*/}
+            {/*      Account*/}
+            {/*    </Link>*/}
+            {/*  </DropdownMenuItem>*/}
+            {/*  <DropdownMenuItem asChild>*/}
+            {/*    <Link to='/settings'>*/}
+            {/*      <CreditCard />*/}
+            {/*      Billing*/}
+            {/*    </Link>*/}
+            {/*  </DropdownMenuItem>*/}
+            {/*  <DropdownMenuItem asChild>*/}
+            {/*    <Link to='/settings/notifications'>*/}
+            {/*      <Bell />*/}
+            {/*      Notifications*/}
+            {/*    </Link>*/}
+            {/*  </DropdownMenuItem>*/}
+            {/*</DropdownMenuGroup>*/}
             <DropdownMenuSeparator />
             <DropdownMenuItem>
               <LogOut />
