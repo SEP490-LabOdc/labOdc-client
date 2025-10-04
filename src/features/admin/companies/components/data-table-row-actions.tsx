@@ -12,6 +12,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { type Company } from '../data/schema'
 import { useCompanies } from './companies-provider'
+import { useNavigate } from '@tanstack/react-router'
 
 type DataTableRowActionsProps = {
     row: Row<Company>
@@ -19,6 +20,7 @@ type DataTableRowActionsProps = {
 
 export function DataTableRowActions({ row }: DataTableRowActionsProps) {
     const { setOpen, setCurrentRow } = useCompanies()
+    const navigate = useNavigate()
     return (
         <>
             <DropdownMenu modal={false}>
@@ -34,8 +36,10 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
                 <DropdownMenuContent align='end' className='w-[160px]'>
                     <DropdownMenuItem
                         onClick={() => {
-                            setCurrentRow(row.original)
-                            setOpen('edit')
+                            navigate({
+                                to: '/admin/companies/edit',
+                                search: { user: row.original },
+                            })
                         }}
                     >
                         Chỉnh sửa
