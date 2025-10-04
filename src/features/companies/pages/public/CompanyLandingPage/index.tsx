@@ -55,7 +55,7 @@ const CompanyLandingPage: React.FC = () => {
                                 Triển khai dự án thực tế, tiếp cận nhân lực trẻ, đồng hành đào tạo thế hệ tương lai
                             </p>
                             <div className="flex flex-col sm:flex-row gap-4">
-                                <Link to='/company/sign-up' className="bg-[var(--color-brand-orange)] hover:bg-[var(--color-brand-orange)]/90 text-white px-8 py-4 rounded-lg font-semibold text-lg transition-colors shadow-lg">
+                                <Link to='/company-register' className="bg-[var(--color-brand-orange)] hover:bg-[var(--color-brand-orange)]/90 text-white px-8 py-4 rounded-lg font-semibold text-lg transition-colors shadow-lg">
                                     Đăng ký doanh nghiệp
                                 </Link>
                                 <button className="border-2 border-secondary text-secondary hover:bg-secondary hover:text-secondary-foreground px-8 py-4 rounded-lg font-semibold text-lg transition-colors">
@@ -357,9 +357,6 @@ const CompanyLandingPage: React.FC = () => {
                         <p className="text-xl opacity-90">
                             Bắt đầu hành trình kết nối với tài năng trẻ FPTU ngay hôm nay
                         </p>
-                        <div className="inline-block bg-destructive text-white px-4 py-2 rounded-full text-sm font-semibold mt-4">
-                            ⏰ Chỉ còn 15 suất cho đợt đầu tiên!
-                        </div>
                     </div>
 
                     <div className="max-w-2xl mx-auto">
