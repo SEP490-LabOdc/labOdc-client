@@ -122,11 +122,11 @@ export function UserAuthForm({
                         </FormItem>
                     )}
                 />
-                <Button className='mt-2' disabled={isLoading} size='lg'>
+                <Button className='mt-2 bg-[#2a9d8f]' disabled={isLoading} size='lg'>
                     {isLoading ? <Loader2 className='animate-spin' /> : <LogIn />}
                     Sign in
                 </Button>
-                <p className='text-center font-semibold'>Do not have an account? <Link to='/sign-up'>Sign Up now</Link></p>
+                <p className='text-center'>Do not have an account? <Link to='/sign-up' className='text-[#2a9d8f] font-semibold hover:underline'>Sign Up now</Link></p>
             </form>
         </Form>
     )
