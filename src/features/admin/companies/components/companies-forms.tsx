@@ -157,257 +157,259 @@ export default function CompanyForm({
     }
 
     return (
-        <Form {...form}>
-            <form
-                onSubmit={form.handleSubmit(onSubmit)}
-                className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2"
-            >
-                {/* ========== CỘT TRÁI ========== */}
-                <div className="space-y-4 px-12">
-                    <FormField
-                        control={form.control}
-                        name="companyName"
-                        render={({ field }) => (
-                            <FormItem className="space-y-1">
-                                <div className="flex items-center gap-3">
-                                    <FormLabel className="w-40 block text-end text-base font-medium">
-                                        Tên công ty
-                                    </FormLabel>
-                                    <FormControl className="flex-1">
-                                        <Input placeholder="VD: Acme Corp." {...field} />
-                                    </FormControl>
-                                </div>
-                                <FormMessage className="ml-40" />
-                            </FormItem>
-                        )}
-                    />
+        <>
 
-                    <FormField
-                        control={form.control}
-                        name="description"
-                        render={({ field }) => (
-                            <FormItem className="space-y-1">
-                                <div className="flex items-center gap-3">
-                                    <FormLabel className="w-40 block text-end text-base font-medium">
-                                        Mô tả
-                                    </FormLabel>
-                                    <FormControl className="flex-1">
-                                        <Input placeholder="Mô tả ngắn về công ty" {...field} />
-                                    </FormControl>
-                                </div>
-                                <FormMessage className="ml-40" />
-                            </FormItem>
-                        )}
-                    />
-
-                    <FormField
-                        control={form.control}
-                        name="email"
-                        render={({ field }) => (
-                            <FormItem className="space-y-1">
-                                <div className="flex items-center gap-3">
-                                    <FormLabel className="w-40 block text-end text-base font-medium">
-                                        Email
-                                    </FormLabel>
-                                    <FormControl className="flex-1">
-                                        <Input placeholder="contact@company.com" {...field} />
-                                    </FormControl>
-                                </div>
-                                <FormMessage className="ml-40" />
-                            </FormItem>
-                        )}
-                    />
-
-                    <FormField
-                        control={form.control}
-                        name="taxId"
-                        render={({ field }) => (
-                            <FormItem className="space-y-1">
-                                <div className="flex items-center gap-3">
-                                    <FormLabel className="w-40 block text-end text-base font-medium">
-                                        Mã số thuế
-                                    </FormLabel>
-                                    <FormControl className="flex-1">
-                                        <Input placeholder="0123456789" {...field} />
-                                    </FormControl>
-                                </div>
-                                <FormMessage className="ml-40" />
-                            </FormItem>
-                        )}
-                    />
-
-                    <FormField
-                        control={form.control}
-                        name="address"
-                        render={({ field }) => (
-                            <FormItem className="space-y-1">
-                                <div className="flex items-center gap-3">
-                                    <FormLabel className="w-40 block text-end text-base font-medium">
-                                        Địa chỉ
-                                    </FormLabel>
-                                    <FormControl className="flex-1">
-                                        <Input placeholder="Số nhà, đường, phường/xã, quận/huyện" {...field} />
-                                    </FormControl>
-                                </div>
-                                <FormMessage className="ml-40" />
-                            </FormItem>
-                        )}
-                    />
-                </div>
-
-                {/* ========== CỘT PHẢI ========== */}
-                <div className="space-y-4 px-12">
-                    <FormField
-                        control={form.control}
-                        name="phoneNumber"
-                        render={({ field }) => (
-                            <FormItem className="space-y-1">
-                                <div className="flex items-center gap-3">
-                                    <FormLabel className="w-40 block text-end text-base font-medium">
-                                        Số điện thoại
-                                    </FormLabel>
-                                    <FormControl className="flex-1">
-                                        <Input placeholder="+84 123 456 789" {...field} />
-                                    </FormControl>
-                                </div>
-                                <FormMessage className="ml-40" />
-                            </FormItem>
-                        )}
-                    />
-
-                    <FormField
-                        control={form.control}
-                        name="domain"
-                        render={({ field }) => (
-                            <FormItem className="space-y-1">
-                                <div className="flex items-center gap-3">
-                                    <FormLabel className="w-40 block text-end text-base font-medium">
-                                        Lĩnh vực
-                                    </FormLabel>
-                                    <div className="flex-1">
-                                        <SelectDropdown
-                                            defaultValue={field.value}
-                                            onValueChange={field.onChange}
-                                            placeholder="Chọn lĩnh vực"
-                                            items={DOMAIN_OPTIONS}
-                                            className="w-full"
-                                        />
+            <Form {...form}>
+                <form
+                    onSubmit={form.handleSubmit(onSubmit)}
+                    className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2"
+                >
+                    {/* ========== CỘT TRÁI ========== */}
+                    <div className="space-y-4 px-12">
+                        <FormField
+                            control={form.control}
+                            name="companyName"
+                            render={({ field }) => (
+                                <FormItem className="space-y-1">
+                                    <div className="flex items-center gap-3">
+                                        <FormLabel className="w-40 block text-end text-base font-medium">
+                                            Tên công ty
+                                        </FormLabel>
+                                        <FormControl className="flex-1">
+                                            <Input placeholder="VD: Acme Corp." {...field} />
+                                        </FormControl>
                                     </div>
-                                </div>
-                                <FormMessage className="ml-40" />
-                            </FormItem>
-                        )}
-                    />
+                                    <FormMessage className="ml-40" />
+                                </FormItem>
+                            )}
+                        />
 
-                    <FormField
-                        control={form.control}
-                        name="status"
-                        render={({ field }) => (
-                            <FormItem className="space-y-1">
-                                <div className="flex items-center gap-3">
-                                    <FormLabel className="w-40 block text-end text-base font-medium">
-                                        Trạng thái
-                                    </FormLabel>
-                                    <div className="flex-1">
-                                        <SelectDropdown
-                                            defaultValue={field.value}
-                                            onValueChange={field.onChange}
-                                            placeholder="Chọn trạng thái"
-                                            items={STATUS_OPTIONS}
-                                            className="w-full"
-                                        />
+                        <FormField
+                            control={form.control}
+                            name="description"
+                            render={({ field }) => (
+                                <FormItem className="space-y-1">
+                                    <div className="flex items-center gap-3">
+                                        <FormLabel className="w-40 block text-end text-base font-medium">
+                                            Mô tả
+                                        </FormLabel>
+                                        <FormControl className="flex-1">
+                                            <Input placeholder="Mô tả ngắn về công ty" {...field} />
+                                        </FormControl>
                                     </div>
-                                </div>
-                                <FormMessage className="ml-40" />
-                            </FormItem>
-                        )}
-                    />
+                                    <FormMessage className="ml-40" />
+                                </FormItem>
+                            )}
+                        />
 
-                    <FormField
-                        control={form.control}
-                        name="logo"
-                        render={({ field }) => (
-                            <FormItem className="space-y-1">
-                                <div className="flex items-center gap-3">
-                                    <FormLabel className="w-40 block text-end text-base font-medium">
-                                        Logo (URL)
-                                    </FormLabel>
-                                    <FormControl className="flex-1">
-                                        <Input placeholder="https://..." {...field} />
-                                    </FormControl>
-                                </div>
-                                <FormMessage className="ml-40" />
-                            </FormItem>
-                        )}
-                    />
+                        <FormField
+                            control={form.control}
+                            name="email"
+                            render={({ field }) => (
+                                <FormItem className="space-y-1">
+                                    <div className="flex items-center gap-3">
+                                        <FormLabel className="w-40 block text-end text-base font-medium">
+                                            Email
+                                        </FormLabel>
+                                        <FormControl className="flex-1">
+                                            <Input placeholder="contact@company.com" {...field} />
+                                        </FormControl>
+                                    </div>
+                                    <FormMessage className="ml-40" />
+                                </FormItem>
+                            )}
+                        />
 
-                    <FormField
-                        control={form.control}
-                        name="banner"
-                        render={({ field }) => (
-                            <FormItem className="space-y-1">
-                                <div className="flex items-center gap-3">
-                                    <FormLabel className="w-40 block text-end text-base font-medium">
-                                        Banner (URL)
-                                    </FormLabel>
-                                    <FormControl className="flex-1">
-                                        <Input placeholder="https://..." {...field} />
-                                    </FormControl>
-                                </div>
-                                <FormMessage className="ml-40" />
-                            </FormItem>
-                        )}
-                    />
+                        <FormField
+                            control={form.control}
+                            name="taxId"
+                            render={({ field }) => (
+                                <FormItem className="space-y-1">
+                                    <div className="flex items-center gap-3">
+                                        <FormLabel className="w-40 block text-end text-base font-medium">
+                                            Mã số thuế
+                                        </FormLabel>
+                                        <FormControl className="flex-1">
+                                            <Input placeholder="0123456789" {...field} />
+                                        </FormControl>
+                                    </div>
+                                    <FormMessage className="ml-40" />
+                                </FormItem>
+                            )}
+                        />
 
-                    <FormField
-                        control={form.control}
-                        name="accountManager"
-                        render={({ field }) => (
-                            <FormItem className="space-y-1">
-                                <div className="flex items-center gap-3">
-                                    <FormLabel className="w-40 block text-end text-base font-medium">
-                                        Quản lý tài khoản
-                                    </FormLabel>
-                                    <FormControl className="flex-1">
-                                        <Input placeholder="Nguyễn Văn A" {...field} />
-                                    </FormControl>
-                                </div>
-                                <FormMessage className="ml-40" />
-                            </FormItem>
-                        )}
-                    />
+                        <FormField
+                            control={form.control}
+                            name="address"
+                            render={({ field }) => (
+                                <FormItem className="space-y-1">
+                                    <div className="flex items-center gap-3">
+                                        <FormLabel className="w-40 block text-end text-base font-medium">
+                                            Địa chỉ
+                                        </FormLabel>
+                                        <FormControl className="flex-1">
+                                            <Input placeholder="Số nhà, đường, phường/xã, quận/huyện" {...field} />
+                                        </FormControl>
+                                    </div>
+                                    <FormMessage className="ml-40" />
+                                </FormItem>
+                            )}
+                        />
+                    </div>
 
-                    <FormField
-                        control={form.control}
-                        name="lastInteraction"
-                        render={({ field }) => (
-                            <FormItem className="space-y-1">
-                                <div className="flex items-center gap-3">
-                                    <FormLabel className="w-40 block text-end text-base font-medium">
-                                        Lần tương tác cuối
-                                    </FormLabel>
-                                    <FormControl className="flex-1">
-                                        <Input type="date" {...field} />
-                                    </FormControl>
-                                </div>
-                                <FormMessage className="ml-40" />
-                            </FormItem>
-                        )}
-                    />
-                </div>
+                    {/* ========== CỘT PHẢI ========== */}
+                    <div className="space-y-4 px-12">
+                        <FormField
+                            control={form.control}
+                            name="phoneNumber"
+                            render={({ field }) => (
+                                <FormItem className="space-y-1">
+                                    <div className="flex items-center gap-3">
+                                        <FormLabel className="w-40 block text-end text-base font-medium">
+                                            Số điện thoại
+                                        </FormLabel>
+                                        <FormControl className="flex-1">
+                                            <Input placeholder="+84 123 456 789" {...field} />
+                                        </FormControl>
+                                    </div>
+                                    <FormMessage className="ml-40" />
+                                </FormItem>
+                            )}
+                        />
 
-                {/* Footer buttons */}
-                <div className="pt-3 md:col-span-2 flex gap-3 px-12">
-                    <Button type="submit">Lưu thay đổi</Button>
-                    <Button
-                        type="button"
-                        variant="outline"
-                        onClick={() => navigate({ to: '/admin/companies' })}
-                    >
-                        Hủy
-                    </Button>
-                </div>
-            </form>
-        </Form>
+                        <FormField
+                            control={form.control}
+                            name="domain"
+                            render={({ field }) => (
+                                <FormItem className="space-y-1">
+                                    <div className="flex items-center gap-3">
+                                        <FormLabel className="w-40 block text-end text-base font-medium">
+                                            Lĩnh vực
+                                        </FormLabel>
+                                        <div className="flex-1">
+                                            <SelectDropdown
+                                                defaultValue={field.value}
+                                                onValueChange={field.onChange}
+                                                placeholder="Chọn lĩnh vực"
+                                                items={DOMAIN_OPTIONS}
+                                                className="w-full"
+                                            />
+                                        </div>
+                                    </div>
+                                    <FormMessage className="ml-40" />
+                                </FormItem>
+                            )}
+                        />
+
+                        <FormField
+                            control={form.control}
+                            name="status"
+                            render={({ field }) => (
+                                <FormItem className="space-y-1">
+                                    <div className="flex items-center gap-3">
+                                        <FormLabel className="w-40 block text-end text-base font-medium">
+                                            Trạng thái
+                                        </FormLabel>
+                                        <div className="flex-1">
+                                            <SelectDropdown
+                                                defaultValue={field.value}
+                                                onValueChange={field.onChange}
+                                                placeholder="Chọn trạng thái"
+                                                items={STATUS_OPTIONS}
+                                                className="w-full"
+                                            />
+                                        </div>
+                                    </div>
+                                    <FormMessage className="ml-40" />
+                                </FormItem>
+                            )}
+                        />
+
+                        <FormField
+                            control={form.control}
+                            name="logo"
+                            render={({ field }) => (
+                                <FormItem className="space-y-1">
+                                    <div className="flex items-center gap-3">
+                                        <FormLabel className="w-40 block text-end text-base font-medium">
+                                            Logo (URL)
+                                        </FormLabel>
+                                        <FormControl className="flex-1">
+                                            <Input placeholder="https://..." {...field} />
+                                        </FormControl>
+                                    </div>
+                                    <FormMessage className="ml-40" />
+                                </FormItem>
+                            )}
+                        />
+
+                        <FormField
+                            control={form.control}
+                            name="banner"
+                            render={({ field }) => (
+                                <FormItem className="space-y-1">
+                                    <div className="flex items-center gap-3">
+                                        <FormLabel className="w-40 block text-end text-base font-medium">
+                                            Banner (URL)
+                                        </FormLabel>
+                                        <FormControl className="flex-1">
+                                            <Input placeholder="https://..." {...field} />
+                                        </FormControl>
+                                    </div>
+                                    <FormMessage className="ml-40" />
+                                </FormItem>
+                            )}
+                        />
+
+                        <FormField
+                            control={form.control}
+                            name="accountManager"
+                            render={({ field }) => (
+                                <FormItem className="space-y-1">
+                                    <div className="flex items-center gap-3">
+                                        <FormLabel className="w-40 block text-end text-base font-medium">
+                                            Quản lý tài khoản
+                                        </FormLabel>
+                                        <FormControl className="flex-1">
+                                            <Input placeholder="Nguyễn Văn A" {...field} />
+                                        </FormControl>
+                                    </div>
+                                    <FormMessage className="ml-40" />
+                                </FormItem>
+                            )}
+                        />
+
+                        <FormField
+                            control={form.control}
+                            name="lastInteraction"
+                            render={({ field }) => (
+                                <FormItem className="space-y-1">
+                                    <div className="flex items-center gap-3">
+                                        <FormLabel className="w-40 block text-end text-base font-medium">
+                                            Lần tương tác cuối
+                                        </FormLabel>
+                                        <FormControl className="flex-1">
+                                            <Input type="date" {...field} />
+                                        </FormControl>
+                                    </div>
+                                    <FormMessage className="ml-40" />
+                                </FormItem>
+                            )}
+                        />
+                    </div>
+                </form>
+            </Form>
+            <div className="pt-3 md:col-span-2 flex gap-3">
+                <Button type="submit">Lưu thay đổi</Button>
+                <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => navigate({ to: '/admin/companies' })}
+                >
+                    Hủy
+                </Button>
+            </div>
+        </>
+
     )
 }

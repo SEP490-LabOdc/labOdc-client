@@ -6,15 +6,14 @@ import { ProfileDropdown } from '@/components/profile-dropdown'
 import { Search } from '@/components/search'
 import { ThemeSwitch } from '@/components/theme-switch'
 import { CompaniesProvider } from '../components/companies-provider'
-import { CompaniesPrimaryButtons } from '../components/companies-primary-buttons'
-import CompanyForm from '../components/companies-forms'
+import CompanyApprovingForm from '../components/companies-approving-form'
 
 
-const route = getRouteApi('/_authenticated/admin/companies/edit/')
+const route = getRouteApi('/_authenticated/admin/companies/approve/')
 
-export default function EditCompany() {
+export default function ApproveCompany() {
     const search = route.useSearch()
-    const navigate = route.useNavigate()
+    // const navigate = route.useNavigate()
 
     return (
         <CompaniesProvider>
@@ -30,15 +29,14 @@ export default function EditCompany() {
                 <Main>
                     <div className='mb-2 flex flex-wrap items-center justify-between space-y-2'>
                         <div>
-                            <h2 className='text-2xl font-bold tracking-tight'>Chỉnh sửa thông tin công ty</h2>
+                            <h2 className='text-2xl font-bold tracking-tight'>Phê duyệt thông tin công ty</h2>
                             <p className='text-muted-foreground'>
-                                Thay đổi thông tin công ty tại đây. Nhấn lưu khi bạn hoàn tất.
+                                Phê duyệt thông tin công ty tại đây. Nhấn nút phê duyệt khi bạn hoàn tất.
                             </p>
                         </div>
-                        <CompaniesPrimaryButtons />
                     </div>
                     <div className='-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-y-0 lg:space-x-12'>
-                        <CompanyForm mode='edit' initialData={search?.user} />
+                        <CompanyApprovingForm initialData={search?.company} />
                     </div>
                 </Main>
             </>
