@@ -129,7 +129,7 @@ function SidebarMenuCollapsible({
 
 function SidebarMenuCollapsedDropdown({
   item,
-  href,
+  // href,
 }: {
   item: NavCollapsible
   href: string

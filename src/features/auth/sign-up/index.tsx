@@ -1,4 +1,3 @@
-import React from 'react'
 import { SignUpForm } from './components/sign-up-form'
 import { Button } from '@/components/ui/button'
 import ggLogo from '@/assets/google-logo.png'

@@ -1,4 +1,4 @@
-﻿import { getRouteApi } from '@tanstack/react-router'
+﻿// import { getRouteApi } from '@tanstack/react-router'
 import { Button } from '@/components/ui/button'
 import {
     Card,
@@ -18,7 +18,7 @@ import { ThemeSwitch } from '@/components/theme-switch'
 import { Overview } from './components/overview'
 import { RecentSales } from './components/recent-sales'
 
-const route = getRouteApi('/_authenticated/admin/')
+// const route = getRouteApi('/_authenticated/admin/')
 
 export default function Dashboard() {
     return (

@@ -1,4 +1,3 @@
-import React from 'react'
 import { Card, CardContent } from '@/components/ui/card'
 import { ClipboardList, FileText, GraduationCap, Search, UserCheck, Users2 } from 'lucide-react'
 

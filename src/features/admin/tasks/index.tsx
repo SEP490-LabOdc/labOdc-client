@@ -1,9 +1,8 @@
-import React from 'react'
 import {
     Table,
     TableHeader,
     TableBody,
-    TableFooter,
+    // TableFooter,
     TableHead,
     TableRow,
     TableCell,
