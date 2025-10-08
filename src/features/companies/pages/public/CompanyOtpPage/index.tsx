@@ -14,7 +14,7 @@ export default function VerifyOtpPage() {
                         transition={{ duration: 1.5 }}
                         className="w-full max-w-2xl mx-auto"
                     >
-                        <div className="mb-8 text-center"> {/* Thêm text-center để đẹp hơn */}
+                        <div className="mb-8 text-center">
                             <h1 className="text-2xl lg:text-3xl font-bold text-[#264653] mb-2">
                                 Kiểm tra email của bạn
                             </h1>
@@ -23,8 +23,8 @@ export default function VerifyOtpPage() {
                             </p>
                         </div>
 
-                        {/* Thay thế LoginCompanyForm bằng OtpForm */}
                         <OtpForm />
+
                     </motion.div>
                 </div>
             </div>
