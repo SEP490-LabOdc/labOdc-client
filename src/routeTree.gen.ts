@@ -14,6 +14,7 @@ import { Route as publicRouteRouteImport } from './routes/(public)/route'
 import { Route as authRouteRouteImport } from './routes/(auth)/route'
 import { Route as CompanyIndexRouteImport } from './routes/company/index'
 import { Route as CompanyRegisterIndexRouteImport } from './routes/company-register/index'
+import { Route as CompanyLoginIndexRouteImport } from './routes/company-login/index'
 import { Route as publicIndexRouteImport } from './routes/(public)/index'
 import { Route as errors503RouteImport } from './routes/(errors)/503'
 import { Route as errors500RouteImport } from './routes/(errors)/500'
@@ -62,6 +63,11 @@ const CompanyIndexRoute = CompanyIndexRouteImport.update({
 const CompanyRegisterIndexRoute = CompanyRegisterIndexRouteImport.update({
   id: '/company-register/',
   path: '/company-register/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CompanyLoginIndexRoute = CompanyLoginIndexRouteImport.update({
+  id: '/company-login/',
+  path: '/company-login/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const publicIndexRoute = publicIndexRouteImport.update({
@@ -214,6 +220,7 @@ export interface FileRoutesByFullPath {
   '/404': typeof errors404Route
   '/500': typeof errors500Route
   '/503': typeof errors503Route
+  '/company-login': typeof CompanyLoginIndexRoute
   '/company-register': typeof CompanyRegisterIndexRoute
   '/company/': typeof CompanyIndexRoute
   '/companies/$companyId': typeof publicCompaniesCompanyIdRoute
@@ -242,6 +249,7 @@ export interface FileRoutesByTo {
   '/404': typeof errors404Route
   '/500': typeof errors500Route
   '/503': typeof errors503Route
+  '/company-login': typeof CompanyLoginIndexRoute
   '/company-register': typeof CompanyRegisterIndexRoute
   '/company': typeof CompanyIndexRoute
   '/companies/$companyId': typeof publicCompaniesCompanyIdRoute
@@ -276,6 +284,7 @@ export interface FileRoutesById {
   '/(errors)/500': typeof errors500Route
   '/(errors)/503': typeof errors503Route
   '/(public)/': typeof publicIndexRoute
+  '/company-login/': typeof CompanyLoginIndexRoute
   '/company-register/': typeof CompanyRegisterIndexRoute
   '/company/': typeof CompanyIndexRoute
   '/(public)/companies/$companyId': typeof publicCompaniesCompanyIdRoute
@@ -309,6 +318,7 @@ export interface FileRouteTypes {
     | '/404'
     | '/500'
     | '/503'
+    | '/company-login'
     | '/company-register'
     | '/company/'
     | '/companies/$companyId'
@@ -337,6 +347,7 @@ export interface FileRouteTypes {
     | '/404'
     | '/500'
     | '/503'
+    | '/company-login'
     | '/company-register'
     | '/company'
     | '/companies/$companyId'
@@ -370,6 +381,7 @@ export interface FileRouteTypes {
     | '/(errors)/500'
     | '/(errors)/503'
     | '/(public)/'
+    | '/company-login/'
     | '/company-register/'
     | '/company/'
     | '/(public)/companies/$companyId'
@@ -402,6 +414,7 @@ export interface RootRouteChildren {
   errors404Route: typeof errors404Route
   errors500Route: typeof errors500Route
   errors503Route: typeof errors503Route
+  CompanyLoginIndexRoute: typeof CompanyLoginIndexRoute
   CompanyRegisterIndexRoute: typeof CompanyRegisterIndexRoute
 }
 
@@ -440,6 +453,13 @@ declare module '@tanstack/react-router' {
       path: '/company-register'
       fullPath: '/company-register'
       preLoaderRoute: typeof CompanyRegisterIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/company-login/': {
+      id: '/company-login/'
+      path: '/company-login'
+      fullPath: '/company-login'
+      preLoaderRoute: typeof CompanyLoginIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/(public)/': {
@@ -736,6 +756,7 @@ const rootRouteChildren: RootRouteChildren = {
   errors404Route: errors404Route,
   errors500Route: errors500Route,
   errors503Route: errors503Route,
+  CompanyLoginIndexRoute: CompanyLoginIndexRoute,
   CompanyRegisterIndexRoute: CompanyRegisterIndexRoute,
 }
 export const routeTree = rootRouteImport
