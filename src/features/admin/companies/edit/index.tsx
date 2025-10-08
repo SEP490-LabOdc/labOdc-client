@@ -14,7 +14,7 @@ const route = getRouteApi('/_authenticated/admin/companies/edit/')
 
 export default function EditCompany() {
     const search = route.useSearch()
-    const navigate = route.useNavigate()
+    // const navigate = route.useNavigate()
 
     return (
         <CompaniesProvider>

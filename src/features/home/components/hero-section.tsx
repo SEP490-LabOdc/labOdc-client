@@ -1,4 +1,3 @@
-import React from 'react'
 import { Button } from '@/components/ui/button'
 import { ArrowRight, ChevronDown, Code, Lightbulb, Monitor, Users } from 'lucide-react'
 
