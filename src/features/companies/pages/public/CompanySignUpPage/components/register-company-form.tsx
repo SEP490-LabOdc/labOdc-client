@@ -315,6 +315,7 @@ export function RegisterCompanyForm() {
                         <ArrowRight className="ml-2 h-4 w-4" />
                     </Button>
                     <p className='text-center'>Đã có tài khoản <Link to='/company-login' className='text-[#2a9d8f] font-semibold hover:underline'>Đăng nhập ngay</Link></p>
+
                 </div>
             </form>
         </Form>
