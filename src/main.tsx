@@ -14,7 +14,7 @@ import { DirectionProvider } from './context/direction-provider'
 import { FontProvider } from './context/font-provider'
 import { ThemeProvider } from './context/theme-provider'
 // Generated Routes
-import { routeTree } from './routeTree.gen'
+import { routeTree } from './routeTree.gen.ts'
 // Styles
 import './styles/index.css'
 import { NotFoundError } from './features/errors/not-found-error'

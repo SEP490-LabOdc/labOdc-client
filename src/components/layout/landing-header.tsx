@@ -29,7 +29,7 @@ export default function LandingHeader() {
                     </nav>
                 </div>
                 <div className="flex items-center space-x-4">
-                    <Link to='/company' className='font-bold'>For company</Link>
+                    <Link to='/company' className='font-bold'>Công ty</Link>
                     {isAuthenticated ? (
                         <>
                             <NotificationDropdown />
@@ -38,11 +38,11 @@ export default function LandingHeader() {
                     ) : (
                         <div>
                             <Link to='/sign-in' className='font-bold'>
-                                Sign In
+                                Đăng nhập
                             </Link>
                             /
                             <Link to='/sign-in' className='font-bold'>
-                                Sign Up
+                                Đăng ký
                             </Link>
                         </div>
                     )}
