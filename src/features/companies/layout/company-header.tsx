@@ -12,12 +12,12 @@ export function CompanyHeader() {
                         </Link>
                     </div>
                     <p className="flex items-center font-bold">
-                        For Company
+                        Dành cho công ty
                     </p>
                 </div>
                 <div className="flex items-center space-x-4">
-                    <Link to='/sign-in' className='font-semibold'>
-                        Sign In
+                    <Link to='/company-login' className='font-semibold'>
+                        Đăng nhập
                     </Link>
                 </div>
             </div>

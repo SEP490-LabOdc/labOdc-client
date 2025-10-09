@@ -4,10 +4,13 @@ import { checkIsActive } from '@/lib/utils'
 import { ProfileDropdown } from '../profile-dropdown'
 import { NotificationDropdown } from '../notification-dropdown'
 import logo from '@/assets/logo-black-text.png'
+import { Button } from '@/components/ui/button.tsx'
+import { useAuthStore } from '@/stores/auth-store.ts'
 
 export default function LandingHeader() {
     const href: string = useLocation({ select: (location) => location.href })
-    const isAuthenticated: boolean = false
+    const { auth } = useAuthStore()
+    const isAuthenticated: boolean = !!auth.accessToken;
 
     return (
         <header className="border-b backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50 w-full">
@@ -29,7 +32,9 @@ export default function LandingHeader() {
                     </nav>
                 </div>
                 <div className="flex items-center space-x-4">
-                    <Link to='/company' className='font-bold'>Công ty</Link>
+                    <Button className="bg-[#e76f51] hover:bg-[#f4a261] text-white font-bold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                        <Link to='/company' className='font-bold'>Tạo dự án ngay</Link>
+                    </Button>
                     {isAuthenticated ? (
                         <>
                             <NotificationDropdown />
@@ -37,12 +42,8 @@ export default function LandingHeader() {
                         </>
                     ) : (
                         <div>
-                            <Link to='/sign-in' className='font-bold'>
+                            <Link to='/sign-in' className='font-bold hover:text-[#2a9d8f] font-semibold hover:underline'>
                                 Đăng nhập
-                            </Link>
-                            /
-                            <Link to='/sign-in' className='font-bold'>
-                                Đăng ký
                             </Link>
                         </div>
                     )}

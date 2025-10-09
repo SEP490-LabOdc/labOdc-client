@@ -8,6 +8,7 @@ import { ArrowRight, Mail, Phone, Building2, User, Upload, MapPin, FileText } fr
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Link } from '@tanstack/react-router';
 
 // --- Schema ---
 const schema = z.object({
@@ -313,6 +314,7 @@ export function RegisterCompanyForm() {
                         {isLoading ? "Đang gửi…" : "Đăng ký doanh nghiệp"}
                         <ArrowRight className="ml-2 h-4 w-4" />
                     </Button>
+                    <p className='text-center'>Đã có tài khoản <Link to='/company-login' className='text-[#2a9d8f] font-semibold hover:underline'>Đăng nhập ngay</Link></p>
                 </div>
             </form>
         </Form>
