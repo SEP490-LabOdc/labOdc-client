@@ -5,10 +5,12 @@ import { ProfileDropdown } from '../profile-dropdown'
 import { NotificationDropdown } from '../notification-dropdown'
 import logo from '@/assets/logo-black-text.png'
 import { Button } from '@/components/ui/button.tsx'
+import { useAuthStore } from '@/stores/auth-store.ts'
 
 export default function LandingHeader() {
     const href: string = useLocation({ select: (location) => location.href })
-    const isAuthenticated: boolean = false
+    const { auth } = useAuthStore()
+    const isAuthenticated: boolean = !!auth.accessToken;
 
     return (
         <header className="border-b backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50 w-full">
