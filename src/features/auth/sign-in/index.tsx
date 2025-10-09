@@ -20,7 +20,7 @@ export default function SignIn() {
                     className="w-full text-lg my-4 px-8 py-4 border-2 border-[#2a9d8f] text-[#2a9d8f] hover:bg-[#2a9d8f] hover:text-white font-semibold transition-all duration-300 bg-transparent"
                 >
                     <img src={ggLogo} alt="google logo" className='w-4 h-4' />
-                    Sign In with Google
+                    Đăng nhập với Google
                 </Button>
                 <UserAuthForm redirectTo={redirect} />
             </div>

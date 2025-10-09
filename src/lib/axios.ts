@@ -43,7 +43,7 @@ axiosInstance.interceptors.response.use(
 );
 
 async function refreshAccessToken(refreshToken: string) {
-    const response = await axiosInstance.post("/api/v1/auth/refresh-token", {
+    const response = await axiosInstance.post("/auth/refresh-token", {
         refreshToken,
     });
     return response.data.accessToken;
