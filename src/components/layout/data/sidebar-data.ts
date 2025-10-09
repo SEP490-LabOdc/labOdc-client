@@ -21,9 +21,9 @@ import { type SidebarData } from '../types'
 
 export const sidebarData: SidebarData = {
   user: {
-    name: 'satnaing',
-    email: 'satnaingdev@gmail.com',
-    avatar: '/avatars/shadcn.jpg',
+    name: 'Jack',
+    email: 'jack5trieu@gmail.com',
+    avatar: 'https://www.anhnghethuatdulich.com/wp-content/uploads/2025/08/jack-meme-joker-pha-tron-giua-hai-huoc-va-phong-cach-doc-dao.jpg',
   },
   navGroups: [
     {

@@ -1,16 +1,17 @@
-// import { Link } from '@tanstack/react-router'
+import { Link } from '@tanstack/react-router'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
-  // DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuShortcut,
   DropdownMenuTrigger,
+  DropdownMenuGroup
 } from '@/components/ui/dropdown-menu'
+import { Palette, UserCog2, Wrench } from 'lucide-react'
 
 export function ProfileDropdown() {
   return (
@@ -18,7 +19,7 @@ export function ProfileDropdown() {
       <DropdownMenuTrigger asChild>
         <Button variant='ghost' className='relative h-8 w-8 rounded-full'>
           <Avatar className='size-10'>
-            <AvatarImage src='https://github.com/shadcn.png' alt='@shadcn' />
+            <AvatarImage src='https://www.anhnghethuatdulich.com/wp-content/uploads/2025/08/jack-meme-joker-pha-tron-giua-hai-huoc-va-phong-cach-doc-dao.jpg' alt='@shadcn' />
             <AvatarFallback>SN</AvatarFallback>
           </Avatar>
         </Button>
@@ -33,30 +34,29 @@ export function ProfileDropdown() {
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        {/*<DropdownMenuGroup>*/}
-        {/*  <DropdownMenuItem asChild>*/}
-        {/*    <Link to='/settings'>*/}
-        {/*      Profile*/}
-        {/*      <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>*/}
-        {/*    </Link>*/}
-        {/*  </DropdownMenuItem>*/}
-        {/*  <DropdownMenuItem asChild>*/}
-        {/*    <Link to='/settings'>*/}
-        {/*      Billing*/}
-        {/*      <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>*/}
-        {/*    </Link>*/}
-        {/*  </DropdownMenuItem>*/}
-        {/*  <DropdownMenuItem asChild>*/}
-        {/*    <Link to='/settings'>*/}
-        {/*      Settings*/}
-        {/*      <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>*/}
-        {/*    </Link>*/}
-        {/*  </DropdownMenuItem>*/}
-        {/*  <DropdownMenuItem>New Team</DropdownMenuItem>*/}
-        {/*</DropdownMenuGroup>*/}
+        <DropdownMenuGroup>
+          <DropdownMenuItem asChild>
+            <Link to='/admin/settings'>
+              <UserCog2 />
+              Hồ sơ
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem asChild>
+            <Link to='/admin/settings/account'>
+              <Wrench />
+              Tài khoản
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem asChild>
+            <Link to='/admin/settings/appearance'>
+              <Palette />
+              Giao diện
+            </Link>
+          </DropdownMenuItem>
+        </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuItem>
-          Log out
+          Đăng xuất
           <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
         </DropdownMenuItem>
       </DropdownMenuContent>

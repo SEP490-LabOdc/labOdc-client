@@ -1,12 +1,10 @@
 import { Link } from '@tanstack/react-router'
 import {
-  // BadgeCheck,
-  // Bell,
   ChevronsUpDown,
-  // CreditCard,
   LogOut,
-  Settings,
-  Sparkles,
+  Palette,
+  UserCog2,
+  Wrench,
 } from 'lucide-react'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import {
@@ -76,42 +74,29 @@ export function NavUser({
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <Sparkles />
-                Upgrade to Pro
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
-            <DropdownMenuSeparator />
-            <DropdownMenuGroup>
               <DropdownMenuItem asChild>
                 <Link to='/admin/settings'>
-                  <Settings />
-                  Cài đặt
+                  <UserCog2 />
+                  Hồ sơ
                 </Link>
               </DropdownMenuItem>
-              {/* <DropdownMenuItem asChild>
-               <Link to='/settings/account'>
-                 <BadgeCheck />
-                 Account
-               </Link>
-             </DropdownMenuItem> */}
-              {/*  <DropdownMenuItem asChild>*/}
-              {/*    <Link to='/settings'>*/}
-              {/*      <CreditCard />*/}
-              {/*      Billing*/}
-              {/*    </Link>*/}
-              {/*  </DropdownMenuItem>*/}
-              {/*  <DropdownMenuItem asChild>*/}
-              {/*    <Link to='/settings/notifications'>*/}
-              {/*      <Bell />*/}
-              {/*      Notifications*/}
-              {/*    </Link>*/}
-              {/*  </DropdownMenuItem>*/}
+              <DropdownMenuItem asChild>
+                <Link to='/admin/settings/account'>
+                  <Wrench />
+                  Tài khoản
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link to='/admin/settings/appearance'>
+                  <Palette />
+                  Giao diện
+                </Link>
+              </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem>
               <LogOut />
-              Log out
+              Đăng xuất
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
