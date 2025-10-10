@@ -1,10 +1,10 @@
 import axios from "axios";
 
-const axiosInstance = axios.create({
+const apiRequest = axios.create({
     baseURL: import.meta.env.VITE_API_URL,
 });
 
-axiosInstance.interceptors.request.use(
+apiRequest.interceptors.request.use(
     (config) => {
         const token = localStorage.getItem("access_token");
         if (token) {
@@ -17,7 +17,7 @@ axiosInstance.interceptors.request.use(
     }
 );
 
-axiosInstance.interceptors.response.use(
+apiRequest.interceptors.response.use(
     (response) => response,
     async (error) => {
         const originalRequest = error.config;
@@ -29,7 +29,7 @@ axiosInstance.interceptors.response.use(
                     const newToken = await refreshAccessToken(refreshToken);
                     localStorage.setItem("access_token", newToken);
                     originalRequest.headers["Authorization"] = `Bearer ${newToken}`;
-                    return axiosInstance(originalRequest);
+                    return apiRequest(originalRequest);
                     // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 } catch (error: any) {
                     localStorage.clear();
@@ -43,10 +43,10 @@ axiosInstance.interceptors.response.use(
 );
 
 async function refreshAccessToken(refreshToken: string) {
-    const response = await axiosInstance.post("/auth/refresh-token", {
+    const response = await apiRequest.post("/api/v1/auth/refresh", {
         refreshToken,
     });
     return response.data.accessToken;
 }
 
-export default axiosInstance;
+export default apiRequest;

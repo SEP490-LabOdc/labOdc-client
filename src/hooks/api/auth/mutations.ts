@@ -1,9 +1,9 @@
-import axiosInstance from '@/lib/axios.ts'
+import apiRequest from '@/config/request.ts'
 import { useMutation } from '@tanstack/react-query'
 import type { TCompanyRegisterDTO, UserLoginPayload } from './types.ts'
 
 const login = async (payload: UserLoginPayload) => {
-  const { data } = await axiosInstance.post('/auth/login', payload)
+  const { data } = await apiRequest.post('/api/v1/auth/login', payload)
   return data
 }
 
@@ -16,7 +16,7 @@ export const useSignIn = () => {
 export const useCompanyRegister = () => {
   return useMutation({
     mutationFn: async (payload: TCompanyRegisterDTO) => {
-      const { data } = await axiosInstance.post('/companies/register',payload)
+      const { data } = await apiRequest.post('/api/v1/companies/register', payload)
       return data
     }
   })
@@ -24,8 +24,8 @@ export const useCompanyRegister = () => {
 
 export const useVerifyOtp = () => {
   return useMutation({
-    mutationFn: async ({otp, email}: {otp: string, email: string}) => {
-      const { data } = await axiosInstance.post('/otp/verify', {
+    mutationFn: async ({ otp, email }: { otp: string, email: string }) => {
+      const { data } = await apiRequest.post('/api/v1/otp/verify', {
         otp: otp,
         email: email
       })
@@ -37,7 +37,7 @@ export const useVerifyOtp = () => {
 export const useResendOtp = () => {
   return useMutation({
     mutationFn: async (email: string) => {
-      const { data } = await axiosInstance.post('/otp/send', email)
+      const { data } = await apiRequest.post('/api/v1/otp/send', email)
       return data
     },
   })
