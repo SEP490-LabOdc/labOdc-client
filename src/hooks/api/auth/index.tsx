@@ -1,4 +1,6 @@
 export {
   useSignIn,
-  useCompanyRegister
+  useCompanyRegister,
+  useVerifyOtp,
+  useResendOtp
 } from './mutations.ts'
