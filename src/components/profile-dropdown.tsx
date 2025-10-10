@@ -11,8 +11,24 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import { useAuthStore } from '@/stores/auth-store.ts'
+import { useNavigate } from '@tanstack/react-router'
+import { toast } from 'sonner'
 
 export function ProfileDropdown() {
+  const { auth } = useAuthStore()
+  const navigate = useNavigate()
+
+  const handleLogout = async () => {
+    try {
+      auth.resetTokens()
+      await navigate({ to: '/sign-in' })
+      toast.success('Đăng xuất thành công!')
+    } catch (error) {
+      toast.error('Có lỗi xảy ra khi đăng xuất!')
+    }
+  }
+
   return (
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
@@ -55,7 +71,7 @@ export function ProfileDropdown() {
         {/*  <DropdownMenuItem>New Team</DropdownMenuItem>*/}
         {/*</DropdownMenuGroup>*/}
         <DropdownMenuSeparator />
-        <DropdownMenuItem>
+        <DropdownMenuItem onClick={handleLogout}>
           Log out
           <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
         </DropdownMenuItem>
