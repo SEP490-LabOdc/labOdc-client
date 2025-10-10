@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
-import { OtpForm } from './components/otp-company-form'; // Import component mới
-import { Building2, Users2, FileText, Clock, ShieldCheck } from 'lucide-react'; // Giữ lại để dùng cho cột phải
+import { OtpForm } from './components/otp-company-form'; // Đảm bảo đường dẫn import chính xác
+import { ShieldCheck } from 'lucide-react';
 
 export default function VerifyOtpPage() {
     return (
@@ -12,24 +12,14 @@ export default function VerifyOtpPage() {
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ duration: 1.5 }}
-                        className="w-full max-w-2xl mx-auto"
+                        className="w-full max-w-md mx-auto" // Giới hạn chiều rộng tối đa
                     >
-                        <div className="mb-8 text-center">
-                            <h1 className="text-2xl lg:text-3xl font-bold text-[#264653] mb-2">
-                                Kiểm tra email của bạn
-                            </h1>
-                            <p className="text-base text-gray-600">
-                                Chúng tôi đã gửi một mã xác thực gồm 6 chữ số đến địa chỉ email của bạn.
-                            </p>
-                        </div>
-
                         <OtpForm />
-
                     </motion.div>
                 </div>
             </div>
 
-            {/* Cột phải - Phần trang trí (Giữ nguyên cho nhất quán) */}
+            {/* Cột phải - Phần trang trí (Giữ nguyên) */}
             <div className="hidden lg:flex w-2/5 bg-gradient-to-br from-[#264653] to-[#2a9d8f] items-center justify-center p-12 fixed right-0 top-0 h-screen">
                 <motion.div
                     initial={{ opacity: 0, x: 20 }}
