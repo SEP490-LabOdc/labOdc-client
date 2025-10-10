@@ -21,3 +21,25 @@ export const useCompanyRegister = () => {
     }
   })
 }
+
+export const useVerifyOtp = () => {
+  return useMutation({
+    mutationFn: async ({otp, email}: {otp: string, email: string}) => {
+      const { data } = await axiosInstance.post('/otp/verify', {
+        otp: otp,
+        email: email
+      })
+      return data
+    },
+  })
+}
+
+export const useResendOtp = () => {
+  return useMutation({
+    mutationFn: async (email: string) => {
+      const { data } = await axiosInstance.post('/otp/send', email)
+      return data
+    },
+  })
+}
+

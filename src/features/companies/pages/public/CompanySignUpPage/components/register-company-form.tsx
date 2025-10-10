@@ -1,20 +1,24 @@
 import z from 'zod';
+import { useCallback, useState } from 'react'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ArrowRight, Mail, Phone, Building2, User, Upload, MapPin, FileText } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Link } from '@tanstack/react-router';
+import { Link, useNavigate } from '@tanstack/react-router'
 import { useCompanyRegister } from '@/hooks/api'
 import { toast } from 'sonner'
+import { LocationSelect } from '@/features/companies/pages/public/CompanySignUpPage/components/LocationSelect.tsx'
+import { useGetProvinces, useGetWardsByProvinceCode } from '@/hooks/api/external'
 
 // --- Schema ---
 const schema = z.object({
     //Company fields
     email: z.email("Email công ty không hợp lệ"),
+    provinceCode: z.string().min(1, "Vui lòng chọn tỉnh/thành phố"),
+    wardCode: z.string().min(1, "Vui lòng chọn phường/xã"),
     address: z.string().min(1, "Địa chỉ công ty là bắt buộc"),
     taxCode: z.string()
       .min(1, "Vui lòng nhập mã số thuế.")
@@ -39,6 +43,13 @@ const schema = z.object({
 export type CompanySignupData = z.infer<typeof schema>;
 
 export function RegisterCompanyForm() {
+    const [selectedProvince, setSelectedProvince] = useState<string>('');
+    const navigate = useNavigate();
+
+    //Fetching data
+    const provinces = useGetProvinces();
+    const wards = useGetWardsByProvinceCode(selectedProvince);
+
     const { mutateAsync, isPending } = useCompanyRegister();
 
     const form = useForm<CompanySignupData>({
@@ -50,6 +61,8 @@ export function RegisterCompanyForm() {
             phone: '',
             taxCode: '',
             address: '',
+            provinceCode: '',
+            wardCode: '',
             businessLicenseLink: '',
             //Personal fields
             contactPersonEmail: '',
@@ -67,12 +80,20 @@ export function RegisterCompanyForm() {
           businessLicenseLink: submitData.businessLicenseLink instanceof File
             ? '' : submitData.businessLicenseLink || ''
         };
-        await mutateAsync(finalSubmitData);
+        await mutateAsync(finalSubmitData)
+        await navigate({ to: '/verify-otp', search: { companyEmail: data.email } })
         toast.success('Đăng ký công ty thành công!')
       } catch (e) {
         console.error(e);
       }
     };
+
+
+    const handleProvinceSelection = useCallback((provinceCode: string) => {
+      setSelectedProvince(provinceCode);
+      form.setValue('provinceCode', provinceCode);
+      form.setValue('wardCode', '');
+    }, [form])
 
     return (
         <Form {...form}>
@@ -199,26 +220,73 @@ export function RegisterCompanyForm() {
                             )}
                         />
 
-                        <FormField
+                      {/* Location selectors */}
+                          <FormField
                             control={form.control}
-                            name='address'
+                            name="provinceCode"
                             render={({ field }) => (
-                                <FormItem className="md:col-span-2">
-                                    <FormLabel className="text-sm font-medium text-[#264653]">Địa chỉ công ty *</FormLabel>
-                                    <FormControl>
-                                        <div className='relative'>
-                                            <MapPin className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-                                            <Textarea
-                                                className="pl-10  border-gray-300 focus:border-[#2a9d8f] focus:ring-[#2a9d8f] min-h-[80px]"
-                                                placeholder='Nhập địa chỉ đầy đủ của công ty'
-                                                {...field}
-                                            />
-                                        </div>
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
+                              <FormItem>
+                                <FormLabel className="text-sm font-medium text-[#264653]">Tỉnh/Thành phố *</FormLabel>
+                                <FormControl>
+                                  <div className="relative">
+                                    <MapPin className="absolute left-3 top-3 h-4 w-4 text-gray-400 z-10" />
+                                    <LocationSelect
+                                      data={provinces.data || []}
+                                      value={field.value}
+                                      onValueChange={handleProvinceSelection}
+                                      placeholder="Chọn tỉnh/thành phố"
+                                      disabled={provinces.isPending}
+                                    />
+                                  </div>
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
                             )}
-                        />
+                          />
+
+                          <FormField
+                            control={form.control}
+                            name="wardCode"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel className="text-sm font-medium text-[#264653]">Phường/Xã *</FormLabel>
+                                <FormControl>
+                                  <div className="relative">
+                                    <MapPin className="absolute left-3 top-3 h-4 w-4 text-gray-400 z-10" />
+                                    <LocationSelect
+                                      data={wards.data?.wards || []}
+                                      value={field.value}
+                                      onValueChange={field.onChange}
+                                      placeholder="Chọn phường/xã"
+                                      disabled={!selectedProvince || wards.isPending}
+                                    />
+                                  </div>
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+
+                      <FormField
+                        control={form.control}
+                        name='address'
+                        render={({ field }) => (
+                          <FormItem className="md:col-span-2">
+                            <FormLabel className="text-sm font-medium text-[#264653]">Địa chỉ cụ thể *</FormLabel>
+                            <FormControl>
+                              <div className='relative'>
+                                <MapPin className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                                <Input
+                                  className="pl-10 border-gray-300 focus:border-[#2a9d8f] focus:ring-[#2a9d8f]"
+                                  placeholder='Số nhà, tên đường...'
+                                  {...field}
+                                />
+                              </div>
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
                     </div>
                 </div>
 
