@@ -8,7 +8,7 @@ import { ArrowRight, Mail, Phone, Building2, User, Upload, MapPin, FileText } fr
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Link } from '@tanstack/react-router';
+import { Link, useNavigate } from '@tanstack/react-router';
 
 // --- Schema ---
 const schema = z.object({
@@ -28,6 +28,7 @@ export type CompanySignupData = z.infer<typeof schema>;
 
 export function RegisterCompanyForm() {
     const [isLoading, setIsLoading] = React.useState(false)
+    const navigate = useNavigate();
 
     const form = useForm<CompanySignupData>({
         resolver: zodResolver(schema),
@@ -46,12 +47,15 @@ export function RegisterCompanyForm() {
     });
 
     const onSubmit = async (data: CompanySignupData) => {
-        setIsLoading(true)
+        setIsLoading(true);
         console.log("Company register:", data);
+
+        // Giả lập gọi API và đăng ký thành công
         setTimeout(() => {
-            alert("Đăng ký thành công! Hãy kiểm tra email để kích hoạt tài khoản.");
-            setIsLoading(false)
-        }, 3000)
+            setIsLoading(false);
+            // SỬ DỤNG CÔNG CỤ ĐỂ CHUYỂN TRANG TẠI ĐÂY
+            navigate({ to: '/verify-otp' });
+        }, 2000);
     };
 
     return (
@@ -315,6 +319,7 @@ export function RegisterCompanyForm() {
                         <ArrowRight className="ml-2 h-4 w-4" />
                     </Button>
                     <p className='text-center'>Đã có tài khoản <Link to='/company-login' className='text-[#2a9d8f] font-semibold hover:underline'>Đăng nhập ngay</Link></p>
+
                 </div>
             </form>
         </Form>

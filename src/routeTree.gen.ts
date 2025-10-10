@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as VerifyOtpRouteRouteImport } from './routes/verify-otp/route'
 import { Route as CompanyRouteRouteImport } from './routes/company/route'
 import { Route as publicRouteRouteImport } from './routes/(public)/route'
 import { Route as authRouteRouteImport } from './routes/(auth)/route'
@@ -42,6 +43,11 @@ import { Route as AuthenticatedAdminCompaniesEditIndexRouteImport } from './rout
 import { Route as AuthenticatedAdminCompaniesCreateIndexRouteImport } from './routes/_authenticated/admin/companies/create/index'
 import { Route as AuthenticatedAdminCompaniesApproveIndexRouteImport } from './routes/_authenticated/admin/companies/approve/index'
 
+const VerifyOtpRouteRoute = VerifyOtpRouteRouteImport.update({
+  id: '/verify-otp',
+  path: '/verify-otp',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CompanyRouteRoute = CompanyRouteRouteImport.update({
   id: '/company',
   path: '/company',
@@ -213,6 +219,7 @@ const AuthenticatedAdminCompaniesApproveIndexRoute =
 export interface FileRoutesByFullPath {
   '/': typeof publicIndexRoute
   '/company': typeof CompanyRouteRouteWithChildren
+  '/verify-otp': typeof VerifyOtpRouteRoute
   '/companies': typeof publicCompaniesRouteRouteWithChildren
   '/admin': typeof AuthenticatedAdminRouteRouteWithChildren
   '/401': typeof errors401Route
@@ -244,6 +251,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof publicIndexRoute
+  '/verify-otp': typeof VerifyOtpRouteRoute
   '/401': typeof errors401Route
   '/403': typeof errors403Route
   '/404': typeof errors404Route
@@ -276,6 +284,7 @@ export interface FileRoutesById {
   '/(auth)': typeof authRouteRouteWithChildren
   '/(public)': typeof publicRouteRouteWithChildren
   '/company': typeof CompanyRouteRouteWithChildren
+  '/verify-otp': typeof VerifyOtpRouteRoute
   '/(public)/companies': typeof publicCompaniesRouteRouteWithChildren
   '/_authenticated/admin': typeof AuthenticatedAdminRouteRouteWithChildren
   '/(errors)/401': typeof errors401Route
@@ -311,6 +320,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/company'
+    | '/verify-otp'
     | '/companies'
     | '/admin'
     | '/401'
@@ -342,6 +352,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/verify-otp'
     | '/401'
     | '/403'
     | '/404'
@@ -373,6 +384,7 @@ export interface FileRouteTypes {
     | '/(auth)'
     | '/(public)'
     | '/company'
+    | '/verify-otp'
     | '/(public)/companies'
     | '/_authenticated/admin'
     | '/(errors)/401'
@@ -408,6 +420,7 @@ export interface RootRouteChildren {
   authRouteRoute: typeof authRouteRouteWithChildren
   publicRouteRoute: typeof publicRouteRouteWithChildren
   CompanyRouteRoute: typeof CompanyRouteRouteWithChildren
+  VerifyOtpRouteRoute: typeof VerifyOtpRouteRoute
   AuthenticatedAdminRouteRoute: typeof AuthenticatedAdminRouteRouteWithChildren
   errors401Route: typeof errors401Route
   errors403Route: typeof errors403Route
@@ -420,6 +433,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/verify-otp': {
+      id: '/verify-otp'
+      path: '/verify-otp'
+      fullPath: '/verify-otp'
+      preLoaderRoute: typeof VerifyOtpRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/company': {
       id: '/company'
       path: '/company'
@@ -750,6 +770,7 @@ const rootRouteChildren: RootRouteChildren = {
   authRouteRoute: authRouteRouteWithChildren,
   publicRouteRoute: publicRouteRouteWithChildren,
   CompanyRouteRoute: CompanyRouteRouteWithChildren,
+  VerifyOtpRouteRoute: VerifyOtpRouteRoute,
   AuthenticatedAdminRouteRoute: AuthenticatedAdminRouteRouteWithChildren,
   errors401Route: errors401Route,
   errors403Route: errors403Route,
