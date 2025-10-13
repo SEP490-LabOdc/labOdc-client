@@ -8,7 +8,6 @@ import { ThemeSwitch } from '@/components/theme-switch'
 import { CompaniesProvider } from '../components/companies-provider'
 import CompanyApprovingForm from '../components/companies-approving-form'
 
-
 const route = getRouteApi('/_authenticated/admin/companies/approve/')
 
 export default function ApproveCompany() {

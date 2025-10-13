@@ -218,6 +218,7 @@ export default function CompanyApprovingForm({
                             {CHECKLIST_ITEMS.map((item) => (
                                 <div key={item.id} className="flex items-start gap-3">
                                     <Checkbox
+                                        className='mt-1 border-white'
                                         checked={verification[item.id]}
                                         onCheckedChange={(next) =>
                                             handleToggle(item.id, Boolean(next))
