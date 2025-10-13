@@ -2,14 +2,16 @@ import React from 'react'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Link } from '@tanstack/react-router'
+import { Link, useNavigate } from '@tanstack/react-router'
 import { cn } from '@/lib/utils'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Loader2, LogIn } from 'lucide-react'
 import { PasswordInput } from '@/components/password-input'
-import { useSignIn } from '../../services/mutations'
+import { toast } from 'sonner'
+import { useAuthStore } from '@/stores/auth-store.ts'
+import { useSignIn } from '@/hooks/api/auth'
 
 const formSchema = z.object({
     email: z.email({
@@ -30,6 +32,8 @@ export function UserAuthForm({
     ...props
 }: UserAuthFormProps) {
     const signIn = useSignIn()
+    const navigate = useNavigate()
+    const { auth } = useAuthStore()
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -40,7 +44,16 @@ export function UserAuthForm({
     })
 
     function onSubmit(data: z.infer<typeof formSchema>) {
-        signIn.mutate(data)
+        signIn.mutate(data,{
+          onSuccess: async (data) => {
+            // Save both tokens to localStorage
+            auth.setTokens(data.accessToken, data.refreshToken)
+            await navigate({ to: '/' })
+          },
+          onError: () => {
+            toast.error("Đăng nhập thất bại!")
+          }
+        })
     }
 
     return (

@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as VerifyOtpRouteRouteImport } from './routes/verify-otp/route'
 import { Route as CompanyRouteRouteImport } from './routes/company/route'
 import { Route as publicRouteRouteImport } from './routes/(public)/route'
 import { Route as authRouteRouteImport } from './routes/(auth)/route'
@@ -33,15 +34,24 @@ import { Route as authSignUpIndexRouteImport } from './routes/(auth)/sign-up/ind
 import { Route as authSignInIndexRouteImport } from './routes/(auth)/sign-in/index'
 import { Route as authForgotPasswordIndexRouteImport } from './routes/(auth)/forgot-password/index'
 import { Route as publicCompaniesCompanyIdRouteImport } from './routes/(public)/companies/$companyId'
+import { Route as AuthenticatedAdminSettingsRouteRouteImport } from './routes/_authenticated/admin/settings/route'
 import { Route as AuthenticatedAdminUsersIndexRouteImport } from './routes/_authenticated/admin/users/index'
 import { Route as AuthenticatedAdminTasksIndexRouteImport } from './routes/_authenticated/admin/tasks/index'
+import { Route as AuthenticatedAdminSettingsIndexRouteImport } from './routes/_authenticated/admin/settings/index'
 import { Route as AuthenticatedAdminCompaniesIndexRouteImport } from './routes/_authenticated/admin/companies/index'
+import { Route as AuthenticatedAdminSettingsAppearanceRouteImport } from './routes/_authenticated/admin/settings/appearance'
+import { Route as AuthenticatedAdminSettingsAccountRouteImport } from './routes/_authenticated/admin/settings/account'
 import { Route as AuthenticatedAdminUsersEditIndexRouteImport } from './routes/_authenticated/admin/users/edit/index'
 import { Route as AuthenticatedAdminUsersCreateIndexRouteImport } from './routes/_authenticated/admin/users/create/index'
 import { Route as AuthenticatedAdminCompaniesEditIndexRouteImport } from './routes/_authenticated/admin/companies/edit/index'
 import { Route as AuthenticatedAdminCompaniesCreateIndexRouteImport } from './routes/_authenticated/admin/companies/create/index'
 import { Route as AuthenticatedAdminCompaniesApproveIndexRouteImport } from './routes/_authenticated/admin/companies/approve/index'
 
+const VerifyOtpRouteRoute = VerifyOtpRouteRouteImport.update({
+  id: '/verify-otp',
+  path: '/verify-otp',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CompanyRouteRoute = CompanyRouteRouteImport.update({
   id: '/company',
   path: '/company',
@@ -161,6 +171,12 @@ const publicCompaniesCompanyIdRoute =
     path: '/$companyId',
     getParentRoute: () => publicCompaniesRouteRoute,
   } as any)
+const AuthenticatedAdminSettingsRouteRoute =
+  AuthenticatedAdminSettingsRouteRouteImport.update({
+    id: '/settings',
+    path: '/settings',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
 const AuthenticatedAdminUsersIndexRoute =
   AuthenticatedAdminUsersIndexRouteImport.update({
     id: '/users/',
@@ -173,11 +189,29 @@ const AuthenticatedAdminTasksIndexRoute =
     path: '/tasks/',
     getParentRoute: () => AuthenticatedAdminRouteRoute,
   } as any)
+const AuthenticatedAdminSettingsIndexRoute =
+  AuthenticatedAdminSettingsIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedAdminSettingsRouteRoute,
+  } as any)
 const AuthenticatedAdminCompaniesIndexRoute =
   AuthenticatedAdminCompaniesIndexRouteImport.update({
     id: '/companies/',
     path: '/companies/',
     getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
+const AuthenticatedAdminSettingsAppearanceRoute =
+  AuthenticatedAdminSettingsAppearanceRouteImport.update({
+    id: '/appearance',
+    path: '/appearance',
+    getParentRoute: () => AuthenticatedAdminSettingsRouteRoute,
+  } as any)
+const AuthenticatedAdminSettingsAccountRoute =
+  AuthenticatedAdminSettingsAccountRouteImport.update({
+    id: '/account',
+    path: '/account',
+    getParentRoute: () => AuthenticatedAdminSettingsRouteRoute,
   } as any)
 const AuthenticatedAdminUsersEditIndexRoute =
   AuthenticatedAdminUsersEditIndexRouteImport.update({
@@ -213,6 +247,7 @@ const AuthenticatedAdminCompaniesApproveIndexRoute =
 export interface FileRoutesByFullPath {
   '/': typeof publicIndexRoute
   '/company': typeof CompanyRouteRouteWithChildren
+  '/verify-otp': typeof VerifyOtpRouteRoute
   '/companies': typeof publicCompaniesRouteRouteWithChildren
   '/admin': typeof AuthenticatedAdminRouteRouteWithChildren
   '/401': typeof errors401Route
@@ -223,6 +258,7 @@ export interface FileRoutesByFullPath {
   '/company-login': typeof CompanyLoginIndexRoute
   '/company-register': typeof CompanyRegisterIndexRoute
   '/company/': typeof CompanyIndexRoute
+  '/admin/settings': typeof AuthenticatedAdminSettingsRouteRouteWithChildren
   '/companies/$companyId': typeof publicCompaniesCompanyIdRoute
   '/forgot-password': typeof authForgotPasswordIndexRoute
   '/sign-in': typeof authSignInIndexRoute
@@ -233,7 +269,10 @@ export interface FileRoutesByFullPath {
   '/talent-pool': typeof publicTalentPoolIndexRoute
   '/terms': typeof publicTermsIndexRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
+  '/admin/settings/account': typeof AuthenticatedAdminSettingsAccountRoute
+  '/admin/settings/appearance': typeof AuthenticatedAdminSettingsAppearanceRoute
   '/admin/companies': typeof AuthenticatedAdminCompaniesIndexRoute
+  '/admin/settings/': typeof AuthenticatedAdminSettingsIndexRoute
   '/admin/tasks': typeof AuthenticatedAdminTasksIndexRoute
   '/admin/users': typeof AuthenticatedAdminUsersIndexRoute
   '/admin/companies/approve': typeof AuthenticatedAdminCompaniesApproveIndexRoute
@@ -244,6 +283,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof publicIndexRoute
+  '/verify-otp': typeof VerifyOtpRouteRoute
   '/401': typeof errors401Route
   '/403': typeof errors403Route
   '/404': typeof errors404Route
@@ -262,7 +302,10 @@ export interface FileRoutesByTo {
   '/talent-pool': typeof publicTalentPoolIndexRoute
   '/terms': typeof publicTermsIndexRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
+  '/admin/settings/account': typeof AuthenticatedAdminSettingsAccountRoute
+  '/admin/settings/appearance': typeof AuthenticatedAdminSettingsAppearanceRoute
   '/admin/companies': typeof AuthenticatedAdminCompaniesIndexRoute
+  '/admin/settings': typeof AuthenticatedAdminSettingsIndexRoute
   '/admin/tasks': typeof AuthenticatedAdminTasksIndexRoute
   '/admin/users': typeof AuthenticatedAdminUsersIndexRoute
   '/admin/companies/approve': typeof AuthenticatedAdminCompaniesApproveIndexRoute
@@ -276,6 +319,7 @@ export interface FileRoutesById {
   '/(auth)': typeof authRouteRouteWithChildren
   '/(public)': typeof publicRouteRouteWithChildren
   '/company': typeof CompanyRouteRouteWithChildren
+  '/verify-otp': typeof VerifyOtpRouteRoute
   '/(public)/companies': typeof publicCompaniesRouteRouteWithChildren
   '/_authenticated/admin': typeof AuthenticatedAdminRouteRouteWithChildren
   '/(errors)/401': typeof errors401Route
@@ -287,6 +331,7 @@ export interface FileRoutesById {
   '/company-login/': typeof CompanyLoginIndexRoute
   '/company-register/': typeof CompanyRegisterIndexRoute
   '/company/': typeof CompanyIndexRoute
+  '/_authenticated/admin/settings': typeof AuthenticatedAdminSettingsRouteRouteWithChildren
   '/(public)/companies/$companyId': typeof publicCompaniesCompanyIdRoute
   '/(auth)/forgot-password/': typeof authForgotPasswordIndexRoute
   '/(auth)/sign-in/': typeof authSignInIndexRoute
@@ -297,7 +342,10 @@ export interface FileRoutesById {
   '/(public)/talent-pool/': typeof publicTalentPoolIndexRoute
   '/(public)/terms/': typeof publicTermsIndexRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
+  '/_authenticated/admin/settings/account': typeof AuthenticatedAdminSettingsAccountRoute
+  '/_authenticated/admin/settings/appearance': typeof AuthenticatedAdminSettingsAppearanceRoute
   '/_authenticated/admin/companies/': typeof AuthenticatedAdminCompaniesIndexRoute
+  '/_authenticated/admin/settings/': typeof AuthenticatedAdminSettingsIndexRoute
   '/_authenticated/admin/tasks/': typeof AuthenticatedAdminTasksIndexRoute
   '/_authenticated/admin/users/': typeof AuthenticatedAdminUsersIndexRoute
   '/_authenticated/admin/companies/approve/': typeof AuthenticatedAdminCompaniesApproveIndexRoute
@@ -311,6 +359,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/company'
+    | '/verify-otp'
     | '/companies'
     | '/admin'
     | '/401'
@@ -321,6 +370,7 @@ export interface FileRouteTypes {
     | '/company-login'
     | '/company-register'
     | '/company/'
+    | '/admin/settings'
     | '/companies/$companyId'
     | '/forgot-password'
     | '/sign-in'
@@ -331,7 +381,10 @@ export interface FileRouteTypes {
     | '/talent-pool'
     | '/terms'
     | '/admin/'
+    | '/admin/settings/account'
+    | '/admin/settings/appearance'
     | '/admin/companies'
+    | '/admin/settings/'
     | '/admin/tasks'
     | '/admin/users'
     | '/admin/companies/approve'
@@ -342,6 +395,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/verify-otp'
     | '/401'
     | '/403'
     | '/404'
@@ -360,7 +414,10 @@ export interface FileRouteTypes {
     | '/talent-pool'
     | '/terms'
     | '/admin'
+    | '/admin/settings/account'
+    | '/admin/settings/appearance'
     | '/admin/companies'
+    | '/admin/settings'
     | '/admin/tasks'
     | '/admin/users'
     | '/admin/companies/approve'
@@ -373,6 +430,7 @@ export interface FileRouteTypes {
     | '/(auth)'
     | '/(public)'
     | '/company'
+    | '/verify-otp'
     | '/(public)/companies'
     | '/_authenticated/admin'
     | '/(errors)/401'
@@ -384,6 +442,7 @@ export interface FileRouteTypes {
     | '/company-login/'
     | '/company-register/'
     | '/company/'
+    | '/_authenticated/admin/settings'
     | '/(public)/companies/$companyId'
     | '/(auth)/forgot-password/'
     | '/(auth)/sign-in/'
@@ -394,7 +453,10 @@ export interface FileRouteTypes {
     | '/(public)/talent-pool/'
     | '/(public)/terms/'
     | '/_authenticated/admin/'
+    | '/_authenticated/admin/settings/account'
+    | '/_authenticated/admin/settings/appearance'
     | '/_authenticated/admin/companies/'
+    | '/_authenticated/admin/settings/'
     | '/_authenticated/admin/tasks/'
     | '/_authenticated/admin/users/'
     | '/_authenticated/admin/companies/approve/'
@@ -408,6 +470,7 @@ export interface RootRouteChildren {
   authRouteRoute: typeof authRouteRouteWithChildren
   publicRouteRoute: typeof publicRouteRouteWithChildren
   CompanyRouteRoute: typeof CompanyRouteRouteWithChildren
+  VerifyOtpRouteRoute: typeof VerifyOtpRouteRoute
   AuthenticatedAdminRouteRoute: typeof AuthenticatedAdminRouteRouteWithChildren
   errors401Route: typeof errors401Route
   errors403Route: typeof errors403Route
@@ -420,6 +483,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/verify-otp': {
+      id: '/verify-otp'
+      path: '/verify-otp'
+      fullPath: '/verify-otp'
+      preLoaderRoute: typeof VerifyOtpRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/company': {
       id: '/company'
       path: '/company'
@@ -588,6 +658,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof publicCompaniesCompanyIdRouteImport
       parentRoute: typeof publicCompaniesRouteRoute
     }
+    '/_authenticated/admin/settings': {
+      id: '/_authenticated/admin/settings'
+      path: '/settings'
+      fullPath: '/admin/settings'
+      preLoaderRoute: typeof AuthenticatedAdminSettingsRouteRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
     '/_authenticated/admin/users/': {
       id: '/_authenticated/admin/users/'
       path: '/users'
@@ -602,12 +679,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminTasksIndexRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
     }
+    '/_authenticated/admin/settings/': {
+      id: '/_authenticated/admin/settings/'
+      path: '/'
+      fullPath: '/admin/settings/'
+      preLoaderRoute: typeof AuthenticatedAdminSettingsIndexRouteImport
+      parentRoute: typeof AuthenticatedAdminSettingsRouteRoute
+    }
     '/_authenticated/admin/companies/': {
       id: '/_authenticated/admin/companies/'
       path: '/companies'
       fullPath: '/admin/companies'
       preLoaderRoute: typeof AuthenticatedAdminCompaniesIndexRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
+    '/_authenticated/admin/settings/appearance': {
+      id: '/_authenticated/admin/settings/appearance'
+      path: '/appearance'
+      fullPath: '/admin/settings/appearance'
+      preLoaderRoute: typeof AuthenticatedAdminSettingsAppearanceRouteImport
+      parentRoute: typeof AuthenticatedAdminSettingsRouteRoute
+    }
+    '/_authenticated/admin/settings/account': {
+      id: '/_authenticated/admin/settings/account'
+      path: '/account'
+      fullPath: '/admin/settings/account'
+      preLoaderRoute: typeof AuthenticatedAdminSettingsAccountRouteImport
+      parentRoute: typeof AuthenticatedAdminSettingsRouteRoute
     }
     '/_authenticated/admin/users/edit/': {
       id: '/_authenticated/admin/users/edit/'
@@ -710,7 +808,28 @@ const CompanyRouteRouteWithChildren = CompanyRouteRoute._addFileChildren(
   CompanyRouteRouteChildren,
 )
 
+interface AuthenticatedAdminSettingsRouteRouteChildren {
+  AuthenticatedAdminSettingsAccountRoute: typeof AuthenticatedAdminSettingsAccountRoute
+  AuthenticatedAdminSettingsAppearanceRoute: typeof AuthenticatedAdminSettingsAppearanceRoute
+  AuthenticatedAdminSettingsIndexRoute: typeof AuthenticatedAdminSettingsIndexRoute
+}
+
+const AuthenticatedAdminSettingsRouteRouteChildren: AuthenticatedAdminSettingsRouteRouteChildren =
+  {
+    AuthenticatedAdminSettingsAccountRoute:
+      AuthenticatedAdminSettingsAccountRoute,
+    AuthenticatedAdminSettingsAppearanceRoute:
+      AuthenticatedAdminSettingsAppearanceRoute,
+    AuthenticatedAdminSettingsIndexRoute: AuthenticatedAdminSettingsIndexRoute,
+  }
+
+const AuthenticatedAdminSettingsRouteRouteWithChildren =
+  AuthenticatedAdminSettingsRouteRoute._addFileChildren(
+    AuthenticatedAdminSettingsRouteRouteChildren,
+  )
+
 interface AuthenticatedAdminRouteRouteChildren {
+  AuthenticatedAdminSettingsRouteRoute: typeof AuthenticatedAdminSettingsRouteRouteWithChildren
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
   AuthenticatedAdminCompaniesIndexRoute: typeof AuthenticatedAdminCompaniesIndexRoute
   AuthenticatedAdminTasksIndexRoute: typeof AuthenticatedAdminTasksIndexRoute
@@ -724,6 +843,8 @@ interface AuthenticatedAdminRouteRouteChildren {
 
 const AuthenticatedAdminRouteRouteChildren: AuthenticatedAdminRouteRouteChildren =
   {
+    AuthenticatedAdminSettingsRouteRoute:
+      AuthenticatedAdminSettingsRouteRouteWithChildren,
     AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
     AuthenticatedAdminCompaniesIndexRoute:
       AuthenticatedAdminCompaniesIndexRoute,
@@ -750,6 +871,7 @@ const rootRouteChildren: RootRouteChildren = {
   authRouteRoute: authRouteRouteWithChildren,
   publicRouteRoute: publicRouteRouteWithChildren,
   CompanyRouteRoute: CompanyRouteRouteWithChildren,
+  VerifyOtpRouteRoute: VerifyOtpRouteRoute,
   AuthenticatedAdminRouteRoute: AuthenticatedAdminRouteRouteWithChildren,
   errors401Route: errors401Route,
   errors403Route: errors403Route,

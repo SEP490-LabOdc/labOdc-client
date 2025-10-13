@@ -1,58 +1,99 @@
-import React from 'react'
 import z from 'zod';
+import { useCallback, useState } from 'react'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ArrowRight, Mail, Phone, Building2, User, Upload, MapPin, FileText } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Link } from '@tanstack/react-router';
+import { Link, useNavigate } from '@tanstack/react-router'
+import { useCompanyRegister } from '@/hooks/api'
+import { toast } from 'sonner'
+import { LocationSelect } from '@/features/companies/pages/public/CompanySignUpPage/components/LocationSelect.tsx'
+import { useGetProvinces, useGetWardsByProvinceCode } from '@/hooks/api/external'
 
 // --- Schema ---
 const schema = z.object({
-    companyName: z.string().min(1, "Company name is required"),
-    taxId: z.string().min(1, "Tax ID is required"),
-    companyEmail: z.string().email("Invalid email address"),
-    businessLicense: z.instanceof(File).optional().or(z.string().optional()),
-    address: z.string().min(1, "Address is required"),
-    companyPhone: z.string().min(1, "Company phone number is required"),
-    fullName: z.string().min(1, "Full name is required"),
-    email: z.string().email("Invalid email address"),
-    phoneNumber: z.string().min(1, "Phone number is required"),
-    agreeTerm: z.boolean().refine(val => val === true, "You must agree to the terms")
+    //Company fields
+    email: z.email("Email công ty không hợp lệ"),
+    provinceCode: z.string().min(1, "Vui lòng chọn tỉnh/thành phố"),
+    wardCode: z.string().min(1, "Vui lòng chọn phường/xã"),
+    address: z.string().min(1, "Địa chỉ công ty là bắt buộc"),
+    taxCode: z.string()
+      .min(1, "Vui lòng nhập mã số thuế.")
+      .regex(/^[0-9-]+$/, "Mã số thuế chỉ được chứa chữ số và dấu gạch ngang.")
+      .transform((val) => val.replace(/-/g, ''))
+      .refine(
+        (val) => val.length === 10 || val.length === 13,
+        {
+          message: "Mã số thuế phải có độ dài 10 hoặc 13 chữ số.",
+        }
+      ),
+    name: z.string().min(1, "Tên công ty là bắt buộc"),
+    phone: z.string().min(1, "Số điện thoại công ty là bắt buộc"),
+    businessLicenseLink: z.instanceof(File).optional().or(z.string().optional()),
+    //Personal fields
+    contactPersonEmail: z.email("Email cá nhân không hợp lệ"),
+    contactPersonName: z.string().min(1, "Họ và tên là bắt buộc"),
+    contactPersonPhone: z.string().min(1, "Số điện thoại là bắt buộc"),
+    agreeTerm: z.boolean().refine(val => val === true, "Bạn phải đồng ý với các điều khoản")
 });
 
 export type CompanySignupData = z.infer<typeof schema>;
 
 export function RegisterCompanyForm() {
-    const [isLoading, setIsLoading] = React.useState(false)
+    const [selectedProvince, setSelectedProvince] = useState<string>('');
+    const navigate = useNavigate();
+
+    //Fetching data
+    const provinces = useGetProvinces();
+    const wards = useGetWardsByProvinceCode(selectedProvince);
+
+    const { mutateAsync, isPending } = useCompanyRegister();
 
     const form = useForm<CompanySignupData>({
         resolver: zodResolver(schema),
         defaultValues: {
-            companyName: '',
-            taxId: '',
-            companyEmail: '',
-            businessLicense: undefined,
-            address: '',
-            companyPhone: '',
-            fullName: '',
+            //Company fields
+            name: '',
             email: '',
-            phoneNumber: '',
+            phone: '',
+            taxCode: '',
+            address: '',
+            provinceCode: '',
+            wardCode: '',
+            businessLicenseLink: '',
+            //Personal fields
+            contactPersonEmail: '',
+            contactPersonName: '',
+            contactPersonPhone: '',
             agreeTerm: false
         }
     });
 
     const onSubmit = async (data: CompanySignupData) => {
-        setIsLoading(true)
-        console.log("Company register:", data);
-        setTimeout(() => {
-            alert("Đăng ký thành công! Hãy kiểm tra email để kích hoạt tài khoản.");
-            setIsLoading(false)
-        }, 3000)
+      try {
+        const { agreeTerm, ...submitData } = data;
+        const finalSubmitData = {
+          ...submitData,
+          businessLicenseLink: submitData.businessLicenseLink instanceof File
+            ? '' : submitData.businessLicenseLink || ''
+        };
+        await mutateAsync(finalSubmitData)
+        await navigate({ to: '/verify-otp', search: { companyEmail: data.email } })
+        toast.success('Đăng ký công ty thành công!')
+      } catch (e) {
+        console.error(e);
+      }
     };
+
+
+    const handleProvinceSelection = useCallback((provinceCode: string) => {
+      setSelectedProvince(provinceCode);
+      form.setValue('provinceCode', provinceCode);
+      form.setValue('wardCode', '');
+    }, [form])
 
     return (
         <Form {...form}>
@@ -67,7 +108,7 @@ export function RegisterCompanyForm() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <FormField
                             control={form.control}
-                            name='companyName'
+                            name='name'
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel className="text-sm font-medium text-[#264653]">Tên công ty *</FormLabel>
@@ -88,7 +129,7 @@ export function RegisterCompanyForm() {
 
                         <FormField
                             control={form.control}
-                            name='taxId'
+                            name='taxCode'
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel className="text-sm font-medium text-[#264653]">Mã số thuế *</FormLabel>
@@ -109,7 +150,7 @@ export function RegisterCompanyForm() {
 
                         <FormField
                             control={form.control}
-                            name='companyEmail'
+                            name='email'
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel className="text-sm font-medium text-[#264653]">Email công ty *</FormLabel>
@@ -131,7 +172,7 @@ export function RegisterCompanyForm() {
 
                         <FormField
                             control={form.control}
-                            name='companyPhone'
+                            name='phone'
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel className="text-sm font-medium text-[#264653]">Số điện thoại công ty *</FormLabel>
@@ -153,7 +194,7 @@ export function RegisterCompanyForm() {
 
                         <FormField
                             control={form.control}
-                            name='businessLicense'
+                            name='businessLicenseLink'
                             render={({ field: { value, onChange, ...fieldProps } }) => (
                                 <FormItem className="md:col-span-2">
                                     <FormLabel className="text-sm font-medium text-[#264653]">Giấy phép kinh doanh *</FormLabel>
@@ -179,26 +220,73 @@ export function RegisterCompanyForm() {
                             )}
                         />
 
-                        <FormField
+                      {/* Location selectors */}
+                          <FormField
                             control={form.control}
-                            name='address'
+                            name="provinceCode"
                             render={({ field }) => (
-                                <FormItem className="md:col-span-2">
-                                    <FormLabel className="text-sm font-medium text-[#264653]">Địa chỉ công ty *</FormLabel>
-                                    <FormControl>
-                                        <div className='relative'>
-                                            <MapPin className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-                                            <Textarea
-                                                className="pl-10  border-gray-300 focus:border-[#2a9d8f] focus:ring-[#2a9d8f] min-h-[80px]"
-                                                placeholder='Nhập địa chỉ đầy đủ của công ty'
-                                                {...field}
-                                            />
-                                        </div>
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
+                              <FormItem>
+                                <FormLabel className="text-sm font-medium text-[#264653]">Tỉnh/Thành phố *</FormLabel>
+                                <FormControl>
+                                  <div className="relative">
+                                    <MapPin className="absolute left-3 top-3 h-4 w-4 text-gray-400 z-10" />
+                                    <LocationSelect
+                                      data={provinces.data || []}
+                                      value={field.value}
+                                      onValueChange={handleProvinceSelection}
+                                      placeholder="Chọn tỉnh/thành phố"
+                                      disabled={provinces.isPending}
+                                    />
+                                  </div>
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
                             )}
-                        />
+                          />
+
+                          <FormField
+                            control={form.control}
+                            name="wardCode"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel className="text-sm font-medium text-[#264653]">Phường/Xã *</FormLabel>
+                                <FormControl>
+                                  <div className="relative">
+                                    <MapPin className="absolute left-3 top-3 h-4 w-4 text-gray-400 z-10" />
+                                    <LocationSelect
+                                      data={wards.data?.wards || []}
+                                      value={field.value}
+                                      onValueChange={field.onChange}
+                                      placeholder="Chọn phường/xã"
+                                      disabled={!selectedProvince || wards.isPending}
+                                    />
+                                  </div>
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+
+                      <FormField
+                        control={form.control}
+                        name='address'
+                        render={({ field }) => (
+                          <FormItem className="md:col-span-2">
+                            <FormLabel className="text-sm font-medium text-[#264653]">Địa chỉ cụ thể *</FormLabel>
+                            <FormControl>
+                              <div className='relative'>
+                                <MapPin className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                                <Input
+                                  className="pl-10 border-gray-300 focus:border-[#2a9d8f] focus:ring-[#2a9d8f]"
+                                  placeholder='Số nhà, tên đường...'
+                                  {...field}
+                                />
+                              </div>
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
                     </div>
                 </div>
 
@@ -212,7 +300,7 @@ export function RegisterCompanyForm() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <FormField
                             control={form.control}
-                            name='fullName'
+                            name='contactPersonName'
                             render={({ field }) => (
                                 <FormItem className="md:col-span-2">
                                     <FormLabel className="text-sm font-medium text-[#264653]">Họ và tên *</FormLabel>
@@ -233,7 +321,7 @@ export function RegisterCompanyForm() {
 
                         <FormField
                             control={form.control}
-                            name='email'
+                            name='contactPersonEmail'
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel className="text-sm font-medium text-[#264653]">Email cá nhân *</FormLabel>
@@ -241,7 +329,7 @@ export function RegisterCompanyForm() {
                                         <div className='relative'>
                                             <Mail className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                                             <Input
-                                                type="email"
+                                                type="contactPersonEmail"
                                                 className="pl-10  border-gray-300 focus:border-[#2a9d8f] focus:ring-[#2a9d8f]"
                                                 placeholder='your.email@domain.com'
                                                 {...field}
@@ -255,7 +343,7 @@ export function RegisterCompanyForm() {
 
                         <FormField
                             control={form.control}
-                            name='phoneNumber'
+                            name='contactPersonPhone'
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel className="text-sm font-medium text-[#264653]">Số điện thoại *</FormLabel>
@@ -308,13 +396,14 @@ export function RegisterCompanyForm() {
                     <Button
                         type="submit"
                         className="w-full bg-[#f4a261] hover:bg-[#e76f51] text-white font-semibold py-3  transition-colors duration-200 shadow-lg"
-                        disabled={isLoading}
+                        disabled={isPending}
                         size="lg"
                     >
-                        {isLoading ? "Đang gửi…" : "Đăng ký doanh nghiệp"}
+                        {isPending ? "Đang gửi…" : "Đăng ký doanh nghiệp"}
                         <ArrowRight className="ml-2 h-4 w-4" />
                     </Button>
                     <p className='text-center'>Đã có tài khoản <Link to='/company-login' className='text-[#2a9d8f] font-semibold hover:underline'>Đăng nhập ngay</Link></p>
+
                 </div>
             </form>
         </Form>

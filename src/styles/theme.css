@@ -78,9 +78,6 @@
 }
 
 @theme inline {
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-
   /* Added brand color utilities */
   --color-brand-dark-teal: var(--color-brand-dark-teal);
   --color-brand-green-teal: var(--color-brand-green-teal);
