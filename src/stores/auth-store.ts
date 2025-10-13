@@ -4,9 +4,10 @@ const ACCESS_TOKEN = 'access_token'
 const REFRESH_TOKEN = 'refresh_token'
 
 interface AuthUser {
-  accountNo: string
-  email: string
-  role: string[]
+  role: string,
+  userId: string,
+  sub: string,
+  iat: number,
   exp: number
 }
 
@@ -37,9 +38,9 @@ export const useAuthStore = create<AuthState>()((set) => {
         set((state) => {
           localStorage.setItem(ACCESS_TOKEN, accessToken)
           localStorage.setItem(REFRESH_TOKEN, refreshToken)
-          return { 
-            ...state, 
-            auth: { ...state.auth, accessToken, refreshToken } 
+          return {
+            ...state,
+            auth: { ...state.auth, accessToken, refreshToken },
           }
         }),
       setAccessToken: (accessToken) =>
@@ -51,9 +52,9 @@ export const useAuthStore = create<AuthState>()((set) => {
         set((state) => {
           localStorage.removeItem(ACCESS_TOKEN)
           localStorage.removeItem(REFRESH_TOKEN)
-          return { 
-            ...state, 
-            auth: { ...state.auth, accessToken: '', refreshToken: '' } 
+          return {
+            ...state,
+            auth: { ...state.auth, accessToken: '', refreshToken: '' },
           }
         }),
       reset: () =>
