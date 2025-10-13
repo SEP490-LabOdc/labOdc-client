@@ -15,6 +15,7 @@ import { Route as publicRouteRouteImport } from './routes/(public)/route'
 import { Route as authRouteRouteImport } from './routes/(auth)/route'
 import { Route as CompanyIndexRouteImport } from './routes/company/index'
 import { Route as CompanyRegisterIndexRouteImport } from './routes/company-register/index'
+import { Route as CompanyRegisterSuccessIndexRouteImport } from './routes/company-register-success/index'
 import { Route as CompanyLoginIndexRouteImport } from './routes/company-login/index'
 import { Route as publicIndexRouteImport } from './routes/(public)/index'
 import { Route as errors503RouteImport } from './routes/(errors)/503'
@@ -71,6 +72,12 @@ const CompanyRegisterIndexRoute = CompanyRegisterIndexRouteImport.update({
   path: '/company-register/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CompanyRegisterSuccessIndexRoute =
+  CompanyRegisterSuccessIndexRouteImport.update({
+    id: '/company-register-success/',
+    path: '/company-register-success/',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const CompanyLoginIndexRoute = CompanyLoginIndexRouteImport.update({
   id: '/company-login/',
   path: '/company-login/',
@@ -228,6 +235,7 @@ export interface FileRoutesByFullPath {
   '/500': typeof errors500Route
   '/503': typeof errors503Route
   '/company-login': typeof CompanyLoginIndexRoute
+  '/company-register-success': typeof CompanyRegisterSuccessIndexRoute
   '/company-register': typeof CompanyRegisterIndexRoute
   '/company/': typeof CompanyIndexRoute
   '/companies/$companyId': typeof publicCompaniesCompanyIdRoute
@@ -258,6 +266,7 @@ export interface FileRoutesByTo {
   '/500': typeof errors500Route
   '/503': typeof errors503Route
   '/company-login': typeof CompanyLoginIndexRoute
+  '/company-register-success': typeof CompanyRegisterSuccessIndexRoute
   '/company-register': typeof CompanyRegisterIndexRoute
   '/company': typeof CompanyIndexRoute
   '/companies/$companyId': typeof publicCompaniesCompanyIdRoute
@@ -294,6 +303,7 @@ export interface FileRoutesById {
   '/(errors)/503': typeof errors503Route
   '/(public)/': typeof publicIndexRoute
   '/company-login/': typeof CompanyLoginIndexRoute
+  '/company-register-success/': typeof CompanyRegisterSuccessIndexRoute
   '/company-register/': typeof CompanyRegisterIndexRoute
   '/company/': typeof CompanyIndexRoute
   '/(public)/companies/$companyId': typeof publicCompaniesCompanyIdRoute
@@ -329,6 +339,7 @@ export interface FileRouteTypes {
     | '/500'
     | '/503'
     | '/company-login'
+    | '/company-register-success'
     | '/company-register'
     | '/company/'
     | '/companies/$companyId'
@@ -359,6 +370,7 @@ export interface FileRouteTypes {
     | '/500'
     | '/503'
     | '/company-login'
+    | '/company-register-success'
     | '/company-register'
     | '/company'
     | '/companies/$companyId'
@@ -394,6 +406,7 @@ export interface FileRouteTypes {
     | '/(errors)/503'
     | '/(public)/'
     | '/company-login/'
+    | '/company-register-success/'
     | '/company-register/'
     | '/company/'
     | '/(public)/companies/$companyId'
@@ -428,6 +441,7 @@ export interface RootRouteChildren {
   errors500Route: typeof errors500Route
   errors503Route: typeof errors503Route
   CompanyLoginIndexRoute: typeof CompanyLoginIndexRoute
+  CompanyRegisterSuccessIndexRoute: typeof CompanyRegisterSuccessIndexRoute
   CompanyRegisterIndexRoute: typeof CompanyRegisterIndexRoute
 }
 
@@ -473,6 +487,13 @@ declare module '@tanstack/react-router' {
       path: '/company-register'
       fullPath: '/company-register'
       preLoaderRoute: typeof CompanyRegisterIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/company-register-success/': {
+      id: '/company-register-success/'
+      path: '/company-register-success'
+      fullPath: '/company-register-success'
+      preLoaderRoute: typeof CompanyRegisterSuccessIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/company-login/': {
@@ -778,6 +799,7 @@ const rootRouteChildren: RootRouteChildren = {
   errors500Route: errors500Route,
   errors503Route: errors503Route,
   CompanyLoginIndexRoute: CompanyLoginIndexRoute,
+  CompanyRegisterSuccessIndexRoute: CompanyRegisterSuccessIndexRoute,
   CompanyRegisterIndexRoute: CompanyRegisterIndexRoute,
 }
 export const routeTree = rootRouteImport
