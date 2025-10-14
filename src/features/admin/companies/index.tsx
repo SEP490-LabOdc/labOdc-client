@@ -8,8 +8,9 @@ import { ThemeSwitch } from '@/components/theme-switch'
 import { CompaniesProvider } from './components/companies-provider'
 import { CompaniesPrimaryButtons } from './components/companies-primary-buttons'
 import { CompaniesTable } from './components/companies-table'
-import { companies } from './data/companies'
+// import { companies } from './data/companies'
 import { CompaniesDialogs } from './components/companies-dialogs'
+import { useGetCompanies } from '@/hooks/api/companies'
 
 
 const route = getRouteApi('/_authenticated/admin/companies/')
@@ -17,6 +18,19 @@ const route = getRouteApi('/_authenticated/admin/companies/')
 export default function Companies() {
     const search = route.useSearch()
     const navigate = route.useNavigate()
+
+    let companies = [];
+    try {
+        // Code that may throw an error
+        const { data, isLoading, isError, error } = useGetCompanies();
+        companies = data.data;
+    } catch (error: any) {
+        // Code to handle the error
+        console.error("An error occurred: ", error.message);
+    } finally {
+        // Code that will run regardless of the try/catch result
+        console.log("Execution completed.");
+    }
 
     return (
         <CompaniesProvider>
