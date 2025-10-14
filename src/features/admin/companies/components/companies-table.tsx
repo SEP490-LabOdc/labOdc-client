@@ -64,7 +64,7 @@ export function CompaniesTable({ data, search, navigate }: DataTableProps) {
         globalFilter: { enabled: false },
         columnFilters: [
             // username per-column text filter
-            { columnId: 'companyName', searchKey: 'companyName', type: 'string' },
+            { columnId: 'name', searchKey: 'name', type: 'string' },
             { columnId: 'status', searchKey: 'status', type: 'array' }
         ],
     })
@@ -102,7 +102,7 @@ export function CompaniesTable({ data, search, navigate }: DataTableProps) {
             <DataTableToolbar
                 table={table}
                 searchPlaceholder='Tìm kiếm công ty...'
-                searchKey='companyName'
+                searchKey='name'
                 filters={[
                     {
                         columnId: 'status',
