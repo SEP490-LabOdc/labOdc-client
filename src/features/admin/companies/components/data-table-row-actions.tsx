@@ -35,13 +35,13 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align='end' className='w-[160px]'>
                     {
-                        row.original.status == 'approving' ? (
+                        row.original.status == 'Pending' ? (
 
                             <DropdownMenuItem
                                 onClick={() => {
                                     navigate({
                                         to: '/admin/companies/approve',
-                                        search: { company: row.original },
+                                        search: { id: row.original.id },
                                     })
                                 }}
                             >

@@ -10,17 +10,17 @@ import { Textarea } from '@/components/ui/textarea'
 
 const CHECKLIST_ITEMS = [
     {
-        id: 'taxId',
+        id: 'taxCode',
         label: 'Mã số thuế (MST)',
         hints: [
             'Đúng định dạng (10 hoặc 13 số).',
             'Không trùng trong hệ thống.',
-            'Tra cứu trên Tổng cục Thuế (API/website) để chắc chắn tồn tại.',
+            'Tra cứu trên Tổng cục Thuế để chắc chắn tồn tại.',
             'Trạng thái hoạt động = "Còn hoạt động".',
         ],
     },
     {
-        id: 'companyName',
+        id: 'name',
         label: 'Tên công ty',
         hints: [
             'Khớp với tên trong dữ liệu tra cứu thuế.',
@@ -36,19 +36,11 @@ const CHECKLIST_ITEMS = [
         ],
     },
     {
-        id: 'foundingDate',
+        id: 'createdAt',
         label: 'Ngày thành lập',
         hints: ['Hợp lý (không lớn hơn ngày hiện tại).', 'Có trong giấy phép.'],
     },
 ] as const
-
-// const STATUS_LABELS: Record<string, string> = {
-//     approving: 'Chờ phê duyệt',
-//     rejected: 'Từ chối phê duyệt',
-//     active: 'Đang hoạt động',
-//     inactive: 'Không hoạt động',
-//     suspended: 'Đã tạm khóa',
-// }
 
 type ChecklistKey = (typeof CHECKLIST_ITEMS)[number]['id']
 type ChecklistState = Record<ChecklistKey, boolean>
@@ -64,10 +56,10 @@ export default function CompanyApprovingForm({
     const navigate = useNavigate()
 
     const buildInitialChecklist = (): ChecklistState => ({
-        taxId: Boolean(initialData?.verification?.taxId),
-        companyName: Boolean(initialData?.verification?.companyName),
+        taxCode: Boolean(initialData?.verification?.taxCode),
+        name: Boolean(initialData?.verification?.name),
         businessLicense: Boolean(initialData?.verification?.businessLicense),
-        foundingDate: Boolean(initialData?.verification?.foundingDate),
+        createdAt: Boolean(initialData?.verification?.createdAt),
     })
 
     const [verification, setVerification] = useState<ChecklistState>(buildInitialChecklist)
@@ -78,10 +70,10 @@ export default function CompanyApprovingForm({
         setVerification(buildInitialChecklist())
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [
-        initialData?.verification?.taxId,
-        initialData?.verification?.companyName,
+        initialData?.verification?.taxCode,
+        initialData?.verification?.name,
         initialData?.verification?.businessLicense,
-        initialData?.verification?.foundingDate,
+        initialData?.verification?.createdAt,
     ])
 
     useEffect(() => {
@@ -95,13 +87,12 @@ export default function CompanyApprovingForm({
         if (!initialData?.id) return
 
         try {
+            console.log(updated)
             // await fetch(`/api/companies/${initialData.id}`, {
             //     method: 'PATCH',
             //     headers: { 'Content-Type': 'application/json' },
             //     body: JSON.stringify({ verification: updated }),
             // })
-            // TODO: handle non-ok responses
-            console.log(updated)
         } catch (error: any) {
             setVerification(previous)
             alert(error?.message ?? 'Đã xảy ra lỗi, vui lòng thử lại.')
@@ -138,18 +129,25 @@ export default function CompanyApprovingForm({
     }
 
     const companyFields = [
-        { label: 'Tên công ty', value: initialData?.companyName ?? '' },
+        { label: 'Tên công ty', value: initialData?.name ?? '' },
         { label: 'Email', value: initialData?.email ?? '' },
-        { label: 'Mã số thuế', value: initialData?.taxId ?? '' },
+        { label: 'Mã số thuế', value: initialData?.taxCode ?? '' },
         { label: 'Địa chỉ', value: initialData?.address ?? '' },
-        { label: 'Số điện thoại', value: initialData?.phoneNumber ?? '' },
+        { label: 'Số điện thoại', value: initialData?.phone ?? '' },
         { label: 'Lĩnh vực', value: initialData?.domain ?? '' },
+        { label: 'Website', value: initialData?.website ?? '' },
+        {
+            label: 'Ngày thành lập',
+            value: initialData?.createdAt
+                ? new Date(initialData.createdAt).toLocaleDateString('vi-VN')
+                : '',
+        },
     ]
 
     const managerFields = [
-        { label: 'Tên quản lý', value: initialData?.accountManager ?? '' },
-        { label: 'Số điện thoại', value: initialData?.phoneNumber ?? '' },
-        { label: 'Email', value: initialData?.email ?? '' },
+        { label: 'Tên người liên hệ', value: initialData?.contactPersonName ?? '' },
+        { label: 'Số điện thoại', value: initialData?.contactPersonPhone ?? '' },
+        { label: 'Email', value: initialData?.contactPersonEmail ?? '' },
     ]
 
     const uncheckedItems = CHECKLIST_ITEMS.filter((item) => !verification[item.id])
@@ -159,6 +157,7 @@ export default function CompanyApprovingForm({
         <>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
                 <div className="space-y-8 px-4">
+                    {/* --- THÔNG TIN CÔNG TY --- */}
                     <div className="p-3 mb-0">
                         <h3 className="mb-4 flex items-center gap-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
                             <span className="h-4 w-1.5 rounded bg-primary" />
@@ -185,16 +184,16 @@ export default function CompanyApprovingForm({
                                     >
                                         Sample file.png
                                     </a>
-
                                 </div>
                             </div>
                         </div>
                     </div>
 
+                    {/* --- THÔNG TIN NGƯỜI LIÊN HỆ --- */}
                     <div className="p-3">
                         <h3 className="mb-4 flex items-center gap-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
                             <span className="h-4 w-1.5 rounded bg-primary" />
-                            Thông tin quản lý
+                            Thông tin người liên hệ
                         </h3>
 
                         <div className="space-y-4">
@@ -210,7 +209,7 @@ export default function CompanyApprovingForm({
                     </div>
                 </div>
 
-
+                {/* --- CHECKLIST --- */}
                 <div className="px-12">
                     <div className="rounded-lg border bg-card p-6 shadow-sm space-y-4">
                         <h3 className="text-lg font-semibold">Checklist xác thực Công Ty</h3>
@@ -262,6 +261,7 @@ export default function CompanyApprovingForm({
                 </Button>
             </div>
 
+            {/* --- DIALOG GỬI YÊU CẦU --- */}
             <ConfirmDialog
                 open={requestDialogOpen}
                 onOpenChange={setRequestDialogOpen}
@@ -298,7 +298,7 @@ export default function CompanyApprovingForm({
                 </div>
                 <p className="text-xs text-muted-foreground italic">
                     Khi bạn nhấn <span className="font-medium">"Gửi yêu cầu"</span>, hệ thống sẽ
-                    gửi email thông báo đến quản lý công ty để yêu cầu cập nhật thông tin.
+                    gửi email thông báo đến người liên hệ của công ty.
                 </p>
             </ConfirmDialog>
         </>
