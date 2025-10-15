@@ -33,7 +33,7 @@ apiRequest.interceptors.response.use(
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
           localStorage.clear()
-          window.location.href = '/login'
+          window.location.href = '/sign-in'
           return Promise.reject(error)
         }
       }

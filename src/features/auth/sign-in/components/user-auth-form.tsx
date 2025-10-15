@@ -52,7 +52,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
   function onSubmit(data: z.infer<typeof formSchema>) {
     signIn.mutate(data, {
       onSuccess: async (data) => {
-        auth.setTokens(data.data.accessToken, data.data.accessToken)
+        auth.setTokens(data.data.accessToken, data.data.refreshToken)
         const user: UserInfo = jwtDecode(data.data.accessToken)
         auth.setUser(user)
         localStorage.setItem('user_id', user.userId)
