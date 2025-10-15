@@ -4,49 +4,43 @@ faker.seed(12345)
 
 export type Company = {
     id: string
-    companyName: string
-    description: string
+    name: string
     email: string
-    taxId: string
+    taxCode: string
     address: string
-    phoneNumber: string
-    domain: string
-    status: 'approving' | 'rejected' | 'active' | 'inactive' | 'suspended'
-    logo: string
-    banner: string
-    accountManager: string
-    lastInteraction: Date
+    phone: string
+    domain: string | null
+    status: 'approving' | 'rejected' | 'active' | 'inactive' | 'suspended' | 'Pending'
+    contactPersonName: string | null
+    contactPersonEmail: string | null
+    contactPersonPhone: string | null
+    website: string | null
+    createdAt: Date
 }
 
 export const companies: Company[] = Array.from({ length: 150 }, () => {
+    const status = faker.helpers.arrayElement([
+        'approving',
+        'active',
+        'inactive',
+        'suspended',
+        'rejected',
+        'Pending',
+    ]) as Company['status']
+
     return {
         id: faker.string.uuid(),
-        companyName: faker.company.name(),
-        description: faker.company.catchPhrase(),
+        name: faker.company.name(),
         email: faker.internet.email(),
-        taxId: faker.finance.accountNumber(10),
+        taxCode: faker.finance.accountNumber(),
         address: faker.location.streetAddress(),
-        phoneNumber: faker.phone.number(),
-        domain: faker.helpers.arrayElement([
-            'Fintech',
-            'E-commerce',
-            'Healthcare',
-            'EdTech',
-            'Logistics',
-            'Gaming',
-            'SaaS',
-            'AI/ML',
-        ]),
-        status: faker.helpers.arrayElement([
-            'approving',
-            'active',
-            'inactive',
-            'suspended',
-            'rejected',
-        ]),
-        logo: faker.image.url({ width: 96, height: 96 }),
-        banner: faker.image.url({ width: 1200, height: 300 }),
-        accountManager: faker.person.fullName(),
-        lastInteraction: faker.date.recent({ days: 60 }),
+        phone: faker.phone.number(),
+        domain: faker.helpers.arrayElement([faker.lorem.word(), '', null]),
+        status: status,
+        contactPersonName: faker.person.fullName(),
+        contactPersonEmail: faker.internet.email(),
+        contactPersonPhone: faker.phone.number(),
+        website: faker.helpers.arrayElement([faker.internet.url(), '', null]),
+        createdAt: faker.date.recent({ days: 180 }),
     }
 })
