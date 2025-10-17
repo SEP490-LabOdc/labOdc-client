@@ -7,10 +7,10 @@ export function FeatureSection() {
             <div className="container mx-auto px-4">
                 <div className="text-center space-y-4 mb-16">
                     <h2 className="text-3xl lg:text-4xl font-bold text-balance text-[#264653]">
-                        Why Choose Lab-based ODC Platform?
+                        Lý do bạn nên chọn nền tảng ODC phòng lab của chúng tôi ?
                     </h2>
                     <p className="text-lg text-[#334155] max-w-2xl mx-auto">
-                        From building talent pools to managing projects, everything is integrated in one platform.
+                        Từ việc xây dựng nguồn nhân lực đến quản lý dự án, mọi thứ đều được tích hợp trong một nền tảng.
                     </p>
                 </div>
 
@@ -18,40 +18,41 @@ export function FeatureSection() {
                     {[
                         {
                             icon: Search,
-                            title: "Talent Pool Management",
-                            description: "Recruit, evaluate, and categorize talents with advanced filtering and assessment tools.",
+                            title: "Quản lý nguồn nhân tài",
+                            description: "Tuyển chọn, đánh giá và phân loại nhân sự với các công cụ lọc và đánh giá nâng cao.",
                             iconBg: "#2a9d8f",
                         },
                         {
                             icon: GraduationCap,
-                            title: "Customized Training",
-                            description: "Training programs aligned with enterprise requirements and industry best practices.",
+                            title: "Đào tạo tùy chỉnh",
+                            description: "Chương trình đào tạo được thiết kế phù hợp với yêu cầu doanh nghiệp và chuẩn ngành.",
                             iconBg: "#e9c46a",
                         },
                         {
                             icon: Users2,
-                            title: "Mini-ODC Teams",
-                            description: "Structured teams with mentor and senior guidance for optimal project delivery.",
+                            title: "Nhóm Mini-ODC",
+                            description: "Các nhóm làm việc có cấu trúc, được hướng dẫn bởi mentor và senior để đảm bảo hiệu quả dự án tối ưu.",
                             iconBg: "#f4a261",
                         },
                         {
                             icon: ClipboardList,
-                            title: "Project Management",
-                            description: "Transparent progress tracking and quality assurance with comprehensive reporting.",
+                            title: "Quản lý dự án",
+                            description: "Theo dõi tiến độ minh bạch và đảm bảo chất lượng với hệ thống báo cáo toàn diện.",
                             iconBg: "#264653",
                         },
                         {
                             icon: FileText,
-                            title: "Flexible Contracts",
-                            description: "Monthly, per-project, or direct hire options to match your business needs.",
+                            title: "Hợp đồng linh hoạt",
+                            description: "Tùy chọn theo tháng, theo dự án hoặc tuyển dụng trực tiếp để phù hợp với nhu cầu doanh nghiệp.",
                             iconBg: "#e76f51",
                         },
                         {
                             icon: UserCheck,
-                            title: "Talent Transfer",
-                            description: "Seamless onboarding when enterprises hire directly with knowledge handover.",
+                            title: "Chuyển giao nhân sự",
+                            description: "Quy trình onboard liền mạch khi doanh nghiệp tuyển dụng trực tiếp, kèm bàn giao kiến thức đầy đủ.",
                             iconBg: "linear-gradient(135deg, #2a9d8f 0%, #e9c46a 100%)",
                         },
+
                     ].map((feature, index) => (
                         <Card
                             key={index}

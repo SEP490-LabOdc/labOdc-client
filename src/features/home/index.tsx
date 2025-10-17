@@ -19,40 +19,40 @@ export default function Home() {
             <section id="process" className="py-20 bg-muted/30">
                 <div className="container mx-auto px-4">
                     <div className="text-center space-y-4 mb-16">
-                        <h2 className="text-3xl lg:text-4xl font-bold text-balance">Our Seamless 6-Step ODC Journey</h2>
+                        <h2 className="text-3xl lg:text-4xl font-bold text-balance"> Hành trình ODC 6 bước liền mạch của chúng tôi</h2>
                     </div>
 
                     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                         {[
                             {
                                 step: "01",
-                                title: "Enterprise Onboarding",
-                                description: "Seamless onboarding with your existing infrastructure and development workflows.",
+                                title: "Tiếp nhận doanh nghiệp",
+                                description: "Kết nối liền mạch với hạ tầng và quy trình phát triển hiện có của doanh nghiệp bạn.",
                             },
                             {
                                 step: "02",
-                                title: "Build & Train Talent Pool",
-                                description: "We identify, vet, and train talented developers specifically for your requirements.",
+                                title: "Xây dựng & Đào tạo nguồn nhân tài",
+                                description: "Chúng tôi tìm kiếm, đánh giá và đào tạo đội ngũ lập trình viên phù hợp với yêu cầu cụ thể của bạn.",
                             },
                             {
                                 step: "03",
-                                title: "Form ODC Teams",
-                                description: "Create your dedicated offshore teams with the right mix of skills and experience.",
+                                title: "Thành lập đội ngũ ODC",
+                                description: "Hình thành các nhóm làm việc chuyên biệt với sự kết hợp kỹ năng và kinh nghiệm tối ưu.",
                             },
                             {
                                 step: "04",
-                                title: "Project Management & Tracking",
-                                description: "Comprehensive project oversight, progress tracking and milestone management.",
+                                title: "Quản lý & Theo dõi dự án",
+                                description: "Giám sát toàn diện tiến độ, quản lý cột mốc và đảm bảo chất lượng dự án minh bạch.",
                             },
                             {
                                 step: "05",
-                                title: "Evaluation & Improvement",
-                                description: "Continuous performance evaluation and process optimization.",
+                                title: "Đánh giá & Cải tiến",
+                                description: "Liên tục đánh giá hiệu suất và tối ưu quy trình để đạt hiệu quả cao nhất.",
                             },
                             {
                                 step: "06",
-                                title: "Transfer Talent",
-                                description: "Seamless talent transfer and knowledge handover for your project continuity.",
+                                title: "Chuyển giao nhân sự",
+                                description: "Bàn giao nhân sự và kiến thức liền mạch để đảm bảo tính liên tục của dự án.",
                             },
                         ].map((step, index) => (
                             <Card key={index} className="relative overflow-hidden hover:shadow-lg transition-shadow">
@@ -232,11 +232,12 @@ export default function Home() {
                     <div className="grid lg:grid-cols-2 gap-12 items-center">
                         <div className="space-y-6">
                             <h2 className="text-3xl lg:text-4xl font-bold text-balance">
-                                Ready to Elevate Your Team? Start Building Today!
+                                Sẵn sàng nâng tầm đội ngũ của bạn? Bắt đầu xây dựng ngay hôm nay!
                             </h2>
                             <p className="text-primary-foreground/80 text-lg">
-                                Connect with our experts to discover how our Lab-based ODC Platform can take solutions for your specific
-                                enterprise needs. Fill out the form below or reach out today!
+                                Kết nối với các chuyên gia của chúng tôi để khám phá cách nền tảng ODC theo mô hình phòng lab
+                                có thể giúp doanh nghiệp bạn đạt được giải pháp tối ưu. Hãy điền thông tin vào biểu mẫu dưới đây
+                                hoặc liên hệ với chúng tôi ngay hôm nay!
                             </p>
                         </div>
 
@@ -244,23 +245,23 @@ export default function Home() {
                             <CardContent className="p-6 space-y-4">
                                 <div className="space-y-4">
                                     <div>
-                                        <label className="text-sm font-medium">Your Name</label>
-                                        <Input placeholder="Enter your name" className="mt-1" />
+                                        <label className="text-sm font-medium">Họ và tên</label>
+                                        <Input placeholder="Nhập họ và tên của bạn" className="mt-1" />
                                     </div>
                                     <div>
-                                        <label className="text-sm font-medium">Your Work Email</label>
-                                        <Input type="email" placeholder="Enter your email" className="mt-1" />
+                                        <label className="text-sm font-medium">Email</label>
+                                        <Input type="email" placeholder="Nhập email của bạn" className="mt-1" />
                                     </div>
                                     <div>
-                                        <label className="text-sm font-medium">Your Company Name</label>
-                                        <Input placeholder="Enter company name" className="mt-1" />
+                                        <label className="text-sm font-medium">Tên công ty</label>
+                                        <Input placeholder="Nhập tên công ty" className="mt-1" />
                                     </div>
                                     <div>
-                                        <label className="text-sm font-medium">Tell us about your project needs</label>
-                                        <Textarea placeholder="Describe your requirements..." className="mt-1" rows={4} />
+                                        <label className="text-sm font-medium">Hãy cho chúng tôi biết về nhu cầu dự án của bạn</label>
+                                        <Textarea placeholder="Mô tả yêu cầu hoặc mục tiêu dự án..." className="mt-1" rows={4} />
                                     </div>
                                     <Button className="w-full bg-[oklch(0.7_0.16_45)] hover:bg-[oklch(0.65_0.16_45)] text-white">
-                                        Submit Inquiry
+                                        Gửi yêu cầu tư vấn
                                     </Button>
                                 </div>
                             </CardContent>

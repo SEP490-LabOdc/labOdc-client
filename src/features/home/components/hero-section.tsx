@@ -17,15 +17,14 @@ export function HeroSection() {
                     <div className="space-y-8">
                         <div className="space-y-6">
                             <h1 className="text-4xl lg:text-6xl font-bold text-balance leading-tight text-brand-dark-teal">
-                                Bridge Talent to Enterprise Success with{" "}
+                                Kết nối Tài năng - Dẫn lối Thành công{" "}
                                 <span className="relative">
-                                    Lab-based ODC Platform
+                                    Lab-based ODC System
                                     <div className="absolute -bottom-2 left-0 w-full h-1 bg-brand-warm-yellow rounded-full"></div>
                                 </span>
                             </h1>
                             <p className="text-xl text-slate-600 text-pretty leading-relaxed">
-                                Connect skilled talents with enterprises through training, mini-ODC teams, and interactive learning.
-                                Transform your development capabilities with our comprehensive platform.
+                                Kết nối đội ngũ sinh viên tài năng từ Đại học FPT với doanh nghiệp thông qua các chương trình đào tạo, mô hình đội ODC linh hoạt và phương pháp học tập tương tác. Nâng tầm năng lực phát triển của doanh nghiệp với nền tảng của chúng tôi.
                             </p>
                         </div>
 
@@ -34,7 +33,7 @@ export function HeroSection() {
                                 size="lg"
                                 className="text-lg px-8 py-4 bg-[#e76f51] hover:bg-[#f4a261] text-white font-bold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
                             >
-                                Get Started
+                                Bắt đầu ngay !
                                 <ArrowRight className="ml-2 h-5 w-5" />
                             </Button>
                             <Button
@@ -42,7 +41,7 @@ export function HeroSection() {
                                 size="lg"
                                 className="text-lg px-8 py-4 border-2 border-[#2a9d8f] text-[#2a9d8f] hover:bg-[#2a9d8f] hover:text-white font-semibold transition-all duration-300 bg-transparent"
                             >
-                                Request Demo
+                                Trải nghiệm ngay
                             </Button>
                         </div>
 
@@ -59,7 +58,7 @@ export function HeroSection() {
                                         </div>
                                     ))}
                                 </div>
-                                <span className="text-sm text-slate-600">500+ Enterprises Trust Us</span>
+                                <span className="text-sm text-slate-600">500+ doanh nghiệp đã tin tưởng lựa chọn chúng tôi</span>
                             </div>
                         </div>
                     </div>
@@ -74,7 +73,7 @@ export function HeroSection() {
                                     <div className="flex items-center justify-between">
                                         <div className="flex items-center space-x-2">
                                             <Monitor className="h-5 w-5 text-brand-dark-teal" />
-                                            <span className="text-sm font-semibold text-brand-dark-teal">ODC Dashboard</span>
+                                            <span className="text-sm font-semibold text-brand-dark-teal">Trang quản lý ODC</span>
                                         </div>
                                         <div className="w-2 h-2 bg-brand-green-teal rounded-full animate-pulse"></div>
                                     </div>
