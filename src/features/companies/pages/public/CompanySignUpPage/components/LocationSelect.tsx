@@ -1,6 +1,6 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
-interface IData {
+ export interface IData {
   name: string,
   code: number,
   division_type: string,

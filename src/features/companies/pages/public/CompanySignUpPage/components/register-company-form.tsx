@@ -10,8 +10,13 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Link, useNavigate } from '@tanstack/react-router'
 import { useCompanyRegister } from '@/hooks/api'
 import { toast } from 'sonner'
-import { LocationSelect } from '@/features/companies/pages/public/CompanySignUpPage/components/LocationSelect.tsx'
+import {
+  type IData,
+  LocationSelect,
+} from '@/features/companies/pages/public/CompanySignUpPage/components/LocationSelect.tsx'
 import { useGetProvinces, useGetWardsByProvinceCode } from '@/hooks/api/external'
+import { removeProperties } from '@/helpers/objectUtils.ts'
+import { combineAddressParts } from '@/helpers/stringUtils.ts'
 
 // --- Schema ---
 const schema = z.object({
@@ -74,12 +79,17 @@ export function RegisterCompanyForm() {
 
     const onSubmit = async (data: CompanySignupData) => {
       try {
-        const { agreeTerm, ...submitData } = data;
+        const selectedProvince = provinces.data?.find((p: IData) => p.code === parseInt(data.provinceCode));
+        const selectedWard = wards.data?.wards?.find((w: IData) => w.code === parseInt(data.wardCode));
+        const addressParts = combineAddressParts(data.address, selectedProvince.name, selectedWard.name);
+        const submitData = removeProperties(data, 'agreeTerm', 'wardCode', 'provinceCode');
         const finalSubmitData = {
           ...submitData,
+          address: addressParts,
           businessLicenseLink: submitData.businessLicenseLink instanceof File
             ? '' : submitData.businessLicenseLink || ''
         };
+        console.log(finalSubmitData);
         await mutateAsync(finalSubmitData)
         await navigate({ to: '/verify-otp', search: { companyEmail: data.email } })
         toast.success('Đăng ký công ty thành công!')
