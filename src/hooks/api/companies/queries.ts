@@ -21,3 +21,30 @@ export const useGetCompanyById = (id?: string) =>
         },
         enabled: !!id,
     });
+
+export const useGetCheckList = () =>
+    useQuery({
+        queryKey: companyKeys.getCheckList,
+        queryFn: async () => {
+            const body = {
+                filters: [
+                    {
+                        key: "entityType",
+                        operator: "EQUAL",
+                        value: "COMPANY_REGISTRATION",
+                        valueTo: {},
+                    },
+                ],
+                sorts: [],
+                page: null,
+                size: null,
+            };
+
+            const { data } = await apiRequest.post(
+                "/api/v1/checklist-templates/search",
+                body
+            );
+
+            return data?.data;
+        },
+    });
