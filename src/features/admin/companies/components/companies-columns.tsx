@@ -112,7 +112,9 @@ export const companiesColumns: ColumnDef<Company>[] = [
         header: ({ column }) => (
             <DataTableColumnHeader column={column} title="Lĩnh vực" />
         ),
-        cell: ({ row }) => <div>{row.getValue('domain')}</div>,
+        cell: ({ row }) => {
+            return <LongText className="max-w-40">{row.getValue('domain')}</LongText>
+        }
     },
     {
         accessorKey: 'status',

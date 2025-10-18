@@ -35,7 +35,7 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align='end' className='w-[160px]'>
                     {
-                        row.original.status == 'Pending' ? (
+                        row.original.status == 'PENDING' || row.original.status == 'UPDATE_REQUIRED' ? (
 
                             <DropdownMenuItem
                                 onClick={() => {

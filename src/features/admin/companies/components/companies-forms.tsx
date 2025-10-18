@@ -17,25 +17,8 @@ import { Input } from '@/components/ui/input'
 import { SelectDropdown } from '@/components/select-dropdown'
 import { useNavigate } from '@tanstack/react-router'
 import type { Company } from '../data/schema'
+import { DOMAIN_OPTIONS, STATUS_OPTIONS } from '../data/data'
 
-// Options
-const DOMAIN_OPTIONS = [
-    { label: 'Fintech', value: 'Fintech' },
-    { label: 'E-commerce', value: 'E-commerce' },
-    { label: 'Healthcare', value: 'Healthcare' },
-    { label: 'EdTech', value: 'EdTech' },
-    { label: 'Logistics', value: 'Logistics' },
-    { label: 'Gaming', value: 'Gaming' },
-    { label: 'SaaS', value: 'SaaS' },
-    { label: 'AI/ML', value: 'AI/ML' },
-]
-const STATUS_OPTIONS = [
-    { label: 'Chờ phê duyệt', value: 'approving' },
-    { label: 'Từ chối phê duyệt', value: 'rejected' },
-    { label: 'Đang hoạt động', value: 'active' },
-    { label: 'Không hoạt động', value: 'inactive' },
-    { label: 'Đã tạm khóa', value: 'suspended' },
-]
 
 // Helpers
 const isValidDateStr = (s: string) => !Number.isNaN(Date.parse(s))
@@ -291,6 +274,7 @@ export default function CompanyForm({
                                                 onValueChange={field.onChange}
                                                 placeholder="Chọn lĩnh vực"
                                                 items={DOMAIN_OPTIONS}
+                                                showSearch
                                                 className="w-full"
                                             />
                                         </div>
