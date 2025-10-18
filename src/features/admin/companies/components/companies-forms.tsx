@@ -39,19 +39,19 @@ const STATUS_OPTIONS = [
 
 // Helpers
 const isValidDateStr = (s: string) => !Number.isNaN(Date.parse(s))
-const toDateInput = (d?: Date) => (d ? new Date(d).toISOString().slice(0, 10) : '')
+//const toDateInput = (d?: Date) => (d ? new Date(d).toISOString().slice(0, 10) : '')
 
 const formSchema = z.object({
-    companyName: z.string().min(1, 'Tên công ty là bắt buộc.'),
+    name: z.string().min(1, 'Tên công ty là bắt buộc.'),
     description: z.string().min(1, 'Mô tả là bắt buộc.'),
     email: z.email({
         error: (iss) => (iss.input === '' ? 'Email là bắt buộc.' : undefined),
     }),
-    taxId: z.string().min(1, 'Mã số thuế là bắt buộc.'),
+    taxCode: z.string().min(1, 'Mã số thuế là bắt buộc.'),
     address: z.string().min(1, 'Địa chỉ là bắt buộc.'),
     phoneNumber: z.string().min(1, 'Số điện thoại là bắt buộc.'),
     domain: z.string().min(1, 'Lĩnh vực là bắt buộc.'),
-    status: z.enum(['approving', 'rejected', 'active', 'inactive', 'suspended']),
+    status: z.enum(['PENDING', 'UPDATE_REQUIRED', 'ACTIVE', 'DISABLED']),
     logo: z.string().url('Logo phải là URL hợp lệ.').min(1, 'Logo là bắt buộc.'),
     banner: z.string().url('Banner phải là URL hợp lệ.').min(1, 'Banner là bắt buộc.'),
     accountManager: z.string().min(1, 'Người quản lý tài khoản là bắt buộc.'),
@@ -78,29 +78,28 @@ export default function CompanyForm({
         () =>
             isEdit && initialData
                 ? {
-                    companyName: initialData.companyName ?? '',
+                    name: initialData.name ?? '',
                     description: initialData.description ?? '',
                     email: initialData.email ?? '',
-                    taxId: initialData.taxId ?? '',
+                    taxCode: initialData.taxCode ?? '',
                     address: initialData.address ?? '',
-                    phoneNumber: initialData.phoneNumber ?? '',
+                    phoneNumber: initialData.phone ?? '',
                     domain: initialData.domain ?? '',
-                    status: initialData.status ?? 'approving',
+                    status: initialData.status ?? '',
                     logo: initialData.logo ?? '',
                     banner: initialData.banner ?? '',
-                    accountManager: initialData.accountManager ?? '',
-                    lastInteraction: toDateInput(initialData.lastInteraction),
+                    accountManager: initialData.contactPersonName ?? '',
                     isEdit: true,
                 }
                 : {
-                    companyName: '',
+                    name: '',
                     description: '',
                     email: '',
-                    taxId: '',
+                    taxCode: '',
                     address: '',
                     phoneNumber: '',
                     domain: '',
-                    status: 'approving',
+                    status: 'PENDING',
                     logo: '',
                     banner: '',
                     accountManager: '',
@@ -124,10 +123,10 @@ export default function CompanyForm({
 
     const onSubmit = async (values: CompanyFormValues) => {
         const payload: any = {
-            companyName: values.companyName,
+            name: values.name,
             description: values.description,
             email: values.email,
-            taxId: values.taxId,
+            taxId: values.taxCode,
             address: values.address,
             phoneNumber: values.phoneNumber,
             domain: values.domain,
@@ -168,7 +167,7 @@ export default function CompanyForm({
                     <div className="space-y-4 px-12">
                         <FormField
                             control={form.control}
-                            name="companyName"
+                            name="name"
                             render={({ field }) => (
                                 <FormItem className="space-y-1">
                                     <div className="flex items-center gap-3">
@@ -222,7 +221,7 @@ export default function CompanyForm({
 
                         <FormField
                             control={form.control}
-                            name="taxId"
+                            name="taxCode"
                             render={({ field }) => (
                                 <FormItem className="space-y-1">
                                     <div className="flex items-center gap-3">

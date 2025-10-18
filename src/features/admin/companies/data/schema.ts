@@ -2,12 +2,10 @@ import { z } from 'zod'
 
 // Enum status
 export const companyStatusSchema = z.union([
-    z.literal('active'),
-    z.literal('inactive'),
-    z.literal('suspended'),
-    z.literal('approving'),
-    z.literal('rejected'),
-    z.literal('Pending'),
+    z.literal('PENDING'),
+    z.literal('UPDATE_REQUIRED'),
+    z.literal('ACTIVE'),
+    z.literal('DISABLED'),
 ])
 export type CompanyStatus = z.infer<typeof companyStatusSchema>
 
@@ -15,6 +13,7 @@ export type CompanyStatus = z.infer<typeof companyStatusSchema>
 export const companySchema = z.object({
     id: z.string(),
     name: z.string().min(2, 'Tên công ty phải có ít nhất 2 ký tự.'),
+    description: z.string().nullable(),
     email: z.string().email('Email không hợp lệ.'),
     taxCode: z.string().regex(/^\d{10,13}$/, 'Mã số thuế không hợp lệ.'),
     address: z.string().min(1, 'Địa chỉ là bắt buộc.'),
@@ -22,6 +21,8 @@ export const companySchema = z.object({
     domain: z.string().nullable().optional(),
     status: companyStatusSchema,
     website: z.string().nullable().optional(),
+    logo: z.string().nullable(),
+    banner: z.string().nullable(),
     contactPersonName: z.string().nullable().optional(),
     contactPersonEmail: z.string().email('Email người liên hệ không hợp lệ.').nullable().optional(),
     contactPersonPhone: z.string().nullable().optional(),

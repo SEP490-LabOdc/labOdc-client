@@ -63,6 +63,17 @@ export const companiesColumns: ColumnDef<Company>[] = [
         enableHiding: false,
     },
     {
+        accessorKey: 'description',
+        header: ({ column }) => (
+            <DataTableColumnHeader className="m-0" column={column} title="Mô tả" />
+        ),
+        cell: ({ row }) => {
+            return <LongText className="max-w-36">{row.getValue('description')}</LongText>
+        },
+        meta: { className: 'w-36' },
+        enableHiding: true,
+    },
+    {
         accessorKey: 'taxCode',
         header: ({ column }) => (
             <DataTableColumnHeader className="m-0" column={column} title="Mã số thuế" />
@@ -71,6 +82,7 @@ export const companiesColumns: ColumnDef<Company>[] = [
             return <LongText className="max-w-36">{row.getValue('taxCode')}</LongText>
         },
         meta: { className: 'w-36' },
+        enableHiding: true,
     },
     {
         accessorKey: 'address',
@@ -112,12 +124,10 @@ export const companiesColumns: ColumnDef<Company>[] = [
             const badgeColor = callTypes.get(status)
 
             const STATUS_MAP = {
-                approving: 'Chờ phê duyệt',
-                rejected: 'Từ chối phê duyệt',
-                active: 'Đang hoạt động',
-                inactive: 'Không hoạt động',
-                suspended: 'Đã tạm khóa',
-                Pending: 'Đang chờ',
+                PENDING: 'Chờ xác thực',
+                UPDATE_REQUIRED: 'Yêu cầu cập nhật',
+                ACTIVE: 'Đang hoạt động',
+                DISABLED: 'Vô hiệu hóa',
             } as const
 
             const vietnameseStatusLabel = STATUS_MAP[status as keyof typeof STATUS_MAP]
