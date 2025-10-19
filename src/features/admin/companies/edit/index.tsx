@@ -6,7 +6,6 @@ import { ProfileDropdown } from '@/components/profile-dropdown'
 import { Search } from '@/components/search'
 import { ThemeSwitch } from '@/components/theme-switch'
 import { CompaniesProvider } from '../components/companies-provider'
-import { CompaniesPrimaryButtons } from '../components/companies-primary-buttons'
 import CompanyForm from '../components/companies-forms'
 
 

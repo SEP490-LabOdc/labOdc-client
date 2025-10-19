@@ -37,6 +37,7 @@ export default function Users() {
     const users = data?.data || [];
 
     console.log(users);
+    console.log(isLoading);
 
     return (
         <UsersProvider>
