@@ -35,7 +35,6 @@ export default function EditCompany() {
                                 Thay đổi thông tin công ty tại đây. Nhấn lưu khi bạn hoàn tất.
                             </p>
                         </div>
-                        <CompaniesPrimaryButtons />
                     </div>
                     <div className='-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-y-0 lg:space-x-12'>
                         <CompanyForm mode='edit' initialData={search?.user} />

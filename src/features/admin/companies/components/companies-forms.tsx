@@ -300,6 +300,7 @@ export default function CompanyForm({
                                                 placeholder="Chọn trạng thái"
                                                 items={STATUS_OPTIONS}
                                                 className="w-full"
+                                                disabled
                                             />
                                         </div>
                                     </div>
