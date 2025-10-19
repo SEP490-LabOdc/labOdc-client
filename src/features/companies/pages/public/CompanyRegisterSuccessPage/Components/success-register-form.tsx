@@ -1,4 +1,4 @@
-import { CheckCircle, ArrowLeft } from 'lucide-react';
+import { CheckCircle, ArrowLeft, Mail, Clock } from 'lucide-react';
 import { motion } from "framer-motion";
 import { Button } from '@/components/ui/button';
 import { useNavigate } from '@tanstack/react-router';
@@ -6,8 +6,8 @@ import { useNavigate } from '@tanstack/react-router';
 export function SuccessRegisterForm() {
     const navigate = useNavigate();
 
-    const handleBackToSignIn = () => {
-        navigate({ to: '/company-login' });
+    const handleBackToHome = () => {
+        navigate({ to: '/' });
     };
 
     return (
@@ -37,14 +37,13 @@ export function SuccessRegisterForm() {
                 className="mb-8"
             >
                 <h1 className="text-3xl lg:text-4xl font-bold text-[#264653] mb-4">
-                    Chúc mừng! 🎉
+                    Đăng ký thành công! 🎉
                 </h1>
                 <h2 className="text-xl lg:text-2xl font-semibold text-[#2a9d8f] mb-4">
-                    Đăng ký tài khoản doanh nghiệp thành công
+                    Thông tin doanh nghiệp đã được gửi
                 </h2>
                 <p className="text-gray-600 text-lg leading-relaxed">
-                    Tài khoản doanh nghiệp của bạn đã được tạo thành công. 
-                    Bạn có thể bắt đầu đăng nhập và khám phá các tính năng tuyệt vời của LabOdc.
+                    Cảm ơn bạn đã đăng ký tài khoản doanh nghiệp. Thông tin của bạn đã được gửi thành công và đang chờ xác nhận từ Lab Admin.
                 </p>
             </motion.div>
 
@@ -55,21 +54,44 @@ export function SuccessRegisterForm() {
                 transition={{ duration: 0.6, delay: 0.6 }}
                 className="mb-8 p-6 bg-blue-50 rounded-xl border border-blue-200"
             >
+                <div className="flex items-center justify-center mb-4">
+                    <Clock className="w-6 h-6 text-amber-600 mr-2" />
+                    <h3 className="text-lg font-semibold text-[#264653]">
+                        Đang chờ xác nhận
+                    </h3>
+                </div>
+                <p className="text-gray-700 mb-4">
+                    Lab Admin sẽ xem xét và xác nhận thông tin doanh nghiệp của bạn trong thời gian sớm nhất.
+                </p>
+                <div className="flex items-center justify-center text-amber-700">
+                    <Mail className="w-5 h-5 mr-2" />
+                    <span className="font-medium">
+                        Bạn sẽ nhận được email thông báo khi tài khoản được kích hoạt
+                    </span>
+                </div>
+            </motion.div>
+
+            <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.6, delay: 0.8 }}
+                className="mb-8 p-6 bg-blue-50 rounded-xl border border-blue-200"
+            >
                 <h3 className="text-lg font-semibold text-[#264653] mb-3">
-                    Bước tiếp theo:
+                    Sau khi được xác nhận:
                 </h3>
                 <ul className="text-left text-gray-700 space-y-2">
+                    <li className="flex items-center">
+                        <div className="w-2 h-2 bg-[#2a9d8f] rounded-full mr-3"></div>
+                        Kiểm tra email để nhận thông tin đăng nhập
+                    </li>
                     <li className="flex items-center">
                         <div className="w-2 h-2 bg-[#2a9d8f] rounded-full mr-3"></div>
                         Đăng nhập vào tài khoản doanh nghiệp
                     </li>
                     <li className="flex items-center">
                         <div className="w-2 h-2 bg-[#2a9d8f] rounded-full mr-3"></div>
-                        Hoàn thiện thông tin công ty
-                    </li>
-                    <li className="flex items-center">
-                        <div className="w-2 h-2 bg-[#2a9d8f] rounded-full mr-3"></div>
-                        Bắt đầu đăng tin tuyển dụng
+                        Bắt đầu sử dụng các tính năng của LabOdc
                     </li>
                 </ul>
             </motion.div>
@@ -78,15 +100,15 @@ export function SuccessRegisterForm() {
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.8 }}
+                transition={{ duration: 0.6, delay: 1.0 }}
             >
                 <Button
-                    onClick={handleBackToSignIn}
+                    onClick={handleBackToHome}
                     size="lg"
                     className="w-full lg:w-auto px-8 py-4 text-lg font-semibold bg-[#2a9d8f] hover:bg-[#264653] text-white transition-all duration-300 shadow-lg hover:shadow-xl"
                 >
                     <ArrowLeft className="w-5 h-5 mr-2" />
-                    Quay về trang đăng nhập
+                    Về trang chủ
                 </Button>
             </motion.div>
 
