@@ -56,6 +56,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
         const user: UserInfo = jwtDecode(data.data.accessToken)
         auth.setUser(user)
         localStorage.setItem('user_id', user.userId)
+        toast.success('Đăng nhập thành công!')
         await navigate({ to: '/' })
       },
       onError: () => {
@@ -76,9 +77,9 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
             <span className="w-full border-t" />
           </div>
           <div className="relative flex justify-center text-xs uppercase">
-                        <span className="bg-background text-muted-foreground px-2">
-                            Or continue with
-                        </span>
+            <span className="bg-background text-muted-foreground px-2">
+              Or continue with
+            </span>
           </div>
         </div>
         <FormField
