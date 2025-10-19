@@ -9,13 +9,34 @@ import { UsersDialogs } from './components/users-dialogs'
 import { UsersPrimaryButtons } from './components/users-primary-buttons'
 import { UsersProvider } from './components/users-provider'
 import { UsersTable } from './components/users-table'
-import { users } from './data/users'
+import { useGetUsers } from '@/hooks/api/users'
 
 const route = getRouteApi('/_authenticated/admin/users/')
 
 export default function Users() {
     const search = route.useSearch()
     const navigate = route.useNavigate()
+
+
+    // 1. Lấy trạng thái truy vấn từ hook
+    const { data, isLoading, isError, error } = useGetUsers();
+
+    // 3. Xử lý trạng thái Error
+    if (isError) {
+        return (
+            <div className="flex h-screen flex-col items-center justify-center p-8">
+                <h2 className="text-2xl font-bold text-red-600">Lỗi Tải Dữ Liệu</h2>
+                <p className="text-muted-foreground mt-2">Không thể kết nối đến server hoặc tải danh sách công ty.</p>
+                <p className="text-sm italic mt-1">Chi tiết lỗi: {error.message}</p>
+            </div>
+        )
+    }
+
+    // 4. Lấy dữ liệu khi đã thành công
+    // Giả định API response có cấu trúc { data: Company[], ... }
+    const users = data?.data || [];
+
+    console.log(users);
 
     return (
         <UsersProvider>
