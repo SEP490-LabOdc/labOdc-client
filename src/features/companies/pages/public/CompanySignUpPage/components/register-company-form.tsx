@@ -89,7 +89,6 @@ export function RegisterCompanyForm() {
           businessLicenseLink: submitData.businessLicenseLink instanceof File
             ? '' : submitData.businessLicenseLink || ''
         };
-        console.log(finalSubmitData);
         await mutateAsync(finalSubmitData)
         await navigate({ to: '/verify-otp', search: { companyEmail: data.email } })
         toast.success('Đăng ký công ty thành công!')

@@ -8,6 +8,7 @@ import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp
 import { ArrowRight, LoaderCircle } from 'lucide-react';
 import { useResendOtp, useVerifyOtp } from '@/hooks/api'
 import { useSearch } from '@tanstack/react-router'
+import { toast } from 'sonner'
 
 const otpSchema = z.object({
     otp: z.string().length(6, { message: "Mã OTP phải có đúng 6 chữ số." }),
@@ -31,8 +32,10 @@ export function OtpForm() {
     const handleResendOtp = async () => {
         try {
             await resendOtp.mutateAsync(companyEmail)
+            toast.success('Mã xác thực đã được gửi lại đến email của bạn.')
         } catch (e) {
             console.error(e);
+            toast.error('Gửi lại mã xác thực thất bại. Vui lòng thử lại!')
         }
     };
 
@@ -42,8 +45,10 @@ export function OtpForm() {
                 otp: data.otp,
                 email: companyEmail,
             })
+            toast.success('Xác thực thành công!')
         } catch (e) {
             console.error(e);
+            toast.error('Xác thực thất bại. Vui lòng thử lại!')
         }
     };
 

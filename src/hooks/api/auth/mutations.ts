@@ -37,7 +37,7 @@ export const useVerifyOtp = () => {
 export const useResendOtp = () => {
   return useMutation({
     mutationFn: async (email: string) => {
-      const { data } = await apiRequest.post('/api/v1/otp/send', email)
+      const { data } = await apiRequest.post('/api/v1/otp/send', {email})
       return data
     },
   })

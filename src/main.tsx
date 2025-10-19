@@ -5,14 +5,24 @@ import {
   QueryClientProvider,
 } from '@tanstack/react-query'
 import { RouterProvider, createRouter } from '@tanstack/react-router'
+import NProgress from "nprogress";
+//Provider
 import { DirectionProvider } from './context/direction-provider'
 import { FontProvider } from './context/font-provider'
 import { ThemeProvider } from './context/theme-provider'
+import { SocketProvider } from './context/socket-context' 
 // Generated Routes
 import { routeTree } from './routeTree.gen.ts'
+import { NotFoundError } from './features/errors/not-found-error'
+import { Lottie } from '@/components/v2/Lottie'
 // Styles
 import './styles/index.css'
-import { NotFoundError } from './features/errors/not-found-error'
+
+import "nprogress/nprogress.css";
+
+
+// Create a new router instance
+NProgress.configure({ showSpinner: false });
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -27,11 +37,25 @@ const queryClient = new QueryClient({
 const router = createRouter({
   routeTree,
   context: { queryClient },
-  defaultPreload: 'intent',
-  defaultPreloadStaleTime: 0,
+  defaultPendingComponent: () => (
+    <div className="flex h-screen w-screen items-center justify-center bg-bunker-800">
+      <Lottie isAutoPlay icon="infisical_loading" className="h-32 w-32" />
+    </div>
+  ),
   notFoundMode: 'root',
   defaultNotFoundComponent: NotFoundError,
 })
+
+router.subscribe("onBeforeLoad", ({ pathChanged }) => {
+  if (pathChanged) {
+    NProgress.start();
+    const timer = setTimeout(() => {
+      clearTimeout(timer);
+      NProgress.done();
+    }, 2000);
+  }
+});
+router.subscribe("onLoad", () => NProgress.done());
 
 // Register the router instance for type safety
 declare module '@tanstack/react-router' {
@@ -50,7 +74,9 @@ if (!rootElement.innerHTML) {
         <ThemeProvider>
           <FontProvider>
             <DirectionProvider>
-              <RouterProvider router={router} />
+              <SocketProvider>
+                <RouterProvider router={router} />
+              </SocketProvider>
             </DirectionProvider>
           </FontProvider>
         </ThemeProvider>
