@@ -44,18 +44,18 @@ export const sidebarData: SidebarData = {
               icon: IconList,
             },
             {
-              title: 'Đang chờ phê duyệt',
-              url: '/admin/companies?status=["approving"]',
+              title: 'Đang chờ xác thực',
+              url: '/admin/companies?status=["PENDING"]',
               icon: IconClockHour4,
             },
             {
               title: 'Đang hoạt động',
-              url: '/admin/companies?status=["active"]',
+              url: '/admin/companies?status=["ACTIVE"]',
               icon: IconCircleCheck,
             },
             {
-              title: 'Đã ngừng hoạt động',
-              url: '/admin/companies?status=["inactive"]',
+              title: 'Đã vô hiệu hóa',
+              url: '/admin/companies?status=["DISABLED"]',
               icon: IconCircleX,
             },
           ]

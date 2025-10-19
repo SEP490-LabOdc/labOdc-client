@@ -55,9 +55,9 @@ export function CompaniesActionDialog({
         resolver: zodResolver(formSchema),
         defaultValues: isEdit
             ? {
-                companyName: currentRow.companyName ?? '',
+                companyName: currentRow.name ?? '',
                 description: currentRow.description ?? '',
-                taxId: currentRow.taxId ?? '',
+                taxId: currentRow.taxCode ?? '',
                 address: currentRow.address ?? '',
                 // industry: currentRow.industry ?? '',
                 // techStack: currentRow.techStack ?? '',

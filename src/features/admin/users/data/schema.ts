@@ -1,33 +1,34 @@
 import { z } from 'zod'
 
 const userStatusSchema = z.union([
-    z.literal('active'),
-    z.literal('inactive'),
-    z.literal('invited'),
-    z.literal('suspended'),
+    z.literal('ACTIVE'),
+    z.literal('INACTIVE'),
+    z.literal('INVITED'),
+    z.literal('SUSPENDED'),
 ])
 export type UserStatus = z.infer<typeof userStatusSchema>
 
 const userRoleSchema = z.union([
-    z.literal('admin'),
-    z.literal('lab_manager'),
-    z.literal('company_admin'),
-    z.literal('mentor'),
-    z.literal('talent'),
+    z.literal('SYSTEM_ADMIN'),
+    z.literal('LAB_ADMIN'),
+    z.literal('SUPERVISOR'),
+    z.literal('USER'),
+    z.literal('COMPANY'),
 ])
+export type UserRole = z.infer<typeof userRoleSchema>
 
-const userSchema = z.object({
-    id: z.string(),
-    // firstName: z.string(),
-    // lastName: z.string(),
+export const userSchema = z.object({
+    id: z.string().uuid(),
+    email: z.string().email(),
+    phone: z.string().nullable().optional(),
     fullName: z.string(),
-    username: z.string(),
-    email: z.string(),
-    phoneNumber: z.string(),
-    status: userStatusSchema,
+    birthDate: z.string().datetime().nullable().optional(),
+    avatarUrl: z.string().url().nullable().optional(),
     role: userRoleSchema,
-    createdAt: z.coerce.date(),
-    updatedAt: z.coerce.date(),
+    gender: z.union([z.literal('MALE'), z.literal('FEMALE')]).nullable().optional(),
+    status: userStatusSchema.default('ACTIVE'),
+    createdAt: z.coerce.date().optional(),
+    updatedAt: z.coerce.date().optional(),
 })
 export type User = z.infer<typeof userSchema>
 
