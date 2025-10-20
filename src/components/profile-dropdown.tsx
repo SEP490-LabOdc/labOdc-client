@@ -21,13 +21,9 @@ export function ProfileDropdown() {
   const navigate = useNavigate()
 
   const handleLogout = async () => {
-    try {
-      auth.resetTokens()
+      auth.logout()
       await navigate({ to: '/sign-in' })
       toast.success('Đăng xuất thành công!')
-    } catch (error) {
-      toast.error('Có lỗi xảy ra khi đăng xuất!')
-    }
   }
 
   return (

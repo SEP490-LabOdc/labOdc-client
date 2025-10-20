@@ -15,20 +15,8 @@ export const Route = createRootRouteWithContext<{
                 <Outlet />
                 <Toaster
                   duration={5000}
-                  richColors={false}
-                  toastOptions={{
-                  classNames: {
-                    toast: 'border border-neutral-700 bg-neutral-900 text-white shadow-lg',
-                    title: 'text-base font-semibold',
-                    description: 'text-sm text-neutral-400',
-                    actionButton: 'bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded-md',
-                    cancelButton: 'bg-neutral-700 hover:bg-neutral-800 text-white px-3 py-1.5 rounded-md',
-                    success: 'border-green-600',
-                    error: 'border-red-600',
-                    warning: 'border-yellow-600',
-                    info: 'border-blue-600',
-                  },
-                }} />
+                  richColors
+                />
                 {import.meta.env.MODE === 'development' && (
                     <>
                         <ReactQueryDevtools buttonPosition="bottom-left" />
