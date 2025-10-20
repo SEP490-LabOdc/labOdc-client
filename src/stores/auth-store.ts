@@ -2,6 +2,7 @@ import { create } from 'zustand'
 
 const ACCESS_TOKEN = 'access_token'
 const REFRESH_TOKEN = 'refresh_token'
+const USER_ID = 'user_id'
 
 interface AuthUser {
   role: string,
@@ -19,7 +20,7 @@ interface AuthState {
     refreshToken: string
     setTokens: (accessToken: string, refreshToken: string) => void
     setAccessToken: (accessToken: string) => void
-    resetTokens: () => void
+    logout: () => void
     reset: () => void
   }
 }
@@ -48,19 +49,21 @@ export const useAuthStore = create<AuthState>()((set) => {
           localStorage.setItem(ACCESS_TOKEN, accessToken)
           return { ...state, auth: { ...state.auth, accessToken } }
         }),
-      resetTokens: () =>
+      logout: () =>
         set((state) => {
           localStorage.removeItem(ACCESS_TOKEN)
           localStorage.removeItem(REFRESH_TOKEN)
+          localStorage.removeItem(USER_ID)
           return {
             ...state,
-            auth: { ...state.auth, accessToken: '', refreshToken: '' },
+            auth: { ...state.auth, user: null, accessToken: '', refreshToken: '' },
           }
         }),
       reset: () =>
         set((state) => {
           localStorage.removeItem(ACCESS_TOKEN)
           localStorage.removeItem(REFRESH_TOKEN)
+          localStorage.removeItem(USER_ID)
           return {
             ...state,
             auth: { ...state.auth, user: null, accessToken: '', refreshToken: '' },
