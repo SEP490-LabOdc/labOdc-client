@@ -252,6 +252,7 @@ const AuthenticatedAdminCompaniesApproveIndexRoute =
   } as any)
 
 export interface FileRoutesByFullPath {
+  '/': typeof publicIndexRoute
   '/company': typeof CompanyRouteRouteWithChildren
   '/verify-otp': typeof VerifyOtpRouteRoute
   '/companies': typeof publicCompaniesRouteRouteWithChildren
@@ -261,7 +262,6 @@ export interface FileRoutesByFullPath {
   '/404': typeof errors404Route
   '/500': typeof errors500Route
   '/503': typeof errors503Route
-  '/': typeof publicIndexRoute
   '/company-login': typeof CompanyLoginIndexRoute
   '/company-register-success': typeof CompanyRegisterSuccessIndexRoute
   '/company-register': typeof CompanyRegisterIndexRoute
@@ -290,13 +290,13 @@ export interface FileRoutesByFullPath {
   '/admin/users/edit': typeof AuthenticatedAdminUsersEditIndexRoute
 }
 export interface FileRoutesByTo {
+  '/': typeof publicIndexRoute
   '/verify-otp': typeof VerifyOtpRouteRoute
   '/401': typeof errors401Route
   '/403': typeof errors403Route
   '/404': typeof errors404Route
   '/500': typeof errors500Route
   '/503': typeof errors503Route
-  '/': typeof publicIndexRoute
   '/company-login': typeof CompanyLoginIndexRoute
   '/company-register-success': typeof CompanyRegisterSuccessIndexRoute
   '/company-register': typeof CompanyRegisterIndexRoute
@@ -367,6 +367,7 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
+    | '/'
     | '/company'
     | '/verify-otp'
     | '/companies'
@@ -376,7 +377,6 @@ export interface FileRouteTypes {
     | '/404'
     | '/500'
     | '/503'
-    | '/'
     | '/company-login'
     | '/company-register-success'
     | '/company-register'
@@ -405,13 +405,13 @@ export interface FileRouteTypes {
     | '/admin/users/edit'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | '/'
     | '/verify-otp'
     | '/401'
     | '/403'
     | '/404'
     | '/500'
     | '/503'
-    | '/'
     | '/company-login'
     | '/company-register-success'
     | '/company-register'
@@ -513,15 +513,15 @@ declare module '@tanstack/react-router' {
     }
     '/(public)': {
       id: '/(public)'
-      path: ''
-      fullPath: ''
+      path: '/'
+      fullPath: '/'
       preLoaderRoute: typeof publicRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/(auth)': {
       id: '/(auth)'
-      path: ''
-      fullPath: ''
+      path: '/'
+      fullPath: '/'
       preLoaderRoute: typeof authRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
