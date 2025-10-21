@@ -6,6 +6,7 @@ import { ConfirmDialog } from '@/components/confirm-dialog'
 import { useNavigate } from '@tanstack/react-router'
 import type { Company } from '../data/schema'
 import { Textarea } from '@/components/ui/textarea'
+import { usePatchPendingCompany } from '@/hooks/api/companies'
 
 type ChecklistItem = {
     id: string
@@ -41,7 +42,8 @@ export default function CompanyApprovingForm({
     initialData?: CompanyWithVerification
     checkList: ChecklistTemplate
 }) {
-    const navigate = useNavigate()
+    const navigate = useNavigate();
+    const patchPendingCompany = usePatchPendingCompany();
 
     // ✅ build trạng thái từ API checklist
     const buildInitialVerification = () => {
@@ -91,25 +93,59 @@ export default function CompanyApprovingForm({
         })
     }
 
-    const handleSendRequest = async () => {
-        if (!initialData?.id) return setRequestDialogOpen(false)
+    const handleSendRequest = async ({ status }
+        : {
+            status: 'APPROVED' | 'UPDATE_REQUIRED'
+        }
+    ) => {
+        if (!initialData?.id) {
+            setRequestDialogOpen(false)
+            return
+        }
+
+        const currentUserId = localStorage.getItem('user_id');
+        if (!currentUserId) return;
+
         try {
-            const unchecked = Object.entries(verification)
-                .filter(([_, checked]) => !checked)
-                .map(([id]) => id)
+            const items = checkList.groups.flatMap(group =>
+                group.items.map(item => ({
+                    templateItemId: item.id,
+                    completedById: currentUserId,
+                    isChecked: !!verification[item.id],
+                }))
+            );
 
-            console.log('🚀 Gửi yêu cầu cập nhật:', {
-                pendingChecklist: unchecked,
-                note: requestNote,
-            })
+            if (status == 'APPROVED') {
 
-            // await apiRequest.post(`/api/v1/companies/${initialData.id}/request-update`, {
-            //   pendingChecklist: unchecked,
-            //   note: requestNote,
-            // })
+                const payload = {
+                    id: initialData.id,
+                    status: status,
+                    templateId: checkList.id,
+                    assigneeId: currentUserId,
+                    notes: '',
+                    items,
+                }
+                await patchPendingCompany.mutateAsync(payload)
+            } else if (status == 'UPDATE_REQUIRED') {
+
+                const payload = {
+                    id: initialData.id,
+                    status: status,
+                    templateId: checkList.id,
+                    assigneeId: currentUserId,
+                    notes: requestNote,
+                    items,
+                }
+                await patchPendingCompany.mutateAsync(payload);
+            } else
+                return;
+
+            //toast.success('✅ Đã gửi yêu cầu cập nhật thông tin thành công!')
+            console.log('Đã gửi yêu cầu cập nhật thông tin thành công');
             setRequestDialogOpen(false)
         } catch (error: any) {
-            alert(error?.message ?? 'Đã xảy ra lỗi, vui lòng thử lại.')
+            console.error('❌ PATCH company failed:', error)
+            // toast.error(error?.message ?? 'Gửi yêu cầu thất bại, vui lòng thử lại!')
         }
     }
 
@@ -251,7 +287,7 @@ export default function CompanyApprovingForm({
 
             {/* --- HÀNH ĐỘNG CUỐI --- */}
             <div className="pt-3 md:col-span-2 flex gap-3">
-                <Button type="button" disabled={!allChecked}>
+                <Button type="button" disabled={!allChecked} onClick={() => handleSendRequest({ status: 'APPROVED' })}>
                     Phê duyệt
                 </Button>
                 <Button
@@ -282,7 +318,11 @@ export default function CompanyApprovingForm({
                 }
                 cancelBtnText="Hủy"
                 confirmText="Gửi yêu cầu"
-                handleConfirm={handleSendRequest}
+                handleConfirm={() =>
+                    handleSendRequest({
+                        status: 'UPDATE_REQUIRED'
+                    })
+                }
                 disabled={uncheckedItems.length === 0}
             >
                 <div>
