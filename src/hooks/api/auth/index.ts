@@ -1,5 +1,6 @@
 export {
   useSignIn,
+  useSignInWithGoogle,
   useCompanyRegister,
   useVerifyOtp,
   useResendOtp
