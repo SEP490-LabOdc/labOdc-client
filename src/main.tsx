@@ -10,15 +10,20 @@ import NProgress from "nprogress";
 import { DirectionProvider } from './context/direction-provider'
 import { FontProvider } from './context/font-provider'
 import { ThemeProvider } from './context/theme-provider'
-import { SocketProvider } from './context/socket-context' 
+import { SocketProvider } from './context/socket-context'
+import { GoogleOAuthProvider } from '@react-oauth/google'
 // Generated Routes
 import { routeTree } from './routeTree.gen.ts'
 import { NotFoundError } from './features/errors/not-found-error'
 import { Lottie } from '@/components/v2/Lottie'
+//Constant
+import { GOOGLE_CLIENT_ID } from '@/const.ts'
 // Styles
 import './styles/index.css'
 
 import "nprogress/nprogress.css";
+
+
 
 
 // Create a new router instance
@@ -74,9 +79,11 @@ if (!rootElement.innerHTML) {
         <ThemeProvider>
           <FontProvider>
             <DirectionProvider>
-              <SocketProvider>
-                <RouterProvider router={router} />
-              </SocketProvider>
+              <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
+                <SocketProvider>
+                  <RouterProvider router={router} />
+                </SocketProvider>
+              </GoogleOAuthProvider>
             </DirectionProvider>
           </FontProvider>
         </ThemeProvider>
