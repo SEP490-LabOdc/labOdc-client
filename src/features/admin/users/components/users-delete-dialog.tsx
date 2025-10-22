@@ -23,7 +23,7 @@ export function UsersDeleteDialog({
     const [value, setValue] = useState('')
 
     const handleDelete = () => {
-        if (value.trim() !== currentRow.username) return
+        if (value.trim() !== currentRow.id) return
 
         onOpenChange(false)
         showSubmittedData(currentRow, 'Người dùng sau đã bị xóa:')
@@ -34,7 +34,7 @@ export function UsersDeleteDialog({
             open={open}
             onOpenChange={onOpenChange}
             handleConfirm={handleDelete}
-            disabled={value.trim() !== currentRow.username}
+            disabled={value.trim() !== currentRow.id}
             title={
                 <span className="text-destructive">
                     <AlertTriangle className="stroke-destructive me-1 inline-block" size={18} />{' '}
@@ -45,7 +45,7 @@ export function UsersDeleteDialog({
                 <div className="space-y-4">
                     <p className="mb-2">
                         Bạn có chắc chắn muốn xóa{' '}
-                        <span className="font-bold">{currentRow.username}</span>?
+                        <span className="font-bold">{currentRow.id}</span>?
                         <br />
                         Hành động này sẽ xóa vĩnh viễn người dùng có vai trò{' '}
                         <span className="font-bold">{currentRow.role.toUpperCase()}</span>{' '}

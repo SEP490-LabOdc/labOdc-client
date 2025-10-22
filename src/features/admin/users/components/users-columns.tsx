@@ -4,7 +4,7 @@ import { Badge } from '@/components/ui/badge'
 import { Checkbox } from '@/components/ui/checkbox'
 import { DataTableColumnHeader } from '@/components/data-table'
 import { LongText } from '@/components/long-text'
-import { callTypes, roles } from '../data/data'
+import { roles } from '../data/data'
 import { type User } from '../data/schema'
 import { DataTableRowActions } from './data-table-row-actions'
 
@@ -18,7 +18,7 @@ export const usersColumns: ColumnDef<User>[] = [
                     (table.getIsSomePageRowsSelected() && 'indeterminate')
                 }
                 onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-                aria-label='Select all'
+                aria-label='Chọn tất cả'
                 className='translate-y-[2px]'
             />
         ),
@@ -29,118 +29,92 @@ export const usersColumns: ColumnDef<User>[] = [
             <Checkbox
                 checked={row.getIsSelected()}
                 onCheckedChange={(value) => row.toggleSelected(!!value)}
-                aria-label='Select row'
+                aria-label='Chọn hàng'
                 className='translate-y-[2px]'
             />
         ),
         enableSorting: false,
         enableHiding: false,
     },
-    {
-        accessorKey: 'username',
-        header: ({ column }) => (
-            <DataTableColumnHeader column={column} title='Username' />
-        ),
-        cell: ({ row }) => (
-            <LongText className='max-w-36 ps-3'>{row.getValue('username')}</LongText>
-        ),
-        meta: {
-            className: cn(
-                'drop-shadow-[0_1px_2px_rgb(0_0_0_/_0.1)] dark:drop-shadow-[0_1px_2px_rgb(255_255_255_/_0.1)]',
-                'sticky start-6 @4xl/content:table-cell @4xl/content:drop-shadow-none m-0'
-            ),
-        },
-        enableHiding: false,
-    },
+
     {
         accessorKey: 'fullName',
         header: ({ column }) => (
-            <DataTableColumnHeader className='m-0' column={column} title='Tên' />
+            <DataTableColumnHeader column={column} title='Họ và tên' />
         ),
-        cell: ({ row }) => {
-            return <LongText className='max-w-36'>{row.getValue('fullName')}</LongText>
-        },
-        meta: { className: 'w-36' },
+        cell: ({ row }) => <LongText className='max-w-36'>{row.getValue('fullName')}</LongText>,
+        meta: { className: 'w-40' },
     },
+
     {
         accessorKey: 'email',
         header: ({ column }) => (
             <DataTableColumnHeader column={column} title='Email' />
         ),
-        cell: ({ row }) => (
-            <div className='w-fit text-nowrap'>{row.getValue('email')}</div>
-        ),
+        cell: ({ row }) => <LongText className='max-w-50'>{row.getValue('email')}</LongText>,
     },
+
     {
-        accessorKey: 'phoneNumber',
+        accessorKey: 'phone',
         header: ({ column }) => (
             <DataTableColumnHeader column={column} title='Số điện thoại' />
         ),
-        cell: ({ row }) => <div>{row.getValue('phoneNumber')}</div>,
+        cell: ({ row }) => <div>{row.getValue('phone') ?? '-'}</div>,
     },
+
     {
         accessorKey: 'status',
         header: ({ column }) => (
             <DataTableColumnHeader column={column} title='Trạng thái' />
         ),
         cell: ({ row }) => {
-            const { status } = row.original
-            const badgeColor = callTypes.get(status)
-            const STATUS_MAP = {
-                'active': 'Đang hoạt động',
-                'inactive': 'Không hoạt động',
-                'invited': 'Đã mời',
-                'suspended': 'Đã tạm khóa',
-            } as const;
-            const vietnameseStatusLabel = STATUS_MAP[status];
+            const status = row.original.status
+            const STATUS_MAP: Record<string, { label: string; color: string }> = {
+                ACTIVE: { label: 'Đang hoạt động', color: 'bg-green-500/20 text-green-700 dark:text-green-300' },
+                INACTIVE: { label: 'Không hoạt động', color: 'bg-gray-300/30 text-gray-600 dark:text-gray-400' },
+                INVITED: { label: 'Đã mời', color: 'bg-blue-500/20 text-blue-700 dark:text-blue-300' },
+                SUSPENDED: { label: 'Đã tạm khóa', color: 'bg-red-500/20 text-red-700 dark:text-red-300' },
+            }
+
+            const display = STATUS_MAP[status] ?? STATUS_MAP.INACTIVE
             return (
-                <div className='flex space-x-2'>
-                    <Badge variant='outline' className={cn('capitalize', badgeColor)}>
-                        {vietnameseStatusLabel}
-                    </Badge>
-                </div>
+                <Badge variant='outline' className={cn('capitalize border-none', display.color)}>
+                    {display.label}
+                </Badge>
             )
         },
-        filterFn: (row, id, value) => {
-            return value.includes(row.getValue(id))
-        },
+        filterFn: (row, id, value) => value.includes(row.getValue(id)),
         enableHiding: false,
     },
+
     {
         accessorKey: 'role',
         header: ({ column }) => (
             <DataTableColumnHeader column={column} title='Vai trò' />
         ),
         cell: ({ row }) => {
-            const { role } = row.original
-            const userType = roles.find(({ value }) => value === role)
+            const role = row.original.role
+            const userRole = roles.find(({ value }) => value === role)
 
-            if (!userType) {
-                return null
+            const ROLE_MAP: Record<string, string> = {
+                SYSTEM_ADMIN: 'Quản trị hệ thống',
+                LAB_ADMIN: 'Quản lý LabOdc',
+                SUPERVISOR: 'Giám sát viên',
+                USER: 'Sinh viên',
+                COMPANY: 'Đại diện công ty',
             }
-            const STATUS_MAP = {
-                'admin': 'Quản trị viên',
-                'lab_manager': 'Quản lý Lab',
-                'company_admin': 'Quản lý công ty',
-                'mentor': 'Mentor',
-                'talent': 'Sinh viên',
-            } as const;
-            const vietnameseStatusLabel = STATUS_MAP[role];
 
             return (
                 <div className='flex items-center gap-x-2'>
-                    {userType.icon && (
-                        <userType.icon size={16} className='text-muted-foreground' />
-                    )}
-                    <span className='text-sm capitalize'>{vietnameseStatusLabel}</span>
+                    {userRole?.icon && <userRole.icon size={16} className='text-muted-foreground' />}
+                    <span className='text-sm'>{ROLE_MAP[role] ?? role}</span>
                 </div>
             )
         },
-        filterFn: (row, id, value) => {
-            return value.includes(row.getValue(id))
-        },
+        filterFn: (row, id, value) => value.includes(row.getValue(id)),
         enableHiding: false,
     },
+
     {
         id: 'actions',
         cell: DataTableRowActions,

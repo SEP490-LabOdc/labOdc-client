@@ -1,133 +1,124 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useAuthStore } from '@/stores/auth-store'
 import { Link, useNavigate } from '@tanstack/react-router'
-import { toast } from 'sonner'
-import { cn, sleep } from '@/lib/utils'
+import { cn } from '@/lib/utils'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Loader2, LogIn } from 'lucide-react'
 import { PasswordInput } from '@/components/password-input'
+import { toast } from 'sonner'
+import { useAuthStore } from '@/stores/auth-store.ts'
+import { useSignIn } from '@/hooks/api/auth'
+import { jwtDecode } from 'jwt-decode'
 
+interface UserInfo {
+  role: string,
+  userId: string,
+  sub: string,
+  iat: number,
+  exp: number
+}
 
 const formSchema = z.object({
-    email: z.email({
-        error: (iss) => (iss.input === '' ? 'Please enter your email' : undefined),
-    }),
-    password: z
-        .string()
-        .min(1, 'Please enter your password')
-        .min(7, 'Password must be at least 7 characters long'),
+  email: z.email({
+    error: (iss) => (iss.input === '' ? 'Please enter your email' : undefined),
+  }),
+  password: z
+    .string()
+    .min(1, 'Vui lòng nhập mật khẩu')
+    .min(8, 'Mật khẩu phải dài ít nhất 8 ký tự'),
 })
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLFormElement> {
-    redirectTo?: string
+  redirectTo?: string
 }
 
-export function UserAuthForm({
-    className,
-    redirectTo,
-    ...props
-}: UserAuthFormProps) {
-    const [isLoading, setIsLoading] = useState(false)
-    const navigate = useNavigate()
-    const { auth } = useAuthStore()
+export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
+  const signIn = useSignIn()
+  const navigate = useNavigate()
+  const { auth } = useAuthStore()
 
-    const form = useForm<z.infer<typeof formSchema>>({
-        resolver: zodResolver(formSchema),
-        defaultValues: {
-            email: '',
-            password: ''
-        }
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      email: '',
+      password: '',
+    },
+  })
+
+  function onSubmit(data: z.infer<typeof formSchema>) {
+    signIn.mutate(data, {
+      onSuccess: async (data) => {
+        auth.setTokens(data.data.accessToken, data.data.refreshToken)
+        const user: UserInfo = jwtDecode(data.data.accessToken)
+        auth.setUser(user)
+        localStorage.setItem('user_id', user.userId)
+        toast.success('Đăng nhập thành công!')
+        await navigate({ to: '/' })
+      },
+      onError: () => {
+        toast.error('Đăng nhập thất bại!')
+      },
     })
+  }
 
-    function onSubmit(data: z.infer<typeof formSchema>) {
-        setIsLoading(true)
-
-        const mockUser = {
-            accountNo: 'ACC001',
-            email: data.email,
-            role: ['user'],
-            exp: Date.now() + 24 * 60 * 60 * 1000, //24 hours from now
-        }
-
-        toast.promise(sleep(2000), {
-            loading: 'Signing in...',
-            success: () => {
-                setIsLoading(false)
-
-                //Set user and access token
-                auth.setUser(mockUser)
-                auth.setAccessToken('mock-access-token')
-
-                //Redirect to the stored location or default to dashboard
-                const targetPath = redirectTo || '/'
-                navigate({ to: targetPath, replace: true })
-
-                return `Welcome back, ${data.email}`
-            },
-            error: 'Error',
-        })
-    }
-
-    return (
-        <Form {...form}>
-            <form
-                onSubmit={form.handleSubmit(onSubmit)}
-                className={cn('grid gap-3', className)}
-                {...props}
-            >
-                <div className='relative my-2'>
-                    <div className='absolute inset-0 flex items-center'>
-                        <span className='w-full border-t' />
-                    </div>
-                    <div className='relative flex justify-center text-xs uppercase'>
-                        <span className='bg-background text-muted-foreground px-2'>
-                            Or continue with
-                        </span>
-                    </div>
-                </div>
-                <FormField
-                    control={form.control}
-                    name='email'
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Email</FormLabel>
-                            <FormControl>
-                                <Input placeholder='name@example.com' {...field} />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-                <FormField
-                    control={form.control}
-                    name='password'
-                    render={({ field }) => (
-                        <FormItem className='relative'>
-                            <FormLabel>Password</FormLabel>
-                            <FormControl>
-                                <PasswordInput placeholder='********' {...field} />
-                            </FormControl>
-                            <FormMessage />
-                            <Link
-                                to='/forgot-password'
-                                className='text-muted-foreground absolute end-0 -top-0.5 text-sm font-medium hover:opacity-75'
-                            >
-                                Forgot password?
-                            </Link>
-                        </FormItem>
-                    )}
-                />
-                <Button className='mt-2 bg-[#2a9d8f]' disabled={isLoading} size='lg'>
-                    {isLoading ? <Loader2 className='animate-spin' /> : <LogIn />}
-                    Sign in
-                </Button>
-                <p className='text-center'>Do not have an account? <Link to='/sign-up' className='text-[#2a9d8f] font-semibold hover:underline'>Sign Up now</Link></p>
-            </form>
-        </Form>
-    )
+  return (
+    <Form {...form}>
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className={cn('grid gap-3', className)}
+        {...props}
+      >
+        <div className="relative my-2">
+          <div className="absolute inset-0 flex items-center">
+            <span className="w-full border-t" />
+          </div>
+          <div className="relative flex justify-center text-xs uppercase">
+            <span className="bg-background text-muted-foreground px-2">
+              Or continue with
+            </span>
+          </div>
+        </div>
+        <FormField
+          control={form.control}
+          name="email"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Email</FormLabel>
+              <FormControl>
+                <Input placeholder="name@example.com" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="password"
+          render={({ field }) => (
+            <FormItem className="relative">
+              <FormLabel>Mật khẩu</FormLabel>
+              <FormControl>
+                <PasswordInput placeholder="********" {...field} />
+              </FormControl>
+              <FormMessage />
+              <Link
+                to="/forgot-password"
+                className="text-muted-foreground absolute end-0 -top-0.5 text-sm font-medium hover:opacity-75"
+              >
+                Quên mật khẩu?
+              </Link>
+            </FormItem>
+          )}
+        />
+        <Button className="mt-2 bg-[#2a9d8f]" disabled={signIn.isPending} size="lg">
+          {signIn.isPending ? <Loader2 className="animate-spin" /> : <LogIn />}
+          Đăng nhập
+        </Button>
+      </form>
+    </Form>
+  )
 }

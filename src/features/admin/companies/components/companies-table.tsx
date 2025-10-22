@@ -43,7 +43,11 @@ type DataTableProps = {
 export function CompaniesTable({ data, search, navigate }: DataTableProps) {
     // Local UI-only states
     const [rowSelection, setRowSelection] = useState({})
-    const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
+    const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
+        taxCode: false,
+        address: false,
+        createdAt: false,
+    })
     const [sorting, setSorting] = useState<SortingState>([])
 
     // Local state management for table (uncomment to use local-only state, not synced with URL)
@@ -64,7 +68,7 @@ export function CompaniesTable({ data, search, navigate }: DataTableProps) {
         globalFilter: { enabled: false },
         columnFilters: [
             // username per-column text filter
-            { columnId: 'companyName', searchKey: 'companyName', type: 'string' },
+            { columnId: 'name', searchKey: 'name', type: 'string' },
             { columnId: 'status', searchKey: 'status', type: 'array' }
         ],
     })
@@ -102,17 +106,16 @@ export function CompaniesTable({ data, search, navigate }: DataTableProps) {
             <DataTableToolbar
                 table={table}
                 searchPlaceholder='Tìm kiếm công ty...'
-                searchKey='companyName'
+                searchKey='name'
                 filters={[
                     {
                         columnId: 'status',
                         title: 'Trạng thái',
                         options: [
-                            { label: 'Đang hoạt động', value: 'active' },
-                            { label: 'Không hoạt động', value: 'inactive' },
-                            { label: 'Đã tạm khóa', value: 'suspended' },
-                            { label: 'Chờ phê duyệt', value: 'approving' },
-                            { label: 'Từ chối phê duyệt', value: 'rejected' },
+                            { label: 'Chờ xác thực', value: 'PENDING' },
+                            { label: 'Yêu cầu cập nhật', value: 'UPDATE_REQUIRED' },
+                            { label: 'Đang hoạt động', value: 'ACTIVE' },
+                            { label: 'Vô hiệu hóa', value: 'DISABLED' },
                         ],
                     },
                 ]}

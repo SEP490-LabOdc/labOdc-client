@@ -6,7 +6,6 @@ import { ProfileDropdown } from '@/components/profile-dropdown'
 import { Search } from '@/components/search'
 import { ThemeSwitch } from '@/components/theme-switch'
 import { CompaniesProvider } from '../components/companies-provider'
-import { CompaniesPrimaryButtons } from '../components/companies-primary-buttons'
 // import { CompaniesTable } from '../components/companies-table'
 // import { companies } from '../data/companies'
 import CompanyForm from '../components/companies-forms'
@@ -37,7 +36,6 @@ export default function CreateCompany() {
                                 Tạo công ty mới tại đây. Nhấn lưu khi bạn hoàn tất.
                             </p>
                         </div>
-                        <CompaniesPrimaryButtons />
                     </div>
                     <div className='-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-y-0 lg:space-x-12'>
                         <CompanyForm mode='create' />

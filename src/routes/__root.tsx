@@ -1,4 +1,3 @@
-import { NavigationProgress } from "@/components/navigation-progress";
 import { Toaster } from "@/components/ui/sonner";
 import type { QueryClient } from "@tanstack/react-query";
 import { createRootRouteWithContext, Outlet } from "@tanstack/react-router";
@@ -13,9 +12,11 @@ export const Route = createRootRouteWithContext<{
     component: () => {
         return (
             <>
-                <NavigationProgress />
                 <Outlet />
-                <Toaster duration={5000} />
+                <Toaster
+                  duration={5000}
+                  richColors
+                />
                 {import.meta.env.MODE === 'development' && (
                     <>
                         <ReactQueryDevtools buttonPosition="bottom-left" />
