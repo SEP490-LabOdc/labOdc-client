@@ -34,6 +34,8 @@ export default function SignIn() {
                   onSuccess={handleSignInWithGoogleSuccess}
                   onError={handleSignInWithGoogleFailed}
                   theme={"filled_blue"}
+                  width={"100%"}
+                  size={"large"}
                 />
                 <UserAuthForm redirectTo={redirect} />
             </div>
