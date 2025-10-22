@@ -22,19 +22,4 @@ export default defineConfig({
   define: {
     global: 'window',
   },
-  server: {
-    proxy: {
-      '/api-provinces': {
-        target: 'https://provinces.open-api.vn',
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api-provinces/, '')
-      },
-
-      '/ws': {
-        target: 'wss://api.labodc.id.vn',
-        ws: true,
-        changeOrigin: true
-      }
-    }
-  }
 })
