@@ -155,8 +155,6 @@ export default function CompanyApprovingForm({
         { label: 'Mã số thuế', value: initialData?.taxCode ?? '' },
         { label: 'Địa chỉ', value: initialData?.address ?? '' },
         { label: 'Số điện thoại', value: initialData?.phone ?? '' },
-        { label: 'Lĩnh vực', value: initialData?.domain ?? '' },
-        { label: 'Website', value: initialData?.website ?? '' },
         {
             label: 'Ngày thành lập',
             value: initialData?.createdAt
@@ -176,7 +174,7 @@ export default function CompanyApprovingForm({
     const uncheckedItems = requiredItems.filter((item) => !verification[item.id])
     const allChecked = uncheckedItems.length === 0
 
-
+    const isUpdateLocked = initialData?.status === 'UPDATE_REQUIRED';
     console.log(checkList);
 
     return (
@@ -252,6 +250,7 @@ export default function CompanyApprovingForm({
                                                     <Checkbox
                                                         className='mt-1 border-white'
                                                         checked={verification[item.id]}
+                                                        disabled={isUpdateLocked}
                                                         onCheckedChange={(checked) =>
                                                             handleToggle(item.id, Boolean(checked))
                                                         }
@@ -275,7 +274,7 @@ export default function CompanyApprovingForm({
                             <Button
                                 type="button"
                                 variant="secondary"
-                                disabled={allChecked}
+                                disabled={allChecked || isUpdateLocked}
                                 onClick={() => setRequestDialogOpen(true)}
                             >
                                 Yêu cầu cập nhật thông tin
@@ -287,7 +286,11 @@ export default function CompanyApprovingForm({
 
             {/* --- HÀNH ĐỘNG CUỐI --- */}
             <div className="pt-3 md:col-span-2 flex gap-3">
-                <Button type="button" disabled={!allChecked} onClick={() => handleSendRequest({ status: 'APPROVED' })}>
+                <Button
+                    type="button"
+                    disabled={!allChecked || isUpdateLocked}
+                    onClick={() => handleSendRequest({ status: 'APPROVED' })}
+                >
                     Phê duyệt
                 </Button>
                 <Button
@@ -298,6 +301,12 @@ export default function CompanyApprovingForm({
                     Hủy
                 </Button>
             </div>
+
+            {isUpdateLocked && (
+                <p className="text-sm text-muted-foreground italic mt-2 text-center">
+                    Công ty đang trong quá trình cập nhật thông tin — bạn không thể chỉnh sửa hoặc phê duyệt lúc này.
+                </p>
+            )}
 
             {/* --- DIALOG GỬI YÊU CẦU --- */}
             <ConfirmDialog
