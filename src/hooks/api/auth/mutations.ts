@@ -1,6 +1,6 @@
 import apiRequest from '@/config/request.ts'
 import { useMutation } from '@tanstack/react-query'
-import type { TCompanyRegisterDTO, UserLoginPayload } from './types.ts'
+import type { TCompanyRegisterDTO, UserLoginGooglePayload, UserLoginPayload } from './types.ts'
 
 const login = async (payload: UserLoginPayload) => {
   const { data } = await apiRequest.post('/api/v1/auth/login', payload)
@@ -10,6 +10,16 @@ const login = async (payload: UserLoginPayload) => {
 export const useSignIn = () => {
   return useMutation({
     mutationFn: (payload: UserLoginPayload) => login(payload),
+  })
+}
+
+export const useSignInWithGoogle = () => {
+  return useMutation({
+    mutationFn: async (payload: UserLoginGooglePayload) => {
+      const { data } = await apiRequest.post('/api/v1/auth/google', payload)
+
+      return data
+    },
   })
 }
 

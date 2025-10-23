@@ -3,6 +3,10 @@ export type UserLoginPayload = {
   password: string,
 }
 
+export type UserLoginGooglePayload = {
+  "idToken": string,
+}
+
 export type TCompanyRegisterDTO = {
   address: string,
   contactPersonEmail: string,
