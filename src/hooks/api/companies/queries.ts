@@ -22,6 +22,17 @@ export const useGetCompanyById = (id?: string) =>
         enabled: !!id,
     });
 
+export const useUpdateCompanyRegistration = (token: string) =>
+  useQuery({
+    queryKey: companyKeys.updateCompanyRegistration(token),
+    queryFn: async () => {
+      const { data } = await apiRequest.get(`/api/v1/companies/for-update?token=${token}`);
+      return data;
+    },
+    enabled: !!token,
+  })
+
+
 export const useGetCheckList = () =>
     useQuery({
         queryKey: companyKeys.getCheckList,

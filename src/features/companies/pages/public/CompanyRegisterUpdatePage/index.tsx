@@ -7,13 +7,13 @@ import type { CompanyPayload } from '@/features/companies/types.ts'
 import {
   RegisterCompanyForm
 } from '../CompanySignUpPage/components/register-company-form.tsx'
-import { useGetCompanyById } from '@/hooks/api/companies/queries.ts'
+import { useUpdateCompanyRegistration } from '@/hooks/api/companies/queries.ts'
 
 export function CompanyRegisterUpdatePage() {
   const navigate = useNavigate();
-  const companyId = useSearch({ from: '/company-register/update' }).companyId;
+  const token = useSearch({ from: '/company-register/update' }).token;
 
-  const companyDetail = useGetCompanyById(companyId)
+  const companyDetail= useUpdateCompanyRegistration(token)
 
   const { mutateAsync, isPending } = useCompanyRegister();
 
@@ -29,6 +29,11 @@ export function CompanyRegisterUpdatePage() {
 
   if (companyDetail.isLoading) {
     return <div>Loading...</div>;
+  }
+
+  if(companyDetail.isError) {
+    navigate({ to: '/company-register' })
+    toast.error('Liên kết cập nhật không hợp lệ hoặc đã hết hạn. Vui lòng đăng ký lại.')
   }
 
   return (
