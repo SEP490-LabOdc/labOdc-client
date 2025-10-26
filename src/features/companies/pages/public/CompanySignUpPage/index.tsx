@@ -1,8 +1,51 @@
 import { Building2, Users2, FileText } from 'lucide-react';
 import { motion } from "framer-motion";
 import { RegisterCompanyForm } from './components/register-company-form';
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import {
+  type CompanyRegisterData,
+  companySchema,
+} from './components/company-register.schema.ts'
+import { useCompanyRegister } from '@/hooks/api'
+import { useNavigate } from '@tanstack/react-router'
+import { toast } from 'sonner'
+import type { CompanyPayload } from '@/features/companies/types.ts'
 
 export default function CompanySignUpPage() {
+    const navigate = useNavigate();
+    const form = useForm<CompanyRegisterData>({
+        resolver: zodResolver(companySchema),
+        defaultValues: {
+          //Company fields
+          name: '',
+          email: '',
+          phone: '',
+          taxCode: '',
+          address: '',
+          provinceCode: '',
+          wardCode: '',
+          businessLicenseLink: '',
+          //Personal fields
+          contactPersonEmail: '',
+          contactPersonName: '',
+          contactPersonPhone: '',
+          agreeTerm: false
+        }
+    });
+
+    const { mutateAsync, isPending } = useCompanyRegister();
+
+    const handleRegisterSubmit = async (data: CompanyPayload) => {
+      try {
+        await mutateAsync(data);
+        await navigate({ to: '/verify-otp', search: { companyEmail: data.email } })
+        toast.success('Đăng ký công ty thành công!')
+      } catch (e) {
+        console.error(e)
+      }
+    };
+
     return (
         <div className="min-h-screen flex">
             {/* Left Column - Registration Form (60%) */}
@@ -23,7 +66,12 @@ export default function CompanySignUpPage() {
                             </p>
                         </div>
 
-                        <RegisterCompanyForm />
+                        <RegisterCompanyForm
+                            form={form}
+                            submitButtonText="Đăng ký doanh nghiệp"
+                            onSubmit={handleRegisterSubmit}
+                            isLoading={isPending}
+                        />
                     </motion.div>
                 </div>
             </div>

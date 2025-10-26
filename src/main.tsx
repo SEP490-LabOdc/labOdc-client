@@ -22,8 +22,7 @@ import { GOOGLE_CLIENT_ID } from '@/const.ts'
 import './styles/index.css'
 
 import "nprogress/nprogress.css";
-
-
+import { GeneralError } from './features/errors/general-error.tsx';
 
 
 // Create a new router instance
@@ -49,6 +48,7 @@ const router = createRouter({
   ),
   notFoundMode: 'root',
   defaultNotFoundComponent: NotFoundError,
+  defaultErrorComponent: GeneralError,
 })
 
 router.subscribe("onBeforeLoad", ({ pathChanged }) => {
