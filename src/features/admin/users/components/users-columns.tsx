@@ -97,7 +97,7 @@ export const usersColumns: ColumnDef<User>[] = [
             const userRole = roles.find(({ value }) => value === role)
 
             const ROLE_MAP: Record<string, string> = {
-                SYSTEM_ADMIN: 'Quản trị hệ thống',
+                SYSTEM_ADMIN: 'Quản trị viên',
                 LAB_ADMIN: 'Quản lý LabOdc',
                 SUPERVISOR: 'Giám sát viên',
                 USER: 'Sinh viên',

@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { companyKeys } from './query-keys'
 import apiRequest from '@/config/request';
 
@@ -48,3 +48,39 @@ export const useGetCheckList = () =>
             return data?.data;
         },
     });
+
+interface PatchPendingCompanyPayload {
+    id: string
+    status: 'APPROVED' | 'UPDATE_REQUIRED'
+    templateId: string
+    assigneeId: string
+    notes?: string
+    items: {
+        templateItemId: string
+        completedById: string
+        isChecked: boolean
+    }[]
+}
+
+export const usePatchPendingCompany = () =>
+    useMutation({
+        mutationKey: [...companyKeys.patchCompany],
+        mutationFn: async (payload: PatchPendingCompanyPayload) => {
+            const { id, status, templateId, assigneeId, notes, items } = payload
+
+            const body = {
+                status,
+                createChecklistRequest: {
+                    templateId,
+                    companyId: id,
+                    assigneeId,
+                    status,
+                    notes,
+                    items,
+                },
+            }
+
+            const { data } = await apiRequest.patch(`/api/v1/companies/${id}`, body)
+            return data
+        },
+    })

@@ -64,7 +64,7 @@ export function UsersTable({ data, search, navigate }: DataTableProps) {
         globalFilter: { enabled: false },
         columnFilters: [
             // username per-column text filter
-            { columnId: 'username', searchKey: 'username', type: 'string' },
+            { columnId: 'fullName', searchKey: 'fullName', type: 'string' },
             { columnId: 'status', searchKey: 'status', type: 'array' },
             { columnId: 'role', searchKey: 'role', type: 'array' },
         ],
@@ -103,7 +103,7 @@ export function UsersTable({ data, search, navigate }: DataTableProps) {
             <DataTableToolbar
                 table={table}
                 searchPlaceholder='Tìm kiếm người dùng...'
-                searchKey='username'
+                searchKey='fullName'
                 filters={[
                     {
                         columnId: 'status',

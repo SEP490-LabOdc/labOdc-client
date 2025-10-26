@@ -13,27 +13,27 @@ export const callTypes = new Map<UserStatus, string>([
 
 export const roles = [
     {
-        label: 'System Admin',
+        label: 'Quản trị viên',
         value: 'SYSTEM_ADMIN',
         icon: LockKeyhole,
     },
     {
-        label: 'Lab Admin',
+        label: 'Quản lý LabOdc',
         value: 'LAB_ADMIN',
         icon: FlaskConical,
     },
     {
-        label: 'Supervisor',
+        label: 'Giám sát viên',
         value: 'SUPERVISOR',
         icon: ShieldCheck,
     },
     {
-        label: 'User',
+        label: 'Sinh viên',
         value: 'USER',
         icon: User,
     },
     {
-        label: 'Company',
+        label: 'Đại diện công ty',
         value: 'COMPANY',
         icon: Building2,
     },

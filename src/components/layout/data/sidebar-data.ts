@@ -107,12 +107,12 @@ export const sidebarData: SidebarData = {
             },
             {
               title: 'Mentors',
-              url: '/admin/users?role=["mentor"]',
+              url: '/admin/users?role=["SUPERVISOR"]',
               icon: IconUserStar,
             },
             {
               title: 'Sinh viên',
-              url: '/admin/users?role=["talent"]',
+              url: '/admin/users?role=["USER"]',
               icon: IconUserCode,
             },
           ]
