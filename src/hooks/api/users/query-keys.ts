@@ -1,4 +1,4 @@
 export const userKeys = {
     getUsers: ["users"] as const,
-    getUserById: ['user'] as const,
+    getUserById: (userId: string | null) => ['user', { userId }] as const,
 }

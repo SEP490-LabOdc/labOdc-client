@@ -1,2 +1,2 @@
 export { userKeys } from './query-keys.ts'
-export { useGetUsers } from './queries.ts'
+export { useGetUsers, useGetUserById, useGetMeQuery } from './queries.ts'
