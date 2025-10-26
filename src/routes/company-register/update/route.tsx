@@ -5,7 +5,7 @@ import {
 import z from 'zod'
 
 const CompanyQueryParamsSchema = z.object({
-  companyId: z.string().catch('')
+  token: z.string().catch('')
 });
 
 export const Route = createFileRoute('/company-register/update')({
