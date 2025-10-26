@@ -23,6 +23,7 @@ import { Route as errors500RouteImport } from './routes/(errors)/500'
 import { Route as errors404RouteImport } from './routes/(errors)/404'
 import { Route as errors403RouteImport } from './routes/(errors)/403'
 import { Route as errors401RouteImport } from './routes/(errors)/401'
+import { Route as CompanyRegisterUpdateRouteRouteImport } from './routes/company-register/update/route'
 import { Route as AuthenticatedAdminRouteRouteImport } from './routes/_authenticated/admin/route'
 import { Route as publicCompaniesRouteRouteImport } from './routes/(public)/companies/route'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin/index'
@@ -117,6 +118,12 @@ const errors401Route = errors401RouteImport.update({
   path: '/401',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CompanyRegisterUpdateRouteRoute =
+  CompanyRegisterUpdateRouteRouteImport.update({
+    id: '/company-register/update',
+    path: '/company-register/update',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const AuthenticatedAdminRouteRoute = AuthenticatedAdminRouteRouteImport.update({
   id: '/_authenticated/admin',
   path: '/admin',
@@ -256,6 +263,7 @@ export interface FileRoutesByFullPath {
   '/verify-otp': typeof VerifyOtpRouteRoute
   '/companies': typeof publicCompaniesRouteRouteWithChildren
   '/admin': typeof AuthenticatedAdminRouteRouteWithChildren
+  '/company-register/update': typeof CompanyRegisterUpdateRouteRoute
   '/401': typeof errors401Route
   '/403': typeof errors403Route
   '/404': typeof errors404Route
@@ -291,6 +299,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/verify-otp': typeof VerifyOtpRouteRoute
+  '/company-register/update': typeof CompanyRegisterUpdateRouteRoute
   '/401': typeof errors401Route
   '/403': typeof errors403Route
   '/404': typeof errors404Route
@@ -331,6 +340,7 @@ export interface FileRoutesById {
   '/verify-otp': typeof VerifyOtpRouteRoute
   '/(public)/companies': typeof publicCompaniesRouteRouteWithChildren
   '/_authenticated/admin': typeof AuthenticatedAdminRouteRouteWithChildren
+  '/company-register/update': typeof CompanyRegisterUpdateRouteRoute
   '/(errors)/401': typeof errors401Route
   '/(errors)/403': typeof errors403Route
   '/(errors)/404': typeof errors404Route
@@ -371,6 +381,7 @@ export interface FileRouteTypes {
     | '/verify-otp'
     | '/companies'
     | '/admin'
+    | '/company-register/update'
     | '/401'
     | '/403'
     | '/404'
@@ -406,6 +417,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/verify-otp'
+    | '/company-register/update'
     | '/401'
     | '/403'
     | '/404'
@@ -445,6 +457,7 @@ export interface FileRouteTypes {
     | '/verify-otp'
     | '/(public)/companies'
     | '/_authenticated/admin'
+    | '/company-register/update'
     | '/(errors)/401'
     | '/(errors)/403'
     | '/(errors)/404'
@@ -485,6 +498,7 @@ export interface RootRouteChildren {
   CompanyRouteRoute: typeof CompanyRouteRouteWithChildren
   VerifyOtpRouteRoute: typeof VerifyOtpRouteRoute
   AuthenticatedAdminRouteRoute: typeof AuthenticatedAdminRouteRouteWithChildren
+  CompanyRegisterUpdateRouteRoute: typeof CompanyRegisterUpdateRouteRoute
   errors401Route: typeof errors401Route
   errors403Route: typeof errors403Route
   errors404Route: typeof errors404Route
@@ -593,6 +607,13 @@ declare module '@tanstack/react-router' {
       path: '/401'
       fullPath: '/401'
       preLoaderRoute: typeof errors401RouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/company-register/update': {
+      id: '/company-register/update'
+      path: '/company-register/update'
+      fullPath: '/company-register/update'
+      preLoaderRoute: typeof CompanyRegisterUpdateRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated/admin': {
@@ -894,6 +915,7 @@ const rootRouteChildren: RootRouteChildren = {
   CompanyRouteRoute: CompanyRouteRouteWithChildren,
   VerifyOtpRouteRoute: VerifyOtpRouteRoute,
   AuthenticatedAdminRouteRoute: AuthenticatedAdminRouteRouteWithChildren,
+  CompanyRegisterUpdateRouteRoute: CompanyRegisterUpdateRouteRoute,
   errors401Route: errors401Route,
   errors403Route: errors403Route,
   errors404Route: errors404Route,

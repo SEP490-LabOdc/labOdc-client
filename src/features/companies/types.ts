@@ -15,3 +15,15 @@ export type Company = {
     email?: string
     foundedYear?: number
 }
+
+export type CompanyPayload = {
+  address: string;
+  businessLicenseLink: string;
+  email: string;
+  taxCode: string;
+  name: string;
+  phone: string;
+  contactPersonEmail: string;
+  contactPersonName: string;
+  contactPersonPhone: string;
+}

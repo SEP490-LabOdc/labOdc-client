@@ -32,6 +32,15 @@ export const useCompanyRegister = () => {
   })
 }
 
+export const useCompanyRegisterUpdate = (companyId: string) => {
+  return useMutation({
+    mutationFn: async (payload: TCompanyRegisterDTO) => {
+      const { data } = await apiRequest.put(`/api/v1/companies/${companyId}`, payload)
+      return data
+    }
+  })
+}
+
 export const useVerifyOtp = () => {
   return useMutation({
     mutationFn: async ({ otp, email }: { otp: string, email: string }) => {
