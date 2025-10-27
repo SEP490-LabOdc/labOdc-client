@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { companyKeys } from './query-keys'
 import apiRequest from '@/config/request';
 
@@ -62,8 +62,9 @@ interface PatchPendingCompanyPayload {
     }[]
 }
 
-export const usePostPendingCompany = () =>
-    useMutation({
+export const usePostPendingCompany = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
         mutationKey: [...companyKeys.patchCompany],
         mutationFn: async (payload: PatchPendingCompanyPayload) => {
             const { id, status, templateId, assigneeId, notes, items } = payload
@@ -83,7 +84,21 @@ export const usePostPendingCompany = () =>
             const { data } = await apiRequest.post(`/api/v1/companies/review`, body)
             return data
         },
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: companyKeys.getCompanyById,
+            })
+            queryClient.invalidateQueries({
+                queryKey: companyKeys.getCompanyChecklists,
+            })
+
+            queryClient.invalidateQueries({
+                queryKey: companyKeys.getCheckList,
+            })
+        }
     })
+}
+
 
 
 export const useGetCompanyChecklists = (id?: string) =>

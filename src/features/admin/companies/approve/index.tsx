@@ -7,14 +7,18 @@ import { Search } from '@/components/search'
 import { ThemeSwitch } from '@/components/theme-switch'
 import { CompaniesProvider } from '../components/companies-provider'
 import CompanyApprovingForm from '../components/companies-approving-form'
-import { useGetCheckList, useGetCompanyById, useGetCompanyChecklists } from '@/hooks/api/companies/queries'
+import {
+    useGetCheckList,
+    useGetCompanyById,
+    useGetCompanyChecklists,
+} from '@/hooks/api/companies/queries'
 import { ErrorView } from '@/components/admin/ErrorView'
 
 const route = getRouteApi('/_authenticated/admin/companies/approve/')
 
 const ApprovingTableSkeleton = () => (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2 animate-pulse">
-        {/* --- Skeleton left column --- */}
+        {/* Left column */}
         <div className="space-y-8 px-4">
             <div className="p-3 mb-0">
                 <div className="h-4 w-1/3 bg-muted rounded mb-4"></div>
@@ -27,7 +31,6 @@ const ApprovingTableSkeleton = () => (
                     ))}
                 </div>
             </div>
-
             <div className="p-3">
                 <div className="h-4 w-1/3 bg-muted rounded mb-4"></div>
                 <div className="space-y-4">
@@ -41,7 +44,7 @@ const ApprovingTableSkeleton = () => (
             </div>
         </div>
 
-        {/* --- Skeleton right column --- */}
+        {/* Right column */}
         <div className="px-12">
             <div className="rounded-lg border bg-card p-6 shadow-sm space-y-4">
                 <div className="h-5 w-1/2 bg-muted rounded"></div>
@@ -65,29 +68,28 @@ const ApprovingTableSkeleton = () => (
 
 export default function ApproveCompany() {
     const search = route.useSearch()
-
-    // Lấy thông tin công ty
-    const {
-        data: companyData,
-        isLoading: isCompanyLoading,
-        isError: isCompanyError,
-        error: companyError,
-    } = useGetCompanyById(search.id)
+    const companyQuery = useGetCompanyById(search.id)
+    const { data: companyData, isLoading: isCompanyLoading, isError: isCompanyError, error: companyError } = companyQuery
 
     const company = companyData?.data
     const companyId = company?.id
-
     const isUpdateRequired = company?.status === 'UPDATE_REQUIRED'
 
+    // Luôn lấy checklist template
     const {
-        data: checklistData,
+        data: baseChecklistData,
         isLoading: isChecklistLoading,
         isError: isChecklistError,
         error: checklistError,
-    } = isUpdateRequired
-            ? useGetCompanyChecklists(companyId)
-            : useGetCheckList()
+    } = useGetCheckList()
 
+    // Chỉ lấy checklist của company nếu cần
+    const {
+        data: companyChecklistData,
+        isLoading: isCompanyChecklistLoading,
+    } = useGetCompanyChecklists(companyId)
+
+    // Khi một trong hai có lỗi
     if (isCompanyError || isChecklistError) {
         const message =
             companyError?.message || checklistError?.message || 'Không thể tải dữ liệu.'
@@ -100,12 +102,28 @@ export default function ApproveCompany() {
         )
     }
 
-    if (isCompanyLoading || isChecklistLoading) {
+    if (isCompanyLoading || isChecklistLoading || (isUpdateRequired && isCompanyChecklistLoading)) {
         return <ApprovingTableSkeleton />
     }
 
-    // ✅ Dữ liệu hợp lệ
-    const checklist = isUpdateRequired ? checklistData : checklistData?.[0]
+    let finalChecklist = baseChecklistData?.[0]
+
+    if (companyChecklistData?.checklists) {
+        const checkedMap = new Map(
+            companyChecklistData.checklists.map((item: any) => [item.id, item.checked])
+        )
+
+        finalChecklist = {
+            ...finalChecklist,
+            groups: finalChecklist?.groups?.map((group: any) => ({
+                ...group,
+                items: group.items.map((item: any) => ({
+                    ...item,
+                    checked: !!checkedMap.get(item.id),
+                })),
+            })),
+        }
+    }
 
     return (
         <CompaniesProvider>
@@ -162,7 +180,7 @@ export default function ApproveCompany() {
                         ) : (
                             <CompanyApprovingForm
                                 initialData={company}
-                                checkList={checklist}
+                                checkList={finalChecklist}
                             />
                         )}
                     </div>
