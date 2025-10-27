@@ -4,7 +4,7 @@ import { z } from 'zod'
 export const companyStatusSchema = z.union([
     z.literal('PENDING'),
     z.literal('UPDATE_REQUIRED'),
-    z.literal('ACTIVE'),
+    z.literal('APPROVED'),
     z.literal('DISABLED'),
 ])
 export type CompanyStatus = z.infer<typeof companyStatusSchema>

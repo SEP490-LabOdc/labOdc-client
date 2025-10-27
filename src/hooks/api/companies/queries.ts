@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { companyKeys } from './query-keys'
 import apiRequest from '@/config/request';
 
@@ -73,8 +73,9 @@ interface PatchPendingCompanyPayload {
     }[]
 }
 
-export const usePatchPendingCompany = () =>
-    useMutation({
+export const usePostPendingCompany = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
         mutationKey: [...companyKeys.patchCompany],
         mutationFn: async (payload: PatchPendingCompanyPayload) => {
             const { id, status, templateId, assigneeId, notes, items } = payload
@@ -91,7 +92,34 @@ export const usePatchPendingCompany = () =>
                 },
             }
 
-            const { data } = await apiRequest.patch(`/api/v1/companies/${id}`, body)
+            const { data } = await apiRequest.post(`/api/v1/companies/review`, body)
             return data
         },
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: companyKeys.getCompanyById,
+            })
+            queryClient.invalidateQueries({
+                queryKey: companyKeys.getCompanyChecklists,
+            })
+
+            queryClient.invalidateQueries({
+                queryKey: companyKeys.getCheckList,
+            })
+        }
+    })
+}
+
+
+
+export const useGetCompanyChecklists = (id?: string) =>
+    useQuery({
+        queryKey: [...companyKeys.getCompanyChecklists, id],
+        queryFn: async () => {
+            if (!id) throw new Error('Missing company id')
+
+            const { data } = await apiRequest.get(`/api/v1/companies/${id}/checklists`)
+            return data?.data
+        },
+        enabled: !!id,
     })

@@ -3,5 +3,6 @@ export const companyKeys = {
     getCompanyById: ['company'] as const,
     getCheckList: ["checklist-templates", "company-registration"] as const,
     patchCompany: ['company', 'patch'] as const,
+    getCompanyChecklists: ['companies', 'checklists'] as const,
     updateCompanyRegistration: (token: string) => ['update-company-registration', token] as const,
 }
