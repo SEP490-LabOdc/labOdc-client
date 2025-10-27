@@ -7,6 +7,7 @@ import { LongText } from '@/components/long-text'
 import { callTypes } from '../data/data'
 import { type Company } from '../data/schema'
 import { DataTableRowActions } from './data-table-row-actions'
+import { Link } from '@tanstack/react-router'
 
 const formatDate = (date: Date) => {
     return date.toLocaleDateString('vi-VN', {
@@ -51,7 +52,21 @@ export const companiesColumns: ColumnDef<Company>[] = [
         ),
         cell: ({ row }) => (
             <LongText className="max-w-36 ps-3">
-                {row.getValue('name')}
+                {(() => {
+                    const status = row.getValue('status');
+                    const id = row.original.id;
+
+                    const linkTo =
+                        status === 'PENDING' || status === 'UPDATE_REQUIRED'
+                            ? `/admin/companies/approve?id=${id}`
+                            : `/admin/companies/edit?id=${id}`;
+
+                    return (
+                        <Link to={linkTo} className="hover:underline">
+                            {row.getValue('name')}
+                        </Link>
+                    );
+                })()}
             </LongText>
         ),
         meta: {
