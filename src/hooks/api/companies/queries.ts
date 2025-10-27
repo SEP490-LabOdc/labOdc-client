@@ -62,7 +62,7 @@ interface PatchPendingCompanyPayload {
     }[]
 }
 
-export const usePatchPendingCompany = () =>
+export const usePostPendingCompany = () =>
     useMutation({
         mutationKey: [...companyKeys.patchCompany],
         mutationFn: async (payload: PatchPendingCompanyPayload) => {
@@ -80,7 +80,20 @@ export const usePatchPendingCompany = () =>
                 },
             }
 
-            const { data } = await apiRequest.patch(`/api/v1/companies/${id}`, body)
+            const { data } = await apiRequest.post(`/api/v1/companies/review`, body)
             return data
         },
+    })
+
+
+export const useGetCompanyChecklists = (id?: string) =>
+    useQuery({
+        queryKey: [...companyKeys.getCompanyChecklists, id],
+        queryFn: async () => {
+            if (!id) throw new Error('Missing company id')
+
+            const { data } = await apiRequest.get(`/api/v1/companies/${id}/checklists`)
+            return data?.data
+        },
+        enabled: !!id,
     })
