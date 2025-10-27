@@ -143,7 +143,7 @@ export const companiesColumns: ColumnDef<Company>[] = [
             const STATUS_MAP = {
                 PENDING: 'Chờ xác thực',
                 UPDATE_REQUIRED: 'Yêu cầu cập nhật',
-                ACTIVE: 'Đang hoạt động',
+                APPROVED: 'Đang hoạt động',
                 DISABLED: 'Vô hiệu hóa',
             } as const
 

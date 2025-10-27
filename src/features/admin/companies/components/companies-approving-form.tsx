@@ -138,6 +138,7 @@ export default function CompanyApprovingForm({
 
             } else {
                 await patchPendingCompany.mutateAsync(payload)
+                navigate({ to: '/admin/companies/edit?id=' + initialData.id });
             }
 
             console.log('✅ Gửi yêu cầu thành công!')

@@ -13,6 +13,7 @@ import {
     FormLabel,
     FormMessage,
 } from '@/components/ui/form'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Input } from '@/components/ui/input'
 import { SelectDropdown } from '@/components/select-dropdown'
 import { useNavigate } from '@tanstack/react-router'
@@ -375,6 +376,87 @@ export default function CompanyForm({
                     Hủy
                 </Button>
             </div>
+            {/* --- RELATIONSHIP SECTION (ServiceNow Style) --- */}
+            <div className="mt-8 border rounded p-2">
+                <div className="">
+                    <Tabs defaultValue="explore" className="w-full">
+                        {/* --- TAB HEADER --- */}
+                        <div className="">
+                            <TabsList className="bg-background gap-1 border p-1">
+                                <TabsTrigger
+                                    value="projects"
+                                >
+                                    Projects
+                                </TabsTrigger>
+                                <TabsTrigger
+                                    value="users"
+                                >
+                                    Users
+                                </TabsTrigger>
+                            </TabsList>
+                        </div>
+
+                        {/* --- PROJECTS TAB --- */}
+                        <TabsContent value="projects" className="mt-0">
+                            <div className="overflow-hidden border-t border-border">
+                                <table className="w-full text-sm border-collapse">
+                                    <thead className="bg-muted/40 border-b border-border">
+                                        <tr>
+                                            <th className="text-left font-semibold px-4 py-2">Tên dự án</th>
+                                            <th className="text-left font-semibold px-4 py-2">Trạng thái</th>
+                                            <th className="text-left font-semibold px-4 py-2">Ngày bắt đầu</th>
+                                            <th className="text-left font-semibold px-4 py-2">Ngày kết thúc</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {[
+                                            { name: 'Fintech Platform', status: 'Đang triển khai', start: '2024-02-10', end: '2025-01-15' },
+                                            { name: 'Mobile Banking App', status: 'Hoàn thành', start: '2023-06-01', end: '2023-12-20' },
+                                            { name: 'CRM Integration', status: 'Chuẩn bị', start: '2025-03-01', end: '2025-06-30' },
+                                        ].map((proj, i) => (
+                                            <tr key={i} className="border-b border-border hover:bg-muted/30">
+                                                <td className="px-4 py-2 font-medium">{proj.name}</td>
+                                                <td className="px-4 py-2">{proj.status}</td>
+                                                <td className="px-4 py-2">{proj.start}</td>
+                                                <td className="px-4 py-2">{proj.end}</td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </TabsContent>
+
+                        {/* --- USERS TAB --- */}
+                        <TabsContent value="users" className="mt-0">
+                            <div className="overflow-hidden border-t border-border">
+                                <table className="w-full text-sm border-collapse">
+                                    <thead className="bg-muted/40 border-b border-border">
+                                        <tr>
+                                            <th className="text-left font-semibold px-4 py-2">Tên người dùng</th>
+                                            <th className="text-left font-semibold px-4 py-2">Email</th>
+                                            <th className="text-left font-semibold px-4 py-2">Vai trò</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {[
+                                            { name: 'Nguyễn Văn A', email: 'a@fintechplus.vn', role: 'Manager' },
+                                            { name: 'Trần Thị B', email: 'b@fintechplus.vn', role: 'Staff' },
+                                            { name: 'Lê Văn C', email: 'c@fintechplus.vn', role: 'Admin' },
+                                        ].map((user, i) => (
+                                            <tr key={i} className="border-b border-border hover:bg-muted/30">
+                                                <td className="px-4 py-2 font-medium">{user.name}</td>
+                                                <td className="px-4 py-2">{user.email}</td>
+                                                <td className="px-4 py-2">{user.role}</td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </TabsContent>
+                    </Tabs>
+                </div>
+            </div>
+
         </>
 
     )
