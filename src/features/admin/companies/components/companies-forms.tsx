@@ -362,29 +362,11 @@ export default function CompanyForm({
                                 </FormItem>
                             )}
                         />
-
-                        <FormField
-                            control={form.control}
-                            name="lastInteraction"
-                            render={({ field }) => (
-                                <FormItem className="space-y-1">
-                                    <div className="flex items-center gap-3">
-                                        <FormLabel className="w-40 block text-end text-base font-medium">
-                                            Lần tương tác cuối
-                                        </FormLabel>
-                                        <FormControl className="flex-1">
-                                            <Input type="date" {...field} />
-                                        </FormControl>
-                                    </div>
-                                    <FormMessage className="ml-40" />
-                                </FormItem>
-                            )}
-                        />
                     </div>
                 </form>
             </Form>
             <div className="pt-3 md:col-span-2 flex gap-3">
-                <Button type="submit">Lưu thay đổi</Button>
+                <Button type="submit">Cập nhật</Button>
                 <Button
                     type="button"
                     variant="outline"
