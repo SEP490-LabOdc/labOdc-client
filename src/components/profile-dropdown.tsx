@@ -15,15 +15,28 @@ import { Palette, UserCog2, Wrench } from 'lucide-react'
 import { useAuthStore } from '@/stores/auth-store.ts'
 import { useNavigate } from '@tanstack/react-router'
 import { toast } from 'sonner'
+import { useUser } from '@/context/UserContext'
+import { getAvatarFallback } from '@/helpers/stringUtils.ts'
 
 export function ProfileDropdown() {
   const { auth } = useAuthStore()
   const navigate = useNavigate()
+  const { user } = useUser()
 
   const handleLogout = async () => {
-      auth.logout()
-      await navigate({ to: '/sign-in' })
-      toast.success('Đăng xuất thành công!')
+    auth.logout()
+    await navigate({ to: '/sign-in' })
+    toast.success('Đăng xuất thành công!')
+  }
+
+  if (!user) {
+    return (
+      <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+        <Avatar className="size-10">
+          <AvatarFallback>...</AvatarFallback>
+        </Avatar>
+      </Button>
+    )
   }
 
   return (
@@ -32,18 +45,18 @@ export function ProfileDropdown() {
         <Button variant="ghost" className="relative h-8 w-8 rounded-full">
           <Avatar className="size-10">
             <AvatarImage
-              src="https://www.anhnghethuatdulich.com/wp-content/uploads/2025/08/jack-meme-joker-pha-tron-giua-hai-huoc-va-phong-cach-doc-dao.jpg"
-              alt="@shadcn" />
-            <AvatarFallback>SN</AvatarFallback>
+              src={user.avatarUrl}
+              alt="user" />
+            <AvatarFallback>{getAvatarFallback(user.fullName)}</AvatarFallback>
           </Avatar>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56" align="end" forceMount>
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
-            <p className="text-sm leading-none font-medium">satnaing</p>
+            <p className="text-sm leading-none font-medium">{user.fullName}</p>
             <p className="text-muted-foreground text-xs leading-none">
-              satnaingdev@gmail.com
+              {user.email}
             </p>
           </div>
         </DropdownMenuLabel>

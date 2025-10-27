@@ -1,84 +1,101 @@
-import z from 'zod';
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { ArrowRight, Mail, Phone, Building2, User, Upload, MapPin, FileText } from 'lucide-react';
+import { useForm } from 'react-hook-form'
+import { ArrowRight, Mail, Phone, Building2, User, MapPin, FileText } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Link, useNavigate } from '@tanstack/react-router'
-import { useCompanyRegister } from '@/hooks/api'
-import { toast } from 'sonner'
+import { Link } from '@tanstack/react-router'
 import {
   type IData,
   LocationSelect,
 } from '@/features/companies/pages/public/CompanySignUpPage/components/LocationSelect.tsx'
 import { useGetProvinces, useGetWardsByProvinceCode } from '@/hooks/api/external'
 import { removeProperties } from '@/helpers/objectUtils.ts'
-import { combineAddressParts } from '@/helpers/stringUtils.ts'
+import {
+  combineAddressParts,
+  findProvinceCodeByName,
+  findWardCodeByName,
+  parseAddressParts,
+} from '@/helpers/stringUtils.ts'
+import {
+  type CompanyRegisterData, companySchema,
+} from '@/features/companies/pages/public/CompanySignUpPage/components/company-register.schema.ts'
+import type { CompanyPayload } from '@/features/companies/types.ts'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { FileUpload } from '@/features/companies/pages/public/CompanySignUpPage/components/FileUpload.tsx'
 
-// --- Schema ---
-const schema = z.object({
-    //Company fields
-    email: z.email("Email công ty không hợp lệ"),
-    provinceCode: z.string().min(1, "Vui lòng chọn tỉnh/thành phố"),
-    wardCode: z.string().min(1, "Vui lòng chọn phường/xã"),
-    address: z.string().min(1, "Địa chỉ công ty là bắt buộc"),
-    taxCode: z.string()
-      .min(1, "Vui lòng nhập mã số thuế.")
-      .regex(/^[0-9-]+$/, "Mã số thuế chỉ được chứa chữ số và dấu gạch ngang.")
-      .transform((val) => val.replace(/-/g, ''))
-      .refine(
-        (val) => val.length === 10 || val.length === 13,
-        {
-          message: "Mã số thuế phải có độ dài 10 hoặc 13 chữ số.",
-        }
-      ),
-    name: z.string().min(1, "Tên công ty là bắt buộc"),
-    phone: z.string().min(1, "Số điện thoại công ty là bắt buộc"),
-    businessLicenseLink: z.instanceof(File).optional().or(z.string().optional()),
-    //Personal fields
-    contactPersonEmail: z.email("Email cá nhân không hợp lệ"),
-    contactPersonName: z.string().min(1, "Họ và tên là bắt buộc"),
-    contactPersonPhone: z.string().min(1, "Số điện thoại là bắt buộc"),
-    agreeTerm: z.boolean().refine(val => val === true, "Bạn phải đồng ý với các điều khoản")
-});
+interface RegisterCompanyFormProps {
+  initialData?: CompanyPayload;
+  submitButtonText?: string;
+  onSubmit: (data: CompanyPayload) => Promise<void>;
+  isLoading: boolean;
+}
 
-export type CompanySignupData = z.infer<typeof schema>;
-
-export function RegisterCompanyForm() {
+export function RegisterCompanyForm({
+    initialData,
+    submitButtonText = "Lưu thông tin",
+    onSubmit,
+    isLoading
+}: RegisterCompanyFormProps) {
     const [selectedProvince, setSelectedProvince] = useState<string>('');
-    const navigate = useNavigate();
 
     //Fetching data
     const provinces = useGetProvinces();
     const wards = useGetWardsByProvinceCode(selectedProvince);
 
-    const { mutateAsync, isPending } = useCompanyRegister();
-
-    const form = useForm<CompanySignupData>({
-        resolver: zodResolver(schema),
-        defaultValues: {
-            //Company fields
-            name: '',
-            email: '',
-            phone: '',
-            taxCode: '',
-            address: '',
-            provinceCode: '',
-            wardCode: '',
-            businessLicenseLink: '',
-            //Personal fields
-            contactPersonEmail: '',
-            contactPersonName: '',
-            contactPersonPhone: '',
-            agreeTerm: false
-        }
+    const form = useForm<CompanyRegisterData>({
+      resolver: zodResolver(companySchema),
+      defaultValues: {
+        //Company fields
+        name: initialData?.name || '',
+        email: initialData?.email || '',
+        phone: initialData?.phone || '',
+        taxCode: initialData?.taxCode || '',
+        address: initialData?.address || '',
+        provinceCode: '',
+        wardCode: '',
+        businessLicenseLink: initialData?.businessLicenseLink || '',
+        //Personal fields
+        contactPersonEmail: initialData?.contactPersonEmail || '',
+        contactPersonName: initialData?.contactPersonName || '',
+        contactPersonPhone: initialData?.contactPersonPhone || '',
+        agreeTerm: false
+      }
     });
 
-    const onSubmit = async (data: CompanySignupData) => {
-      try {
+    // Effect to populate form when initialData and provinces are loaded
+    useEffect(() => {
+      if (initialData?.address && provinces.data?.length > 0) {
+
+        const { street, ward, province } = parseAddressParts(initialData?.address);
+        // Find and set province
+        const provinceCode = findProvinceCodeByName('Thành phố Hồ Chí Minh', provinces.data);
+        console.log(provinceCode);
+        if (provinceCode) {
+          setSelectedProvince(provinceCode);
+          form.setValue('provinceCode', provinceCode);
+        }
+
+        // Set street address
+        form.setValue('address', street);
+      }
+    }, [initialData?.address, provinces.data, form]);
+
+    // Effect to set ward when wards are loaded
+    useEffect(() => {
+      if (initialData?.address && wards.data?.wards?.length > 0) {
+        console.log('zo nè')
+        const { ward } = parseAddressParts(initialData?.address);
+        const wardCode = findWardCodeByName('Phường Bình Thạnh', wards.data.wards);
+
+        if (wardCode) {
+          form.setValue('wardCode', wardCode);
+        }
+      }
+    }, [initialData?.address, wards.data, form]);
+
+    const handleSubmit = async (data: CompanyRegisterData) => {
         const selectedProvince = provinces.data?.find((p: IData) => p.code === parseInt(data.provinceCode));
         const selectedWard = wards.data?.wards?.find((w: IData) => w.code === parseInt(data.wardCode));
         const addressParts = combineAddressParts(data.address, selectedProvince.name, selectedWard.name);
@@ -89,24 +106,20 @@ export function RegisterCompanyForm() {
           businessLicenseLink: submitData.businessLicenseLink instanceof File
             ? '' : submitData.businessLicenseLink || ''
         };
-        await mutateAsync(finalSubmitData)
-        await navigate({ to: '/verify-otp', search: { companyEmail: data.email } })
-        toast.success('Đăng ký công ty thành công!')
-      } catch (e) {
-        console.error(e);
-      }
+        await onSubmit(finalSubmitData)
     };
-
 
     const handleProvinceSelection = useCallback((provinceCode: string) => {
       setSelectedProvince(provinceCode);
       form.setValue('provinceCode', provinceCode);
       form.setValue('wardCode', '');
     }, [form])
+  
+
 
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-8">
                 {/* Section 1: Company Information */}
                 <div className="space-y-6">
                     <div className="flex items-center gap-2 pb-2 border-b border-gray-200">
@@ -201,33 +214,28 @@ export function RegisterCompanyForm() {
                             )}
                         />
 
-                        <FormField
-                            control={form.control}
-                            name='businessLicenseLink'
-                            render={({ field: { value, onChange, ...fieldProps } }) => (
-                                <FormItem className="md:col-span-2">
-                                    <FormLabel className="text-sm font-medium text-[#264653]">Giấy phép kinh doanh *</FormLabel>
-                                    <FormControl>
-                                        <div className="relative">
-                                            <input
-                                                type="file"
-                                                onChange={(e) => onChange(e.target.files?.[0])}
-                                                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                                                accept=".pdf,.jpg,.jpeg,.png"
-                                                {...fieldProps}
-                                            />
-                                            <div className="flex items-center gap-3 p-3 border border-gray-300  hover:border-[#2a9d8f] transition-colors">
-                                                <Upload className="h-4 w-4 text-gray-400" />
-                                                <span className="text-sm text-gray-600">
-                                                    {value instanceof File ? value.name : 'Chọn file (PDF, JPG, PNG)'}
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
+                      <FormField
+                        control={form.control}
+                        name='businessLicenseLink'
+                        render={({ field }) => (
+                          <FormItem className="md:col-span-2">
+                            <FormLabel className="text-sm font-medium text-[#264653]">
+                              Giấy phép kinh doanh *
+                            </FormLabel>
+                            <FormControl>
+                              <FileUpload
+                                value={field.value}
+                                onChange={field.onChange}
+                                accept=".pdf,.jpg,.jpeg,.png"
+                                maxSize={10}
+                                placeholder="Chọn file giấy phép kinh doanh"
+                                disabled={isLoading}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
 
                       {/* Location selectors */}
                           <FormField
@@ -405,10 +413,10 @@ export function RegisterCompanyForm() {
                     <Button
                         type="submit"
                         className="w-full bg-[#f4a261] hover:bg-[#e76f51] text-white font-semibold py-3  transition-colors duration-200 shadow-lg"
-                        disabled={isPending}
+                        disabled={isLoading}
                         size="lg"
                     >
-                        {isPending ? "Đang gửi…" : "Đăng ký doanh nghiệp"}
+                        {isLoading ? "Đang gửi…" : `${ submitButtonText }`}
                         <ArrowRight className="ml-2 h-4 w-4" />
                     </Button>
                     <p className='text-center'>Đã có tài khoản <Link to='/company-login' className='text-[#2a9d8f] font-semibold hover:underline'>Đăng nhập ngay</Link></p>

@@ -3,8 +3,6 @@ import type { QueryClient } from "@tanstack/react-query";
 import { createRootRouteWithContext, Outlet } from "@tanstack/react-router";
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
-import { NotFoundError } from "@/features/errors/not-found-error";
-import { GeneralError } from "@/features/errors/general-error";
 
 export const Route = createRootRouteWithContext<{
     queryClient: QueryClient
@@ -14,8 +12,8 @@ export const Route = createRootRouteWithContext<{
             <>
                 <Outlet />
                 <Toaster
-                  duration={5000}
-                  richColors
+                    duration={5000}
+                    richColors
                 />
                 {import.meta.env.MODE === 'development' && (
                     <>
@@ -26,6 +24,4 @@ export const Route = createRootRouteWithContext<{
             </>
         )
     },
-    notFoundComponent: NotFoundError,
-    errorComponent: GeneralError
 })

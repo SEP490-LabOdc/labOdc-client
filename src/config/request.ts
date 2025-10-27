@@ -5,6 +5,11 @@ const apiRequest = axios.create({
   baseURL: BASE_URL,
 });
 
+// Tạo instance riêng cho refresh token (không có interceptor)
+const refreshApiRequest = axios.create({
+  baseURL: BASE_URL,
+});
+
 apiRequest.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("access_token");
@@ -22,7 +27,7 @@ apiRequest.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
-    if (error.response.status === 401 && !originalRequest._retry) {
+    if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
       const refreshToken = localStorage.getItem("refresh_token");
       if (refreshToken) {
@@ -32,12 +37,16 @@ apiRequest.interceptors.response.use(
           localStorage.setItem("access_token", newToken);
           originalRequest.headers["Authorization"] = `Bearer ${newToken}`;
           return apiRequest(originalRequest);
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
+          // Clear storage và redirect
           localStorage.clear();
           window.location.href = "/sign-in";
           return Promise.reject(error);
         }
+      } else {
+        // Không có refresh token, redirect ngay
+        localStorage.clear();
+        window.location.href = "/sign-in";
       }
     }
     return Promise.reject(error);
@@ -45,7 +54,8 @@ apiRequest.interceptors.response.use(
 );
 
 async function refreshAccessToken(refreshToken: string, userId: string) {
-  const { data } = await apiRequest.post("/api/v1/auth/refresh", {
+  // Sử dụng refreshApiRequest thay vì apiRequest
+  const { data } = await refreshApiRequest.post("/api/v1/auth/refresh", {
     userId,
     refreshToken
   });
