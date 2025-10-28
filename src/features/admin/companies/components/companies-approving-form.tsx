@@ -8,6 +8,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { usePatchPendingCompany } from '@/hooks/api/companies'
 import { Loader2 } from 'lucide-react'
 import { useNavigate } from '@tanstack/react-router'
+import { toast } from 'sonner'
 
 type ChecklistItem = {
     id: string
@@ -70,33 +71,14 @@ export default function CompanyApprovingForm({
 
     useEffect(() => {
         setVerification(buildInitialVerification())
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [checkList])
 
     useEffect(() => {
         if (!requestDialogOpen) setRequestNote('')
     }, [requestDialogOpen])
 
-    const persistVerification = async (
-        updated: Record<string, boolean>,
-        previous: Record<string, boolean>
-    ) => {
-        if (!initialData?.id) return
-        try {
-            console.log('✅ Persist verification:', updated)
-            // await apiRequest.patch(`/api/v1/companies/${initialData.id}`, { verification: updated })
-        } catch (error: any) {
-            setVerification(previous)
-            alert(error?.message ?? 'Đã xảy ra lỗi, vui lòng thử lại.')
-        }
-    }
-
     const handleToggle = (id: string, checked: boolean) => {
-        setVerification((prev) => {
-            const updated = { ...prev, [id]: checked }
-            void persistVerification(updated, prev)
-            return updated
-        });
+        setVerification((prev) => ({ ...prev, [id]: checked }))
     }
 
     const handleSendRequest = async ({ status }
@@ -134,17 +116,19 @@ export default function CompanyApprovingForm({
 
             if (status === 'UPDATE_REQUIRED') {
                 await patchPendingCompany.mutateAsync(payload)
-                setRequestDialogOpen(false)
+                setRequestDialogOpen(false);
+                toast.info('📝 Yêu cầu cập nhật đã được gửi thành công!')
 
             } else {
                 await patchPendingCompany.mutateAsync(payload)
+                toast.success('✅ Đã phê duyệt yêu cầu thành công!');
                 navigate({ to: '/admin/companies/edit?id=' + initialData.id });
             }
 
             console.log('✅ Gửi yêu cầu thành công!')
         } catch (error: any) {
             console.error('❌ PATCH company failed:', error)
-            // toast.error(error?.message ?? 'Gửi yêu cầu thất bại, vui lòng thử lại!')
+            toast.error(error?.message ? 'Gửi yêu cầu thất bại, ' + error?.message : 'Gửi yêu cầu thất bại, vui lòng thử lại!')
         }
         finally {
             setLoadingAction(null);
