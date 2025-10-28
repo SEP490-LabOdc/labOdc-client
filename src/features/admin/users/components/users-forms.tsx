@@ -1,6 +1,4 @@
-// File: components/admin/users/UsersForm.tsx
-'use client'
-import { useEffect, useMemo } from 'react'
+import { useEffect } from 'react'
 import type { JSX } from 'react'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
@@ -9,67 +7,31 @@ import { Button } from '@/components/ui/button'
 import {
     Form,
     FormControl,
+    FormDescription,
     FormField,
     FormItem,
     FormLabel,
     FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { PasswordInput } from '@/components/password-input'
 import { SelectDropdown } from '@/components/select-dropdown'
-import { roles } from '../data/data'
-import { type User } from '../data/schema'
 import { useNavigate } from '@tanstack/react-router'
+import { DatePicker } from '@/components/date-picker'
 
-const formSchema = z
-    .object({
-        firstName: z.string().min(1, 'Tên là bắt buộc.'),
-        lastName: z.string().min(1, 'Họ là bắt buộc.'),
-        username: z.string().min(1, 'Tên đăng nhập là bắt buộc.'),
-        phoneNumber: z.string().min(1, 'Số điện thoại là bắt buộc.'),
-        email: z.email({
-            error: (iss) => (iss.input === '' ? 'Email là bắt buộc.' : undefined),
+// 👇 Schema xác thực cho các field có trong dữ liệu trả về
+const formSchema = z.object({
+    fullName: z.string().min(1, 'Họ và tên là bắt buộc.'),
+    email: z.string().email('Email không hợp lệ.'),
+    phone: z.string().min(1, 'Số điện thoại là bắt buộc.'),
+    role: z.string().min(1, 'Vai trò là bắt buộc.'),
+    gender: z
+        .enum(['MALE', 'FEMALE', 'OTHER'])
+        .refine((val) => ['MALE', 'FEMALE', 'OTHER'].includes(val), {
+            message: 'Giới tính không hợp lệ.',
         }),
-        password: z.string().transform((pwd) => pwd.trim()),
-        role: z.string().min(1, 'Vai trò là bắt buộc.'),
-        confirmPassword: z.string().transform((pwd) => pwd.trim()),
-        isEdit: z.boolean(),
-    })
-    .refine(
-        (data) => {
-            if (data.isEdit && !data.password) return true
-            return data.password.length > 0
-        },
-        { message: 'Mật khẩu là bắt buộc.', path: ['password'] }
-    )
-    .refine(
-        ({ isEdit, password }) => {
-            if (isEdit && !password) return true
-            return password.length >= 8
-        },
-        { message: 'Mật khẩu phải dài tối thiểu 8 ký tự.', path: ['password'] }
-    )
-    .refine(
-        ({ isEdit, password }) => {
-            if (isEdit && !password) return true
-            return /[a-z]/.test(password)
-        },
-        { message: 'Mật khẩu phải chứa ít nhất một chữ cái thường.', path: ['password'] }
-    )
-    .refine(
-        ({ isEdit, password }) => {
-            if (isEdit && !password) return true
-            return /\d/.test(password)
-        },
-        { message: 'Mật khẩu phải chứa ít nhất một số.', path: ['password'] }
-    )
-    .refine(
-        ({ isEdit, password, confirmPassword }) => {
-            if (isEdit && !password) return true
-            return password === confirmPassword
-        },
-        { message: 'Mật khẩu không khớp.', path: ['confirmPassword'] }
-    )
+    birthDate: z.date('Please select your date of birth.').optional(),
+    avatarUrl: z.string().nullable().optional(),
+})
 
 export type UserForm = z.infer<typeof formSchema>
 
@@ -78,76 +40,46 @@ export default function UsersForm({
     initialData,
 }: {
     mode: 'create' | 'edit'
-    initialData?: User
+    initialData?: Partial<UserForm> & { id?: string }
 }): JSX.Element {
     const navigate = useNavigate()
-
     const isEdit = mode === 'edit'
-
-    const defaultValues: UserForm = useMemo(
-        () =>
-            isEdit && initialData
-                ? {
-                    ...(initialData as any),
-                    password: '',
-                    confirmPassword: '',
-                    isEdit: true,
-                }
-                : {
-                    firstName: '',
-                    lastName: '',
-                    username: '',
-                    email: '',
-                    role: '',
-                    phoneNumber: '',
-                    password: '',
-                    confirmPassword: '',
-                    isEdit: false,
-                },
-        [isEdit, initialData]
-    )
 
     const form = useForm<UserForm>({
         resolver: zodResolver(formSchema),
-        defaultValues,
+        defaultValues: {
+            fullName: initialData?.fullName ?? '',
+            email: initialData?.email ?? '',
+            phone: initialData?.phone ?? '',
+            role: initialData?.role ?? '',
+            gender: initialData?.gender ?? 'OTHER',
+            birthDate: initialData?.birthDate
+                ? new Date(initialData.birthDate)
+                : new Date(),
+            avatarUrl: initialData?.avatarUrl ?? '',
+        },
     })
-    // Khi initialData đến trễ (trang edit), đồng bộ vào form
+
     useEffect(() => {
-        if (isEdit && initialData) {
-            form.reset(defaultValues)
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isEdit, initialData])
+        if (initialData) form.reset(initialData)
+    }, [initialData, form])
 
-    const onSubmit: any = async (values: UserForm) => {
-        const payload: any = {
-            firstName: values.firstName,
-            lastName: values.lastName,
-            username: values.username,
-            email: values.email,
-            phoneNumber: values.phoneNumber,
-            role: values.role,
-        }
-        if (!isEdit || values.password) {
-            payload.password = values.password
-        }
-
+    const onSubmit = async (values: UserForm) => {
         try {
-            const res = await fetch(isEdit ? `/api/users/${(initialData as any)?.id}` : '/api/users', {
-                method: isEdit ? 'PUT' : 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload),
-            })
-            if (!res.ok) throw new Error('Lưu thất bại')
+            const res = await fetch(
+                isEdit ? `/api/users/${initialData?.id}` : '/api/users',
+                {
+                    method: isEdit ? 'PUT' : 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(values),
+                }
+            )
+            if (!res.ok) throw new Error('Lưu thất bại.')
             navigate({ to: '/admin/users' })
         } catch (e: any) {
-            // Bạn có thể thay bằng toast UI của bạn
-            alert(e.message);
-            navigate({ to: '/admin/users' });
+            alert(e.message)
         }
     }
-
-    const isPasswordTouched = !!form.formState.dirtyFields.password
 
     return (
         <>
@@ -160,15 +92,15 @@ export default function UsersForm({
                     <div className="space-y-4 px-12">
                         <FormField
                             control={form.control}
-                            name="firstName"
+                            name="fullName"
                             render={({ field }) => (
                                 <FormItem className="space-y-1">
                                     <div className="flex items-center gap-3">
-                                        <FormLabel className="w-40 block text-end text-base font-medium">
-                                            Tên
+                                        <FormLabel className="w-40 text-end text-base font-medium">
+                                            Họ và tên
                                         </FormLabel>
                                         <FormControl className="flex-1">
-                                            <Input placeholder="John" autoComplete="off" {...field} />
+                                            <Input placeholder="VD: Hoàng Văn Nam" {...field} />
                                         </FormControl>
                                     </div>
                                     <FormMessage className="ml-40" />
@@ -178,15 +110,15 @@ export default function UsersForm({
 
                         <FormField
                             control={form.control}
-                            name="lastName"
+                            name="email"
                             render={({ field }) => (
                                 <FormItem className="space-y-1">
                                     <div className="flex items-center gap-3">
-                                        <FormLabel className="w-40 block text-end text-base font-medium">
-                                            Họ
+                                        <FormLabel className="w-40 text-end text-base font-medium">
+                                            Email
                                         </FormLabel>
                                         <FormControl className="flex-1">
-                                            <Input placeholder="Doe" autoComplete="off" {...field} />
+                                            <Input placeholder="hoang@example.com" {...field} />
                                         </FormControl>
                                     </div>
                                     <FormMessage className="ml-40" />
@@ -196,33 +128,15 @@ export default function UsersForm({
 
                         <FormField
                             control={form.control}
-                            name="username"
+                            name="phone"
                             render={({ field }) => (
                                 <FormItem className="space-y-1">
                                     <div className="flex items-center gap-3">
-                                        <FormLabel className="w-40 block text-end text-base font-medium">
-                                            Tên đăng nhập
-                                        </FormLabel>
-                                        <FormControl className="flex-1">
-                                            <Input placeholder="abel.tuter" {...field} />
-                                        </FormControl>
-                                    </div>
-                                    <FormMessage className="ml-40" />
-                                </FormItem>
-                            )}
-                        />
-
-                        <FormField
-                            control={form.control}
-                            name="phoneNumber"
-                            render={({ field }) => (
-                                <FormItem className="space-y-1">
-                                    <div className="flex items-center gap-3">
-                                        <FormLabel className="w-40 block text-end text-base font-medium">
+                                        <FormLabel className="w-40 text-end text-base font-medium">
                                             Số điện thoại
                                         </FormLabel>
                                         <FormControl className="flex-1">
-                                            <Input placeholder="+1 234 567 890" {...field} />
+                                            <Input placeholder="+84..." {...field} />
                                         </FormControl>
                                     </div>
                                     <FormMessage className="ml-40" />
@@ -235,37 +149,22 @@ export default function UsersForm({
                     <div className="space-y-4 px-12">
                         <FormField
                             control={form.control}
-                            name="email"
-                            render={({ field }) => (
-                                <FormItem className="space-y-1">
-                                    <div className="flex items-center gap-3">
-                                        <FormLabel className="w-40 block text-end text-base font-medium">
-                                            Email
-                                        </FormLabel>
-                                        <FormControl className="flex-1">
-                                            <Input placeholder="abel.tuter@example.com" {...field} />
-                                        </FormControl>
-                                    </div>
-                                    <FormMessage className="ml-40" />
-                                </FormItem>
-                            )}
-                        />
-
-                        <FormField
-                            control={form.control}
                             name="role"
                             render={({ field }) => (
                                 <FormItem className="space-y-1">
                                     <div className="flex items-center gap-3">
-                                        <FormLabel className="w-40 block text-end text-base font-medium">
+                                        <FormLabel className="w-40 text-end text-base font-medium">
                                             Vai trò
                                         </FormLabel>
                                         <div className="flex-1">
                                             <SelectDropdown
                                                 defaultValue={field.value}
                                                 onValueChange={field.onChange}
-                                                placeholder="Chọn một vai trò"
-                                                items={roles.map(({ label, value }) => ({ label, value }))}
+                                                placeholder="Chọn vai trò"
+                                                items={[
+                                                    { label: 'Người dùng', value: 'USER' },
+                                                    { label: 'Quản trị', value: 'ADMIN' },
+                                                ]}
                                                 className="w-full"
                                             />
                                         </div>
@@ -277,49 +176,55 @@ export default function UsersForm({
 
                         <FormField
                             control={form.control}
-                            name="password"
+                            name="gender"
                             render={({ field }) => (
                                 <FormItem className="space-y-1">
                                     <div className="flex items-center gap-3">
-                                        <FormLabel className="w-40 block text-end text-base font-medium">
-                                            Mật khẩu{isEdit ? ' (để trống nếu không đổi)' : ''}
+                                        <FormLabel className="w-40 text-end text-base font-medium">
+                                            Giới tính
                                         </FormLabel>
-                                        <FormControl className="flex-1">
-                                            <PasswordInput placeholder="VD: S3cur3P@ssw0rd" {...field} />
-                                        </FormControl>
+                                        <div className="flex-1">
+                                            <SelectDropdown
+                                                defaultValue={field.value}
+                                                onValueChange={field.onChange}
+                                                items={[
+                                                    { label: 'Nam', value: 'MALE' },
+                                                    { label: 'Nữ', value: 'FEMALE' },
+                                                    { label: 'Khác', value: 'OTHER' },
+                                                ]}
+                                                placeholder="Chọn giới tính"
+                                                className="w-full"
+                                            />
+                                        </div>
                                     </div>
                                     <FormMessage className="ml-40" />
                                 </FormItem>
                             )}
                         />
-
                         <FormField
                             control={form.control}
-                            name="confirmPassword"
+                            name='birthDate'
                             render={({ field }) => (
-                                <FormItem className="space-y-1">
+                                <FormItem className='space-y-1'>
                                     <div className="flex items-center gap-3">
-                                        <FormLabel className="w-40 block text-end text-base font-medium">
-                                            Xác nhận mật khẩu
-                                        </FormLabel>
-                                        <FormControl className="flex-1">
-                                            <PasswordInput
-                                                disabled={isEdit && !isPasswordTouched}
-                                                placeholder="VD: S3cur3P@ssw0rd"
-                                                {...field}
-                                            />
-                                        </FormControl>
+                                        <FormLabel className="w-40 text-end text-base font-medium">Ngày sinh</FormLabel>
+                                        <div className="flex-1">
+                                            <DatePicker selected={field.value} onSelect={field.onChange} />
+                                        </div>
                                     </div>
-                                    <FormMessage className="ml-40" />
+                                    <FormMessage />
                                 </FormItem>
                             )}
                         />
                     </div>
                 </form>
-            </Form>
+            </Form >
 
-            <div className="pt-3 md:col-span-2 flex gap-3">
-                <Button type="submit">Lưu thay đổi</Button>
+            {/* --- BUTTON ACTIONS --- */}
+            <div className="mt-3 pt-3 flex gap-3" >
+                <Button type="submit" onClick={form.handleSubmit(onSubmit)}>
+                    {isEdit ? 'Cập nhật' : 'Tạo mới'}
+                </Button>
                 <Button
                     type="button"
                     variant="outline"
@@ -327,7 +232,7 @@ export default function UsersForm({
                 >
                     Hủy
                 </Button>
-            </div>
+            </div >
         </>
     )
 }
