@@ -1,46 +1,41 @@
 import React, { useState, useRef } from 'react';
-import { Upload, X, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
-import { FileIcon } from 'lucide-react';
+import { Upload, X, FileIcon, AlertCircle, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { useUploadFile } from '@/hooks/api/file/mutations';
+import { useUploadFile } from '@/hooks/api/file'
 
 interface FileUploadProps {
-  value?: string | File;
-  onChange: (value: string | null) => void; // Changed to only accept string (URL) or null
+  value?: string | null; // Changed back to string (file URL) after successful upload
+  onChange: (value: string | null) => void; // Changed back to handle file URLs
   accept?: string;
   maxSize?: number;
   placeholder?: string;
   disabled?: boolean;
   className?: string;
-  autoUpload?: boolean; // New prop to control auto upload behavior
 }
 
 export function FileUpload({
-                             value,
-                             onChange,
-                             accept = '.pdf,.jpg,.jpeg,.png',
-                             maxSize = 10,
-                             placeholder = 'Chọn file để tải lên',
-                             disabled = false,
-                             className,
-                             autoUpload = true
-                           }: FileUploadProps) {
+   value,
+   onChange,
+   accept = '.pdf,.jpg,.jpeg,.png',
+   maxSize = 10,
+   placeholder = 'Chọn file để tải lên',
+   disabled = false,
+   className
+}: FileUploadProps) {
   const [isDragOver, setIsDragOver] = useState(false);
   const [uploadError, setUploadError] = useState<string>('');
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const { mutateAsync: uploadFile, isPending } = useUploadFile();
+  const { mutateAsync: uploadFile, isPending: isUploading } = useUploadFile();
 
   const handleFileSelect = async (file: File) => {
     setUploadError('');
-    setSelectedFile(file);
 
     // Validate file size
     if (file.size > maxSize * 1024 * 1024) {
       setUploadError(`Kích thước file không được vượt quá ${maxSize}MB`);
-      setSelectedFile(null);
       return;
     }
 
@@ -49,35 +44,31 @@ export function FileUpload({
     const fileExtension = '.' + file.name.split('.').pop()?.toLowerCase();
     if (!allowedTypes.includes(fileExtension)) {
       setUploadError(`Định dạng file không được hỗ trợ. Chỉ chấp nhận: ${accept}`);
-      setSelectedFile(null);
       return;
     }
 
-    // Auto upload if enabled
-    if (autoUpload) {
-      try {
-        const result = await uploadFile(file);
-        onChange(result.url || result.data?.url); // Adjust based on your API response structure
-        setSelectedFile(null); // Clear selected file after successful upload
-      } catch (error) {
-        setUploadError('Có lỗi xảy ra khi tải file lên server');
-        console.error('Upload error:', error);
-        setSelectedFile(null);
-      }
-    }
-  };
+    // Store selected file and upload
+    setSelectedFile(file);
 
-  const handleManualUpload = async () => {
-    if (!selectedFile) return;
+    // Create FormData and upload
+    const formData = new FormData();
+    formData.append('file', file);
 
     try {
-      setUploadError('');
-      const result = await uploadFile(selectedFile);
-      onChange(result.url || result.data?.url); // Adjust based on your API response structure
+      const response = await uploadFile(formData);
+      // Handle success - access the nested data structure
+      const fileUrl = response.data?.fileUrl;
+      if (fileUrl) {
+        onChange(fileUrl);
+        setSelectedFile(null);
+        setUploadError('');
+      } else {
+        setUploadError('Không thể lấy URL của file đã tải lên');
+        setSelectedFile(null);
+      }
+    } catch (error: unknown) {
+      setUploadError(error instanceof Error ? error.message : 'Tải file lên thất bại');
       setSelectedFile(null);
-    } catch (error) {
-      setUploadError('Có lỗi xảy ra khi tải file lên server');
-      console.error('Upload error:', error);
     }
   };
 
@@ -87,7 +78,7 @@ export function FileUpload({
 
     const files = Array.from(e.dataTransfer.files);
     if (files.length > 0) {
-      handleFileSelect(files[0]);
+      void handleFileSelect(files[0]);
     }
   };
 
@@ -101,9 +92,7 @@ export function FileUpload({
   };
 
   const handleClick = () => {
-    if (!isPending) {
-      fileInputRef.current?.click();
-    }
+    fileInputRef.current?.click();
   };
 
   const handleRemove = () => {
@@ -119,8 +108,9 @@ export function FileUpload({
     if (selectedFile) {
       return selectedFile.name;
     }
-    if (typeof value === 'string' && value) {
-      return value.split('/').pop() || 'File đã tải lên';
+    if (value) {
+      // Extract filename from URL
+      return value.split('/').pop() || 'Uploaded file';
     }
     return null;
   };
@@ -134,8 +124,8 @@ export function FileUpload({
 
   const fileName = getFileName();
   const fileSize = getFileSize();
-  const hasFile = !!fileName;
-  const isUploaded = typeof value === 'string' && value && !selectedFile;
+  const hasFile = !!(fileName || value);
+  const showLoading = isUploading || !!selectedFile;
 
   return (
     <div className={cn('w-full', className)}>
@@ -146,30 +136,31 @@ export function FileUpload({
         onChange={(e) => {
           const file = e.target.files?.[0];
           if (file) {
-            handleFileSelect(file);
+            void handleFileSelect(file);
           }
         }}
         className="hidden"
-        disabled={disabled || isPending}
+        disabled={disabled}
       />
 
       {!hasFile ? (
         <div
-          onClick={handleClick}
-          onDrop={handleDrop}
-          onDragOver={handleDragOver}
-          onDragLeave={handleDragLeave}
+          onClick={!isUploading ? handleClick : undefined}
+          onDrop={!isUploading ? handleDrop : undefined}
+          onDragOver={!isUploading ? handleDragOver : undefined}
+          onDragLeave={!isUploading ? handleDragLeave : undefined}
           className={cn(
-            'relative border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-colors',
-            isDragOver
+            'relative border-2 border-dashed rounded-lg p-6 text-center transition-colors',
+            !isUploading && 'cursor-pointer',
+            isDragOver && !isUploading
               ? 'border-[#2a9d8f] bg-[#2a9d8f]/5'
               : 'border-gray-300 hover:border-[#2a9d8f]',
-            (disabled || isPending) && 'opacity-50 cursor-not-allowed',
+            (disabled || isUploading) && 'opacity-50 cursor-not-allowed',
             uploadError && 'border-red-300 bg-red-50'
           )}
         >
           <div className="flex flex-col items-center gap-3">
-            {isPending ? (
+            {isUploading ? (
               <Loader2 className="h-8 w-8 text-[#2a9d8f] animate-spin" />
             ) : (
               <Upload className={cn(
@@ -179,14 +170,18 @@ export function FileUpload({
             )}
             <div>
               <p className="text-sm font-medium text-gray-700">
-                {isPending ? 'Đang tải lên...' : placeholder}
+                {isUploading ? 'Đang tải lên...' : placeholder}
               </p>
-              <p className="text-xs text-gray-500 mt-1">
-                Hoặc kéo thả file vào đây
-              </p>
-              <p className="text-xs text-gray-400 mt-1">
-                Định dạng: {accept} • Tối đa {maxSize}MB
-              </p>
+              {!isUploading && (
+                <>
+                  <p className="text-xs text-gray-500 mt-1">
+                    Hoặc kéo thả file vào đây
+                  </p>
+                  <p className="text-xs text-gray-400 mt-1">
+                    Định dạng: {accept} • Tối đa {maxSize}MB
+                  </p>
+                </>
+              )}
             </div>
           </div>
         </div>
@@ -194,10 +189,8 @@ export function FileUpload({
         <div className="border border-gray-300 rounded-lg p-4">
           <div className="flex items-center gap-3">
             <div className="flex-shrink-0">
-              {isPending ? (
+              {showLoading ? (
                 <Loader2 className="h-8 w-8 text-[#2a9d8f] animate-spin" />
-              ) : isUploaded ? (
-                <CheckCircle className="h-8 w-8 text-green-500" />
               ) : (
                 <FileIcon className="h-8 w-8 text-[#2a9d8f]" />
               )}
@@ -210,35 +203,21 @@ export function FileUpload({
               {fileSize && (
                 <p className="text-xs text-gray-500">{fileSize}</p>
               )}
-              {isPending && (
-                <p className="text-xs text-[#2a9d8f]">Đang tải lên...</p>
+              {isUploading && (
+                <p className="text-xs text-blue-600">Đang tải lên...</p>
               )}
             </div>
 
-            <div className="flex items-center gap-2">
-              {/* Manual upload button (only show if autoUpload is false and file is selected but not uploaded) */}
-              {!autoUpload && selectedFile && !isUploaded && !isPending && (
-                <Button
-                  type="button"
-                  size="sm"
-                  onClick={handleManualUpload}
-                  className="bg-[#2a9d8f] hover:bg-[#2a9d8f]/90 text-white"
-                >
-                  Tải lên
-                </Button>
-              )}
-
-              <Button
-                type="button"
-                variant="ghost"
-                size="sm"
-                onClick={handleRemove}
-                disabled={disabled || isPending}
-                className="flex-shrink-0 h-8 w-8 p-0 hover:bg-red-50 hover:text-red-600"
-              >
-                <X className="h-4 w-4" />
-              </Button>
-            </div>
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              onClick={handleRemove}
+              disabled={disabled || isUploading}
+              className="flex-shrink-0 h-8 w-8 p-0 hover:bg-red-50 hover:text-red-600"
+            >
+              <X className="h-4 w-4" />
+            </Button>
           </div>
         </div>
       )}
