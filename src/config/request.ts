@@ -5,7 +5,6 @@ const apiRequest = axios.create({
   baseURL: BASE_URL,
 });
 
-// Tạo instance riêng cho refresh token (không có interceptor)
 const refreshApiRequest = axios.create({
   baseURL: BASE_URL,
 });
@@ -43,11 +42,12 @@ apiRequest.interceptors.response.use(
           window.location.href = "/sign-in";
           return Promise.reject(error);
         }
-      } else {
-        // Không có refresh token, redirect ngay
-        localStorage.clear();
-        window.location.href = "/sign-in";
       }
+      // else {
+      //   // Không có refresh token, redirect ngay
+      //   localStorage.clear();
+      //   window.location.href = "/sign-in";
+      // }
     }
     return Promise.reject(error);
   }

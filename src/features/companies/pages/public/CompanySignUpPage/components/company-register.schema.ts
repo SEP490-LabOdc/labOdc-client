@@ -17,12 +17,16 @@ export const companySchema = z.object({
       }
     ),
   name: z.string().min(1, "Tên công ty là bắt buộc"),
-  phone: z.string().min(1, "Số điện thoại công ty là bắt buộc"),
-  businessLicenseLink: z.instanceof(File).optional().or(z.string().optional()),
+  phone: z.string()
+    .min(1, "Số điện thoại công ty là bắt buộc")
+    .regex(/^([+]?[\s0-9]+)?(\d{3}|[(]?[0-9]+[)])?([-]?[\s]?[0-9])+$/, 'Số điện thoại không hợp lệ'),
+  businessLicenseLink: z.string().min(1, "Vui lòng tải lên giấy phép kinh doanh"),
   //Personal fields
   contactPersonEmail: z.email("Email cá nhân không hợp lệ"),
   contactPersonName: z.string().min(1, "Họ và tên là bắt buộc"),
-  contactPersonPhone: z.string().min(1, "Số điện thoại là bắt buộc"),
+  contactPersonPhone: z.string()
+    .min(1, "Số điện thoại là bắt buộc")
+    .regex(/^([+]?[\s0-9]+)?(\d{3}|[(]?[0-9]+[)])?([-]?[\s]?[0-9])+$/, 'Số điện thoại không hợp lệ'),
   agreeTerm: z.boolean().refine(val => val === true, "Bạn phải đồng ý với các điều khoản")
 });
 

@@ -103,8 +103,7 @@ export function RegisterCompanyForm({
         const finalSubmitData = {
           ...submitData,
           address: addressParts,
-          businessLicenseLink: submitData.businessLicenseLink instanceof File
-            ? '' : submitData.businessLicenseLink || ''
+          businessLicenseLink: data.businessLicenseLink
         };
         await onSubmit(finalSubmitData)
     };

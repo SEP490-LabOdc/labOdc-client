@@ -3,8 +3,8 @@ import apiRequest from '@/config/request.ts'
 
 export const useUploadFile = () => {
   return useMutation({
-    mutationFn: async (file: File) => {
-      const { data } = await apiRequest.post('/api/v1/files/upload', file)
+    mutationFn: async (formData: FormData) => {
+      const { data } = await apiRequest.post('/api/v1/files/upload', formData)
 
       return data
     }
