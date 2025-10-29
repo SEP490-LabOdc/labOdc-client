@@ -34,14 +34,3 @@ export const useGetMeQuery = () => {
         enabled: !!userId,
     });
 };
-
-// export const useGetCompanyById = (id?: string) =>
-//     useQuery({
-//         queryKey: [...companyKeys.getCompanyById, id],
-//         queryFn: async () => {
-//             if (!id) throw new Error('Missing company id')
-//             const { data } = await apiRequest.get(`/api/v1/companies/${id}`)
-//             return data
-//         },
-//         enabled: !!id,
-//     });

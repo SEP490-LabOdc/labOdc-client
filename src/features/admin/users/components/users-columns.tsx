@@ -7,6 +7,7 @@ import { LongText } from '@/components/long-text'
 import { roles } from '../data/data'
 import { type User } from '../data/schema'
 import { DataTableRowActions } from './data-table-row-actions'
+import { Link } from '@tanstack/react-router'
 
 export const usersColumns: ColumnDef<User>[] = [
     {
@@ -42,7 +43,22 @@ export const usersColumns: ColumnDef<User>[] = [
         header: ({ column }) => (
             <DataTableColumnHeader column={column} title='Họ và tên' />
         ),
-        cell: ({ row }) => <LongText className='max-w-36'>{row.getValue('fullName')}</LongText>,
+        cell: ({ row }) => (
+
+
+            <LongText className='max-w-36 ps-3'>
+                {(() => {
+                    const id = row.original.id;
+                    const linkTo = `/admin/users/edit?id=${id}`
+
+                    return (
+                        <Link to={linkTo} className="hover:underline">
+                            {row.getValue('fullName')}
+                        </Link>
+                    );
+                })()}
+            </LongText>
+        ),
         meta: { className: 'w-40' },
     },
 
