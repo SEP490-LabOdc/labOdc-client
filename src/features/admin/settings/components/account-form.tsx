@@ -1,18 +1,8 @@
+import { useEffect } from 'react'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
-import { CaretSortIcon, CheckIcon } from '@radix-ui/react-icons'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { showSubmittedData } from '@/lib/show-submitted-data'
-import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
-import {
-    Command,
-    CommandEmpty,
-    CommandGroup,
-    CommandInput,
-    CommandItem,
-    CommandList,
-} from '@/components/ui/command'
 import {
     Form,
     FormControl,
@@ -23,142 +13,193 @@ import {
     FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
-} from '@/components/ui/popover'
 import { DatePicker } from '@/components/date-picker'
+import { SelectDropdown } from '@/components/select-dropdown'
+import { useGetUserById, useUpdateProfile } from '@/hooks/api/users'
+import { toast } from 'sonner'
 
-const languages = [
-    { label: 'Tiếng Anh', value: 'en' },
-    { label: 'Tiếng Việt', value: 'vi' },
-] as const
-
-const accountFormSchema = z.object({
-    name: z
-        .string()
-        .min(1, 'Please enter your name.')
-        .min(2, 'Name must be at least 2 characters.')
-        .max(30, 'Name must not be longer than 30 characters.'),
-    dob: z.date('Please select your date of birth.'),
-    language: z.string('Please select a language.'),
+// ✅ Schema khớp với API /api/v1/users/{id}/profile
+const profileSchema = z.object({
+    fullName: z.string().min(1, 'Họ và tên là bắt buộc.'),
+    phone: z.string().min(1, 'Số điện thoại là bắt buộc.'),
+    gender: z.enum(['MALE', 'FEMALE', 'OTHER']),
+    birthDate: z.date(),
+    address: z.string().min(1, 'Địa chỉ là bắt buộc.'),
+    avatarUrl: z.string().url('Avatar phải là URL hợp lệ.').optional(),
 })
 
-type AccountFormValues = z.infer<typeof accountFormSchema>
-
-// This can come from your database or API.
-const defaultValues: Partial<AccountFormValues> = {
-    name: '',
-}
+export type ProfileFormValues = z.infer<typeof profileSchema>
 
 export function AccountForm() {
-    const form = useForm<AccountFormValues>({
-        resolver: zodResolver(accountFormSchema),
-        defaultValues,
+    const userId = typeof window !== 'undefined' ? localStorage.getItem('user_id') : null
+
+    const { data: userData, isLoading, refetch } = useGetUserById(userId);
+
+    const { mutateAsync: updateProfile } = useUpdateProfile()
+
+    const form = useForm<ProfileFormValues>({
+        resolver: zodResolver(profileSchema),
+        defaultValues: {
+            fullName: '',
+            phone: '',
+            gender: 'OTHER',
+            birthDate: new Date(),
+            address: '',
+            avatarUrl: '',
+        },
     })
 
-    function onSubmit(data: AccountFormValues) {
-        showSubmittedData(data)
+    useEffect(() => {
+        if (userId) refetch()
+    }, [userId, refetch])
+
+    useEffect(() => {
+        if (userData) {
+            form.reset({
+                fullName: userData.data.fullName ?? '',
+                phone: userData.data.phone ?? '',
+                gender: userData.data.gender ?? 'OTHER',
+                birthDate: userData.data.birthDate ? new Date(userData.data.birthDate) : new Date(),
+                address: userData.data.address ?? '',
+                avatarUrl: userData.data.avatarUrl ?? '',
+            })
+        }
+    }, [userData, form])
+
+    // 🔹 Submit form để cập nhật profile
+    const onSubmit = async (values: ProfileFormValues) => {
+        if (!userId) return toast.error('Không tìm thấy ID người dùng!')
+
+        const promise = updateProfile({
+            id: userId,
+            payload: {
+                fullName: values.fullName,
+                phone: values.phone,
+                gender: values.gender,
+                birthDate: values.birthDate.toISOString().split('T')[0],
+                address: values.address,
+                avatarUrl: values.avatarUrl,
+            },
+        })
+
+        toast.promise(promise, {
+            loading: 'Đang cập nhật hồ sơ...',
+            success: 'Cập nhật hồ sơ thành công!',
+            error: 'Cập nhật thất bại, vui lòng thử lại!',
+        })
+
+        await promise
     }
+
+    if (isLoading) {
+        return <p className="text-center py-6">Đang tải dữ liệu người dùng...</p>
+    }
+
     return (
-        <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-8'>
-                <FormField
-                    control={form.control}
-                    name='name'
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Tên</FormLabel>
-                            <FormControl>
-                                <Input placeholder='Tên của bạn' {...field} />
-                            </FormControl>
-                            <FormDescription>
-                                Đây là tên sẽ được hiển thị trên hồ sơ của bạn và trong các email.
-                            </FormDescription>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-                <FormField
-                    control={form.control}
-                    name='dob'
-                    render={({ field }) => (
-                        <FormItem className='flex flex-col'>
-                            <FormLabel>Ngày sinh</FormLabel>
-                            <DatePicker selected={field.value} onSelect={field.onChange} />
-                            <FormDescription>
-                                Ngày sinh của bạn được sử dụng để tính tuổi của bạn.
-                            </FormDescription>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-                <FormField
-                    control={form.control}
-                    name='language'
-                    render={({ field }) => (
-                        <FormItem className='flex flex-col'>
-                            <FormLabel>Ngôn ngữ</FormLabel>
-                            <Popover>
-                                <PopoverTrigger asChild>
-                                    <FormControl>
-                                        <Button
-                                            variant='outline'
-                                            role='combobox'
-                                            className={cn(
-                                                'w-[200px] justify-between',
-                                                !field.value && 'text-muted-foreground'
-                                            )}
-                                        >
-                                            {field.value
-                                                ? languages.find(
-                                                    (language) => language.value === field.value
-                                                )?.label
-                                                : 'Chọn ngôn ngữ'}
-                                            <CaretSortIcon className='ms-2 h-4 w-4 shrink-0 opacity-50' />
-                                        </Button>
-                                    </FormControl>
-                                </PopoverTrigger>
-                                <PopoverContent className='w-[200px] p-0'>
-                                    <Command>
-                                        <CommandInput placeholder='Tìm kiếm ngôn ngữ...' />
-                                        <CommandEmpty>Không tìm thấy ngôn ngữ nào.</CommandEmpty>
-                                        <CommandGroup>
-                                            <CommandList>
-                                                {languages.map((language) => (
-                                                    <CommandItem
-                                                        value={language.label}
-                                                        key={language.value}
-                                                        onSelect={() => {
-                                                            form.setValue('language', language.value)
-                                                        }}
-                                                    >
-                                                        <CheckIcon
-                                                            className={cn(
-                                                                'size-4',
-                                                                language.value === field.value
-                                                                    ? 'opacity-100'
-                                                                    : 'opacity-0'
-                                                            )}
-                                                        />
-                                                        {language.label}
-                                                    </CommandItem>
-                                                ))}
-                                            </CommandList>
-                                        </CommandGroup>
-                                    </Command>
-                                </PopoverContent>
-                            </Popover>
-                            <FormDescription>
-                                Đây là ngôn ngữ sẽ được sử dụng trong bảng điều khiển.
-                            </FormDescription>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-                <Button type='submit'>Cập nhật tài khoản</Button>
-            </form>
-        </Form>
+        <div className="max-w-3xl mx-auto space-y-8">
+            <Form {...form}>
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                    <FormField
+                        control={form.control}
+                        name="fullName"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Họ và tên</FormLabel>
+                                <FormControl>
+                                    <Input placeholder="VD: Hoàng Văn Nam" {...field} />
+                                </FormControl>
+                                <FormDescription>Tên hiển thị công khai của bạn.</FormDescription>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+
+                    <FormField
+                        control={form.control}
+                        name="phone"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Số điện thoại</FormLabel>
+                                <FormControl>
+                                    <Input placeholder="+84 908 899 008" {...field} />
+                                </FormControl>
+                                <FormDescription>Dùng để liên hệ và xác minh tài khoản.</FormDescription>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+
+                    <FormField
+                        control={form.control}
+                        name="gender"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Giới tính</FormLabel>
+                                <SelectDropdown
+                                    defaultValue={field.value}
+                                    onValueChange={field.onChange}
+                                    placeholder="Chọn giới tính"
+                                    items={[
+                                        { label: 'Nam', value: 'MALE' },
+                                        { label: 'Nữ', value: 'FEMALE' },
+                                        { label: 'Khác', value: 'OTHER' },
+                                    ]}
+                                    className="w-[200px]"
+                                />
+                                <FormDescription>Chọn giới tính phù hợp của bạn.</FormDescription>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+
+                    <FormField
+                        control={form.control}
+                        name="birthDate"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Ngày sinh</FormLabel>
+                                <DatePicker selected={field.value} onSelect={field.onChange} />
+                                <FormDescription>Ngày sinh của bạn.</FormDescription>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+
+                    <FormField
+                        control={form.control}
+                        name="address"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Địa chỉ</FormLabel>
+                                <FormControl>
+                                    <Input placeholder="VD: Hà Nội" {...field} />
+                                </FormControl>
+                                <FormDescription>Nơi bạn đang sinh sống.</FormDescription>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+
+                    <FormField
+                        control={form.control}
+                        name="avatarUrl"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Ảnh đại diện (URL)</FormLabel>
+                                <FormControl>
+                                    <Input placeholder="https://..." {...field} />
+                                </FormControl>
+                                <FormDescription>Dán liên kết ảnh đại diện của bạn.</FormDescription>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+
+                    <div className="flex justify-start pb-3">
+                        <Button type="submit">Cập nhật hồ sơ</Button>
+                    </div>
+                </form>
+            </Form>
+        </div>
     )
 }
