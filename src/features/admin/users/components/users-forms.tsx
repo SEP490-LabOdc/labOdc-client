@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button'
 import {
     Form,
     FormControl,
-    FormDescription,
+    // FormDescription,
     FormField,
     FormItem,
     FormLabel,
@@ -17,6 +17,9 @@ import { Input } from '@/components/ui/input'
 import { SelectDropdown } from '@/components/select-dropdown'
 import { useNavigate } from '@tanstack/react-router'
 import { DatePicker } from '@/components/date-picker'
+import { useUpdateProfile } from '@/hooks/api/users'
+import { toast } from 'sonner'
+import { USER_STATUS_OPTIONS } from '../data/schema'
 
 // 👇 Schema xác thực cho các field có trong dữ liệu trả về
 const formSchema = z.object({
@@ -45,6 +48,9 @@ export default function UsersForm({
     const navigate = useNavigate()
     const isEdit = mode === 'edit'
 
+
+    const { mutateAsync: updateProfile } = useUpdateProfile();
+
     const form = useForm<UserForm>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -65,19 +71,33 @@ export default function UsersForm({
     }, [initialData, form])
 
     const onSubmit = async (values: UserForm) => {
+        if (!initialData?.id) return
+
+        const updatePromise = updateProfile({
+            id: initialData.id,
+            payload: {
+                fullName: values.fullName,
+                phone: values.phone,
+                gender: values.gender,
+                birthDate: values.birthDate
+                    ? values.birthDate.toISOString().split('T')[0]
+                    : undefined,
+                address: '',
+                avatarUrl: values.avatarUrl ?? undefined,
+            },
+        })
+
+        toast.promise(updatePromise, {
+            loading: 'Đang cập nhật hồ sơ...',
+            success: 'Cập nhật hồ sơ thành công!',
+            error: 'Cập nhật thất bại, vui lòng thử lại!',
+        })
+
         try {
-            const res = await fetch(
-                isEdit ? `/api/users/${initialData?.id}` : '/api/users',
-                {
-                    method: isEdit ? 'PUT' : 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(values),
-                }
-            )
-            if (!res.ok) throw new Error('Lưu thất bại.')
-            navigate({ to: '/admin/users' })
-        } catch (e: any) {
-            alert(e.message)
+            await updatePromise
+            // navigate({ to: '/admin/users' }) // Nếu cần điều hướng sau khi done
+        } catch (error) {
+            console.error('❌ Update failed:', error)
         }
     }
 
@@ -161,10 +181,7 @@ export default function UsersForm({
                                                 defaultValue={field.value}
                                                 onValueChange={field.onChange}
                                                 placeholder="Chọn vai trò"
-                                                items={[
-                                                    { label: 'Người dùng', value: 'USER' },
-                                                    { label: 'Quản trị', value: 'ADMIN' },
-                                                ]}
+                                                items={USER_STATUS_OPTIONS}
                                                 className="w-full"
                                             />
                                         </div>
