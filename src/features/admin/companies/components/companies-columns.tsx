@@ -5,7 +5,7 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { DataTableColumnHeader } from '@/components/data-table'
 import { LongText } from '@/components/long-text'
 import { callTypes } from '../data/data'
-import { type Company } from '../data/schema'
+import { COMPANY_STATUS, COMPANY_STATUS_LABEL, type Company } from '../data/schema'
 import { DataTableRowActions } from './data-table-row-actions'
 import { Link } from '@tanstack/react-router'
 
@@ -57,7 +57,7 @@ export const companiesColumns: ColumnDef<Company>[] = [
                     const id = row.original.id;
 
                     const linkTo =
-                        status === 'PENDING' || status === 'UPDATE_REQUIRED'
+                        status === COMPANY_STATUS.PENDING || status === COMPANY_STATUS.UPDATE_REQUIRED
                             ? `/admin/companies/approve?id=${id}`
                             : `/admin/companies/edit?id=${id}`;
 
@@ -140,14 +140,7 @@ export const companiesColumns: ColumnDef<Company>[] = [
             const { status } = row.original
             const badgeColor = callTypes.get(status)
 
-            const STATUS_MAP = {
-                PENDING: 'Chờ xác thực',
-                UPDATE_REQUIRED: 'Yêu cầu cập nhật',
-                APPROVED: 'Đang hoạt động',
-                DISABLED: 'Vô hiệu hóa',
-            } as const
-
-            const vietnameseStatusLabel = STATUS_MAP[status as keyof typeof STATUS_MAP]
+            const vietnameseStatusLabel = COMPANY_STATUS_LABEL[status as keyof typeof COMPANY_STATUS_LABEL]
 
             return (
                 <div className="flex space-x-2">
