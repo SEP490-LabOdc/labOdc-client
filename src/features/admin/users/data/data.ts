@@ -23,7 +23,7 @@ export const roles = [
         icon: FlaskConical,
     },
     {
-        label: 'Giám sát viên',
+        label: 'Mentor',
         value: 'SUPERVISOR',
         icon: ShieldCheck,
     },

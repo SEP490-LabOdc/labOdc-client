@@ -35,7 +35,7 @@ export type UserRole = z.infer<typeof userRoleSchema>;
 export const USER_ROLE_LABEL: Record<UserRole, string> = {
     [USER_ROLE.SYSTEM_ADMIN]: 'Quản trị hệ thống',
     [USER_ROLE.LAB_ADMIN]: 'Quản lý LabOdc',
-    [USER_ROLE.SUPERVISOR]: 'Giám sát viên',
+    [USER_ROLE.SUPERVISOR]: 'Mentor',
     [USER_ROLE.USER]: 'Sinh Viên',
     [USER_ROLE.COMPANY]: 'Doanh nghiệp',
 };
