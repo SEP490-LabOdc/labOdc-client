@@ -97,12 +97,12 @@ export const sidebarData: SidebarData = {
             },
             {
               title: 'Đang hoạt động',
-              url: `/admin/users?status=["active"]`,
+              url: `/admin/users?status=["ACTIVE"]`,
               icon: IconUserCheck,
             },
             {
               title: 'Đã ngừng hoạt động',
-              url: '/admin/users?status=["inactive"]',
+              url: '/admin/users?status=["INACTIVE"]',
               icon: IconUserOff,
             },
             {

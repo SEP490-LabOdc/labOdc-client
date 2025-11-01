@@ -13,7 +13,7 @@ import { ErrorView } from '@/components/admin/ErrorView'
 // import { UsersTable } from './components/users-table'
 // import { users } from '../data/users'
 
-const route = getRouteApi('/_authenticated/admin/users/edit/')
+const route = getRouteApi('/_authenticated/admin/users/info/')
 
 export default function EditUser() {
     const search = route.useSearch();
@@ -60,9 +60,9 @@ export default function EditUser() {
             <Main>
                 <div className='mb-2 flex flex-wrap items-center justify-between space-y-2'>
                     <div>
-                        <h2 className='text-2xl font-bold tracking-tight'>Chỉnh sửa thông tin người dùng</h2>
+                        <h2 className='text-2xl font-bold tracking-tight'>Thông tin người dùng</h2>
                         <p className='text-muted-foreground'>
-                            Thay đổi thông tin người dùng tại đây. Nhấn lưu khi bạn hoàn tất.
+                            Xem thông tin chi tiết người dùng tại đây.
                         </p>
                     </div>
                 </div>

@@ -48,7 +48,7 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
                     <DropdownMenuItem
                         onClick={() => {
                             navigate({
-                                to: '/admin/users/edit',
+                                to: '/admin/users/info',
                                 search: { id: row.original.id },
                             })
                         }}

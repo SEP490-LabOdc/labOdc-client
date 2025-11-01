@@ -49,7 +49,7 @@ export const usersColumns: ColumnDef<User>[] = [
             <LongText className='max-w-36 ps-3'>
                 {(() => {
                     const id = row.original.id;
-                    const linkTo = `/admin/users/edit?id=${id}`
+                    const linkTo = `/admin/users/info?id=${id}`
 
                     return (
                         <Link to={linkTo} className="hover:underline">
@@ -85,9 +85,6 @@ export const usersColumns: ColumnDef<User>[] = [
         ),
         cell: ({ row }) => {
             const status = row.original.status
-
-            console.log('Status:', row.original)
-            console.log('Label:', USER_STATUS_LABEL[status])
 
             return (
                 <Badge variant='outline' className={cn('capitalize border-none', callTypes.get(status))}>

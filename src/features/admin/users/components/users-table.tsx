@@ -22,8 +22,7 @@ import {
     TableRow,
 } from '@/components/ui/table'
 import { DataTablePagination, DataTableToolbar } from '@/components/data-table'
-import { roles } from '../data/data'
-import { type User } from '../data/schema'
+import { USER_ROLE_OPTIONS, USER_STATUS_OPTIONS, type User } from '../data/schema'
 import { DataTableBulkActions } from './data-table-bulk-actions'
 import { usersColumns as columns } from './users-columns'
 
@@ -108,17 +107,12 @@ export function UsersTable({ data, search, navigate }: DataTableProps) {
                     {
                         columnId: 'status',
                         title: 'Trạng thái',
-                        options: [
-                            { label: 'Đang hoạt động', value: 'active' },
-                            { label: 'Không hoạt động', value: 'inactive' },
-                            { label: 'Đã mời', value: 'invited' },
-                            { label: 'Đã tạm khóa', value: 'suspended' },
-                        ],
+                        options: USER_STATUS_OPTIONS,
                     },
                     {
                         columnId: 'role',
                         title: 'Vai trò',
-                        options: roles.map((role) => ({ ...role })),
+                        options: USER_ROLE_OPTIONS,
                     },
                 ]}
             />

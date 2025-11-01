@@ -7,7 +7,6 @@ import { Button } from '@/components/ui/button'
 import {
     Form,
     FormControl,
-    // FormDescription,
     FormField,
     FormItem,
     FormLabel,
@@ -19,21 +18,19 @@ import { useNavigate } from '@tanstack/react-router'
 import { DatePicker } from '@/components/date-picker'
 import { useUpdateProfile } from '@/hooks/api/users'
 import { toast } from 'sonner'
-import { USER_STATUS_OPTIONS } from '../data/schema'
+import { USER_ROLE_OPTIONS, USER_STATUS_OPTIONS } from '../data/schema'
 
-// 👇 Schema xác thực cho các field có trong dữ liệu trả về
+// ✅ Schema cập nhật
 const formSchema = z.object({
     fullName: z.string().min(1, 'Họ và tên là bắt buộc.'),
     email: z.string().email('Email không hợp lệ.'),
-    phone: z.string().min(1, 'Số điện thoại là bắt buộc.'),
+    phone: z.string().optional(),
     role: z.string().min(1, 'Vai trò là bắt buộc.'),
-    gender: z
-        .enum(['MALE', 'FEMALE', 'OTHER'])
-        .refine((val) => ['MALE', 'FEMALE', 'OTHER'].includes(val), {
-            message: 'Giới tính không hợp lệ.',
-        }),
-    birthDate: z.date('Please select your date of birth.').optional(),
+    gender: z.enum(['MALE', 'FEMALE', 'OTHER']).optional(),
+    birthDate: z.date().optional(),
     avatarUrl: z.string().nullable().optional(),
+    address: z.string().optional(),
+    status: z.enum(['ACTIVE', 'INACTIVE', 'INVITED', 'SUSPENDED']).optional(),
 })
 
 export type UserForm = z.infer<typeof formSchema>
@@ -47,9 +44,7 @@ export default function UsersForm({
 }): JSX.Element {
     const navigate = useNavigate()
     const isEdit = mode === 'edit'
-
-
-    const { mutateAsync: updateProfile } = useUpdateProfile();
+    const { mutateAsync: updateProfile } = useUpdateProfile()
 
     const form = useForm<UserForm>({
         resolver: zodResolver(formSchema),
@@ -61,8 +56,10 @@ export default function UsersForm({
             gender: initialData?.gender ?? 'OTHER',
             birthDate: initialData?.birthDate
                 ? new Date(initialData.birthDate)
-                : new Date(),
+                : undefined,
             avatarUrl: initialData?.avatarUrl ?? '',
+            address: initialData?.address ?? '',
+            status: initialData?.status ?? 'ACTIVE',
         },
     })
 
@@ -77,12 +74,12 @@ export default function UsersForm({
             id: initialData.id,
             payload: {
                 fullName: values.fullName,
-                phone: values.phone,
-                gender: values.gender,
+                phone: values.phone ?? '',
+                gender: values.gender ?? 'OTHER',
                 birthDate: values.birthDate
                     ? values.birthDate.toISOString().split('T')[0]
                     : undefined,
-                address: '',
+                address: values.address ?? '',
                 avatarUrl: values.avatarUrl ?? undefined,
             },
         })
@@ -95,7 +92,6 @@ export default function UsersForm({
 
         try {
             await updatePromise
-            // navigate({ to: '/admin/users' }) // Nếu cần điều hướng sau khi done
         } catch (error) {
             console.error('❌ Update failed:', error)
         }
@@ -120,7 +116,7 @@ export default function UsersForm({
                                             Họ và tên
                                         </FormLabel>
                                         <FormControl className="flex-1">
-                                            <Input placeholder="VD: Hoàng Văn Nam" {...field} />
+                                            <Input placeholder="VD: Hoàng Văn Nam" {...field} disabled />
                                         </FormControl>
                                     </div>
                                     <FormMessage className="ml-40" />
@@ -138,7 +134,7 @@ export default function UsersForm({
                                             Email
                                         </FormLabel>
                                         <FormControl className="flex-1">
-                                            <Input placeholder="hoang@example.com" {...field} />
+                                            <Input placeholder="hoang@example.com" {...field} disabled />
                                         </FormControl>
                                     </div>
                                     <FormMessage className="ml-40" />
@@ -156,7 +152,25 @@ export default function UsersForm({
                                             Số điện thoại
                                         </FormLabel>
                                         <FormControl className="flex-1">
-                                            <Input placeholder="+84..." {...field} />
+                                            <Input value={field.value ? field.value : ""} disabled />
+                                        </FormControl>
+                                    </div>
+                                    <FormMessage className="ml-40" />
+                                </FormItem>
+                            )}
+                        />
+
+                        <FormField
+                            control={form.control}
+                            name="address"
+                            render={({ field }) => (
+                                <FormItem className="space-y-1">
+                                    <div className="flex items-center gap-3">
+                                        <FormLabel className="w-40 text-end text-base font-medium">
+                                            Địa chỉ
+                                        </FormLabel>
+                                        <FormControl className="flex-1">
+                                            <Input value={field.value ? field.value : ""} disabled />
                                         </FormControl>
                                     </div>
                                     <FormMessage className="ml-40" />
@@ -181,8 +195,9 @@ export default function UsersForm({
                                                 defaultValue={field.value}
                                                 onValueChange={field.onChange}
                                                 placeholder="Chọn vai trò"
-                                                items={USER_STATUS_OPTIONS}
+                                                items={USER_ROLE_OPTIONS}
                                                 className="w-full"
+                                                disabled
                                             />
                                         </div>
                                     </div>
@@ -207,10 +222,11 @@ export default function UsersForm({
                                                 items={[
                                                     { label: 'Nam', value: 'MALE' },
                                                     { label: 'Nữ', value: 'FEMALE' },
-                                                    { label: 'Khác', value: 'OTHER' },
+                                                    { label: '', value: 'OTHER' },
                                                 ]}
                                                 placeholder="Chọn giới tính"
                                                 className="w-full"
+                                                disabled
                                             />
                                         </div>
                                     </div>
@@ -218,15 +234,56 @@ export default function UsersForm({
                                 </FormItem>
                             )}
                         />
+
                         <FormField
                             control={form.control}
-                            name='birthDate'
+                            name="status"
                             render={({ field }) => (
-                                <FormItem className='space-y-1'>
+                                <FormItem className="space-y-1">
                                     <div className="flex items-center gap-3">
-                                        <FormLabel className="w-40 text-end text-base font-medium">Ngày sinh</FormLabel>
+                                        <FormLabel className="w-40 text-end text-base font-medium">
+                                            Trạng thái
+                                        </FormLabel>
                                         <div className="flex-1">
-                                            <DatePicker selected={field.value} onSelect={field.onChange} />
+                                            <SelectDropdown
+                                                defaultValue={field.value}
+                                                onValueChange={field.onChange}
+                                                items={[
+                                                    { label: 'Hoạt động', value: 'ACTIVE' },
+                                                    { label: 'Vô hiệu hóa', value: 'INACTIVE' },
+                                                ]}
+                                                placeholder="Chọn trạng thái"
+                                                className="w-full"
+                                                disabled
+                                            />
+                                        </div>
+                                    </div>
+                                    <FormMessage className="ml-40" />
+                                </FormItem>
+                            )}
+                        />
+
+                        <FormField
+                            control={form.control}
+                            name="birthDate"
+                            render={({ field }) => (
+                                <FormItem className="space-y-1">
+                                    <div className="flex items-center gap-3">
+                                        <FormLabel className="w-40 text-end text-base font-medium">
+                                            Ngày sinh
+                                        </FormLabel>
+                                        <div className="flex-1">
+                                            {field.value ? (
+                                                <DatePicker
+                                                    selected={field.value}
+                                                    onSelect={field.onChange}
+                                                    disabled
+                                                />
+                                            ) : (
+                                                <FormControl className="flex-1">
+                                                    <Input value={""} disabled />
+                                                </FormControl>
+                                            )}
                                         </div>
                                     </div>
                                     <FormMessage />
@@ -235,10 +292,10 @@ export default function UsersForm({
                         />
                     </div>
                 </form>
-            </Form >
+            </Form>
 
             {/* --- BUTTON ACTIONS --- */}
-            <div className="mt-3 pt-3 flex gap-3" >
+            <div className="mt-3 pt-3 flex gap-3">
                 <Button type="submit" onClick={form.handleSubmit(onSubmit)}>
                     {isEdit ? 'Cập nhật' : 'Tạo mới'}
                 </Button>
@@ -249,7 +306,7 @@ export default function UsersForm({
                 >
                     Hủy
                 </Button>
-            </div >
+            </div>
         </>
     )
 }

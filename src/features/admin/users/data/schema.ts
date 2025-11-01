@@ -40,6 +40,11 @@ export const USER_ROLE_LABEL: Record<UserRole, string> = {
     [USER_ROLE.COMPANY]: 'Doanh nghiệp',
 };
 
+export const USER_ROLE_OPTIONS = Object.entries(USER_ROLE_LABEL).map(
+    ([value, label]) => ({ value, label })
+);
+
+
 export const userSchema = z.object({
     id: z.string().uuid(),
     email: z.string().email(),
