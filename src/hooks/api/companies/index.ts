@@ -1,2 +1,2 @@
 export { companyKeys } from './query-keys.ts'
-export { useGetCompanies, useGetCheckList, usePatchPendingCompany, useUpdateCompanyRegistration } from './queries.ts'
+export { useGetCompanies, useGetCheckList, usePostPendingCompany as usePatchPendingCompany, useGetCompanyChecklists, useUpdateCompanyRegistration } from './queries.ts'

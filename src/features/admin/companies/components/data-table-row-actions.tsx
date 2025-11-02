@@ -57,7 +57,7 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
                                 onClick={() => {
                                     navigate({
                                         to: '/admin/companies/edit',
-                                        search: { user: row.original },
+                                        search: { id: row.original.id },
                                     })
                                 }}
                             >

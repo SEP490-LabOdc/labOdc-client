@@ -3,16 +3,18 @@ import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Input } from '@/components/ui/input'
 import { ConfirmDialog } from '@/components/confirm-dialog'
-import { useNavigate } from '@tanstack/react-router'
 import type { Company } from '../data/schema'
 import { Textarea } from '@/components/ui/textarea'
 import { usePatchPendingCompany } from '@/hooks/api/companies'
+import { Loader2 } from 'lucide-react'
+import { useNavigate } from '@tanstack/react-router'
 
 type ChecklistItem = {
     id: string
     content: string
     required: boolean
     displayOrder: number
+    checked: boolean
 }
 
 
@@ -42,15 +44,17 @@ export default function CompanyApprovingForm({
     initialData?: CompanyWithVerification
     checkList: ChecklistTemplate
 }) {
-    const navigate = useNavigate();
     const patchPendingCompany = usePatchPendingCompany();
+    const navigate = useNavigate();
 
-    // ✅ build trạng thái từ API checklist
     const buildInitialVerification = () => {
         const state: Record<string, boolean> = {}
         checkList?.groups?.forEach((group) => {
             group.items.forEach((item) => {
-                state[item.id] = Boolean(initialData?.verification?.[item.id])
+                state[item.id] =
+                    typeof item.checked === 'boolean'
+                        ? item.checked
+                        : Boolean(initialData?.verification?.[item.id])
             })
         })
         return state
@@ -60,7 +64,9 @@ export default function CompanyApprovingForm({
         buildInitialVerification()
     )
     const [requestDialogOpen, setRequestDialogOpen] = useState(false)
-    const [requestNote, setRequestNote] = useState('')
+    const [requestNote, setRequestNote] = useState('');
+    const [loadingAction, setLoadingAction] = useState<'APPROVED' | 'UPDATE_REQUIRED' | null>(null);
+
 
     useEffect(() => {
         setVerification(buildInitialVerification())
@@ -90,7 +96,7 @@ export default function CompanyApprovingForm({
             const updated = { ...prev, [id]: checked }
             void persistVerification(updated, prev)
             return updated
-        })
+        });
     }
 
     const handleSendRequest = async ({ status }
@@ -107,6 +113,8 @@ export default function CompanyApprovingForm({
         if (!currentUserId) return;
 
         try {
+            setLoadingAction(status);
+
             const items = checkList.groups.flatMap(group =>
                 group.items.map(item => ({
                     templateItemId: item.id,
@@ -115,37 +123,31 @@ export default function CompanyApprovingForm({
                 }))
             );
 
-            if (status == 'APPROVED') {
+            const payload = {
+                id: initialData.id,
+                status,
+                templateId: checkList.id,
+                assigneeId: currentUserId,
+                notes: status === 'UPDATE_REQUIRED' ? requestNote : '',
+                items,
+            }
 
-                const payload = {
-                    id: initialData.id,
-                    status: status,
-                    templateId: checkList.id,
-                    assigneeId: currentUserId,
-                    notes: '',
-                    items,
-                }
+            if (status === 'UPDATE_REQUIRED') {
                 await patchPendingCompany.mutateAsync(payload)
-            } else if (status == 'UPDATE_REQUIRED') {
+                setRequestDialogOpen(false)
 
-                const payload = {
-                    id: initialData.id,
-                    status: status,
-                    templateId: checkList.id,
-                    assigneeId: currentUserId,
-                    notes: requestNote,
-                    items,
-                }
-                await patchPendingCompany.mutateAsync(payload);
-            } else
-                return;
+            } else {
+                await patchPendingCompany.mutateAsync(payload)
+                navigate({ to: '/admin/companies/edit?id=' + initialData.id });
+            }
 
-            //toast.success('✅ Đã gửi yêu cầu cập nhật thông tin thành công!')
-            console.log('Đã gửi yêu cầu cập nhật thông tin thành công');
-            setRequestDialogOpen(false)
+            console.log('✅ Gửi yêu cầu thành công!')
         } catch (error: any) {
             console.error('❌ PATCH company failed:', error)
             // toast.error(error?.message ?? 'Gửi yêu cầu thất bại, vui lòng thử lại!')
+        }
+        finally {
+            setLoadingAction(null);
         }
     }
 
@@ -175,7 +177,6 @@ export default function CompanyApprovingForm({
     const allChecked = uncheckedItems.length === 0
 
     const isUpdateLocked = initialData?.status === 'UPDATE_REQUIRED';
-    console.log(checkList);
 
     return (
         <>
@@ -291,7 +292,14 @@ export default function CompanyApprovingForm({
                     disabled={!allChecked || isUpdateLocked}
                     onClick={() => handleSendRequest({ status: 'APPROVED' })}
                 >
-                    Phê duyệt
+                    {loadingAction === 'APPROVED' ? (
+                        <>
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            Đang phê duyệt...
+                        </>
+                    ) : (
+                        'Phê duyệt'
+                    )}
                 </Button>
                 <Button
                     type="button"
@@ -326,7 +334,16 @@ export default function CompanyApprovingForm({
                     </div>
                 }
                 cancelBtnText="Hủy"
-                confirmText="Gửi yêu cầu"
+                confirmText={
+                    loadingAction === 'UPDATE_REQUIRED' ? (
+                        <>
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            Đang gửi...
+                        </>
+                    ) : (
+                        'Gửi yêu cầu'
+                    )
+                }
                 handleConfirm={() =>
                     handleSendRequest({
                         status: 'UPDATE_REQUIRED'

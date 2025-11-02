@@ -114,7 +114,7 @@ export function CompaniesTable({ data, search, navigate }: DataTableProps) {
                         options: [
                             { label: 'Chờ xác thực', value: 'PENDING' },
                             { label: 'Yêu cầu cập nhật', value: 'UPDATE_REQUIRED' },
-                            { label: 'Đang hoạt động', value: 'ACTIVE' },
+                            { label: 'Đang hoạt động', value: 'APPROVED' },
                             { label: 'Vô hiệu hóa', value: 'DISABLED' },
                         ],
                     },
