@@ -1,5 +1,5 @@
 import { type ButtonHTMLAttributes, forwardRef, type JSX, type ReactNode } from 'react'
-import { cva, VariantProps } from "cva";
+import { cva, type VariantProps } from "class-variance-authority";
 import { twMerge } from "tailwind-merge";
 
 type Props = {
