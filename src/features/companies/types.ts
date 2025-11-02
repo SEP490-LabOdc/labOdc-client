@@ -27,3 +27,15 @@ export type CompanyPayload = {
   contactPersonName: string;
   contactPersonPhone: string;
 }
+
+export type CompanyUpdateRegister = {
+  companyName: string,
+  companyEmail: string,
+  companyPhone: string,
+  taxCode: string,
+  address: string,
+  businessLicenseLink: string,
+  contactPersonName: string,
+  contactPersonEmail: string,
+  contactPersonPhone: string,
+}
