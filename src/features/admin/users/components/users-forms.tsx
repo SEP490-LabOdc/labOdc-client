@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import type { JSX } from 'react'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
@@ -18,7 +18,10 @@ import { useNavigate } from '@tanstack/react-router'
 import { DatePicker } from '@/components/date-picker'
 import { useUpdateProfile } from '@/hooks/api/users'
 import { toast } from 'sonner'
-import { USER_ROLE_OPTIONS, USER_STATUS_OPTIONS } from '../data/schema'
+import { USER_ROLE_OPTIONS, USER_STATUS } from '../data/schema'
+import { ConfirmDialog } from '@/components/confirm-dialog'
+import { Loader2 } from 'lucide-react'
+import { useUpdateUserRole } from '@/hooks/api/users/queries'
 
 // ✅ Schema cập nhật
 const formSchema = z.object({
@@ -45,6 +48,7 @@ export default function UsersForm({
     const navigate = useNavigate()
     const isEdit = mode === 'edit'
     const { mutateAsync: updateProfile } = useUpdateProfile()
+    const { mutateAsync: updateUserRole } = useUpdateUserRole()
 
     const form = useForm<UserForm>({
         resolver: zodResolver(formSchema),
@@ -94,6 +98,37 @@ export default function UsersForm({
             await updatePromise
         } catch (error) {
             console.error('❌ Update failed:', error)
+        }
+    }
+
+    const [isRoleModalOpen, setRoleModalOpen] = useState(false)
+    const [selectedRole, setSelectedRole] = useState(initialData?.role ?? "")
+    const [loadingAction, setLoadingAction] = useState<"UPDATE_ROLE" | null>(null)
+
+    const handleChangeRole = async () => {
+        if (!initialData?.id || !selectedRole) return
+
+        setLoadingAction("UPDATE_ROLE")
+
+        const updatePromise = updateUserRole({
+            id: initialData.id,
+            roleName: selectedRole,
+        })
+
+        toast.promise(updatePromise, {
+            loading: "Đang cập nhật vai trò...",
+            success: "Cập nhật vai trò thành công!",
+            error: "Cập nhật vai trò thất bại!",
+        })
+
+        try {
+            await updatePromise
+            form.setValue("role", selectedRole);
+            setRoleModalOpen(false);
+        } catch (error) {
+            console.error("❌ Update role failed:", error)
+        } finally {
+            setLoadingAction(null)
         }
     }
 
@@ -192,6 +227,7 @@ export default function UsersForm({
                                         </FormLabel>
                                         <div className="flex-1">
                                             <SelectDropdown
+                                                key={field.value}
                                                 defaultValue={field.value}
                                                 onValueChange={field.onChange}
                                                 placeholder="Chọn vai trò"
@@ -291,14 +327,93 @@ export default function UsersForm({
                             )}
                         />
                     </div>
+                    <ConfirmDialog
+                        open={isRoleModalOpen}
+                        onOpenChange={setRoleModalOpen}
+                        title="Đổi vai trò người dùng"
+                        desc={
+                            <div className="space-y-3">
+                                <p className="text-sm text-muted-foreground">
+                                    Chọn vai trò mới cho người dùng này. Sau khi xác nhận, hệ thống sẽ cập nhật ngay.
+                                </p>
+                            </div>
+                        }
+                        cancelBtnText="Hủy"
+                        confirmText={
+                            loadingAction === "UPDATE_ROLE" ? (
+                                <>
+                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                    Đang cập nhật...
+                                </>
+                            ) : (
+                                "Xác nhận"
+                            )
+                        }
+                        handleConfirm={handleChangeRole}
+                        disabled={!selectedRole}
+                    >
+                        <FormField
+                            control={form.control}
+                            name="role"
+                            render={({ field }) => (
+                                <FormItem className="space-y-1">
+                                    <div className="flex items-center gap-3">
+                                        <FormLabel className="w-40 text-end text-base font-medium">
+                                            Vai trò
+                                        </FormLabel>
+                                        <div className="flex-1">
+                                            <SelectDropdown
+                                                defaultValue={field.value}
+                                                onValueChange={setSelectedRole}
+                                                placeholder="Chọn vai trò"
+                                                items={USER_ROLE_OPTIONS}
+                                                className="w-full"
+                                            />
+                                        </div>
+                                    </div>
+                                    <FormMessage className="ml-40" />
+                                </FormItem>
+                            )}
+                        />
+                        <p className="text-xs text-muted-foreground italic mt-2">
+                            Vai trò hiện tại:{" "}
+                            <span className="font-medium text-foreground">{initialData?.role || "Chưa có"}</span>
+                        </p>
+                    </ConfirmDialog>
                 </form>
             </Form>
 
             {/* --- BUTTON ACTIONS --- */}
             <div className="mt-3 pt-3 flex gap-3">
-                <Button type="submit" onClick={form.handleSubmit(onSubmit)}>
+                {/* <Button type="submit" onClick={form.handleSubmit(onSubmit)}>
                     {isEdit ? 'Cập nhật' : 'Tạo mới'}
+                </Button> */}
+                <Button
+                    type="button"
+                    onClick={() => setRoleModalOpen(true)}
+                >
+                    Đổi vai trò
                 </Button>
+                {
+                    initialData?.status == USER_STATUS.ACTIVE ? (
+                        <Button
+                            type="button"
+                            onClick={form.handleSubmit(onSubmit)}
+                            variant="destructive"
+                            className=""
+                        >
+                            Vô hiệu hóa
+                        </Button>
+
+                    ) : (
+                        <Button
+                            type="button"
+                            onClick={form.handleSubmit(onSubmit)}
+                        >
+                            Kích hoạt
+                        </Button>
+                    )
+                }
                 <Button
                     type="button"
                     variant="outline"

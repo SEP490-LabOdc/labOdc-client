@@ -72,3 +72,24 @@ export const useGetMeQuery = () => {
         enabled: !!userId,
     });
 };
+
+export const useUpdateUserRole = () => {
+    return useMutation({
+        mutationFn: async ({
+            id,
+            roleName,
+        }: {
+            id: string
+            roleName: string
+        }) => {
+            const { data } = await apiRequest.put(`/api/v1/users/${id}/role`, {
+                roleName,
+            })
+            return data
+        },
+        onError: (error: any) => {
+            console.error('❌ Update role failed:', error)
+            throw error
+        },
+    })
+}
