@@ -1,6 +1,6 @@
 import { Building2, Users2, FileText } from 'lucide-react';
 import { motion } from "framer-motion";
-import { useCompanyRegister } from '@/hooks/api'
+import { useCompanyRegisterUpdate } from '@/hooks/api'
 import { useNavigate, useSearch } from '@tanstack/react-router'
 import { toast } from 'sonner'
 import type { CompanyPayload } from '@/features/companies/types.ts'
@@ -15,15 +15,16 @@ export function CompanyRegisterUpdatePage() {
 
   const companyDetail= useUpdateCompanyRegistration(token)
 
-  const { mutateAsync, isPending } = useCompanyRegister();
+  const { mutateAsync, isPending } = useCompanyRegisterUpdate(token);
 
   const handleRegisterSubmit = async (data: CompanyPayload) => {
     try {
       await mutateAsync(data);
-      await navigate({ to: '/verify-otp', search: { companyEmail: data.email } })
-      toast.success('Đăng ký công ty thành công!')
+      toast.success('Cập nhật thông tin đăng ký thành công!')
+      await navigate({ to: '/company-register-success' });
     } catch (e) {
       console.error(e)
+      toast.error("Cập nhật thông tin đăng ký thất bại. Vui lòng thử lại.")
     }
   };
 

@@ -21,12 +21,12 @@ import {
 import {
   type CompanyRegisterData, companySchema,
 } from '@/features/companies/pages/public/CompanySignUpPage/components/company-register.schema.ts'
-import type { CompanyPayload } from '@/features/companies/types.ts'
+import type { CompanyPayload, CompanyUpdateRegister } from '@/features/companies/types.ts'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { FileUpload } from '@/features/companies/pages/public/CompanySignUpPage/components/FileUpload.tsx'
 
 interface RegisterCompanyFormProps {
-  initialData?: CompanyPayload;
+  initialData?: CompanyUpdateRegister;
   submitButtonText?: string;
   onSubmit: (data: CompanyPayload) => Promise<void>;
   isLoading: boolean;
@@ -48,9 +48,9 @@ export function RegisterCompanyForm({
       resolver: zodResolver(companySchema),
       defaultValues: {
         //Company fields
-        name: initialData?.name || '',
-        email: initialData?.email || '',
-        phone: initialData?.phone || '',
+        name: initialData?.companyName || '',
+        email: initialData?.companyEmail || '',
+        phone: initialData?.companyPhone || '',
         taxCode: initialData?.taxCode || '',
         address: initialData?.address || '',
         provinceCode: '',
@@ -68,10 +68,8 @@ export function RegisterCompanyForm({
     useEffect(() => {
       if (initialData?.address && provinces.data?.length > 0) {
 
-        const { street, ward, province } = parseAddressParts(initialData?.address);
-        // Find and set province
-        const provinceCode = findProvinceCodeByName('Thành phố Hồ Chí Minh', provinces.data);
-        console.log(provinceCode);
+        const { street, province } = parseAddressParts(initialData?.address);
+        const provinceCode = findProvinceCodeByName(province, provinces.data);
         if (provinceCode) {
           setSelectedProvince(provinceCode);
           form.setValue('provinceCode', provinceCode);
@@ -85,9 +83,8 @@ export function RegisterCompanyForm({
     // Effect to set ward when wards are loaded
     useEffect(() => {
       if (initialData?.address && wards.data?.wards?.length > 0) {
-        console.log('zo nè')
         const { ward } = parseAddressParts(initialData?.address);
-        const wardCode = findWardCodeByName('Phường Bình Thạnh', wards.data.wards);
+        const wardCode = findWardCodeByName(ward, wards.data.wards);
 
         if (wardCode) {
           form.setValue('wardCode', wardCode);
@@ -98,7 +95,7 @@ export function RegisterCompanyForm({
     const handleSubmit = async (data: CompanyRegisterData) => {
         const selectedProvince = provinces.data?.find((p: IData) => p.code === parseInt(data.provinceCode));
         const selectedWard = wards.data?.wards?.find((w: IData) => w.code === parseInt(data.wardCode));
-        const addressParts = combineAddressParts(data.address, selectedProvince.name, selectedWard.name);
+        const addressParts = combineAddressParts(data.address, selectedWard.name, selectedProvince.name);
         const submitData = removeProperties(data, 'agreeTerm', 'wardCode', 'provinceCode');
         const finalSubmitData = {
           ...submitData,
@@ -182,6 +179,7 @@ export function RegisterCompanyForm({
                                                 type="email"
                                                 className="pl-10  border-gray-300 focus:border-[#2a9d8f] focus:ring-[#2a9d8f]"
                                                 placeholder='company@domain.com'
+                                                disabled={!!initialData?.companyEmail}
                                                 {...field}
                                             />
                                         </div>
