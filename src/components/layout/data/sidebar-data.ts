@@ -10,7 +10,6 @@ import {
   IconUserSearch,    // For Tất cả users
   IconUserCheck,     // For Đang hoạt động users
   IconUserStar,      // For Mentors
-  IconUserCode,      // For Sinh viên
   IconClipboardList,    // For Quản lý dự án
   IconCircleCheckFilled,// For Đã hoàn thành
   IconHistory,
@@ -18,6 +17,8 @@ import {
 } from '@tabler/icons-react'
 // import { AudioWaveform, Command, GalleryVerticalEnd } from 'lucide-react'
 import { type SidebarData } from '../types'
+import { USER_ROLE, USER_ROLE_LABEL, USER_ROLE_OPTIONS } from '@/features/admin/users/data/schema'
+import { Building2, FlaskConical, LockKeyhole, User } from 'lucide-react'
 
 export const sidebarData: SidebarData = {
   user: {
@@ -97,23 +98,38 @@ export const sidebarData: SidebarData = {
             },
             {
               title: 'Đang hoạt động',
-              url: `/admin/users?status=["active"]`,
+              url: `/admin/users?status=["ACTIVE"]`,
               icon: IconUserCheck,
             },
             {
               title: 'Đã ngừng hoạt động',
-              url: '/admin/users?status=["inactive"]',
+              url: '/admin/users?status=["INACTIVE"]',
               icon: IconUserOff,
             },
             {
-              title: 'Mentors',
-              url: '/admin/users?role=["SUPERVISOR"]',
+              title: USER_ROLE_LABEL[USER_ROLE.SYSTEM_ADMIN],
+              url: '/admin/users?role=["' + USER_ROLE.SYSTEM_ADMIN + '"]',
+              icon: LockKeyhole,
+            },
+            {
+              title: USER_ROLE_LABEL[USER_ROLE.LAB_ADMIN],
+              url: '/admin/users?role=["' + USER_ROLE.LAB_ADMIN + '"]',
+              icon: FlaskConical,
+            },
+            {
+              title: USER_ROLE_LABEL[USER_ROLE.COMPANY],
+              url: '/admin/users?role=["' + USER_ROLE.COMPANY + '"]',
+              icon: Building2,
+            },
+            {
+              title: USER_ROLE_LABEL[USER_ROLE.SUPERVISOR],
+              url: '/admin/users?role=["' + USER_ROLE.SUPERVISOR + '"]',
               icon: IconUserStar,
             },
             {
-              title: 'Sinh viên',
-              url: '/admin/users?role=["USER"]',
-              icon: IconUserCode,
+              title: USER_ROLE_LABEL[USER_ROLE.USER],
+              url: '/admin/users?role=["' + USER_ROLE.USER + '"]',
+              icon: User,
             },
           ]
         },
