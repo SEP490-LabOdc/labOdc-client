@@ -14,7 +14,7 @@ import { useAuthStore } from '@/stores/auth-store.ts'
 import { useSignIn } from '@/hooks/api/auth'
 import { jwtDecode } from 'jwt-decode'
 
-interface UserInfo {
+export interface UserInfo {
   role: string,
   userId: string,
   sub: string,

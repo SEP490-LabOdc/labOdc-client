@@ -1,13 +1,17 @@
 import AuthLayout from '../auth-layout'
-import { UserAuthForm } from './components/user-auth-form'
-import { useSearch } from '@tanstack/react-router'
+import { UserAuthForm, type UserInfo } from './components/user-auth-form'
+import { useNavigate, useSearch } from '@tanstack/react-router'
 import { useSignInWithGoogle } from '@/hooks/api'
 import { type CredentialResponse, GoogleLogin } from '@react-oauth/google'
 import { toast } from 'sonner'
+import { useAuthStore } from '@/stores/auth-store.ts'
+import { jwtDecode } from 'jwt-decode'
 
 export default function SignIn() {
     const { redirect } = useSearch({ from: '/(auth)/sign-in/' })
     const signInGoogle = useSignInWithGoogle()
+    const { auth } = useAuthStore()
+    const navigate = useNavigate()
 
     const handleSignInWithGoogleSuccess = async (credentialResponse: CredentialResponse) => {
       const idToken = credentialResponse.credential
@@ -15,6 +19,11 @@ export default function SignIn() {
         const response = await signInGoogle.mutateAsync({
           idToken: idToken
         })
+        auth.setTokens(response.data.accessToken, response.data.refreshToken)
+        const user: UserInfo = jwtDecode(response.data.accessToken)
+        localStorage.setItem('user_id', user.userId)
+        toast.success('Đăng nhập thành công!')
+        await navigate({ to: '/' })
         toast.success(response.message)
       }
     }
