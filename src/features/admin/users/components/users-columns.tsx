@@ -4,9 +4,10 @@ import { Badge } from '@/components/ui/badge'
 import { Checkbox } from '@/components/ui/checkbox'
 import { DataTableColumnHeader } from '@/components/data-table'
 import { LongText } from '@/components/long-text'
-import { roles } from '../data/data'
-import { type User } from '../data/schema'
+import { callTypes, roles } from '../data/data'
+import { USER_ROLE_LABEL, USER_STATUS_LABEL, type User } from '../data/schema'
 import { DataTableRowActions } from './data-table-row-actions'
+import { Link } from '@tanstack/react-router'
 
 export const usersColumns: ColumnDef<User>[] = [
     {
@@ -42,7 +43,22 @@ export const usersColumns: ColumnDef<User>[] = [
         header: ({ column }) => (
             <DataTableColumnHeader column={column} title='Họ và tên' />
         ),
-        cell: ({ row }) => <LongText className='max-w-36'>{row.getValue('fullName')}</LongText>,
+        cell: ({ row }) => (
+
+
+            <LongText className='max-w-36 ps-3'>
+                {(() => {
+                    const id = row.original.id;
+                    const linkTo = `/admin/users/info?id=${id}`
+
+                    return (
+                        <Link to={linkTo} className="hover:underline">
+                            {row.getValue('fullName')}
+                        </Link>
+                    );
+                })()}
+            </LongText>
+        ),
         meta: { className: 'w-40' },
     },
 
@@ -69,17 +85,10 @@ export const usersColumns: ColumnDef<User>[] = [
         ),
         cell: ({ row }) => {
             const status = row.original.status
-            const STATUS_MAP: Record<string, { label: string; color: string }> = {
-                ACTIVE: { label: 'Đang hoạt động', color: 'bg-green-500/20 text-green-700 dark:text-green-300' },
-                INACTIVE: { label: 'Không hoạt động', color: 'bg-gray-300/30 text-gray-600 dark:text-gray-400' },
-                INVITED: { label: 'Đã mời', color: 'bg-blue-500/20 text-blue-700 dark:text-blue-300' },
-                SUSPENDED: { label: 'Đã tạm khóa', color: 'bg-red-500/20 text-red-700 dark:text-red-300' },
-            }
 
-            const display = STATUS_MAP[status] ?? STATUS_MAP.INACTIVE
             return (
-                <Badge variant='outline' className={cn('capitalize border-none', display.color)}>
-                    {display.label}
+                <Badge variant='outline' className={cn('capitalize border-none', callTypes.get(status))}>
+                    {USER_STATUS_LABEL[status]}
                 </Badge>
             )
         },
@@ -96,18 +105,10 @@ export const usersColumns: ColumnDef<User>[] = [
             const role = row.original.role
             const userRole = roles.find(({ value }) => value === role)
 
-            const ROLE_MAP: Record<string, string> = {
-                SYSTEM_ADMIN: 'Quản trị viên',
-                LAB_ADMIN: 'Quản lý LabOdc',
-                SUPERVISOR: 'Giám sát viên',
-                USER: 'Sinh viên',
-                COMPANY: 'Đại diện công ty',
-            }
-
             return (
                 <div className='flex items-center gap-x-2'>
                     {userRole?.icon && <userRole.icon size={16} className='text-muted-foreground' />}
-                    <span className='text-sm'>{ROLE_MAP[role] ?? role}</span>
+                    <span className='text-sm'>{USER_ROLE_LABEL[role] ?? role}</span>
                 </div>
             )
         },

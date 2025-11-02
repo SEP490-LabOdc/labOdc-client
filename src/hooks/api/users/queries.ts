@@ -1,7 +1,45 @@
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
 import apiRequest from '@/config/request';
 import { userKeys } from './query-keys';
+
+export type UpdateProfilePayload = {
+    fullName: string
+    phone: string
+    gender: 'MALE' | 'FEMALE' | 'OTHER'
+    birthDate?: string
+    address?: string
+    avatarUrl?: string
+}
+
+export const useUpdateProfile = () => {
+    const queryClient = useQueryClient()
+
+    return useMutation({
+        mutationFn: async ({
+            id,
+            payload,
+        }: {
+            id: string
+            payload: UpdateProfilePayload
+        }) => {
+            const { data } = await apiRequest.put(`/api/v1/users/${id}/profile`, payload)
+            return data
+        },
+        onSuccess: (_data, variables) => {
+            queryClient.invalidateQueries({
+                queryKey: userKeys.getUserById(variables.id),
+            })
+            queryClient.invalidateQueries({
+                queryKey: userKeys.getUsers,
+            })
+        },
+        onError: (error: any) => {
+            console.error('❌ Update profile failed:', error)
+            throw error
+        },
+    })
+}
 
 export const fetchUserById = async (userId: string | null) => {
     const { data } = await apiRequest.get(`/api/v1/users/${userId}`)
@@ -35,13 +73,71 @@ export const useGetMeQuery = () => {
     });
 };
 
-// export const useGetCompanyById = (id?: string) =>
-//     useQuery({
-//         queryKey: [...companyKeys.getCompanyById, id],
-//         queryFn: async () => {
-//             if (!id) throw new Error('Missing company id')
-//             const { data } = await apiRequest.get(`/api/v1/companies/${id}`)
-//             return data
-//         },
-//         enabled: !!id,
-//     });
+export const useUpdateUserRole = () => {
+    return useMutation({
+        mutationFn: async ({
+            id,
+            roleName,
+        }: {
+            id: string
+            roleName: string
+        }) => {
+            const { data } = await apiRequest.put(`/api/v1/users/${id}/role`, {
+                roleName,
+            })
+            return data
+        },
+        onError: (error: any) => {
+            console.error('❌ Update role failed:', error)
+            throw error
+        },
+    })
+}
+
+export const useUpdateUserStatus = () => {
+    const queryClient = useQueryClient()
+
+    return useMutation({
+        mutationFn: async ({
+            id,
+            status,
+        }: {
+            id: string
+            status: string
+        }) => {
+            const { data } = await apiRequest.put(
+                `/api/v1/users/${id}/status`,
+                null,
+                {
+                    params: { status },
+                }
+            )
+            return data
+        },
+        onSuccess: (_data, variables) => {
+            queryClient.invalidateQueries({
+                queryKey: userKeys.getUserById(variables.id),
+            })
+            queryClient.invalidateQueries({
+                queryKey: userKeys.getUsers,
+            })
+        },
+        onError: (error: any) => {
+            console.error("❌ Update user status failed:", error)
+            throw error
+        },
+    })
+}
+
+export const useCreateUser = () => {
+    return useMutation({
+        mutationFn: async (payload: any) => {
+            const { data } = await apiRequest.post("/api/v1/users", payload)
+            return data
+        },
+        onError: (error: any) => {
+            console.error("❌ Create user failed:", error)
+            throw error
+        },
+    })
+}

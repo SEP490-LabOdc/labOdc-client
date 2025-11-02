@@ -10,7 +10,7 @@ import {
     DropdownMenuShortcut,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { type Company } from '../data/schema'
+import { COMPANY_STATUS, type Company } from '../data/schema'
 import { useCompanies } from './companies-provider'
 import { useNavigate } from '@tanstack/react-router'
 
@@ -35,7 +35,7 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align='end' className='w-[160px]'>
                     {
-                        row.original.status == 'PENDING' || row.original.status == 'UPDATE_REQUIRED' ? (
+                        row.original.status == COMPANY_STATUS.PENDING || row.original.status == COMPANY_STATUS.UPDATE_REQUIRED ? (
 
                             <DropdownMenuItem
                                 onClick={() => {

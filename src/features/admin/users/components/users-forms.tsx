@@ -1,6 +1,4 @@
-// File: components/admin/users/UsersForm.tsx
-'use client'
-import { useEffect, useMemo } from 'react'
+import { useEffect, useState } from 'react'
 import type { JSX } from 'react'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
@@ -15,61 +13,28 @@ import {
     FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { PasswordInput } from '@/components/password-input'
 import { SelectDropdown } from '@/components/select-dropdown'
-import { roles } from '../data/data'
-import { type User } from '../data/schema'
 import { useNavigate } from '@tanstack/react-router'
+import { DatePicker } from '@/components/date-picker'
+import { toast } from 'sonner'
+import { USER_ROLE_OPTIONS, USER_STATUS } from '../data/schema'
+import { ConfirmDialog } from '@/components/confirm-dialog'
+import { Loader2 } from 'lucide-react'
+import { useCreateUser, useUpdateUserRole, useUpdateUserStatus } from '@/hooks/api/users/queries'
 
-const formSchema = z
-    .object({
-        firstName: z.string().min(1, 'Tên là bắt buộc.'),
-        lastName: z.string().min(1, 'Họ là bắt buộc.'),
-        username: z.string().min(1, 'Tên đăng nhập là bắt buộc.'),
-        phoneNumber: z.string().min(1, 'Số điện thoại là bắt buộc.'),
-        email: z.email({
-            error: (iss) => (iss.input === '' ? 'Email là bắt buộc.' : undefined),
-        }),
-        password: z.string().transform((pwd) => pwd.trim()),
-        role: z.string().min(1, 'Vai trò là bắt buộc.'),
-        confirmPassword: z.string().transform((pwd) => pwd.trim()),
-        isEdit: z.boolean(),
-    })
-    .refine(
-        (data) => {
-            if (data.isEdit && !data.password) return true
-            return data.password.length > 0
-        },
-        { message: 'Mật khẩu là bắt buộc.', path: ['password'] }
-    )
-    .refine(
-        ({ isEdit, password }) => {
-            if (isEdit && !password) return true
-            return password.length >= 8
-        },
-        { message: 'Mật khẩu phải dài tối thiểu 8 ký tự.', path: ['password'] }
-    )
-    .refine(
-        ({ isEdit, password }) => {
-            if (isEdit && !password) return true
-            return /[a-z]/.test(password)
-        },
-        { message: 'Mật khẩu phải chứa ít nhất một chữ cái thường.', path: ['password'] }
-    )
-    .refine(
-        ({ isEdit, password }) => {
-            if (isEdit && !password) return true
-            return /\d/.test(password)
-        },
-        { message: 'Mật khẩu phải chứa ít nhất một số.', path: ['password'] }
-    )
-    .refine(
-        ({ isEdit, password, confirmPassword }) => {
-            if (isEdit && !password) return true
-            return password === confirmPassword
-        },
-        { message: 'Mật khẩu không khớp.', path: ['confirmPassword'] }
-    )
+// ✅ Schema cập nhật
+const formSchema = z.object({
+    fullName: z.string().min(1, 'Họ và tên là bắt buộc.'),
+    email: z.string().email('Email không hợp lệ.'),
+    phone: z.string().optional(),
+    role: z.string().min(1, 'Vai trò là bắt buộc.'),
+    gender: z.enum(['MALE', 'FEMALE', 'OTHER']).optional(),
+    birthDate: z.date().optional(),
+    avatarUrl: z.string().nullable().optional(),
+    address: z.string().optional(),
+    status: z.enum(['ACTIVE', 'INACTIVE', 'INVITED', 'SUSPENDED']).optional(),
+    password: z.string().optional(),
+})
 
 export type UserForm = z.infer<typeof formSchema>
 
@@ -78,76 +43,112 @@ export default function UsersForm({
     initialData,
 }: {
     mode: 'create' | 'edit'
-    initialData?: User
+    initialData?: Partial<UserForm> & { id?: string }
 }): JSX.Element {
     const navigate = useNavigate()
-
     const isEdit = mode === 'edit'
-
-    const defaultValues: UserForm = useMemo(
-        () =>
-            isEdit && initialData
-                ? {
-                    ...(initialData as any),
-                    password: '',
-                    confirmPassword: '',
-                    isEdit: true,
-                }
-                : {
-                    firstName: '',
-                    lastName: '',
-                    username: '',
-                    email: '',
-                    role: '',
-                    phoneNumber: '',
-                    password: '',
-                    confirmPassword: '',
-                    isEdit: false,
-                },
-        [isEdit, initialData]
-    )
+    const { mutateAsync: updateUserRole } = useUpdateUserRole();
+    const { mutateAsync: updateUserStatus } = useUpdateUserStatus();
+    const { mutateAsync: createUser } = useCreateUser();
 
     const form = useForm<UserForm>({
         resolver: zodResolver(formSchema),
-        defaultValues,
+        defaultValues: {
+            fullName: initialData?.fullName ?? '',
+            email: initialData?.email ?? '',
+            phone: initialData?.phone ?? '',
+            role: initialData?.role ?? '',
+            gender: initialData?.gender ?? 'OTHER',
+            birthDate: initialData?.birthDate
+                ? new Date(initialData.birthDate)
+                : undefined,
+            avatarUrl: initialData?.avatarUrl ?? '',
+            address: initialData?.address ?? '',
+            status: initialData?.status ?? 'ACTIVE',
+            password: '',
+        },
     })
-    // Khi initialData đến trễ (trang edit), đồng bộ vào form
-    useEffect(() => {
-        if (isEdit && initialData) {
-            form.reset(defaultValues)
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isEdit, initialData])
 
-    const onSubmit: any = async (values: UserForm) => {
-        const payload: any = {
-            firstName: values.firstName,
-            lastName: values.lastName,
-            username: values.username,
-            email: values.email,
-            phoneNumber: values.phoneNumber,
-            role: values.role,
-        }
-        if (!isEdit || values.password) {
-            payload.password = values.password
-        }
+    useEffect(() => {
+        if (initialData) form.reset(initialData)
+    }, [initialData, form])
+
+    const onSubmit = async (values: UserForm) => {
+        // Gọi API tạo user
+        const createPromise = createUser(values)
+
+        toast.promise(createPromise, {
+            loading: 'Đang tạo người dùng...',
+            success: 'Tạo người dùng thành công!',
+            error: 'Tạo người dùng thất bại!',
+        })
 
         try {
-            const res = await fetch(isEdit ? `/api/users/${(initialData as any)?.id}` : '/api/users', {
-                method: isEdit ? 'PUT' : 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload),
-            })
-            if (!res.ok) throw new Error('Lưu thất bại')
+            await createPromise
             navigate({ to: '/admin/users' })
-        } catch (e: any) {
-            // Bạn có thể thay bằng toast UI của bạn
-            alert(e.message);
-            navigate({ to: '/admin/users' });
+        } catch (error) {
+            console.error('❌ Create failed:', error)
         }
     }
 
-    const isPasswordTouched = !!form.formState.dirtyFields.password
+    const [isRoleModalOpen, setRoleModalOpen] = useState(false)
+    const [selectedRole, setSelectedRole] = useState(initialData?.role ?? "")
+    const [loadingAction, setLoadingAction] = useState<"UPDATE_ROLE" | null>(null)
+
+    const handleChangeRole = async () => {
+        if (!initialData?.id || !selectedRole) return
+
+        setLoadingAction("UPDATE_ROLE")
+
+        const updatePromise = updateUserRole({
+            id: initialData.id,
+            roleName: selectedRole,
+        })
+
+        toast.promise(updatePromise, {
+            loading: "Đang cập nhật vai trò...",
+            success: "Cập nhật vai trò thành công!",
+            error: "Cập nhật vai trò thất bại!",
+        })
+
+        try {
+            await updatePromise
+            form.setValue("role", selectedRole);
+            setRoleModalOpen(false);
+        } catch (error) {
+            console.error("❌ Update role failed:", error)
+        } finally {
+            setLoadingAction(null)
+        }
+    }
+
+    const handleToggleStatus = async () => {
+        if (!initialData?.id) return
+
+        const newStatus =
+            initialData.status === USER_STATUS.ACTIVE ? USER_STATUS.INACTIVE : USER_STATUS.ACTIVE
+
+        const updatePromise = updateUserStatus({
+            id: initialData.id,
+            status: newStatus,
+        })
+
+        toast.promise(updatePromise, {
+            loading: "Đang cập nhật trạng thái...",
+            success:
+                newStatus === USER_STATUS.ACTIVE
+                    ? "Tài khoản đã được kích hoạt lại!"
+                    : "Tài khoản đã bị vô hiệu hóa!",
+            error: "Cập nhật trạng thái thất bại!",
+        })
+
+        try {
+            await updatePromise
+            form.setValue("status", newStatus)
+        } catch (error) {
+            console.error("❌ Update status failed:", error)
+        }
+    }
 
     return (
         <>
@@ -160,15 +161,15 @@ export default function UsersForm({
                     <div className="space-y-4 px-12">
                         <FormField
                             control={form.control}
-                            name="firstName"
+                            name="fullName"
                             render={({ field }) => (
                                 <FormItem className="space-y-1">
                                     <div className="flex items-center gap-3">
-                                        <FormLabel className="w-40 block text-end text-base font-medium">
-                                            Tên
+                                        <FormLabel className="w-40 text-end text-base font-medium">
+                                            Họ và tên
                                         </FormLabel>
                                         <FormControl className="flex-1">
-                                            <Input placeholder="John" autoComplete="off" {...field} />
+                                            <Input placeholder="VD: Hoàng Văn Nam" {...field} disabled={isEdit} />
                                         </FormControl>
                                     </div>
                                     <FormMessage className="ml-40" />
@@ -176,74 +177,17 @@ export default function UsersForm({
                             )}
                         />
 
-                        <FormField
-                            control={form.control}
-                            name="lastName"
-                            render={({ field }) => (
-                                <FormItem className="space-y-1">
-                                    <div className="flex items-center gap-3">
-                                        <FormLabel className="w-40 block text-end text-base font-medium">
-                                            Họ
-                                        </FormLabel>
-                                        <FormControl className="flex-1">
-                                            <Input placeholder="Doe" autoComplete="off" {...field} />
-                                        </FormControl>
-                                    </div>
-                                    <FormMessage className="ml-40" />
-                                </FormItem>
-                            )}
-                        />
-
-                        <FormField
-                            control={form.control}
-                            name="username"
-                            render={({ field }) => (
-                                <FormItem className="space-y-1">
-                                    <div className="flex items-center gap-3">
-                                        <FormLabel className="w-40 block text-end text-base font-medium">
-                                            Tên đăng nhập
-                                        </FormLabel>
-                                        <FormControl className="flex-1">
-                                            <Input placeholder="abel.tuter" {...field} />
-                                        </FormControl>
-                                    </div>
-                                    <FormMessage className="ml-40" />
-                                </FormItem>
-                            )}
-                        />
-
-                        <FormField
-                            control={form.control}
-                            name="phoneNumber"
-                            render={({ field }) => (
-                                <FormItem className="space-y-1">
-                                    <div className="flex items-center gap-3">
-                                        <FormLabel className="w-40 block text-end text-base font-medium">
-                                            Số điện thoại
-                                        </FormLabel>
-                                        <FormControl className="flex-1">
-                                            <Input placeholder="+1 234 567 890" {...field} />
-                                        </FormControl>
-                                    </div>
-                                    <FormMessage className="ml-40" />
-                                </FormItem>
-                            )}
-                        />
-                    </div>
-
-                    {/* ===== CỘT PHẢI ===== */}
-                    <div className="space-y-4 px-12">
                         <FormField
                             control={form.control}
                             name="email"
                             render={({ field }) => (
                                 <FormItem className="space-y-1">
                                     <div className="flex items-center gap-3">
-                                        <FormLabel className="w-40 block text-end text-base font-medium">
+                                        <FormLabel className="w-40 text-end text-base font-medium">
                                             Email
                                         </FormLabel>
                                         <FormControl className="flex-1">
-                                            <Input placeholder="abel.tuter@example.com" {...field} />
+                                            <Input placeholder="hoang@example.com" {...field} disabled={isEdit} />
                                         </FormControl>
                                     </div>
                                     <FormMessage className="ml-40" />
@@ -253,20 +197,85 @@ export default function UsersForm({
 
                         <FormField
                             control={form.control}
+                            name="phone"
+                            render={({ field }) => (
+                                <FormItem className="space-y-1">
+                                    <div className="flex items-center gap-3">
+                                        <FormLabel className="w-40 text-end text-base font-medium">
+                                            Số điện thoại
+                                        </FormLabel>
+                                        <FormControl className="flex-1">
+                                            <Input {...field} disabled={isEdit} />
+                                        </FormControl>
+                                    </div>
+                                    <FormMessage className="ml-40" />
+                                </FormItem>
+                            )}
+                        />
+
+                        <FormField
+                            control={form.control}
+                            name="address"
+                            render={({ field }) => (
+                                <FormItem className="space-y-1">
+                                    <div className="flex items-center gap-3">
+                                        <FormLabel className="w-40 text-end text-base font-medium">
+                                            Địa chỉ
+                                        </FormLabel>
+                                        <FormControl className="flex-1">
+                                            <Input {...field} disabled={isEdit} />
+                                        </FormControl>
+                                    </div>
+                                    <FormMessage className="ml-40" />
+                                </FormItem>
+                            )}
+                        />
+
+                        {!isEdit && (
+                            <FormField
+                                control={form.control}
+                                name="password"
+                                render={({ field }) => (
+                                    <FormItem className="space-y-1">
+                                        <div className="flex items-center gap-3">
+                                            <FormLabel className="w-40 text-end text-base font-medium">
+                                                Mật khẩu
+                                            </FormLabel>
+                                            <FormControl className="flex-1">
+                                                <Input
+                                                    type="password"
+                                                    placeholder="Nhập mật khẩu"
+                                                    {...field}
+                                                />
+                                            </FormControl>
+                                        </div>
+                                        <FormMessage className="ml-40" />
+                                    </FormItem>
+                                )}
+                            />
+                        )}
+                    </div>
+
+                    {/* ===== CỘT PHẢI ===== */}
+                    <div className="space-y-4 px-12">
+                        <FormField
+                            control={form.control}
                             name="role"
                             render={({ field }) => (
                                 <FormItem className="space-y-1">
                                     <div className="flex items-center gap-3">
-                                        <FormLabel className="w-40 block text-end text-base font-medium">
+                                        <FormLabel className="w-40 text-end text-base font-medium">
                                             Vai trò
                                         </FormLabel>
                                         <div className="flex-1">
                                             <SelectDropdown
+                                                key={field.value}
                                                 defaultValue={field.value}
                                                 onValueChange={field.onChange}
-                                                placeholder="Chọn một vai trò"
-                                                items={roles.map(({ label, value }) => ({ label, value }))}
+                                                placeholder="Chọn vai trò"
+                                                items={USER_ROLE_OPTIONS}
                                                 className="w-full"
+                                                disabled={isEdit}
                                             />
                                         </div>
                                     </div>
@@ -277,16 +286,27 @@ export default function UsersForm({
 
                         <FormField
                             control={form.control}
-                            name="password"
+                            name="gender"
                             render={({ field }) => (
                                 <FormItem className="space-y-1">
                                     <div className="flex items-center gap-3">
-                                        <FormLabel className="w-40 block text-end text-base font-medium">
-                                            Mật khẩu{isEdit ? ' (để trống nếu không đổi)' : ''}
+                                        <FormLabel className="w-40 text-end text-base font-medium">
+                                            Giới tính
                                         </FormLabel>
-                                        <FormControl className="flex-1">
-                                            <PasswordInput placeholder="VD: S3cur3P@ssw0rd" {...field} />
-                                        </FormControl>
+                                        <div className="flex-1">
+                                            <SelectDropdown
+                                                defaultValue={field.value}
+                                                onValueChange={field.onChange}
+                                                items={[
+                                                    { label: 'Nam', value: 'MALE' },
+                                                    { label: 'Nữ', value: 'FEMALE' },
+                                                    { label: '', value: 'OTHER' },
+                                                ]}
+                                                placeholder="Chọn giới tính"
+                                                className="w-full"
+                                                disabled={isEdit}
+                                            />
+                                        </div>
                                     </div>
                                     <FormMessage className="ml-40" />
                                 </FormItem>
@@ -295,31 +315,155 @@ export default function UsersForm({
 
                         <FormField
                             control={form.control}
-                            name="confirmPassword"
+                            name="status"
                             render={({ field }) => (
                                 <FormItem className="space-y-1">
                                     <div className="flex items-center gap-3">
-                                        <FormLabel className="w-40 block text-end text-base font-medium">
-                                            Xác nhận mật khẩu
+                                        <FormLabel className="w-40 text-end text-base font-medium">
+                                            Trạng thái
                                         </FormLabel>
-                                        <FormControl className="flex-1">
-                                            <PasswordInput
-                                                disabled={isEdit && !isPasswordTouched}
-                                                placeholder="VD: S3cur3P@ssw0rd"
-                                                {...field}
+                                        <div className="flex-1">
+                                            <SelectDropdown
+                                                key={field.value}
+                                                defaultValue={field.value}
+                                                onValueChange={field.onChange}
+                                                items={[
+                                                    { label: 'Hoạt động', value: 'ACTIVE' },
+                                                    { label: 'Vô hiệu hóa', value: 'INACTIVE' },
+                                                ]}
+                                                placeholder="Chọn trạng thái"
+                                                className="w-full"
+                                                disabled={isEdit}
                                             />
-                                        </FormControl>
+                                        </div>
                                     </div>
                                     <FormMessage className="ml-40" />
                                 </FormItem>
                             )}
                         />
+
+                        <FormField
+                            control={form.control}
+                            name="birthDate"
+                            render={({ field }) => (
+                                <FormItem className="space-y-1">
+                                    <div className="flex items-center gap-3">
+                                        <FormLabel className="w-40 text-end text-base font-medium">
+                                            Ngày sinh
+                                        </FormLabel>
+                                        <div className="flex-1">
+                                            {(!isEdit) || (isEdit && field.value) ? (
+                                                <DatePicker
+                                                    selected={field.value}
+                                                    onSelect={field.onChange}
+                                                    disabled={isEdit}
+                                                />
+                                            ) : (
+                                                <FormControl className="flex-1">
+                                                    <Input value={""} disabled />
+                                                </FormControl>
+                                            )}
+                                        </div>
+                                    </div>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
                     </div>
+                    <ConfirmDialog
+                        open={isRoleModalOpen}
+                        onOpenChange={setRoleModalOpen}
+                        title="Đổi vai trò người dùng"
+                        desc={
+                            <div className="space-y-3">
+                                <p className="text-sm text-muted-foreground">
+                                    Chọn vai trò mới cho người dùng này. Sau khi xác nhận, hệ thống sẽ cập nhật ngay.
+                                </p>
+                            </div>
+                        }
+                        cancelBtnText="Hủy"
+                        confirmText={
+                            loadingAction === "UPDATE_ROLE" ? (
+                                <>
+                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                    Đang cập nhật...
+                                </>
+                            ) : (
+                                "Xác nhận"
+                            )
+                        }
+                        handleConfirm={handleChangeRole}
+                        disabled={!selectedRole}
+                    >
+                        <FormField
+                            control={form.control}
+                            name="role"
+                            render={({ field }) => (
+                                <FormItem className="space-y-1">
+                                    <div className="flex items-center gap-3">
+                                        <FormLabel className="w-40 text-end text-base font-medium">
+                                            Vai trò
+                                        </FormLabel>
+                                        <div className="flex-1">
+                                            <SelectDropdown
+                                                defaultValue={field.value}
+                                                onValueChange={setSelectedRole}
+                                                placeholder="Chọn vai trò"
+                                                items={USER_ROLE_OPTIONS}
+                                                className="w-full"
+                                            />
+                                        </div>
+                                    </div>
+                                    <FormMessage className="ml-40" />
+                                </FormItem>
+                            )}
+                        />
+                        <p className="text-xs text-muted-foreground italic mt-2">
+                            Vai trò hiện tại:{" "}
+                            <span className="font-medium text-foreground">{initialData?.role || "Chưa có"}</span>
+                        </p>
+                    </ConfirmDialog>
                 </form>
             </Form>
 
-            <div className="pt-3 md:col-span-2 flex gap-3">
-                <Button type="submit">Lưu thay đổi</Button>
+            {/* --- BUTTON ACTIONS --- */}
+            <div className="mt-3 pt-3 flex gap-3">
+                {isEdit && (
+                    <>
+                        <Button
+                            type="button"
+                            onClick={() => setRoleModalOpen(true)}
+                        >
+                            Đổi vai trò
+                        </Button>
+
+                        {initialData?.status === USER_STATUS.ACTIVE ? (
+                            <Button
+                                type="button"
+                                variant="destructive"
+                                onClick={handleToggleStatus}
+                            >
+                                Vô hiệu hóa
+                            </Button>
+                        ) : (
+                            <Button
+                                type="button"
+                                onClick={handleToggleStatus}
+                            >
+                                Kích hoạt
+                            </Button>
+                        )}
+                    </>
+                )}
+
+                {
+                    !isEdit && (
+                        <Button type="submit" onClick={form.handleSubmit(onSubmit)}>
+                            Thêm
+                        </Button>
+                    )
+                }
+
                 <Button
                     type="button"
                     variant="outline"

@@ -1,13 +1,24 @@
 import { z } from 'zod'
 
-// Enum status
-export const companyStatusSchema = z.union([
-    z.literal('PENDING'),
-    z.literal('UPDATE_REQUIRED'),
-    z.literal('APPROVED'),
-    z.literal('DISABLED'),
-])
-export type CompanyStatus = z.infer<typeof companyStatusSchema>
+export const COMPANY_STATUS = {
+    PENDING: 'PENDING',
+    UPDATE_REQUIRED: 'UPDATE_REQUIRED',
+    APPROVED: 'APPROVED',
+    DISABLED: 'DISABLED',
+} as const;
+
+export const COMPANY_STATUS_LABEL: Record<CompanyStatus, string> = {
+    [COMPANY_STATUS.PENDING]: 'Chờ duyệt',
+    [COMPANY_STATUS.UPDATE_REQUIRED]: 'Cần cập nhật',
+    [COMPANY_STATUS.APPROVED]: 'Đã duyệt',
+    [COMPANY_STATUS.DISABLED]: 'Ngừng hoạt động',
+};
+
+export const COMPANY_STATUS_OPTIONS = Object.entries(COMPANY_STATUS_LABEL).map(
+    ([value, label]) => ({ value, label })
+);
+export const companyStatusSchema = z.enum(COMPANY_STATUS);
+export type CompanyStatus = z.infer<typeof companyStatusSchema>;
 
 // Schema Company
 export const companySchema = z.object({

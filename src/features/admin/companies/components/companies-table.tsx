@@ -22,7 +22,7 @@ import {
     TableRow,
 } from '@/components/ui/table'
 import { DataTablePagination, DataTableToolbar } from '@/components/data-table'
-import { type Company } from '../data/schema'
+import { COMPANY_STATUS_OPTIONS, type Company } from '../data/schema'
 //import { DataTableBulkActions } from './data-table-bulk-actions'
 import { companiesColumns as columns } from './companies-columns'
 import { DataTableBulkActions } from './data-table-bulk-action'
@@ -111,12 +111,7 @@ export function CompaniesTable({ data, search, navigate }: DataTableProps) {
                     {
                         columnId: 'status',
                         title: 'Trạng thái',
-                        options: [
-                            { label: 'Chờ xác thực', value: 'PENDING' },
-                            { label: 'Yêu cầu cập nhật', value: 'UPDATE_REQUIRED' },
-                            { label: 'Đang hoạt động', value: 'APPROVED' },
-                            { label: 'Vô hiệu hóa', value: 'DISABLED' },
-                        ],
+                        options: COMPANY_STATUS_OPTIONS,
                     },
                 ]}
             />

@@ -1,6 +1,6 @@
 import { DotsHorizontalIcon } from '@radix-ui/react-icons'
 import { type Row } from '@tanstack/react-table'
-import { Trash2, UserPen } from 'lucide-react'
+import { Trash2, Search } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
     DropdownMenu,
@@ -34,28 +34,17 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align='end' className='w-[160px]'>
-                    {/* <DropdownMenuItem
-                        onClick={() => {
-                            setCurrentRow(row.original)
-                            setOpen('edit')
-                        }}
-                    >
-                        Chỉnh sửa
-                        <DropdownMenuShortcut>
-                            <UserPen size={16} />
-                        </DropdownMenuShortcut>
-                    </DropdownMenuItem> */}
                     <DropdownMenuItem
                         onClick={() => {
                             navigate({
-                                to: '/admin/users/edit',
-                                search: { user: row.original },
+                                to: '/admin/users/info',
+                                search: { id: row.original.id },
                             })
                         }}
                     >
-                        Chỉnh sửa
+                        Thông tin
                         <DropdownMenuShortcut>
-                            <UserPen size={16} />
+                            <Search size={16} />
                         </DropdownMenuShortcut>
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
