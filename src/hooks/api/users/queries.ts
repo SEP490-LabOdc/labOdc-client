@@ -128,3 +128,16 @@ export const useUpdateUserStatus = () => {
         },
     })
 }
+
+export const useCreateUser = () => {
+    return useMutation({
+        mutationFn: async (payload: any) => {
+            const { data } = await apiRequest.post("/api/v1/users", payload)
+            return data
+        },
+        onError: (error: any) => {
+            console.error("❌ Create user failed:", error)
+            throw error
+        },
+    })
+}

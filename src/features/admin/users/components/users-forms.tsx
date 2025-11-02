@@ -16,12 +16,11 @@ import { Input } from '@/components/ui/input'
 import { SelectDropdown } from '@/components/select-dropdown'
 import { useNavigate } from '@tanstack/react-router'
 import { DatePicker } from '@/components/date-picker'
-import { useUpdateProfile } from '@/hooks/api/users'
 import { toast } from 'sonner'
 import { USER_ROLE_OPTIONS, USER_STATUS } from '../data/schema'
 import { ConfirmDialog } from '@/components/confirm-dialog'
 import { Loader2 } from 'lucide-react'
-import { useUpdateUserRole, useUpdateUserStatus } from '@/hooks/api/users/queries'
+import { useCreateUser, useUpdateUserRole, useUpdateUserStatus } from '@/hooks/api/users/queries'
 
 // ✅ Schema cập nhật
 const formSchema = z.object({
@@ -34,6 +33,7 @@ const formSchema = z.object({
     avatarUrl: z.string().nullable().optional(),
     address: z.string().optional(),
     status: z.enum(['ACTIVE', 'INACTIVE', 'INVITED', 'SUSPENDED']).optional(),
+    password: z.string().optional(),
 })
 
 export type UserForm = z.infer<typeof formSchema>
@@ -47,9 +47,9 @@ export default function UsersForm({
 }): JSX.Element {
     const navigate = useNavigate()
     const isEdit = mode === 'edit'
-    const { mutateAsync: updateProfile } = useUpdateProfile();
     const { mutateAsync: updateUserRole } = useUpdateUserRole();
     const { mutateAsync: updateUserStatus } = useUpdateUserStatus();
+    const { mutateAsync: createUser } = useCreateUser();
 
     const form = useForm<UserForm>({
         resolver: zodResolver(formSchema),
@@ -65,6 +65,7 @@ export default function UsersForm({
             avatarUrl: initialData?.avatarUrl ?? '',
             address: initialData?.address ?? '',
             status: initialData?.status ?? 'ACTIVE',
+            password: '',
         },
     })
 
@@ -73,32 +74,20 @@ export default function UsersForm({
     }, [initialData, form])
 
     const onSubmit = async (values: UserForm) => {
-        if (!initialData?.id) return
+        // Gọi API tạo user
+        const createPromise = createUser(values)
 
-        const updatePromise = updateProfile({
-            id: initialData.id,
-            payload: {
-                fullName: values.fullName,
-                phone: values.phone ?? '',
-                gender: values.gender ?? 'OTHER',
-                birthDate: values.birthDate
-                    ? values.birthDate.toISOString().split('T')[0]
-                    : undefined,
-                address: values.address ?? '',
-                avatarUrl: values.avatarUrl ?? undefined,
-            },
-        })
-
-        toast.promise(updatePromise, {
-            loading: 'Đang cập nhật hồ sơ...',
-            success: 'Cập nhật hồ sơ thành công!',
-            error: 'Cập nhật thất bại, vui lòng thử lại!',
+        toast.promise(createPromise, {
+            loading: 'Đang tạo người dùng...',
+            success: 'Tạo người dùng thành công!',
+            error: 'Tạo người dùng thất bại!',
         })
 
         try {
-            await updatePromise
+            await createPromise
+            navigate({ to: '/admin/users' })
         } catch (error) {
-            console.error('❌ Update failed:', error)
+            console.error('❌ Create failed:', error)
         }
     }
 
@@ -180,7 +169,7 @@ export default function UsersForm({
                                             Họ và tên
                                         </FormLabel>
                                         <FormControl className="flex-1">
-                                            <Input placeholder="VD: Hoàng Văn Nam" {...field} disabled />
+                                            <Input placeholder="VD: Hoàng Văn Nam" {...field} disabled={isEdit} />
                                         </FormControl>
                                     </div>
                                     <FormMessage className="ml-40" />
@@ -198,7 +187,7 @@ export default function UsersForm({
                                             Email
                                         </FormLabel>
                                         <FormControl className="flex-1">
-                                            <Input placeholder="hoang@example.com" {...field} disabled />
+                                            <Input placeholder="hoang@example.com" {...field} disabled={isEdit} />
                                         </FormControl>
                                     </div>
                                     <FormMessage className="ml-40" />
@@ -216,7 +205,7 @@ export default function UsersForm({
                                             Số điện thoại
                                         </FormLabel>
                                         <FormControl className="flex-1">
-                                            <Input value={field.value ? field.value : ""} disabled />
+                                            <Input {...field} disabled={isEdit} />
                                         </FormControl>
                                     </div>
                                     <FormMessage className="ml-40" />
@@ -234,13 +223,37 @@ export default function UsersForm({
                                             Địa chỉ
                                         </FormLabel>
                                         <FormControl className="flex-1">
-                                            <Input value={field.value ? field.value : ""} disabled />
+                                            <Input {...field} disabled={isEdit} />
                                         </FormControl>
                                     </div>
                                     <FormMessage className="ml-40" />
                                 </FormItem>
                             )}
                         />
+
+                        {!isEdit && (
+                            <FormField
+                                control={form.control}
+                                name="password"
+                                render={({ field }) => (
+                                    <FormItem className="space-y-1">
+                                        <div className="flex items-center gap-3">
+                                            <FormLabel className="w-40 text-end text-base font-medium">
+                                                Mật khẩu
+                                            </FormLabel>
+                                            <FormControl className="flex-1">
+                                                <Input
+                                                    type="password"
+                                                    placeholder="Nhập mật khẩu"
+                                                    {...field}
+                                                />
+                                            </FormControl>
+                                        </div>
+                                        <FormMessage className="ml-40" />
+                                    </FormItem>
+                                )}
+                            />
+                        )}
                     </div>
 
                     {/* ===== CỘT PHẢI ===== */}
@@ -262,7 +275,7 @@ export default function UsersForm({
                                                 placeholder="Chọn vai trò"
                                                 items={USER_ROLE_OPTIONS}
                                                 className="w-full"
-                                                disabled
+                                                disabled={isEdit}
                                             />
                                         </div>
                                     </div>
@@ -291,7 +304,7 @@ export default function UsersForm({
                                                 ]}
                                                 placeholder="Chọn giới tính"
                                                 className="w-full"
-                                                disabled
+                                                disabled={isEdit}
                                             />
                                         </div>
                                     </div>
@@ -320,7 +333,7 @@ export default function UsersForm({
                                                 ]}
                                                 placeholder="Chọn trạng thái"
                                                 className="w-full"
-                                                disabled
+                                                disabled={isEdit}
                                             />
                                         </div>
                                     </div>
@@ -339,11 +352,11 @@ export default function UsersForm({
                                             Ngày sinh
                                         </FormLabel>
                                         <div className="flex-1">
-                                            {field.value ? (
+                                            {(!isEdit) || (isEdit && field.value) ? (
                                                 <DatePicker
                                                     selected={field.value}
                                                     onSelect={field.onChange}
-                                                    disabled
+                                                    disabled={isEdit}
                                                 />
                                             ) : (
                                                 <FormControl className="flex-1">
@@ -415,33 +428,42 @@ export default function UsersForm({
 
             {/* --- BUTTON ACTIONS --- */}
             <div className="mt-3 pt-3 flex gap-3">
-                {/* <Button type="submit" onClick={form.handleSubmit(onSubmit)}>
-                    {isEdit ? 'Cập nhật' : 'Tạo mới'}
-                </Button> */}
-                <Button
-                    type="button"
-                    onClick={() => setRoleModalOpen(true)}
-                >
-                    Đổi vai trò
-                </Button>
-                {
-                    initialData?.status == USER_STATUS.ACTIVE ? (
+                {isEdit && (
+                    <>
                         <Button
                             type="button"
-                            variant="destructive"
-                            onClick={handleToggleStatus}
+                            onClick={() => setRoleModalOpen(true)}
                         >
-                            Vô hiệu hóa
+                            Đổi vai trò
                         </Button>
-                    ) : (
-                        <Button
-                            type="button"
-                            onClick={handleToggleStatus}
-                        >
-                            Kích hoạt
+
+                        {initialData?.status === USER_STATUS.ACTIVE ? (
+                            <Button
+                                type="button"
+                                variant="destructive"
+                                onClick={handleToggleStatus}
+                            >
+                                Vô hiệu hóa
+                            </Button>
+                        ) : (
+                            <Button
+                                type="button"
+                                onClick={handleToggleStatus}
+                            >
+                                Kích hoạt
+                            </Button>
+                        )}
+                    </>
+                )}
+
+                {
+                    !isEdit && (
+                        <Button type="submit" onClick={form.handleSubmit(onSubmit)}>
+                            Thêm
                         </Button>
                     )
                 }
+
                 <Button
                     type="button"
                     variant="outline"
