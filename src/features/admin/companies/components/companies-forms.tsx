@@ -35,7 +35,7 @@ const formSchema = z.object({
     address: z.string().min(1, 'Địa chỉ là bắt buộc.'),
     phoneNumber: z.string().min(1, 'Số điện thoại là bắt buộc.'),
     domain: z.string().min(1, 'Lĩnh vực là bắt buộc.'),
-    status: z.enum(['PENDING', 'UPDATE_REQUIRED', 'APPROVED', 'DISABLED']),
+    status: z.enum(['PENDING', 'UPDATE_REQUIRED', 'ACTIVE', 'DISABLED']),
     logo: z.string().url('Logo phải là URL hợp lệ.').min(1, 'Logo là bắt buộc.'),
     banner: z.string().url('Banner phải là URL hợp lệ.').min(1, 'Banner là bắt buộc.'),
     accountManager: z.string().min(1, 'Người quản lý tài khoản là bắt buộc.'),

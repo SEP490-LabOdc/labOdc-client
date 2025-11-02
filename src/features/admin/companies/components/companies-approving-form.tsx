@@ -66,7 +66,7 @@ export default function CompanyApprovingForm({
     )
     const [requestDialogOpen, setRequestDialogOpen] = useState(false)
     const [requestNote, setRequestNote] = useState('');
-    const [loadingAction, setLoadingAction] = useState<'APPROVED' | 'UPDATE_REQUIRED' | null>(null);
+    const [loadingAction, setLoadingAction] = useState<'ACTIVE' | 'UPDATE_REQUIRED' | null>(null);
 
 
     useEffect(() => {
@@ -83,7 +83,7 @@ export default function CompanyApprovingForm({
 
     const handleSendRequest = async ({ status }
         : {
-            status: 'APPROVED' | 'UPDATE_REQUIRED'
+            status: 'ACTIVE' | 'UPDATE_REQUIRED'
         }
     ) => {
         if (!initialData?.id) {
@@ -274,9 +274,9 @@ export default function CompanyApprovingForm({
                 <Button
                     type="button"
                     disabled={!allChecked || isUpdateLocked}
-                    onClick={() => handleSendRequest({ status: 'APPROVED' })}
+                    onClick={() => handleSendRequest({ status: 'ACTIVE' })}
                 >
-                    {loadingAction === 'APPROVED' ? (
+                    {loadingAction === 'ACTIVE' ? (
                         <>
                             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                             Đang phê duyệt...
