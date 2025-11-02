@@ -11,6 +11,7 @@ import { CompaniesTable } from './components/companies-table'
 //import { companies } from './data/companies'
 import { CompaniesDialogs } from './components/companies-dialogs'
 import { useGetCompanies } from '@/hooks/api/companies'
+import { ErrorView } from '@/components/admin/ErrorView'
 
 
 const route = getRouteApi('/_authenticated/admin/companies/')
@@ -54,11 +55,11 @@ export default function Companies() {
     // 3. Xử lý trạng thái Error
     if (isError) {
         return (
-            <div className="flex h-screen flex-col items-center justify-center p-8">
-                <h2 className="text-2xl font-bold text-red-600">Lỗi Tải Dữ Liệu</h2>
-                <p className="text-muted-foreground mt-2">Không thể kết nối đến server hoặc tải danh sách công ty.</p>
-                <p className="text-sm italic mt-1">Chi tiết lỗi: {error.message}</p>
-            </div>
+            <ErrorView
+                title="Lỗi Tải Dữ Liệu"
+                description="Không thể kết nối đến server hoặc tải danh sách công ty."
+                details={error.message}
+            />
         )
     }
 

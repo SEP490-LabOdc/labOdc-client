@@ -14,7 +14,7 @@ import { useAuthStore } from '@/stores/auth-store.ts'
 import { useSignIn } from '@/hooks/api/auth'
 import { jwtDecode } from 'jwt-decode'
 
-interface UserInfo {
+export interface UserInfo {
   role: string,
   userId: string,
   sub: string,
@@ -54,7 +54,6 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
       onSuccess: async (data) => {
         auth.setTokens(data.data.accessToken, data.data.refreshToken)
         const user: UserInfo = jwtDecode(data.data.accessToken)
-        auth.setUser(user)
         localStorage.setItem('user_id', user.userId)
         toast.success('Đăng nhập thành công!')
         await navigate({ to: '/' })

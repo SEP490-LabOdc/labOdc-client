@@ -7,7 +7,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp';
 import { ArrowRight, LoaderCircle } from 'lucide-react';
 import { useResendOtp, useVerifyOtp } from '@/hooks/api'
-import { useSearch } from '@tanstack/react-router'
+import { useNavigate, useSearch } from '@tanstack/react-router'
 import { toast } from 'sonner'
 
 const otpSchema = z.object({
@@ -17,6 +17,7 @@ const otpSchema = z.object({
 type OtpFormData = z.infer<typeof otpSchema>;
 
 export function OtpForm() {
+    const navigate = useNavigate();
     const companyEmail: string = useSearch({ from: '/verify-otp' }).companyEmail
 
     const verifyOtp = useVerifyOtp()
@@ -46,6 +47,7 @@ export function OtpForm() {
                 email: companyEmail,
             })
             toast.success('Xác thực thành công!')
+            await navigate({ to: '/company-register-success'})
         } catch (e) {
             console.error(e);
             toast.error('Xác thực thất bại. Vui lòng thử lại!')

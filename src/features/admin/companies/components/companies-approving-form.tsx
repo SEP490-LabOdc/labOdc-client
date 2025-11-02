@@ -3,15 +3,18 @@ import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Input } from '@/components/ui/input'
 import { ConfirmDialog } from '@/components/confirm-dialog'
-import { useNavigate } from '@tanstack/react-router'
 import type { Company } from '../data/schema'
 import { Textarea } from '@/components/ui/textarea'
+import { usePatchPendingCompany } from '@/hooks/api/companies'
+import { Loader2 } from 'lucide-react'
+import { useNavigate } from '@tanstack/react-router'
 
 type ChecklistItem = {
     id: string
     content: string
     required: boolean
     displayOrder: number
+    checked: boolean
 }
 
 
@@ -41,14 +44,17 @@ export default function CompanyApprovingForm({
     initialData?: CompanyWithVerification
     checkList: ChecklistTemplate
 }) {
-    const navigate = useNavigate()
+    const patchPendingCompany = usePatchPendingCompany();
+    const navigate = useNavigate();
 
-    // ✅ build trạng thái từ API checklist
     const buildInitialVerification = () => {
         const state: Record<string, boolean> = {}
         checkList?.groups?.forEach((group) => {
             group.items.forEach((item) => {
-                state[item.id] = Boolean(initialData?.verification?.[item.id])
+                state[item.id] =
+                    typeof item.checked === 'boolean'
+                        ? item.checked
+                        : Boolean(initialData?.verification?.[item.id])
             })
         })
         return state
@@ -58,7 +64,9 @@ export default function CompanyApprovingForm({
         buildInitialVerification()
     )
     const [requestDialogOpen, setRequestDialogOpen] = useState(false)
-    const [requestNote, setRequestNote] = useState('')
+    const [requestNote, setRequestNote] = useState('');
+    const [loadingAction, setLoadingAction] = useState<'APPROVED' | 'UPDATE_REQUIRED' | null>(null);
+
 
     useEffect(() => {
         setVerification(buildInitialVerification())
@@ -88,28 +96,58 @@ export default function CompanyApprovingForm({
             const updated = { ...prev, [id]: checked }
             void persistVerification(updated, prev)
             return updated
-        })
+        });
     }
 
-    const handleSendRequest = async () => {
-        if (!initialData?.id) return setRequestDialogOpen(false)
-        try {
-            const unchecked = Object.entries(verification)
-                .filter(([_, checked]) => !checked)
-                .map(([id]) => id)
-
-            console.log('🚀 Gửi yêu cầu cập nhật:', {
-                pendingChecklist: unchecked,
-                note: requestNote,
-            })
-
-            // await apiRequest.post(`/api/v1/companies/${initialData.id}/request-update`, {
-            //   pendingChecklist: unchecked,
-            //   note: requestNote,
-            // })
+    const handleSendRequest = async ({ status }
+        : {
+            status: 'APPROVED' | 'UPDATE_REQUIRED'
+        }
+    ) => {
+        if (!initialData?.id) {
             setRequestDialogOpen(false)
+            return
+        }
+
+        const currentUserId = localStorage.getItem('user_id');
+        if (!currentUserId) return;
+
+        try {
+            setLoadingAction(status);
+
+            const items = checkList.groups.flatMap(group =>
+                group.items.map(item => ({
+                    templateItemId: item.id,
+                    completedById: currentUserId,
+                    isChecked: !!verification[item.id],
+                }))
+            );
+
+            const payload = {
+                id: initialData.id,
+                status,
+                templateId: checkList.id,
+                assigneeId: currentUserId,
+                notes: status === 'UPDATE_REQUIRED' ? requestNote : '',
+                items,
+            }
+
+            if (status === 'UPDATE_REQUIRED') {
+                await patchPendingCompany.mutateAsync(payload)
+                setRequestDialogOpen(false)
+
+            } else {
+                await patchPendingCompany.mutateAsync(payload)
+                navigate({ to: '/admin/companies/edit?id=' + initialData.id });
+            }
+
+            console.log('✅ Gửi yêu cầu thành công!')
         } catch (error: any) {
-            alert(error?.message ?? 'Đã xảy ra lỗi, vui lòng thử lại.')
+            console.error('❌ PATCH company failed:', error)
+            // toast.error(error?.message ?? 'Gửi yêu cầu thất bại, vui lòng thử lại!')
+        }
+        finally {
+            setLoadingAction(null);
         }
     }
 
@@ -119,8 +157,6 @@ export default function CompanyApprovingForm({
         { label: 'Mã số thuế', value: initialData?.taxCode ?? '' },
         { label: 'Địa chỉ', value: initialData?.address ?? '' },
         { label: 'Số điện thoại', value: initialData?.phone ?? '' },
-        { label: 'Lĩnh vực', value: initialData?.domain ?? '' },
-        { label: 'Website', value: initialData?.website ?? '' },
         {
             label: 'Ngày thành lập',
             value: initialData?.createdAt
@@ -140,8 +176,7 @@ export default function CompanyApprovingForm({
     const uncheckedItems = requiredItems.filter((item) => !verification[item.id])
     const allChecked = uncheckedItems.length === 0
 
-
-    console.log(checkList);
+    const isUpdateLocked = initialData?.status === 'UPDATE_REQUIRED';
 
     return (
         <>
@@ -216,6 +251,7 @@ export default function CompanyApprovingForm({
                                                     <Checkbox
                                                         className='mt-1 border-white'
                                                         checked={verification[item.id]}
+                                                        disabled={isUpdateLocked}
                                                         onCheckedChange={(checked) =>
                                                             handleToggle(item.id, Boolean(checked))
                                                         }
@@ -239,7 +275,7 @@ export default function CompanyApprovingForm({
                             <Button
                                 type="button"
                                 variant="secondary"
-                                disabled={allChecked}
+                                disabled={allChecked || isUpdateLocked}
                                 onClick={() => setRequestDialogOpen(true)}
                             >
                                 Yêu cầu cập nhật thông tin
@@ -251,8 +287,19 @@ export default function CompanyApprovingForm({
 
             {/* --- HÀNH ĐỘNG CUỐI --- */}
             <div className="pt-3 md:col-span-2 flex gap-3">
-                <Button type="button" disabled={!allChecked}>
-                    Phê duyệt
+                <Button
+                    type="button"
+                    disabled={!allChecked || isUpdateLocked}
+                    onClick={() => handleSendRequest({ status: 'APPROVED' })}
+                >
+                    {loadingAction === 'APPROVED' ? (
+                        <>
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            Đang phê duyệt...
+                        </>
+                    ) : (
+                        'Phê duyệt'
+                    )}
                 </Button>
                 <Button
                     type="button"
@@ -262,6 +309,12 @@ export default function CompanyApprovingForm({
                     Hủy
                 </Button>
             </div>
+
+            {isUpdateLocked && (
+                <p className="text-sm text-muted-foreground italic mt-2 text-center">
+                    Công ty đang trong quá trình cập nhật thông tin — bạn không thể chỉnh sửa hoặc phê duyệt lúc này.
+                </p>
+            )}
 
             {/* --- DIALOG GỬI YÊU CẦU --- */}
             <ConfirmDialog
@@ -281,8 +334,21 @@ export default function CompanyApprovingForm({
                     </div>
                 }
                 cancelBtnText="Hủy"
-                confirmText="Gửi yêu cầu"
-                handleConfirm={handleSendRequest}
+                confirmText={
+                    loadingAction === 'UPDATE_REQUIRED' ? (
+                        <>
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            Đang gửi...
+                        </>
+                    ) : (
+                        'Gửi yêu cầu'
+                    )
+                }
+                handleConfirm={() =>
+                    handleSendRequest({
+                        status: 'UPDATE_REQUIRED'
+                    })
+                }
                 disabled={uncheckedItems.length === 0}
             >
                 <div>

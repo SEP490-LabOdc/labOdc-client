@@ -32,6 +32,26 @@ export const useCompanyRegister = () => {
   })
 }
 
+export const useCompanyRegisterUpdate = (token: string) => {
+  return useMutation({
+    mutationFn: async (payload: TCompanyRegisterDTO) => {
+      const url = '/api/v1/companies/onboard/update';
+      
+      const body = payload;
+
+      const config = {
+        params: {
+          token: token
+        }
+      };
+
+      const { data } = await apiRequest.put(url, body, config);
+
+      return data;
+    }
+  });
+};
+
 export const useVerifyOtp = () => {
   return useMutation({
     mutationFn: async ({ otp, email }: { otp: string, email: string }) => {
