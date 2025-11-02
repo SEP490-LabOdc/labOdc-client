@@ -21,7 +21,7 @@ import { toast } from 'sonner'
 import { USER_ROLE_OPTIONS, USER_STATUS } from '../data/schema'
 import { ConfirmDialog } from '@/components/confirm-dialog'
 import { Loader2 } from 'lucide-react'
-import { useUpdateUserRole } from '@/hooks/api/users/queries'
+import { useUpdateUserRole, useUpdateUserStatus } from '@/hooks/api/users/queries'
 
 // ✅ Schema cập nhật
 const formSchema = z.object({
@@ -47,8 +47,9 @@ export default function UsersForm({
 }): JSX.Element {
     const navigate = useNavigate()
     const isEdit = mode === 'edit'
-    const { mutateAsync: updateProfile } = useUpdateProfile()
-    const { mutateAsync: updateUserRole } = useUpdateUserRole()
+    const { mutateAsync: updateProfile } = useUpdateProfile();
+    const { mutateAsync: updateUserRole } = useUpdateUserRole();
+    const { mutateAsync: updateUserStatus } = useUpdateUserStatus();
 
     const form = useForm<UserForm>({
         resolver: zodResolver(formSchema),
@@ -129,6 +130,34 @@ export default function UsersForm({
             console.error("❌ Update role failed:", error)
         } finally {
             setLoadingAction(null)
+        }
+    }
+
+    const handleToggleStatus = async () => {
+        if (!initialData?.id) return
+
+        const newStatus =
+            initialData.status === USER_STATUS.ACTIVE ? USER_STATUS.INACTIVE : USER_STATUS.ACTIVE
+
+        const updatePromise = updateUserStatus({
+            id: initialData.id,
+            status: newStatus,
+        })
+
+        toast.promise(updatePromise, {
+            loading: "Đang cập nhật trạng thái...",
+            success:
+                newStatus === USER_STATUS.ACTIVE
+                    ? "Tài khoản đã được kích hoạt lại!"
+                    : "Tài khoản đã bị vô hiệu hóa!",
+            error: "Cập nhật trạng thái thất bại!",
+        })
+
+        try {
+            await updatePromise
+            form.setValue("status", newStatus)
+        } catch (error) {
+            console.error("❌ Update status failed:", error)
         }
     }
 
@@ -282,6 +311,7 @@ export default function UsersForm({
                                         </FormLabel>
                                         <div className="flex-1">
                                             <SelectDropdown
+                                                key={field.value}
                                                 defaultValue={field.value}
                                                 onValueChange={field.onChange}
                                                 items={[
@@ -398,17 +428,15 @@ export default function UsersForm({
                     initialData?.status == USER_STATUS.ACTIVE ? (
                         <Button
                             type="button"
-                            onClick={form.handleSubmit(onSubmit)}
                             variant="destructive"
-                            className=""
+                            onClick={handleToggleStatus}
                         >
                             Vô hiệu hóa
                         </Button>
-
                     ) : (
                         <Button
                             type="button"
-                            onClick={form.handleSubmit(onSubmit)}
+                            onClick={handleToggleStatus}
                         >
                             Kích hoạt
                         </Button>

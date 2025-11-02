@@ -93,3 +93,38 @@ export const useUpdateUserRole = () => {
         },
     })
 }
+
+export const useUpdateUserStatus = () => {
+    const queryClient = useQueryClient()
+
+    return useMutation({
+        mutationFn: async ({
+            id,
+            status,
+        }: {
+            id: string
+            status: string
+        }) => {
+            const { data } = await apiRequest.put(
+                `/api/v1/users/${id}/status`,
+                null,
+                {
+                    params: { status },
+                }
+            )
+            return data
+        },
+        onSuccess: (_data, variables) => {
+            queryClient.invalidateQueries({
+                queryKey: userKeys.getUserById(variables.id),
+            })
+            queryClient.invalidateQueries({
+                queryKey: userKeys.getUsers,
+            })
+        },
+        onError: (error: any) => {
+            console.error("❌ Update user status failed:", error)
+            throw error
+        },
+    })
+}
