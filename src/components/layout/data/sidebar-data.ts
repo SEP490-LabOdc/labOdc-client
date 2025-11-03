@@ -31,7 +31,7 @@ export const sidebarData: SidebarData = {
           icon: IconLayoutDashboard,
         },
         {
-          title: 'Quản lý đối tác',
+          title: 'Quản lý công ty',
           icon: IconBuildingStore,
           items: [
             {
