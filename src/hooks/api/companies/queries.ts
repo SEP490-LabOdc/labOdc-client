@@ -23,25 +23,25 @@ export const useGetCompanyById = (id?: string) =>
     });
 
 export const useUpdateCompanyRegistration = (token: string) =>
-  useQuery({
-    queryKey: companyKeys.updateCompanyRegistration(token),
-    queryFn: async () => {
-      // 1. URL gốc (không có query parameters)
-      const url = '/api/v1/companies/for-update';
+    useQuery({
+        queryKey: companyKeys.updateCompanyRegistration(token),
+        queryFn: async () => {
+            // 1. URL gốc (không có query parameters)
+            const url = '/api/v1/companies/for-update';
 
-      // 2. Config object chứa params
-      const config = {
-        params: {
-          token: token // Axios sẽ tự động đổi thành ?token=N%40PUZ%5Bh.i49%5D
-        }
-      };
+            // 2. Config object chứa params
+            const config = {
+                params: {
+                    token: token // Axios sẽ tự động đổi thành ?token=N%40PUZ%5Bh.i49%5D
+                }
+            };
 
-      // apiRequest.get(url, config)
-      const { data } = await apiRequest.get(url, config);
-      return data;
-    },
-    enabled: !!token,
-  });
+            // apiRequest.get(url, config)
+            const { data } = await apiRequest.get(url, config);
+            return data;
+        },
+        enabled: !!token,
+    });
 
 
 export const useGetCheckList = () =>
@@ -73,7 +73,7 @@ export const useGetCheckList = () =>
 
 interface PatchPendingCompanyPayload {
     id: string
-    status: 'APPROVED' | 'UPDATE_REQUIRED'
+    status: 'ACTIVE' | 'UPDATE_REQUIRED'
     templateId: string
     assigneeId: string
     notes?: string

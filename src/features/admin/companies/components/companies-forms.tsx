@@ -35,7 +35,7 @@ const formSchema = z.object({
     address: z.string().min(1, 'Địa chỉ là bắt buộc.'),
     phoneNumber: z.string().min(1, 'Số điện thoại là bắt buộc.'),
     domain: z.string().min(1, 'Lĩnh vực là bắt buộc.'),
-    status: z.enum(['PENDING', 'UPDATE_REQUIRED', 'APPROVED', 'DISABLED']),
+    status: z.enum(['PENDING', 'UPDATE_REQUIRED', 'ACTIVE', 'DISABLED']),
     logo: z.string().url('Logo phải là URL hợp lệ.').min(1, 'Logo là bắt buộc.'),
     banner: z.string().url('Banner phải là URL hợp lệ.').min(1, 'Banner là bắt buộc.'),
     accountManager: z.string().min(1, 'Người quản lý tài khoản là bắt buộc.'),
@@ -48,12 +48,21 @@ const formSchema = z.object({
 
 export type CompanyFormValues = z.infer<typeof formSchema>
 
+type CompanyWithDocuments = Company & {
+    getCompanyDocumentResponses?: {
+        id: string;
+        fileUrl: string;
+        type: string;
+    }[],
+    userId: string
+};
+
 export default function CompanyForm({
     mode,
     initialData,
 }: {
     mode: 'create' | 'edit'
-    initialData?: Company
+    initialData?: CompanyWithDocuments
 }): JSX.Element {
     const navigate = useNavigate()
     const isEdit = mode === 'edit'
@@ -159,7 +168,7 @@ export default function CompanyForm({
                                             Tên công ty
                                         </FormLabel>
                                         <FormControl className="flex-1">
-                                            <Input placeholder="VD: Acme Corp." {...field} />
+                                            <Input placeholder="VD: Acme Corp." {...field} disabled />
                                         </FormControl>
                                     </div>
                                     <FormMessage className="ml-40" />
@@ -177,7 +186,7 @@ export default function CompanyForm({
                                             Mô tả
                                         </FormLabel>
                                         <FormControl className="flex-1">
-                                            <Input placeholder="Mô tả ngắn về công ty" {...field} />
+                                            <Input placeholder="" {...field} disabled />
                                         </FormControl>
                                     </div>
                                     <FormMessage className="ml-40" />
@@ -195,7 +204,7 @@ export default function CompanyForm({
                                             Email
                                         </FormLabel>
                                         <FormControl className="flex-1">
-                                            <Input placeholder="contact@company.com" {...field} />
+                                            <Input placeholder="contact@company.com" {...field} disabled />
                                         </FormControl>
                                     </div>
                                     <FormMessage className="ml-40" />
@@ -213,7 +222,7 @@ export default function CompanyForm({
                                             Mã số thuế
                                         </FormLabel>
                                         <FormControl className="flex-1">
-                                            <Input placeholder="0123456789" {...field} />
+                                            <Input placeholder="0123456789" {...field} disabled />
                                         </FormControl>
                                     </div>
                                     <FormMessage className="ml-40" />
@@ -231,13 +240,49 @@ export default function CompanyForm({
                                             Địa chỉ
                                         </FormLabel>
                                         <FormControl className="flex-1">
-                                            <Input placeholder="Số nhà, đường, phường/xã, quận/huyện" {...field} />
+                                            <Input placeholder="" {...field} disabled />
                                         </FormControl>
                                     </div>
                                     <FormMessage className="ml-40" />
                                 </FormItem>
                             )}
                         />
+
+                        {(initialData?.getCompanyDocumentResponses?.length ?? 0) > 0 && (
+                            <div className="space-y-3">
+                                {initialData!.getCompanyDocumentResponses!.map((doc) => {
+                                    // 🔹 Lấy tên file chỉ phần sau dấu "_"
+                                    const rawName = decodeURIComponent(doc.fileUrl.split('/').pop() || 'Tài liệu');
+                                    const fileName = rawName.includes('_') ? rawName.split('_').pop()! : rawName;
+
+                                    const typeLabelMap: Record<string, string> = {
+                                        BUSINESS_LICENSE: 'Giấy phép kinh doanh',
+                                        IDENTIFICATION: 'Giấy tờ cá nhân',
+                                        CONTRACT: 'Hợp đồng',
+                                    };
+                                    const typeLabel = typeLabelMap[doc.type] || doc.type;
+
+                                    return (
+                                        <div key={doc.id} className="flex items-center gap-3">
+                                            <span className="w-40 block text-end text-base font-medium">
+                                                {typeLabel}
+                                            </span>
+                                            <a
+                                                href={doc.fileUrl}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                download={fileName}
+                                                className="flex-1 px-3 py-2 rounded-xs border bg-muted/40 text-sm text-blue-600 border-input underline truncate"
+                                                title={fileName}
+                                            >
+                                                {fileName}
+                                            </a>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        )}
+
                     </div>
 
                     {/* ========== CỘT PHẢI ========== */}
@@ -252,7 +297,7 @@ export default function CompanyForm({
                                             Số điện thoại
                                         </FormLabel>
                                         <FormControl className="flex-1">
-                                            <Input placeholder="+84 123 456 789" {...field} />
+                                            <Input placeholder="+84 123 456 789" {...field} disabled />
                                         </FormControl>
                                     </div>
                                     <FormMessage className="ml-40" />
@@ -273,10 +318,11 @@ export default function CompanyForm({
                                             <SelectDropdown
                                                 defaultValue={field.value}
                                                 onValueChange={field.onChange}
-                                                placeholder="Chọn lĩnh vực"
+                                                placeholder=""
                                                 items={DOMAIN_OPTIONS}
                                                 showSearch
                                                 className="w-full"
+                                                disabled
                                             />
                                         </div>
                                     </div>
@@ -298,7 +344,7 @@ export default function CompanyForm({
                                             <SelectDropdown
                                                 defaultValue={field.value}
                                                 onValueChange={field.onChange}
-                                                placeholder="Chọn trạng thái"
+                                                placeholder=""
                                                 items={STATUS_OPTIONS}
                                                 className="w-full"
                                                 disabled
@@ -320,7 +366,7 @@ export default function CompanyForm({
                                             Logo (URL)
                                         </FormLabel>
                                         <FormControl className="flex-1">
-                                            <Input placeholder="https://..." {...field} />
+                                            <Input placeholder="" {...field} disabled />
                                         </FormControl>
                                     </div>
                                     <FormMessage className="ml-40" />
@@ -338,7 +384,7 @@ export default function CompanyForm({
                                             Banner (URL)
                                         </FormLabel>
                                         <FormControl className="flex-1">
-                                            <Input placeholder="https://..." {...field} />
+                                            <Input placeholder="" {...field} disabled />
                                         </FormControl>
                                     </div>
                                     <FormMessage className="ml-40" />
@@ -346,34 +392,40 @@ export default function CompanyForm({
                             )}
                         />
 
-                        <FormField
-                            control={form.control}
-                            name="accountManager"
-                            render={({ field }) => (
-                                <FormItem className="space-y-1">
-                                    <div className="flex items-center gap-3">
-                                        <FormLabel className="w-40 block text-end text-base font-medium">
-                                            Quản lý tài khoản
-                                        </FormLabel>
-                                        <FormControl className="flex-1">
-                                            <Input placeholder="Nguyễn Văn A" {...field} />
-                                        </FormControl>
-                                    </div>
-                                    <FormMessage className="ml-40" />
-                                </FormItem>
-                            )}
-                        />
+                        {
+                            initialData?.userId && (
+                                <FormField
+                                    control={form.control}
+                                    name="accountManager"
+                                    render={({ field }) => (
+                                        <FormItem className="space-y-1">
+                                            <div className="flex items-center gap-3">
+                                                <FormLabel className="w-40 block text-end text-base font-medium">
+                                                    Người quản lý
+                                                </FormLabel>
+                                                <FormControl className="flex-1">
+
+                                                    <Input placeholder="" {...field} onClick={() => navigate({ to: '/admin/users/info?id=' + initialData?.userId })}
+                                                        className="cursor-pointer underline text-blue-600 hover:bg-muted/40 transition" />
+                                                </FormControl>
+                                            </div>
+                                            <FormMessage className="ml-40" />
+                                        </FormItem>
+                                    )}
+                                />
+                            )
+                        }
                     </div>
                 </form>
             </Form>
-            <div className="pt-3 md:col-span-2 flex gap-3">
-                <Button type="submit">Cập nhật</Button>
+            <div className="pt-4 md:col-span-2 flex gap-3">
+                {/* <Button type="submit">Cập nhật</Button> */}
                 <Button
                     type="button"
                     variant="outline"
                     onClick={() => navigate({ to: '/admin/companies' })}
                 >
-                    Hủy
+                    Quay về danh sách
                 </Button>
             </div>
             {/* --- RELATIONSHIP SECTION (ServiceNow Style) --- */}

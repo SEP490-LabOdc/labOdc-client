@@ -1,7 +1,7 @@
 import type { CompanyStatus } from "./schema";
 
 export const callTypes = new Map<CompanyStatus, string>([
-    ['APPROVED', 'bg-teal-100/30 text-teal-900 dark:text-teal-200 border-teal-200'],
+    ['ACTIVE', 'bg-teal-100/30 text-teal-900 dark:text-teal-200 border-teal-200'],
     ['UPDATE_REQUIRED', 'bg-neutral-300/40 border-neutral-300'],
     ['PENDING', 'bg-sky-200/40 text-sky-900 dark:text-sky-100 border-sky-300'],
     ['DISABLED', 'bg-red-400/30 text-red-900 dark:bg-red-700/50 dark:text-red-100 border-red-500'],
@@ -10,7 +10,7 @@ export const callTypes = new Map<CompanyStatus, string>([
 export const STATUS_OPTIONS = [
     { label: 'Chờ xác thực', value: 'PENDING' },
     { label: 'Yêu cầu cập nhật', value: 'UPDATE_REQUIRED' },
-    { label: 'Đang hoạt động', value: 'APPROVED' },
+    { label: 'Đang hoạt động', value: 'ACTIVE' },
     { label: 'Vô hiệu hóa', value: 'DISABLED' },
 ]
 
