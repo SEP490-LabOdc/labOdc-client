@@ -53,7 +53,8 @@ type CompanyWithDocuments = Company & {
         id: string;
         fileUrl: string;
         type: string;
-    }[];
+    }[],
+    userId: string
 };
 
 export default function CompanyForm({
@@ -391,24 +392,29 @@ export default function CompanyForm({
                             )}
                         />
 
-                        <FormField
-                            control={form.control}
-                            name="accountManager"
-                            render={({ field }) => (
-                                <FormItem className="space-y-1">
-                                    <div className="flex items-center gap-3">
-                                        <FormLabel className="w-40 block text-end text-base font-medium">
-                                            Người quản lý
-                                        </FormLabel>
-                                        <FormControl className="flex-1">
-                                            <Input placeholder="" {...field} onClick={() => navigate({ to: '/admin/users/info?id=' + "00ff2f64-46c2-4289-bcb6-16a7a07d0106" })}
-                                                className="cursor-pointer underline text-blue-600 hover:bg-muted/40 transition" />
-                                        </FormControl>
-                                    </div>
-                                    <FormMessage className="ml-40" />
-                                </FormItem>
-                            )}
-                        />
+                        {
+                            initialData?.userId && (
+                                <FormField
+                                    control={form.control}
+                                    name="accountManager"
+                                    render={({ field }) => (
+                                        <FormItem className="space-y-1">
+                                            <div className="flex items-center gap-3">
+                                                <FormLabel className="w-40 block text-end text-base font-medium">
+                                                    Người quản lý
+                                                </FormLabel>
+                                                <FormControl className="flex-1">
+
+                                                    <Input placeholder="" {...field} onClick={() => navigate({ to: '/admin/users/info?id=' + initialData?.userId })}
+                                                        className="cursor-pointer underline text-blue-600 hover:bg-muted/40 transition" />
+                                                </FormControl>
+                                            </div>
+                                            <FormMessage className="ml-40" />
+                                        </FormItem>
+                                    )}
+                                />
+                            )
+                        }
                     </div>
                 </form>
             </Form>
