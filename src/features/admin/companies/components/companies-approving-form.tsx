@@ -35,8 +35,13 @@ type ChecklistTemplate = {
 }
 
 type CompanyWithVerification = Company & {
-    verification?: Record<string, boolean>
-}
+    verification?: Record<string, boolean>;
+    getCompanyDocumentResponses?: {
+        id: string;
+        fileUrl: string;
+        type: string;
+    }[];
+};
 
 export default function CompanyApprovingForm({
     initialData,
@@ -182,12 +187,6 @@ export default function CompanyApprovingForm({
                                     <Input value={value} disabled className="flex-1 bg-muted/40" />
                                 </div>
                             ))}
-                            <div key="attachment" className="space-y-1">
-                                <div className="flex items-center gap-3">
-                                    <span className="w-40 block text-end text-base font-medium">File</span>
-                                    <a href="http://localhost:5173/logo.png" download="Sample file.png" className="flex-1 px-3 py-2 rounded-md border bg-muted/40 text-sm text-blue-600 border-input underline" > Sample file.png </a>
-                                </div>
-                            </div>
                         </div>
 
 
@@ -210,6 +209,47 @@ export default function CompanyApprovingForm({
                             ))}
                         </div>
                     </div>
+
+                    {(initialData?.getCompanyDocumentResponses?.length ?? 0) > 0 && (
+                        <div className="p-3">
+                            <h3 className="mb-4 flex items-center gap-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+                                <span className="h-4 w-1.5 rounded bg-primary" />
+                                Tài liệu đính kèm
+                            </h3>
+
+                            <div className="space-y-3">
+                                {initialData!.getCompanyDocumentResponses!.map((doc) => {
+                                    const rawName = decodeURIComponent(doc.fileUrl.split('/').pop() || 'Tài liệu');
+                                    const fileName = rawName.includes('_') ? rawName.split('_').pop()! : rawName;
+
+                                    const typeLabelMap: Record<string, string> = {
+                                        BUSINESS_LICENSE: 'Giấy phép kinh doanh',
+                                        IDENTIFICATION: 'Giấy tờ cá nhân',
+                                        CONTRACT: 'Hợp đồng',
+                                    }
+                                    const typeLabel = typeLabelMap[doc.type] || doc.type
+
+                                    return (
+                                        <div key={doc.id} className="flex items-center gap-3">
+                                            <span className="w-40 block text-end text-base font-medium">
+                                                {typeLabel}
+                                            </span>
+                                            <a
+                                                href={doc.fileUrl}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                download={fileName}
+                                                className="flex-1 px-3 py-2 rounded-xs border bg-muted/40 text-sm text-blue-600 border-input underline truncate"
+                                                title={fileName}
+                                            >
+                                                {fileName}
+                                            </a>
+                                        </div>
+                                    )
+                                })}
+                            </div>
+                        </div>
+                    )}
                 </div>
 
                 {/* --- CỘT PHẢI: CHECKLIST --- */}
