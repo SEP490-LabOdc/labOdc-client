@@ -8,7 +8,7 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { Route as rootRouteImport } from './routes/__root'
+import { Route as rootRouteImport } from './routes/root.tsx'
 import { Route as VerifyOtpRouteRouteImport } from './routes/verify-otp/route'
 import { Route as CompanyRouteRouteImport } from './routes/company/route'
 import { Route as publicRouteRouteImport } from './routes/(public)/route'

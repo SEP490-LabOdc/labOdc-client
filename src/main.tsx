@@ -43,7 +43,7 @@ const queryClient = new QueryClient({
 // Create a new router instance
 const router = createRouter({
   routeTree,
-  context: { queryClient },
+  context: { queryClient, serverConfig: null },
   defaultPendingComponent: () => (
     <div className="flex h-screen w-screen items-center justify-center bg-bunker-800">
       <Lottie isAutoPlay icon="infisical_loading" className="h-32 w-32" />
