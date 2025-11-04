@@ -69,7 +69,6 @@ apiRequest.interceptors.response.use(
       return Promise.reject(error);
     }
 
-    // ✅ Only handle 401 errors for token refresh, let other errors pass through
     if (error.response?.status === 401 && !originalRequest._retry) {
 
       if (isRefreshing) {
@@ -147,8 +146,7 @@ const handleAuthenticationFailure = (message: string): void => {
   }
 };
 
-async function refreshAccessToken(refreshToken: string, userId: string): Promise<string> {
-  try {
+async function refreshAccessToken(refreshToken: string, userId: string) {
     const { data } = await refreshApiRequest.post<RefreshTokenResponse>(
       "/api/v1/auth/refresh",
       {
@@ -157,20 +155,7 @@ async function refreshAccessToken(refreshToken: string, userId: string): Promise
       }
     );
 
-    if (!data?.data?.accessToken) {
-      throw new Error('Invalid refresh response format');
-    }
-
     return data.data.accessToken;
-  } catch (error) {
-    const axiosError = error as AxiosError<ApiErrorResponse>;
-
-    const enhancedError = new Error(
-      axiosError.response?.data?.message || 'Token refresh failed'
-    );
-    enhancedError.name = 'RefreshTokenError';
-    throw enhancedError;
-  }
 }
 
 declare module 'axios' {
