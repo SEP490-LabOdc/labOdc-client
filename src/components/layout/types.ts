@@ -30,7 +30,7 @@ interface NavGroup {
 }
 
 interface SidebarData {
-  user: User
+  // user: User
   navGroups: NavGroup[]
 }
 

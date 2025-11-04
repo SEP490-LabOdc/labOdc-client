@@ -69,7 +69,7 @@ export const useGetCheckList = () =>
 
 interface PatchPendingCompanyPayload {
     id: string
-    status: 'APPROVED' | 'UPDATE_REQUIRED'
+    status: 'ACTIVE' | 'UPDATE_REQUIRED'
     templateId: string
     assigneeId: string
     notes?: string

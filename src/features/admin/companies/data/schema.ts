@@ -3,14 +3,14 @@ import { z } from 'zod'
 export const COMPANY_STATUS = {
     PENDING: 'PENDING',
     UPDATE_REQUIRED: 'UPDATE_REQUIRED',
-    APPROVED: 'APPROVED',
+    ACTIVE: 'ACTIVE',
     DISABLED: 'DISABLED',
 } as const;
 
 export const COMPANY_STATUS_LABEL: Record<CompanyStatus, string> = {
     [COMPANY_STATUS.PENDING]: 'Chờ duyệt',
     [COMPANY_STATUS.UPDATE_REQUIRED]: 'Cần cập nhật',
-    [COMPANY_STATUS.APPROVED]: 'Đã duyệt',
+    [COMPANY_STATUS.ACTIVE]: 'Đang hoạt động',
     [COMPANY_STATUS.DISABLED]: 'Ngừng hoạt động',
 };
 

@@ -21,11 +21,6 @@ import { USER_ROLE, USER_ROLE_LABEL } from '@/features/admin/users/data/schema'
 import { Building2, FlaskConical, LockKeyhole, User } from 'lucide-react'
 
 export const sidebarData: SidebarData = {
-  user: {
-    name: 'Jack',
-    email: 'jack5trieu@gmail.com',
-    avatar: 'https://www.anhnghethuatdulich.com/wp-content/uploads/2025/08/jack-meme-joker-pha-tron-giua-hai-huoc-va-phong-cach-doc-dao.jpg',
-  },
   navGroups: [
     {
       title: 'Lab Management',
@@ -36,7 +31,7 @@ export const sidebarData: SidebarData = {
           icon: IconLayoutDashboard,
         },
         {
-          title: 'Quản lý đối tác',
+          title: 'Quản lý công ty',
           icon: IconBuildingStore,
           items: [
             {
