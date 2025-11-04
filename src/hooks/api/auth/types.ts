@@ -8,13 +8,30 @@ export type UserLoginGooglePayload = {
 }
 
 export type TCompanyRegisterDTO = {
-  address: string,
-  contactPersonEmail: string,
-  contactPersonName: string,
-  contactPersonPhone: string,
-  email: string,
-  name: string,
-  phone: string,
-  taxCode: string,
-  businessLicenseLink?: string
-}
+  // Create payload
+  address: string;
+  businessLicenseLink: string;
+  businessLicenseFileName?: string;
+  email: string;
+  taxCode: string;
+  name: string;
+  phone: string;
+  contactPersonEmail: string;
+  contactPersonName: string;
+  contactPersonPhone: string;
+} | {
+  // Update payload
+  name: string;
+  phone: string;
+  taxCode: string;
+  address: string;
+  contactPersonName: string;
+  contactPersonPhone: string;
+  contactPersonEmail: string;
+  updateCompanyDocumentRequests: Array<{
+    id?: string;
+    fileName?: string;
+    fileUrl: string;
+    type: string;
+  }>;
+};

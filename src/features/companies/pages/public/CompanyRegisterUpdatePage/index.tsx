@@ -13,7 +13,7 @@ export function CompanyRegisterUpdatePage() {
   const navigate = useNavigate();
   const token = useSearch({ from: '/company-register/update' }).token;
 
-  const companyDetail= useUpdateCompanyRegistration(token)
+  const companyDetail= useUpdateCompanyRegistration(token);
 
   const { mutateAsync, isPending } = useCompanyRegisterUpdate(token);
 
@@ -32,7 +32,7 @@ export function CompanyRegisterUpdatePage() {
     return <div>Loading...</div>;
   }
 
-  if(companyDetail.isError) {
+  if(!token) {
     navigate({ to: '/company-register' })
     toast.error('Liên kết cập nhật không hợp lệ hoặc đã hết hạn. Vui lòng đăng ký lại.')
   }

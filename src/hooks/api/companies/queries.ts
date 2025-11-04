@@ -26,21 +26,17 @@ export const useUpdateCompanyRegistration = (token: string) =>
   useQuery({
     queryKey: companyKeys.updateCompanyRegistration(token),
     queryFn: async () => {
-      // 1. URL gốc (không có query parameters)
       const url = '/api/v1/companies/for-update';
 
-      // 2. Config object chứa params
       const config = {
         params: {
-          token: token // Axios sẽ tự động đổi thành ?token=N%40PUZ%5Bh.i49%5D
+          token: token
         }
       };
 
-      // apiRequest.get(url, config)
       const { data } = await apiRequest.get(url, config);
       return data;
     },
-    enabled: !!token,
   });
 
 
