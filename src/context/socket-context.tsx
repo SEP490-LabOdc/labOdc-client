@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState, type ReactNode } from 'react';
+import { createContext, useEffect, useState, useRef, type ReactNode } from 'react';
 import { Client } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
 import { BASE_URL } from '@/const';
@@ -13,55 +13,63 @@ export default SocketContext;
 
 export const SocketProvider = ({ children }: SocketProviderProps) => {
   const [stompClient, setStompClient] = useState<Client | null>(null);
+  const clientRef = useRef<Client | null>(null);
 
   const accessToken = useAuthStore(state => state.accessToken);
   const isAuthenticated = useAuthStore(state => state.isAuthenticated());
 
   useEffect(() => {
     if (isAuthenticated && accessToken) {
-      console.log('🔌 Connecting socket with token:', accessToken.substring(0, 10) + '...');
-
       const client = new Client({
         webSocketFactory: () => new SockJS(`${BASE_URL}/ws`),
 
         beforeConnect: () => {
-          // Always use fresh token from store
-          const currentToken = useAuthStore.getState().accessToken;
+          const currentState = useAuthStore.getState();
+          if (!currentState.isAuthenticated()) {
+            client.deactivate().catch(console.error);
+            return;
+          }
+
           client.connectHeaders = {
-            Authorization: `Bearer ${currentToken}`,
+            Authorization: `Bearer ${currentState.accessToken}`,
           };
         },
 
         reconnectDelay: 5000,
 
         onConnect: () => {
-          console.log('WebSocket connected');
           setStompClient(client);
         },
 
         onStompError: (frame) => {
           console.error('Socket error:', frame.headers['message']);
           console.error('Details:', frame.body);
+
+          if (frame.headers['message']?.includes('Failed to send message')) {
+            client.deactivate().catch(console.error);
+            setStompClient(null);
+          }
         },
 
         onDisconnect: () => {
-          console.log('WebSocket disconnected');
           setStompClient(null);
         }
       });
 
+      clientRef.current = client;
       client.activate();
 
       return () => {
-        console.log('Cleaning up socket connection');
-        if (client.connected) {
-          client.deactivate();
+        if (clientRef.current) {
+          clientRef.current.deactivate().catch(console.error);
+          clientRef.current = null;
         }
         setStompClient(null);
       };
     } else {
-      // No auth = no socket
-      console.log('No authentication, disconnecting socket');
+      if (stompClient?.connected) {
+        stompClient.deactivate().catch(console.error);
+      }
       setStompClient(null);
     }
   }, [accessToken, isAuthenticated]);
