@@ -46,7 +46,6 @@ import { Route as AuthenticatedAdminSettingsAccountRouteImport } from './routes/
 import { Route as AuthenticatedAdminUsersInfoIndexRouteImport } from './routes/_authenticated/admin/users/info/index'
 import { Route as AuthenticatedAdminUsersCreateIndexRouteImport } from './routes/_authenticated/admin/users/create/index'
 import { Route as AuthenticatedAdminCompaniesEditIndexRouteImport } from './routes/_authenticated/admin/companies/edit/index'
-import { Route as AuthenticatedAdminCompaniesCreateIndexRouteImport } from './routes/_authenticated/admin/companies/create/index'
 import { Route as AuthenticatedAdminCompaniesApproveIndexRouteImport } from './routes/_authenticated/admin/companies/approve/index'
 
 const VerifyOtpRouteRoute = VerifyOtpRouteRouteImport.update({
@@ -245,12 +244,6 @@ const AuthenticatedAdminCompaniesEditIndexRoute =
     path: '/companies/edit/',
     getParentRoute: () => AuthenticatedAdminRouteRoute,
   } as any)
-const AuthenticatedAdminCompaniesCreateIndexRoute =
-  AuthenticatedAdminCompaniesCreateIndexRouteImport.update({
-    id: '/companies/create/',
-    path: '/companies/create/',
-    getParentRoute: () => AuthenticatedAdminRouteRoute,
-  } as any)
 const AuthenticatedAdminCompaniesApproveIndexRoute =
   AuthenticatedAdminCompaniesApproveIndexRouteImport.update({
     id: '/companies/approve/',
@@ -292,7 +285,6 @@ export interface FileRoutesByFullPath {
   '/admin/tasks': typeof AuthenticatedAdminTasksIndexRoute
   '/admin/users': typeof AuthenticatedAdminUsersIndexRoute
   '/admin/companies/approve': typeof AuthenticatedAdminCompaniesApproveIndexRoute
-  '/admin/companies/create': typeof AuthenticatedAdminCompaniesCreateIndexRoute
   '/admin/companies/edit': typeof AuthenticatedAdminCompaniesEditIndexRoute
   '/admin/users/create': typeof AuthenticatedAdminUsersCreateIndexRoute
   '/admin/users/info': typeof AuthenticatedAdminUsersInfoIndexRoute
@@ -327,7 +319,6 @@ export interface FileRoutesByTo {
   '/admin/tasks': typeof AuthenticatedAdminTasksIndexRoute
   '/admin/users': typeof AuthenticatedAdminUsersIndexRoute
   '/admin/companies/approve': typeof AuthenticatedAdminCompaniesApproveIndexRoute
-  '/admin/companies/create': typeof AuthenticatedAdminCompaniesCreateIndexRoute
   '/admin/companies/edit': typeof AuthenticatedAdminCompaniesEditIndexRoute
   '/admin/users/create': typeof AuthenticatedAdminUsersCreateIndexRoute
   '/admin/users/info': typeof AuthenticatedAdminUsersInfoIndexRoute
@@ -369,7 +360,6 @@ export interface FileRoutesById {
   '/_authenticated/admin/tasks/': typeof AuthenticatedAdminTasksIndexRoute
   '/_authenticated/admin/users/': typeof AuthenticatedAdminUsersIndexRoute
   '/_authenticated/admin/companies/approve/': typeof AuthenticatedAdminCompaniesApproveIndexRoute
-  '/_authenticated/admin/companies/create/': typeof AuthenticatedAdminCompaniesCreateIndexRoute
   '/_authenticated/admin/companies/edit/': typeof AuthenticatedAdminCompaniesEditIndexRoute
   '/_authenticated/admin/users/create/': typeof AuthenticatedAdminUsersCreateIndexRoute
   '/_authenticated/admin/users/info/': typeof AuthenticatedAdminUsersInfoIndexRoute
@@ -410,7 +400,6 @@ export interface FileRouteTypes {
     | '/admin/tasks'
     | '/admin/users'
     | '/admin/companies/approve'
-    | '/admin/companies/create'
     | '/admin/companies/edit'
     | '/admin/users/create'
     | '/admin/users/info'
@@ -445,7 +434,6 @@ export interface FileRouteTypes {
     | '/admin/tasks'
     | '/admin/users'
     | '/admin/companies/approve'
-    | '/admin/companies/create'
     | '/admin/companies/edit'
     | '/admin/users/create'
     | '/admin/users/info'
@@ -486,7 +474,6 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/tasks/'
     | '/_authenticated/admin/users/'
     | '/_authenticated/admin/companies/approve/'
-    | '/_authenticated/admin/companies/create/'
     | '/_authenticated/admin/companies/edit/'
     | '/_authenticated/admin/users/create/'
     | '/_authenticated/admin/users/info/'
@@ -770,13 +757,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminCompaniesEditIndexRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
     }
-    '/_authenticated/admin/companies/create/': {
-      id: '/_authenticated/admin/companies/create/'
-      path: '/companies/create'
-      fullPath: '/admin/companies/create'
-      preLoaderRoute: typeof AuthenticatedAdminCompaniesCreateIndexRouteImport
-      parentRoute: typeof AuthenticatedAdminRouteRoute
-    }
     '/_authenticated/admin/companies/approve/': {
       id: '/_authenticated/admin/companies/approve/'
       path: '/companies/approve'
@@ -877,7 +857,6 @@ interface AuthenticatedAdminRouteRouteChildren {
   AuthenticatedAdminTasksIndexRoute: typeof AuthenticatedAdminTasksIndexRoute
   AuthenticatedAdminUsersIndexRoute: typeof AuthenticatedAdminUsersIndexRoute
   AuthenticatedAdminCompaniesApproveIndexRoute: typeof AuthenticatedAdminCompaniesApproveIndexRoute
-  AuthenticatedAdminCompaniesCreateIndexRoute: typeof AuthenticatedAdminCompaniesCreateIndexRoute
   AuthenticatedAdminCompaniesEditIndexRoute: typeof AuthenticatedAdminCompaniesEditIndexRoute
   AuthenticatedAdminUsersCreateIndexRoute: typeof AuthenticatedAdminUsersCreateIndexRoute
   AuthenticatedAdminUsersInfoIndexRoute: typeof AuthenticatedAdminUsersInfoIndexRoute
@@ -894,8 +873,6 @@ const AuthenticatedAdminRouteRouteChildren: AuthenticatedAdminRouteRouteChildren
     AuthenticatedAdminUsersIndexRoute: AuthenticatedAdminUsersIndexRoute,
     AuthenticatedAdminCompaniesApproveIndexRoute:
       AuthenticatedAdminCompaniesApproveIndexRoute,
-    AuthenticatedAdminCompaniesCreateIndexRoute:
-      AuthenticatedAdminCompaniesCreateIndexRoute,
     AuthenticatedAdminCompaniesEditIndexRoute:
       AuthenticatedAdminCompaniesEditIndexRoute,
     AuthenticatedAdminUsersCreateIndexRoute:

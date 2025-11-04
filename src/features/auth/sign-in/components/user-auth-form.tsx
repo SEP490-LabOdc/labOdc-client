@@ -10,17 +10,7 @@ import { Button } from '@/components/ui/button'
 import { Loader2, LogIn } from 'lucide-react'
 import { PasswordInput } from '@/components/password-input'
 import { toast } from 'sonner'
-import { useAuthStore } from '@/stores/auth-store.ts'
 import { useSignIn } from '@/hooks/api/auth'
-import { jwtDecode } from 'jwt-decode'
-
-export interface UserInfo {
-  role: string,
-  userId: string,
-  sub: string,
-  iat: number,
-  exp: number
-}
 
 const formSchema = z.object({
   email: z.email({
@@ -39,7 +29,6 @@ interface UserAuthFormProps extends React.HTMLAttributes<HTMLFormElement> {
 export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
   const signIn = useSignIn()
   const navigate = useNavigate()
-  const { auth } = useAuthStore()
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -51,10 +40,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
 
   function onSubmit(data: z.infer<typeof formSchema>) {
     signIn.mutate(data, {
-      onSuccess: async (data) => {
-        auth.setTokens(data.data.accessToken, data.data.refreshToken)
-        const user: UserInfo = jwtDecode(data.data.accessToken)
-        localStorage.setItem('user_id', user.userId)
+      onSuccess: async () => {
         toast.success('Đăng nhập thành công!')
         await navigate({ to: '/' })
       },

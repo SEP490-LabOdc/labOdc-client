@@ -1,5 +1,7 @@
+// src/config/request.ts (Fixed)
 import axios from "axios";
 import { BASE_URL } from "@/const";
+import { useAuthStore } from "@/stores/auth-store";
 
 const apiRequest = axios.create({
   baseURL: BASE_URL,
@@ -11,50 +13,54 @@ const refreshApiRequest = axios.create({
 
 apiRequest.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("access_token");
+    // ✅ Always get fresh token from store
+    const token = useAuthStore.getState().accessToken;
     if (token) {
       config.headers["Authorization"] = `Bearer ${token}`;
     }
     return config;
   },
-  (error) => {
-    return Promise.reject(error);
-  }
+  (error) => Promise.reject(error)
 );
 
 apiRequest.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
+
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
-      const refreshToken = localStorage.getItem("refresh_token");
+
+      const { refreshToken } = useAuthStore.getState();
+
       if (refreshToken) {
         try {
-          const userId: string = localStorage.getItem("user_id") || "";
+          const userId = localStorage.getItem("user_id") || "";
           const newToken = await refreshAccessToken(refreshToken, userId);
-          localStorage.setItem("access_token", newToken);
+
+          // ✅ Update store (will trigger socket reconnect)
+          useAuthStore.getState().setAccessToken(newToken);
+
           originalRequest.headers["Authorization"] = `Bearer ${newToken}`;
           return apiRequest(originalRequest);
-        } catch (error: any) {
-          // Clear storage và redirect
-          localStorage.clear();
+
+        } catch (error) {
+          console.error('Token refresh failed:', error);
+          useAuthStore.getState().logout();
           window.location.href = "/sign-in";
           return Promise.reject(error);
         }
+      } else {
+        useAuthStore.getState().logout();
+        window.location.href = "/sign-in";
       }
-      // else {
-      //   // Không có refresh token, redirect ngay
-      //   localStorage.clear();
-      //   window.location.href = "/sign-in";
-      // }
     }
+
     return Promise.reject(error);
   }
 );
 
 async function refreshAccessToken(refreshToken: string, userId: string) {
-  // Sử dụng refreshApiRequest thay vì apiRequest
   const { data } = await refreshApiRequest.post("/api/v1/auth/refresh", {
     userId,
     refreshToken
