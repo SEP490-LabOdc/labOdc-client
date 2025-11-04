@@ -21,6 +21,7 @@ export const companySchema = z.object({
     .min(1, "Số điện thoại công ty là bắt buộc")
     .regex(/^([+]?[\s0-9]+)?(\d{3}|[(]?[0-9]+[)])?([-]?[\s]?[0-9])+$/, 'Số điện thoại không hợp lệ'),
   businessLicenseLink: z.string().min(1, "Vui lòng tải lên giấy phép kinh doanh"),
+  businessLicenseFileName: z.string().optional(),
   //Personal fields
   contactPersonEmail: z.email("Email cá nhân không hợp lệ"),
   contactPersonName: z.string().min(1, "Họ và tên là bắt buộc"),

@@ -1,12 +1,14 @@
-import React, { useState, useRef } from 'react';
-import { Upload, X, FileIcon, AlertCircle, Loader2 } from 'lucide-react';
+import React, { useState, useRef, useEffect } from 'react'
+import { Upload, X, FileIcon, AlertCircle, Loader2, Eye, RotateCcw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { useUploadFile } from '@/hooks/api/file'
 
 interface FileUploadProps {
-  value?: string | null; // Changed back to string (file URL) after successful upload
-  onChange: (value: string | null) => void; // Changed back to handle file URLs
+  value?: string | null;
+  onChange: (value: string | null) => void;
+  onFileUploaded?: (fileName: string) => void;
+  existingFileName?: string;
   accept?: string;
   maxSize?: number;
   placeholder?: string;
@@ -15,20 +17,30 @@ interface FileUploadProps {
 }
 
 export function FileUpload({
-   value,
-   onChange,
-   accept = '.pdf,.jpg,.jpeg,.png',
-   maxSize = 10,
-   placeholder = 'Chọn file để tải lên',
-   disabled = false,
-   className
-}: FileUploadProps) {
+                             value,
+                             onChange,
+                             onFileUploaded,
+                             existingFileName,
+                             accept = '.pdf,.jpg,.jpeg,.png',
+                             maxSize = 10,
+                             placeholder = 'Chọn file để tải lên',
+                             disabled = false,
+                             className
+                           }: FileUploadProps) {
   const [isDragOver, setIsDragOver] = useState(false);
   const [uploadError, setUploadError] = useState<string>('');
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [uploadedFileInfo, setUploadedFileInfo] = useState<{fileName: string; fileUrl: string} | null>(null);
 
   const { mutateAsync: uploadFile, isPending: isUploading } = useUploadFile();
+
+  // Initialize with existing file info
+  useEffect(() => {
+    if (value && existingFileName) {
+      setUploadedFileInfo({ fileName: existingFileName, fileUrl: value });
+    }
+  }, [value, existingFileName]);
 
   const handleFileSelect = async (file: File) => {
     setUploadError('');
@@ -56,14 +68,15 @@ export function FileUpload({
 
     try {
       const response = await uploadFile(formData);
-      // Handle success - access the nested data structure
-      const fileUrl = response.data?.fileUrl;
-      if (fileUrl) {
+      const { fileUrl, fileName } = response.data || {};
+      if (fileUrl && fileName) {
         onChange(fileUrl);
+        setUploadedFileInfo({ fileName, fileUrl });
         setSelectedFile(null);
         setUploadError('');
+        onFileUploaded?.(fileName);
       } else {
-        setUploadError('Không thể lấy URL của file đã tải lên');
+        setUploadError('Không thể lấy thông tin file đã tải lên');
         setSelectedFile(null);
       }
     } catch (error: unknown) {
@@ -98,9 +111,31 @@ export function FileUpload({
   const handleRemove = () => {
     onChange(null);
     setSelectedFile(null);
+    setUploadedFileInfo(null);
+    setUploadError('');
+    onFileUploaded?.(''); // Clear filename in parent
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
+  // Handle replace file - remove current and trigger file picker
+  const handleReplace = () => {
+    setUploadedFileInfo(null);
+    setSelectedFile(null);
     setUploadError('');
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
+    }
+    // Trigger file picker
+    setTimeout(() => handleClick(), 100);
+  };
+
+  // Handle view file - open in new tab
+  const handleViewFile = () => {
+    const fileUrl = value || uploadedFileInfo?.fileUrl;
+    if (value) {
+      window.open(fileUrl, '_blank');
     }
   };
 
@@ -108,8 +143,13 @@ export function FileUpload({
     if (selectedFile) {
       return selectedFile.name;
     }
+    if (uploadedFileInfo) {
+      return uploadedFileInfo.fileName;
+    }
+    if (existingFileName) {
+      return existingFileName;
+    }
     if (value) {
-      // Extract filename from URL
       return value.split('/').pop() || 'Uploaded file';
     }
     return null;
@@ -208,16 +248,50 @@ export function FileUpload({
               )}
             </div>
 
-            <Button
-              type="button"
-              variant="ghost"
-              size="sm"
-              onClick={handleRemove}
-              disabled={disabled || isUploading}
-              className="flex-shrink-0 h-8 w-8 p-0 hover:bg-red-50 hover:text-red-600"
-            >
-              <X className="h-4 w-4" />
-            </Button>
+            <div className="flex items-center gap-1">
+              {/* View File Button */}
+              {(value || existingFileName) && !isUploading && (
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleViewFile}
+                  disabled={disabled}
+                  className="flex-shrink-0 h-8 w-8 p-0 hover:bg-blue-50 hover:text-blue-600"
+                  title="Xem file"
+                >
+                  <Eye className="h-4 w-4" />
+                </Button>
+              )}
+
+              {/* Replace File Button */}
+              {!isUploading && (
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleReplace}
+                  disabled={disabled}
+                  className="flex-shrink-0 h-8 w-8 p-0 hover:bg-orange-50 hover:text-orange-600"
+                  title="Thay đổi file"
+                >
+                  <RotateCcw className="h-4 w-4" />
+                </Button>
+              )}
+
+              {/* Remove File Button */}
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                onClick={handleRemove}
+                disabled={disabled || isUploading}
+                className="flex-shrink-0 h-8 w-8 p-0 hover:bg-red-50 hover:text-red-600"
+                title="Xóa file"
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
           </div>
         </div>
       )}
