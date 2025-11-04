@@ -21,14 +21,14 @@ import {
 import {
   type CompanyRegisterData, companySchema,
 } from '@/features/companies/pages/public/CompanySignUpPage/components/company-register.schema.ts'
-import type { CompanyPayload, CompanyUpdateRegister } from '@/features/companies/types.ts'
+import type { CompanyCreatePayload, CompanyPayload, CompanyUpdateRegister } from '@/features/companies/types.ts'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { FileUpload } from '@/features/companies/pages/public/CompanySignUpPage/components/FileUpload.tsx'
 
 interface RegisterCompanyFormProps {
   initialData?: CompanyUpdateRegister;
   submitButtonText?: string;
-  onSubmit: (data: CompanyPayload) => Promise<void>;
+  onSubmit: (data: CompanyCreatePayload | CompanyPayload) => Promise<void>;
   isLoading: boolean;
 }
 
@@ -39,6 +39,12 @@ export function RegisterCompanyForm({
     isLoading
 }: RegisterCompanyFormProps) {
     const [selectedProvince, setSelectedProvince] = useState<string>('');
+    const [uploadedFileName, setUploadedFileName] = useState<string>('');
+
+    // Get existing business license file info
+    const existingBusinessLicense = initialData?.getCompanyDocumentEditResponses?.find(
+      doc => doc.type === 'BUSINESS_LICENSE' || doc.fileUrl === initialData?.businessLicenseLink
+    );
 
     //Fetching data
     const provinces = useGetProvinces();
@@ -55,7 +61,8 @@ export function RegisterCompanyForm({
         address: initialData?.address || '',
         provinceCode: '',
         wardCode: '',
-        businessLicenseLink: initialData?.businessLicenseLink || '',
+        businessLicenseLink: existingBusinessLicense?.fileUrl || '',
+        businessLicenseFileName: existingBusinessLicense?.fileName || '',
         //Personal fields
         contactPersonEmail: initialData?.contactPersonEmail || '',
         contactPersonName: initialData?.contactPersonName || '',
@@ -63,6 +70,13 @@ export function RegisterCompanyForm({
         agreeTerm: false
       }
     });
+
+    // Set initial filename from existing data
+    useEffect(() => {
+      if (existingBusinessLicense?.fileName) {
+        setUploadedFileName(existingBusinessLicense.fileName);
+      }
+    }, [existingBusinessLicense]);
 
     // Effect to populate form when initialData and provinces are loaded
     useEffect(() => {
@@ -97,12 +111,38 @@ export function RegisterCompanyForm({
         const selectedWard = wards.data?.wards?.find((w: IData) => w.code === parseInt(data.wardCode));
         const addressParts = combineAddressParts(data.address, selectedWard.name, selectedProvince.name);
         const submitData = removeProperties(data, 'agreeTerm', 'wardCode', 'provinceCode');
-        const finalSubmitData = {
-          ...submitData,
-          address: addressParts,
-          businessLicenseLink: data.businessLicenseLink
-        };
-        await onSubmit(finalSubmitData)
+
+        // Check if this is an update operation (initialData exists)
+        if (initialData) {
+          // Update payload structure
+          const updatePayload = {
+            name: data.name,
+            phone: data.phone,
+            taxCode: data.taxCode,
+            address: addressParts,
+            contactPersonName: data.contactPersonName,
+            contactPersonPhone: data.contactPersonPhone,
+            contactPersonEmail: data.contactPersonEmail,
+            updateCompanyDocumentRequests: [
+              {
+                id: existingBusinessLicense?.id,
+                fileName: uploadedFileName || existingBusinessLicense?.fileName || data.businessLicenseFileName,
+                fileUrl: data.businessLicenseLink,
+                type: "BUSINESS_LICENSE"
+              }
+            ]
+          };
+          await onSubmit(updatePayload);
+        } else {
+          // Create payload structure (original)
+          const finalSubmitData = {
+            ...submitData,
+            address: addressParts,
+            businessLicenseLink: data.businessLicenseLink,
+            businessLicenseFileName: uploadedFileName || data.businessLicenseFileName
+          };
+          await onSubmit(finalSubmitData);
+        }
     };
 
     const handleProvinceSelection = useCallback((provinceCode: string) => {
@@ -223,10 +263,15 @@ export function RegisterCompanyForm({
                               <FileUpload
                                 value={field.value}
                                 onChange={field.onChange}
+                                onFileUploaded={(fileName) => {
+                                  setUploadedFileName(fileName);
+                                  form.setValue('businessLicenseFileName', fileName);
+                                }}
                                 accept=".pdf,.jpg,.jpeg,.png"
                                 maxSize={10}
                                 placeholder="Chọn file giấy phép kinh doanh"
                                 disabled={isLoading}
+                                existingFileName={existingBusinessLicense?.fileName} // Pass existing filename
                               />
                             </FormControl>
                             <FormMessage />

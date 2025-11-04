@@ -13,7 +13,7 @@ export function CompanyRegisterUpdatePage() {
   const navigate = useNavigate();
   const token = useSearch({ from: '/company-register/update' }).token;
 
-  const companyDetail= useUpdateCompanyRegistration(token)
+  const companyDetail= useUpdateCompanyRegistration(token);
 
   const { mutateAsync, isPending } = useCompanyRegisterUpdate(token);
 
@@ -22,9 +22,14 @@ export function CompanyRegisterUpdatePage() {
       await mutateAsync(data);
       toast.success('Cập nhật thông tin đăng ký thành công!')
       await navigate({ to: '/company-register-success' });
-    } catch (e) {
-      console.error(e)
-      toast.error("Cập nhật thông tin đăng ký thất bại. Vui lòng thử lại.")
+    } catch (error: any) {
+      console.error(error);
+
+      const errorMessage = error?.response?.data?.message ||
+        error?.message ||
+        "Cập nhật thông tin thất bại. Vui lòng thử lại.";
+
+      toast.error(errorMessage);
     }
   };
 
@@ -32,7 +37,7 @@ export function CompanyRegisterUpdatePage() {
     return <div>Loading...</div>;
   }
 
-  if(companyDetail.isError) {
+  if(!token) {
     navigate({ to: '/company-register' })
     toast.error('Liên kết cập nhật không hợp lệ hoặc đã hết hạn. Vui lòng đăng ký lại.')
   }

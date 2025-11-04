@@ -17,8 +17,38 @@ export type Company = {
 }
 
 export type CompanyPayload = {
+  // Create payload
   address: string;
   businessLicenseLink: string;
+  businessLicenseFileName?: string;
+  email: string;
+  taxCode: string;
+  name: string;
+  phone: string;
+  contactPersonEmail: string;
+  contactPersonName: string;
+  contactPersonPhone: string;
+} | {
+  // Update payload
+  name: string;
+  phone: string;
+  taxCode: string;
+  address: string;
+  contactPersonName: string;
+  contactPersonPhone: string;
+  contactPersonEmail: string;
+  updateCompanyDocumentRequests: Array<{
+    id?: string;
+    fileName?: string;
+    fileUrl: string;
+    type: string;
+  }>;
+};
+
+export type CompanyCreatePayload = {
+  address: string;
+  businessLicenseLink: string;
+  businessLicenseFileName?: string;
   email: string;
   taxCode: string;
   name: string;
@@ -38,4 +68,12 @@ export type CompanyUpdateRegister = {
   contactPersonName: string,
   contactPersonEmail: string,
   contactPersonPhone: string,
+  getCompanyDocumentEditResponses: CompanyDocument[]
+}
+
+type CompanyDocument = {
+  id: string,
+  fileName: string,
+  fileUrl: string,
+  type: string
 }

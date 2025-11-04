@@ -60,7 +60,7 @@ export default function EditCompany() {
                         <div>
                             <h2 className='text-2xl font-bold tracking-tight'>Thông tin công ty</h2>
                             <p className='text-muted-foreground'>
-                                Thay đổi thông tin công ty tại đây. Nhấn lưu khi bạn hoàn tất.
+                                Xem thông tin công ty tại đây.
                             </p>
                         </div>
                     </div>
