@@ -24,6 +24,7 @@ import { Route as errors404RouteImport } from './routes/(errors)/404'
 import { Route as errors403RouteImport } from './routes/(errors)/403'
 import { Route as errors401RouteImport } from './routes/(errors)/401'
 import { Route as CompanyRegisterUpdateRouteRouteImport } from './routes/company-register/update/route'
+import { Route as AuthenticatedCompanyRouteRouteImport } from './routes/_authenticated/company/route'
 import { Route as AuthenticatedAdminRouteRouteImport } from './routes/_authenticated/admin/route'
 import { Route as publicCompaniesRouteRouteImport } from './routes/(public)/companies/route'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin/index'
@@ -37,16 +38,18 @@ import { Route as authSignInIndexRouteImport } from './routes/(auth)/sign-in/ind
 import { Route as authForgotPasswordIndexRouteImport } from './routes/(auth)/forgot-password/index'
 import { Route as publicCompaniesCompanyIdRouteImport } from './routes/(public)/companies/$companyId'
 import { Route as AuthenticatedAdminSettingsRouteRouteImport } from './routes/_authenticated/admin/settings/route'
+import { Route as AuthenticatedCompanyProjectsIndexRouteImport } from './routes/_authenticated/company/projects/index'
 import { Route as AuthenticatedAdminUsersIndexRouteImport } from './routes/_authenticated/admin/users/index'
 import { Route as AuthenticatedAdminTasksIndexRouteImport } from './routes/_authenticated/admin/tasks/index'
 import { Route as AuthenticatedAdminSettingsIndexRouteImport } from './routes/_authenticated/admin/settings/index'
 import { Route as AuthenticatedAdminCompaniesIndexRouteImport } from './routes/_authenticated/admin/companies/index'
 import { Route as AuthenticatedAdminSettingsAppearanceRouteImport } from './routes/_authenticated/admin/settings/appearance'
 import { Route as AuthenticatedAdminSettingsAccountRouteImport } from './routes/_authenticated/admin/settings/account'
+import { Route as AuthenticatedCompanyProjectsCreateIndexRouteImport } from './routes/_authenticated/company/projects/create/index'
+import { Route as AuthenticatedCompanyProjectsProjectIdIndexRouteImport } from './routes/_authenticated/company/projects/$projectId/index'
 import { Route as AuthenticatedAdminUsersInfoIndexRouteImport } from './routes/_authenticated/admin/users/info/index'
 import { Route as AuthenticatedAdminUsersCreateIndexRouteImport } from './routes/_authenticated/admin/users/create/index'
 import { Route as AuthenticatedAdminCompaniesEditIndexRouteImport } from './routes/_authenticated/admin/companies/edit/index'
-import { Route as AuthenticatedAdminCompaniesCreateIndexRouteImport } from './routes/_authenticated/admin/companies/create/index'
 import { Route as AuthenticatedAdminCompaniesApproveIndexRouteImport } from './routes/_authenticated/admin/companies/approve/index'
 
 const VerifyOtpRouteRoute = VerifyOtpRouteRouteImport.update({
@@ -124,6 +127,12 @@ const CompanyRegisterUpdateRouteRoute =
     path: '/company-register/update',
     getParentRoute: () => rootRouteImport,
   } as any)
+const AuthenticatedCompanyRouteRoute =
+  AuthenticatedCompanyRouteRouteImport.update({
+    id: '/_authenticated/company',
+    path: '/company',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const AuthenticatedAdminRouteRoute = AuthenticatedAdminRouteRouteImport.update({
   id: '/_authenticated/admin',
   path: '/admin',
@@ -191,6 +200,12 @@ const AuthenticatedAdminSettingsRouteRoute =
     path: '/settings',
     getParentRoute: () => AuthenticatedAdminRouteRoute,
   } as any)
+const AuthenticatedCompanyProjectsIndexRoute =
+  AuthenticatedCompanyProjectsIndexRouteImport.update({
+    id: '/projects/',
+    path: '/projects/',
+    getParentRoute: () => AuthenticatedCompanyRouteRoute,
+  } as any)
 const AuthenticatedAdminUsersIndexRoute =
   AuthenticatedAdminUsersIndexRouteImport.update({
     id: '/users/',
@@ -227,6 +242,18 @@ const AuthenticatedAdminSettingsAccountRoute =
     path: '/account',
     getParentRoute: () => AuthenticatedAdminSettingsRouteRoute,
   } as any)
+const AuthenticatedCompanyProjectsCreateIndexRoute =
+  AuthenticatedCompanyProjectsCreateIndexRouteImport.update({
+    id: '/projects/create/',
+    path: '/projects/create/',
+    getParentRoute: () => AuthenticatedCompanyRouteRoute,
+  } as any)
+const AuthenticatedCompanyProjectsProjectIdIndexRoute =
+  AuthenticatedCompanyProjectsProjectIdIndexRouteImport.update({
+    id: '/projects/$projectId/',
+    path: '/projects/$projectId/',
+    getParentRoute: () => AuthenticatedCompanyRouteRoute,
+  } as any)
 const AuthenticatedAdminUsersInfoIndexRoute =
   AuthenticatedAdminUsersInfoIndexRouteImport.update({
     id: '/users/info/',
@@ -245,12 +272,6 @@ const AuthenticatedAdminCompaniesEditIndexRoute =
     path: '/companies/edit/',
     getParentRoute: () => AuthenticatedAdminRouteRoute,
   } as any)
-const AuthenticatedAdminCompaniesCreateIndexRoute =
-  AuthenticatedAdminCompaniesCreateIndexRouteImport.update({
-    id: '/companies/create/',
-    path: '/companies/create/',
-    getParentRoute: () => AuthenticatedAdminRouteRoute,
-  } as any)
 const AuthenticatedAdminCompaniesApproveIndexRoute =
   AuthenticatedAdminCompaniesApproveIndexRouteImport.update({
     id: '/companies/approve/',
@@ -259,7 +280,7 @@ const AuthenticatedAdminCompaniesApproveIndexRoute =
   } as any)
 
 export interface FileRoutesByFullPath {
-  '/company': typeof CompanyRouteRouteWithChildren
+  '/company': typeof AuthenticatedCompanyRouteRouteWithChildren
   '/verify-otp': typeof VerifyOtpRouteRoute
   '/companies': typeof publicCompaniesRouteRouteWithChildren
   '/admin': typeof AuthenticatedAdminRouteRouteWithChildren
@@ -291,14 +312,17 @@ export interface FileRoutesByFullPath {
   '/admin/settings/': typeof AuthenticatedAdminSettingsIndexRoute
   '/admin/tasks': typeof AuthenticatedAdminTasksIndexRoute
   '/admin/users': typeof AuthenticatedAdminUsersIndexRoute
+  '/company/projects': typeof AuthenticatedCompanyProjectsIndexRoute
   '/admin/companies/approve': typeof AuthenticatedAdminCompaniesApproveIndexRoute
-  '/admin/companies/create': typeof AuthenticatedAdminCompaniesCreateIndexRoute
   '/admin/companies/edit': typeof AuthenticatedAdminCompaniesEditIndexRoute
   '/admin/users/create': typeof AuthenticatedAdminUsersCreateIndexRoute
   '/admin/users/info': typeof AuthenticatedAdminUsersInfoIndexRoute
+  '/company/projects/$projectId': typeof AuthenticatedCompanyProjectsProjectIdIndexRoute
+  '/company/projects/create': typeof AuthenticatedCompanyProjectsCreateIndexRoute
 }
 export interface FileRoutesByTo {
   '/verify-otp': typeof VerifyOtpRouteRoute
+  '/company': typeof CompanyIndexRoute
   '/company-register/update': typeof CompanyRegisterUpdateRouteRoute
   '/401': typeof errors401Route
   '/403': typeof errors403Route
@@ -309,7 +333,6 @@ export interface FileRoutesByTo {
   '/company-login': typeof CompanyLoginIndexRoute
   '/company-register-success': typeof CompanyRegisterSuccessIndexRoute
   '/company-register': typeof CompanyRegisterIndexRoute
-  '/company': typeof CompanyIndexRoute
   '/companies/$companyId': typeof publicCompaniesCompanyIdRoute
   '/forgot-password': typeof authForgotPasswordIndexRoute
   '/sign-in': typeof authSignInIndexRoute
@@ -326,11 +349,13 @@ export interface FileRoutesByTo {
   '/admin/settings': typeof AuthenticatedAdminSettingsIndexRoute
   '/admin/tasks': typeof AuthenticatedAdminTasksIndexRoute
   '/admin/users': typeof AuthenticatedAdminUsersIndexRoute
+  '/company/projects': typeof AuthenticatedCompanyProjectsIndexRoute
   '/admin/companies/approve': typeof AuthenticatedAdminCompaniesApproveIndexRoute
-  '/admin/companies/create': typeof AuthenticatedAdminCompaniesCreateIndexRoute
   '/admin/companies/edit': typeof AuthenticatedAdminCompaniesEditIndexRoute
   '/admin/users/create': typeof AuthenticatedAdminUsersCreateIndexRoute
   '/admin/users/info': typeof AuthenticatedAdminUsersInfoIndexRoute
+  '/company/projects/$projectId': typeof AuthenticatedCompanyProjectsProjectIdIndexRoute
+  '/company/projects/create': typeof AuthenticatedCompanyProjectsCreateIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -340,6 +365,7 @@ export interface FileRoutesById {
   '/verify-otp': typeof VerifyOtpRouteRoute
   '/(public)/companies': typeof publicCompaniesRouteRouteWithChildren
   '/_authenticated/admin': typeof AuthenticatedAdminRouteRouteWithChildren
+  '/_authenticated/company': typeof AuthenticatedCompanyRouteRouteWithChildren
   '/company-register/update': typeof CompanyRegisterUpdateRouteRoute
   '/(errors)/401': typeof errors401Route
   '/(errors)/403': typeof errors403Route
@@ -368,11 +394,13 @@ export interface FileRoutesById {
   '/_authenticated/admin/settings/': typeof AuthenticatedAdminSettingsIndexRoute
   '/_authenticated/admin/tasks/': typeof AuthenticatedAdminTasksIndexRoute
   '/_authenticated/admin/users/': typeof AuthenticatedAdminUsersIndexRoute
+  '/_authenticated/company/projects/': typeof AuthenticatedCompanyProjectsIndexRoute
   '/_authenticated/admin/companies/approve/': typeof AuthenticatedAdminCompaniesApproveIndexRoute
-  '/_authenticated/admin/companies/create/': typeof AuthenticatedAdminCompaniesCreateIndexRoute
   '/_authenticated/admin/companies/edit/': typeof AuthenticatedAdminCompaniesEditIndexRoute
   '/_authenticated/admin/users/create/': typeof AuthenticatedAdminUsersCreateIndexRoute
   '/_authenticated/admin/users/info/': typeof AuthenticatedAdminUsersInfoIndexRoute
+  '/_authenticated/company/projects/$projectId/': typeof AuthenticatedCompanyProjectsProjectIdIndexRoute
+  '/_authenticated/company/projects/create/': typeof AuthenticatedCompanyProjectsCreateIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -409,14 +437,17 @@ export interface FileRouteTypes {
     | '/admin/settings/'
     | '/admin/tasks'
     | '/admin/users'
+    | '/company/projects'
     | '/admin/companies/approve'
-    | '/admin/companies/create'
     | '/admin/companies/edit'
     | '/admin/users/create'
     | '/admin/users/info'
+    | '/company/projects/$projectId'
+    | '/company/projects/create'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/verify-otp'
+    | '/company'
     | '/company-register/update'
     | '/401'
     | '/403'
@@ -427,7 +458,6 @@ export interface FileRouteTypes {
     | '/company-login'
     | '/company-register-success'
     | '/company-register'
-    | '/company'
     | '/companies/$companyId'
     | '/forgot-password'
     | '/sign-in'
@@ -444,11 +474,13 @@ export interface FileRouteTypes {
     | '/admin/settings'
     | '/admin/tasks'
     | '/admin/users'
+    | '/company/projects'
     | '/admin/companies/approve'
-    | '/admin/companies/create'
     | '/admin/companies/edit'
     | '/admin/users/create'
     | '/admin/users/info'
+    | '/company/projects/$projectId'
+    | '/company/projects/create'
   id:
     | '__root__'
     | '/(auth)'
@@ -457,6 +489,7 @@ export interface FileRouteTypes {
     | '/verify-otp'
     | '/(public)/companies'
     | '/_authenticated/admin'
+    | '/_authenticated/company'
     | '/company-register/update'
     | '/(errors)/401'
     | '/(errors)/403'
@@ -485,11 +518,13 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/settings/'
     | '/_authenticated/admin/tasks/'
     | '/_authenticated/admin/users/'
+    | '/_authenticated/company/projects/'
     | '/_authenticated/admin/companies/approve/'
-    | '/_authenticated/admin/companies/create/'
     | '/_authenticated/admin/companies/edit/'
     | '/_authenticated/admin/users/create/'
     | '/_authenticated/admin/users/info/'
+    | '/_authenticated/company/projects/$projectId/'
+    | '/_authenticated/company/projects/create/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -498,6 +533,7 @@ export interface RootRouteChildren {
   CompanyRouteRoute: typeof CompanyRouteRouteWithChildren
   VerifyOtpRouteRoute: typeof VerifyOtpRouteRoute
   AuthenticatedAdminRouteRoute: typeof AuthenticatedAdminRouteRouteWithChildren
+  AuthenticatedCompanyRouteRoute: typeof AuthenticatedCompanyRouteRouteWithChildren
   CompanyRegisterUpdateRouteRoute: typeof CompanyRegisterUpdateRouteRoute
   errors401Route: typeof errors401Route
   errors403Route: typeof errors403Route
@@ -616,6 +652,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CompanyRegisterUpdateRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/company': {
+      id: '/_authenticated/company'
+      path: '/company'
+      fullPath: '/company'
+      preLoaderRoute: typeof AuthenticatedCompanyRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated/admin': {
       id: '/_authenticated/admin'
       path: '/admin'
@@ -707,6 +750,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminSettingsRouteRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
     }
+    '/_authenticated/company/projects/': {
+      id: '/_authenticated/company/projects/'
+      path: '/projects'
+      fullPath: '/company/projects'
+      preLoaderRoute: typeof AuthenticatedCompanyProjectsIndexRouteImport
+      parentRoute: typeof AuthenticatedCompanyRouteRoute
+    }
     '/_authenticated/admin/users/': {
       id: '/_authenticated/admin/users/'
       path: '/users'
@@ -749,6 +799,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminSettingsAccountRouteImport
       parentRoute: typeof AuthenticatedAdminSettingsRouteRoute
     }
+    '/_authenticated/company/projects/create/': {
+      id: '/_authenticated/company/projects/create/'
+      path: '/projects/create'
+      fullPath: '/company/projects/create'
+      preLoaderRoute: typeof AuthenticatedCompanyProjectsCreateIndexRouteImport
+      parentRoute: typeof AuthenticatedCompanyRouteRoute
+    }
+    '/_authenticated/company/projects/$projectId/': {
+      id: '/_authenticated/company/projects/$projectId/'
+      path: '/projects/$projectId'
+      fullPath: '/company/projects/$projectId'
+      preLoaderRoute: typeof AuthenticatedCompanyProjectsProjectIdIndexRouteImport
+      parentRoute: typeof AuthenticatedCompanyRouteRoute
+    }
     '/_authenticated/admin/users/info/': {
       id: '/_authenticated/admin/users/info/'
       path: '/users/info'
@@ -768,13 +832,6 @@ declare module '@tanstack/react-router' {
       path: '/companies/edit'
       fullPath: '/admin/companies/edit'
       preLoaderRoute: typeof AuthenticatedAdminCompaniesEditIndexRouteImport
-      parentRoute: typeof AuthenticatedAdminRouteRoute
-    }
-    '/_authenticated/admin/companies/create/': {
-      id: '/_authenticated/admin/companies/create/'
-      path: '/companies/create'
-      fullPath: '/admin/companies/create'
-      preLoaderRoute: typeof AuthenticatedAdminCompaniesCreateIndexRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
     }
     '/_authenticated/admin/companies/approve/': {
@@ -877,7 +934,6 @@ interface AuthenticatedAdminRouteRouteChildren {
   AuthenticatedAdminTasksIndexRoute: typeof AuthenticatedAdminTasksIndexRoute
   AuthenticatedAdminUsersIndexRoute: typeof AuthenticatedAdminUsersIndexRoute
   AuthenticatedAdminCompaniesApproveIndexRoute: typeof AuthenticatedAdminCompaniesApproveIndexRoute
-  AuthenticatedAdminCompaniesCreateIndexRoute: typeof AuthenticatedAdminCompaniesCreateIndexRoute
   AuthenticatedAdminCompaniesEditIndexRoute: typeof AuthenticatedAdminCompaniesEditIndexRoute
   AuthenticatedAdminUsersCreateIndexRoute: typeof AuthenticatedAdminUsersCreateIndexRoute
   AuthenticatedAdminUsersInfoIndexRoute: typeof AuthenticatedAdminUsersInfoIndexRoute
@@ -894,8 +950,6 @@ const AuthenticatedAdminRouteRouteChildren: AuthenticatedAdminRouteRouteChildren
     AuthenticatedAdminUsersIndexRoute: AuthenticatedAdminUsersIndexRoute,
     AuthenticatedAdminCompaniesApproveIndexRoute:
       AuthenticatedAdminCompaniesApproveIndexRoute,
-    AuthenticatedAdminCompaniesCreateIndexRoute:
-      AuthenticatedAdminCompaniesCreateIndexRoute,
     AuthenticatedAdminCompaniesEditIndexRoute:
       AuthenticatedAdminCompaniesEditIndexRoute,
     AuthenticatedAdminUsersCreateIndexRoute:
@@ -909,12 +963,34 @@ const AuthenticatedAdminRouteRouteWithChildren =
     AuthenticatedAdminRouteRouteChildren,
   )
 
+interface AuthenticatedCompanyRouteRouteChildren {
+  AuthenticatedCompanyProjectsIndexRoute: typeof AuthenticatedCompanyProjectsIndexRoute
+  AuthenticatedCompanyProjectsProjectIdIndexRoute: typeof AuthenticatedCompanyProjectsProjectIdIndexRoute
+  AuthenticatedCompanyProjectsCreateIndexRoute: typeof AuthenticatedCompanyProjectsCreateIndexRoute
+}
+
+const AuthenticatedCompanyRouteRouteChildren: AuthenticatedCompanyRouteRouteChildren =
+  {
+    AuthenticatedCompanyProjectsIndexRoute:
+      AuthenticatedCompanyProjectsIndexRoute,
+    AuthenticatedCompanyProjectsProjectIdIndexRoute:
+      AuthenticatedCompanyProjectsProjectIdIndexRoute,
+    AuthenticatedCompanyProjectsCreateIndexRoute:
+      AuthenticatedCompanyProjectsCreateIndexRoute,
+  }
+
+const AuthenticatedCompanyRouteRouteWithChildren =
+  AuthenticatedCompanyRouteRoute._addFileChildren(
+    AuthenticatedCompanyRouteRouteChildren,
+  )
+
 const rootRouteChildren: RootRouteChildren = {
   authRouteRoute: authRouteRouteWithChildren,
   publicRouteRoute: publicRouteRouteWithChildren,
   CompanyRouteRoute: CompanyRouteRouteWithChildren,
   VerifyOtpRouteRoute: VerifyOtpRouteRoute,
   AuthenticatedAdminRouteRoute: AuthenticatedAdminRouteRouteWithChildren,
+  AuthenticatedCompanyRouteRoute: AuthenticatedCompanyRouteRouteWithChildren,
   CompanyRegisterUpdateRouteRoute: CompanyRegisterUpdateRouteRoute,
   errors401Route: errors401Route,
   errors403Route: errors403Route,
