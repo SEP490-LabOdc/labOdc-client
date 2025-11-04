@@ -4,22 +4,31 @@ import { RegisterCompanyForm } from './components/register-company-form';
 import { useCompanyRegister } from '@/hooks/api'
 import { useNavigate } from '@tanstack/react-router'
 import { toast } from 'sonner'
-import type { CompanyPayload } from '@/features/companies/types.ts'
+import type { CompanyCreatePayload, CompanyPayload } from '@/features/companies/types.ts'
 
 export default function CompanySignUpPage() {
     const navigate = useNavigate();
 
     const { mutateAsync, isPending } = useCompanyRegister();
 
-    const handleRegisterSubmit = async (data: CompanyPayload) => {
-        try {
-            await mutateAsync(data);
-            await navigate({ to: '/verify-otp', search: { companyEmail: data.email } })
-            toast.success('Đăng ký công ty thành công!')
-        } catch (e) {
-            console.error(e)
-        }
-    };
+  const handleRegisterSubmit = async (data: CompanyCreatePayload | CompanyPayload) => {
+    try {
+      await mutateAsync(data);
+
+      if ('email' in data && data.email) {
+        await navigate({ to: '/verify-otp', search: { companyEmail: data.email } });
+        toast.success('Đăng ký công ty thành công!');
+      }
+    } catch (error: unknown) {
+      console.error(error);
+
+      const errorMessage = (error as any)?.response?.data?.message ||
+        (error as any)?.message ||
+        "Đăng ký thất bại. Vui lòng thử lại.";
+
+      toast.error(errorMessage);
+    }
+  };
 
     return (
         <div className="min-h-screen flex">
