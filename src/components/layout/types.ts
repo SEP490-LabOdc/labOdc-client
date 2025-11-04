@@ -1,11 +1,5 @@
 import type { LinkProps } from '@tanstack/react-router'
 
-interface User {
-  name: string
-  email: string
-  avatar: string
-}
-
 interface BaseNavItem {
   title: string
   badge?: string

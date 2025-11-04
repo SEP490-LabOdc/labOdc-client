@@ -22,9 +22,14 @@ export function CompanyRegisterUpdatePage() {
       await mutateAsync(data);
       toast.success('Cập nhật thông tin đăng ký thành công!')
       await navigate({ to: '/company-register-success' });
-    } catch (e) {
-      console.error(e)
-      toast.error("Cập nhật thông tin đăng ký thất bại. Vui lòng thử lại.")
+    } catch (error: any) {
+      console.error(error);
+
+      const errorMessage = error?.response?.data?.message ||
+        error?.message ||
+        "Cập nhật thông tin thất bại. Vui lòng thử lại.";
+
+      toast.error(errorMessage);
     }
   };
 

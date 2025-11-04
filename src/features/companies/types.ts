@@ -45,6 +45,19 @@ export type CompanyPayload = {
   }>;
 };
 
+export type CompanyCreatePayload = {
+  address: string;
+  businessLicenseLink: string;
+  businessLicenseFileName?: string;
+  email: string;
+  taxCode: string;
+  name: string;
+  phone: string;
+  contactPersonEmail: string;
+  contactPersonName: string;
+  contactPersonPhone: string;
+}
+
 export type CompanyUpdateRegister = {
   companyName: string,
   companyEmail: string,
