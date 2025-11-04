@@ -151,7 +151,7 @@ export const labAdminSidebarData: SidebarData = {
       items: [
         {
           title: 'Dashboard',
-          url: '/admin',
+          url: '/lab-admin',
           icon: IconLayoutDashboard,
         },
         {
@@ -160,22 +160,22 @@ export const labAdminSidebarData: SidebarData = {
           items: [
             {
               title: 'Tất cả',
-              url: '/admin/companies',
+              url: '/lab-admin/companies',
               icon: IconList,
             },
             {
               title: 'Đang chờ xác thực',
-              url: '/admin/companies?status=["PENDING"]',
+              url: '/lab-admin/companies?status=["PENDING"]',
               icon: IconClockHour4,
             },
             {
               title: 'Đang hoạt động',
-              url: '/admin/companies?status=["ACTIVE"]',
+              url: '/lab-admin/companies?status=["ACTIVE"]',
               icon: IconCircleCheck,
             },
             {
               title: 'Đã vô hiệu hóa',
-              url: '/admin/companies?status=["DISABLED"]',
+              url: '/lab-admin/companies?status=["DISABLED"]',
               icon: IconCircleX,
             },
           ]
@@ -186,22 +186,22 @@ export const labAdminSidebarData: SidebarData = {
           items: [
             {
               title: 'Đang chờ phê duyệt',
-              url: '/',
+              url: '/lab-admin',
               icon: IconClockHour4,
             },
             {
               title: 'Đang hoạt động',
-              url: '/',
+              url: '/lab-admin',
               icon: IconCircleCheck,
             },
             {
               title: 'Đã hoàn thành',
-              url: '/',
+              url: '/lab-admin',
               icon: IconCircleCheckFilled,
             },
             {
               title: 'Đã hủy',
-              url: '/',
+              url: '/lab-admin',
               icon: IconCircleX,
             },
           ]
