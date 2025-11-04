@@ -19,12 +19,12 @@ import { useUser } from '@/context/UserContext'
 import { getAvatarFallback } from '@/helpers/stringUtils.ts'
 
 export function ProfileDropdown() {
-  const { auth } = useAuthStore()
+  const logout = useAuthStore(state => state.logout)
   const navigate = useNavigate()
   const { user } = useUser()
 
   const handleLogout = async () => {
-    auth.logout()
+    logout()
     await navigate({ to: '/sign-in' })
     toast.success('Đăng xuất thành công!')
   }
