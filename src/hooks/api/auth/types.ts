@@ -35,3 +35,8 @@ export type TCompanyRegisterDTO = {
     type: string;
   }>;
 };
+
+export type TRefreshTokenDTO = {
+  userId: string;
+  refreshToken: string;
+}

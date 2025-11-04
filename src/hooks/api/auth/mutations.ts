@@ -1,6 +1,7 @@
 import apiRequest from '@/config/request.ts'
 import { useMutation } from '@tanstack/react-query'
-import type { TCompanyRegisterDTO, UserLoginGooglePayload, UserLoginPayload } from './types.ts'
+import { useAuthStore } from '@/stores/auth-store'
+import type { TCompanyRegisterDTO, TRefreshTokenDTO, UserLoginGooglePayload, UserLoginPayload } from './types.ts'
 
 const login = async (payload: UserLoginPayload) => {
   const { data } = await apiRequest.post('/api/v1/auth/login', payload)
@@ -8,18 +9,37 @@ const login = async (payload: UserLoginPayload) => {
 }
 
 export const useSignIn = () => {
+  const { setTokens } = useAuthStore()
+
   return useMutation({
     mutationFn: (payload: UserLoginPayload) => login(payload),
+    onSuccess: (data) => {
+      setTokens(data.data.accessToken, data.data.refreshToken)
+    }
+  })
+}
+
+export const useRefreshToken = () => {
+  return useMutation({
+    mutationFn: async (payload: TRefreshTokenDTO) => {
+      const { data } = await apiRequest.post('/api/v1/auth/refresh', payload)
+
+      return data
+    },
   })
 }
 
 export const useSignInWithGoogle = () => {
+  const { setTokens } = useAuthStore()
+
   return useMutation({
     mutationFn: async (payload: UserLoginGooglePayload) => {
       const { data } = await apiRequest.post('/api/v1/auth/google', payload)
-
       return data
     },
+    onSuccess: (data) => {
+      setTokens(data.data.accessToken, data.data.refreshToken)
+    }
   })
 }
 
@@ -36,7 +56,7 @@ export const useCompanyRegisterUpdate = (token: string) => {
   return useMutation({
     mutationFn: async (payload: TCompanyRegisterDTO) => {
       const url = '/api/v1/companies/onboard/update';
-      
+
       const body = payload;
 
       const config = {
