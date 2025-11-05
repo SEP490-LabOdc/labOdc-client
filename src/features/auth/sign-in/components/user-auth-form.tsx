@@ -11,6 +11,7 @@ import { Loader2, LogIn } from 'lucide-react'
 import { PasswordInput } from '@/components/password-input'
 import { toast } from 'sonner'
 import { useSignIn } from '@/hooks/api/auth'
+import { jwtDecode } from 'jwt-decode'
 
 const formSchema = z.object({
   email: z.email({
@@ -38,11 +39,30 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
     },
   })
 
+  type UserRole = 'SYSTEM_ADMIN' | 'LAB_ADMIN' | 'SUPERVISOR' | 'COMPANY' | 'USER';
+
+  const roleNavigateRoute: Record<UserRole, string> = {
+    SYSTEM_ADMIN: '/admin/',
+    LAB_ADMIN: '/lab-admin/',
+    SUPERVISOR: '/',
+    COMPANY: '/',
+    USER: '/'
+  };
+
   function onSubmit(data: z.infer<typeof formSchema>) {
     signIn.mutate(data, {
-      onSuccess: async () => {
+      onSuccess: async (res) => {
         toast.success('Đăng nhập thành công!')
-        await navigate({ to: '/' })
+
+        const decodedRole =
+          res.data.user?.role ??
+          res.data.role ??
+          (jwtDecode<{ role?: string }>(res.data.accessToken).role);
+
+        const role = decodedRole as UserRole | undefined;
+        const navagatedRoute = role ? roleNavigateRoute[role] : '/';
+
+        await navigate({ to: navagatedRoute })
       },
       onError: () => {
         toast.error('Đăng nhập thất bại!')
