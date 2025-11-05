@@ -23,6 +23,7 @@ import './styles/index.css'
 
 import "nprogress/nprogress.css";
 import { GeneralError } from './features/errors/general-error.tsx';
+import { useAuthStore } from './stores/auth-store.ts';
 
 
 // Create a new router instance
@@ -43,7 +44,7 @@ const queryClient = new QueryClient({
 // Create a new router instance
 const router = createRouter({
   routeTree,
-  context: { queryClient, serverConfig: null },
+  context: { queryClient, serverConfig: null, authStore: useAuthStore },
   defaultPendingComponent: () => (
     <div className="flex h-screen w-screen items-center justify-center bg-bunker-800">
       <Lottie isAutoPlay icon="infisical_loading" className="h-32 w-32" />
