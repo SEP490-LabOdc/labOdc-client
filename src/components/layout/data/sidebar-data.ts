@@ -285,34 +285,8 @@ export const companySidebarData: SidebarData = {
       items: [
         {
           title: 'Dashboard',
-          url: '/admin',
+          url: '/company-manager',
           icon: IconLayoutDashboard,
-        },
-        {
-          title: 'Quản lý công ty',
-          icon: IconBuildingStore,
-          items: [
-            {
-              title: 'Tất cả',
-              url: '/admin/companies',
-              icon: IconList,
-            },
-            {
-              title: 'Đang chờ xác thực',
-              url: '/admin/companies?status=["PENDING"]',
-              icon: IconClockHour4,
-            },
-            {
-              title: 'Đang hoạt động',
-              url: '/admin/companies?status=["ACTIVE"]',
-              icon: IconCircleCheck,
-            },
-            {
-              title: 'Đã vô hiệu hóa',
-              url: '/admin/companies?status=["DISABLED"]',
-              icon: IconCircleX,
-            },
-          ]
         },
         {
           title: 'Quản lý dự án',
