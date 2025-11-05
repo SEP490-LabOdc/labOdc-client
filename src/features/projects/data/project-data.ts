@@ -1,52 +1,133 @@
-export const projects = [
+export interface Skill {
+  id: string;
+  name: string;
+  description: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface Project {
+  id: string;
+  companyId: string;
+  mentorId: string;
+  title: string;
+  description: string;
+  status: string;
+  startDate: string;
+  endDate: string;
+  budget: number;
+  skills: Skill[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+export const projects: Project[] = [
   {
-    id: 1,
+    id: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    companyId: "comp-001",
+    mentorId: "mentor-001",
     title: "E-commerce Mobile App Development",
-    description: "Build a modern mobile app for our retail business with payment integration and inventory management.",
-    skills: ["React Native", "Node.js", "MongoDB", "Payment APIs"],
-    duration: "3-4 months",
-    budget: "$15,000 - $25,000",
-    enterprise: "RetailCorp Inc.",
-    type: "Mobile",
-    proposals: 12,
-    rating: 4.8,
+    description: "Build a comprehensive mobile e-commerce application with React Native, featuring user authentication, product catalog, shopping cart, and payment integration.",
+    status: "OPEN",
+    startDate: "2024-01-15",
+    endDate: "2024-04-15",
+    budget: 25000,
+    skills: [
+      {
+        id: "skill-001",
+        name: "React Native",
+        description: "Cross-platform mobile development framework",
+        createdAt: "2024-01-01T00:00:00.000Z",
+        updatedAt: "2024-01-01T00:00:00.000Z"
+      },
+      {
+        id: "skill-002",
+        name: "Node.js",
+        description: "Backend JavaScript runtime",
+        createdAt: "2024-01-01T00:00:00.000Z",
+        updatedAt: "2024-01-01T00:00:00.000Z"
+      },
+      {
+        id: "skill-003",
+        name: "MongoDB",
+        description: "NoSQL database",
+        createdAt: "2024-01-01T00:00:00.000Z",
+        updatedAt: "2024-01-01T00:00:00.000Z"
+      }
+    ],
+    createdAt: "2024-01-01T10:00:00.000Z",
+    updatedAt: "2024-01-01T10:00:00.000Z"
   },
   {
-    id: 2,
-    title: "AI-Powered Analytics Dashboard",
-    description:
-      "Create an intelligent dashboard that provides real-time insights and predictive analytics for our operations.",
-    skills: ["Python", "Machine Learning", "React", "PostgreSQL"],
-    duration: "2-3 months",
-    budget: "$20,000 - $35,000",
-    enterprise: "DataTech Solutions",
-    type: "AI",
-    proposals: 8,
-    rating: 4.9,
+    id: "4fb85f64-5717-4562-b3fc-2c963f66afa7",
+    companyId: "comp-002",
+    mentorId: "mentor-002",
+    title: "AI-Powered Data Analytics Platform",
+    description: "Develop a machine learning platform for predictive analytics using Python, TensorFlow, and cloud infrastructure.",
+    status: "IN_PROGRESS",
+    startDate: "2024-02-01",
+    endDate: "2024-06-01",
+    budget: 45000,
+    skills: [
+      {
+        id: "skill-004",
+        name: "Python",
+        description: "Programming language for data science",
+        createdAt: "2024-01-01T00:00:00.000Z",
+        updatedAt: "2024-01-01T00:00:00.000Z"
+      },
+      {
+        id: "skill-005",
+        name: "TensorFlow",
+        description: "Machine learning framework",
+        createdAt: "2024-01-01T00:00:00.000Z",
+        updatedAt: "2024-01-01T00:00:00.000Z"
+      },
+      {
+        id: "skill-006",
+        name: "AWS",
+        description: "Cloud computing platform",
+        createdAt: "2024-01-01T00:00:00.000Z",
+        updatedAt: "2024-01-01T00:00:00.000Z"
+      }
+    ],
+    createdAt: "2024-01-15T10:00:00.000Z",
+    updatedAt: "2024-01-15T10:00:00.000Z"
   },
   {
-    id: 3,
-    title: "Cloud Infrastructure Migration",
-    description: "Migrate our legacy systems to AWS cloud with improved scalability and security measures.",
-    skills: ["AWS", "Docker", "Kubernetes", "DevOps"],
-    duration: "4-6 months",
-    budget: "$30,000 - $50,000",
-    enterprise: "TechFlow Corp",
-    type: "Cloud",
-    proposals: 15,
-    rating: 4.7,
-  },
-  {
-    id: 4,
-    title: "Customer Portal Web Application",
-    description:
-      "Develop a comprehensive customer portal with account management, support tickets, and billing features.",
-    skills: ["Next.js", "TypeScript", "Prisma", "Stripe"],
-    duration: "2-3 months",
-    budget: "$12,000 - $20,000",
-    enterprise: "ServiceHub Ltd",
-    type: "Web",
-    proposals: 6,
-    rating: 4.6,
-  },
-]
+    id: "5gc85f64-5717-4562-b3fc-2c963f66afa8",
+    companyId: "comp-003",
+    mentorId: "mentor-003",
+    title: "Enterprise Web Application",
+    description: "Create a scalable web application using React, TypeScript, and microservices architecture for enterprise resource planning.",
+    status: "OPEN",
+    startDate: "2024-03-01",
+    endDate: "2024-08-01",
+    budget: 60000,
+    skills: [
+      {
+        id: "skill-007",
+        name: "React",
+        description: "Frontend JavaScript library",
+        createdAt: "2024-01-01T00:00:00.000Z",
+        updatedAt: "2024-01-01T00:00:00.000Z"
+      },
+      {
+        id: "skill-008",
+        name: "TypeScript",
+        description: "Typed superset of JavaScript",
+        createdAt: "2024-01-01T00:00:00.000Z",
+        updatedAt: "2024-01-01T00:00:00.000Z"
+      },
+      {
+        id: "skill-009",
+        name: "Docker",
+        description: "Containerization platform",
+        createdAt: "2024-01-01T00:00:00.000Z",
+        updatedAt: "2024-01-01T00:00:00.000Z"
+      }
+    ],
+    createdAt: "2024-02-01T10:00:00.000Z",
+    updatedAt: "2024-02-01T10:00:00.000Z"
+  }
+];
