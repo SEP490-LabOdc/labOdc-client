@@ -11,7 +11,7 @@ import { Link } from '@tanstack/react-router'
 import type { Project } from '@/types/project'
 
 export function CompanyProjectDetailPage() {
-    const { projectId } = useParams({ from: '/_authenticated/company/projects/$projectId/' })
+    const { projectId } = useParams({ from: '' })
 
     // TODO: Dùng useQuery để fetch project
     // const { data: project, isLoading } = useGetProjectById(projectId)
@@ -28,7 +28,7 @@ export function CompanyProjectDetailPage() {
                 <div className="text-center">
                     <p className="text-lg text-muted-foreground">Không tìm thấy dự án.</p>
                     <Button asChild variant="outline" className="mt-4">
-                        <Link to="/company/projects">Quay lại danh sách</Link>
+                        <Link to="/company-admin/projects">Quay lại danh sách</Link>
                     </Button>
                 </div>
             </div>
@@ -42,7 +42,7 @@ export function CompanyProjectDetailPage() {
         <div className="container mx-auto py-10">
             <div className="mb-6">
                 <Button asChild variant="ghost" size="sm" className="mb-4">
-                    <Link to="/company/projects">
+                    <Link to="/company-admin/projects">
                         <ArrowLeft className="mr-2 h-4 w-4" />
                         Quay lại danh sách
                     </Link>

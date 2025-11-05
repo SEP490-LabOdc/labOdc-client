@@ -7,8 +7,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { Card } from '@/components/ui/card'
 
 export function CompanyProjectListPage() {
-    // Trang tĩnh - không gọi API, chỉ hiển thị layout mẫu
-    const data: Project[] = [] // Empty array để hiển thị "Không có kết quả nào"
+    const data: Project[] = []
     const isLoading = false
 
     return (
@@ -16,7 +15,7 @@ export function CompanyProjectListPage() {
             <div className="flex justify-between items-center mb-6">
                 <h2 className="text-3xl font-bold tracking-tight">Quản lý dự án</h2>
                 <Button asChild>
-                    <Link to="/company/projects/create">
+                    <Link to="/company-admin/projects/create">
                         <PlusCircle className="mr-2 h-4 w-4" />
                         Tạo dự án
                     </Link>
@@ -44,7 +43,7 @@ export function CompanyProjectListPage() {
                     <h3 className="text-lg font-semibold mb-2">Chưa có dự án nào</h3>
                     <p className="text-muted-foreground mb-4">Tạo dự án đầu tiên để bắt đầu</p>
                     <Button asChild>
-                        <Link to="/company/projects/create">
+                        <Link to="/company-admin/projects/create">
                             <PlusCircle className="mr-2 h-4 w-4" />
                             Tạo dự án mới
                         </Link>
