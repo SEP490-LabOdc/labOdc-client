@@ -1,0 +1,1 @@
+export { ProjectDetailModal } from './ProjectDetailModal';
