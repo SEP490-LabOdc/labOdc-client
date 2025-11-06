@@ -1,6 +1,7 @@
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { projectKeys } from './query-keys.ts'
 import { projects } from './data.ts'
+import apiRequest from '@/config/request';
 
 const fetchProjects = () => {
   return new Promise((resolve) => {
@@ -38,3 +39,13 @@ export const useGetProjectsByCompanyId = (companyId: string) =>
       return data
     }
   })
+
+export function getMyCompanyProjects() {
+    return useQuery({
+        queryKey: projectKeys.myCompany(),
+        queryFn: async () => {
+            const res = await apiRequest.get('/api/v1/projects/my-company-projects');
+            return res.data;
+        }
+    });
+}
