@@ -7,7 +7,6 @@ export const PROJECT_STATUS = {
     HIRING: 'HIRING',
     IN_PROGRESS: 'IN_PROGRESS',
     COMPLETED: 'COMPLETED',
-    CLOSED: 'CLOSED',
 } as const
 
 export const PROJECT_STATUS_LABEL: Record<ProjectStatus, string> = {
@@ -16,7 +15,6 @@ export const PROJECT_STATUS_LABEL: Record<ProjectStatus, string> = {
     [PROJECT_STATUS.HIRING]: 'Đang tuyển',
     [PROJECT_STATUS.IN_PROGRESS]: 'Đang thực hiện',
     [PROJECT_STATUS.COMPLETED]: 'Hoàn thành',
-    [PROJECT_STATUS.CLOSED]: 'Đã đóng',
 }
 
 export const PROJECT_STATUS_OPTIONS = Object.entries(PROJECT_STATUS_LABEL).map(

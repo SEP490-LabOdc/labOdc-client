@@ -13,12 +13,14 @@ import {
   IconClipboardList,    // For Quản lý dự án
   IconCircleCheckFilled,// For Đã hoàn thành
   IconHistory,
-  IconList,         // For Lịch sử cập nhật
+  IconList,
+  IconProgress,         // For Lịch sử cập nhật
 } from '@tabler/icons-react'
 // import { AudioWaveform, Command, GalleryVerticalEnd } from 'lucide-react'
 import { type SidebarData } from '../types'
 import { USER_ROLE, USER_ROLE_LABEL } from '@/features/admin/users/data/schema'
 import { Building2, FlaskConical, LockKeyhole, User } from 'lucide-react'
+import { PROJECT_STATUS } from '@/features/companyManage/project/data/schema'
 
 export const systemAmdminSidebarData: SidebarData = {
   navGroups: [
@@ -298,27 +300,32 @@ export const companySidebarData: SidebarData = {
               icon: IconList,
             },
             {
-              title: 'Đang chờ phê duyệt',
-              url: '/',
+              title: 'Chờ duyệt',
+              url: '/company-manage/projects?status=["' + PROJECT_STATUS.PENDING + '"]',
               icon: IconClockHour4,
             },
             {
-              title: 'Đang hoạt động',
-              url: '/',
+              title: 'Đã duyệt',
+              url: '/company-manage/projects?status=["' + PROJECT_STATUS.APPROVED + '"]',
               icon: IconCircleCheck,
             },
             {
-              title: 'Đã hoàn thành',
-              url: '/',
-              icon: IconCircleCheckFilled,
+              title: 'Đang tuyển',
+              url: '/company-manage/projects?status=["' + PROJECT_STATUS.HIRING + '"]',
+              icon: IconUserSearch,
             },
             {
-              title: 'Đã hủy',
-              url: '/',
-              icon: IconCircleX,
+              title: 'Đang thực hiện',
+              url: '/company-manage/projects?status=["' + PROJECT_STATUS.IN_PROGRESS + '"]',
+              icon: IconProgress,
             },
-          ]
-        },
+            {
+              title: 'Hoàn thành',
+              url: '/company-manage/projects?status=["' + PROJECT_STATUS.COMPLETED + '"]',
+              icon: IconCircleCheckFilled,
+            },
+          ],
+        }
       ]
     },
   ],

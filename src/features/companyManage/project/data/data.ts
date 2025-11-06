@@ -21,8 +21,4 @@ export const callTypes = new Map<ProjectStatus, string>([
         'COMPLETED',
         'bg-teal-200/40 text-teal-900 dark:text-teal-100 border-teal-300',
     ],
-    [
-        'CLOSED',
-        'bg-neutral-300/40 text-neutral-800 dark:text-neutral-200 border-neutral-400',
-    ],
 ])
