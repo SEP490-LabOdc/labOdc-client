@@ -1,4 +1,4 @@
 export * from './types.ts'
-export { projectKeys } from './query-keys.ts'
-export { getMyCompanyProjects } from './queries.ts'
+export * from './queries.ts'
+export * from './query-keys.ts'
 
