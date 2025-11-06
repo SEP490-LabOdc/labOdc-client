@@ -285,13 +285,18 @@ export const companySidebarData: SidebarData = {
       items: [
         {
           title: 'Dashboard',
-          url: '/company-manager',
+          url: '/company-manage',
           icon: IconLayoutDashboard,
         },
         {
           title: 'Quản lý dự án',
           icon: IconClipboardList,
           items: [
+            {
+              title: 'Tất cả',
+              url: '/company-manage/projects',
+              icon: IconList,
+            },
             {
               title: 'Đang chờ phê duyệt',
               url: '/',

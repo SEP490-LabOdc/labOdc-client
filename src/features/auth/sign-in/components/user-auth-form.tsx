@@ -45,7 +45,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
     SYSTEM_ADMIN: '/admin/',
     LAB_ADMIN: '/lab-admin/',
     SUPERVISOR: '/',
-    COMPANY: '/company-manager/',
+    COMPANY: '/company-manage/',
     USER: '/'
   };
 
