@@ -13,17 +13,19 @@ import {
   IconClipboardList,    // For Quản lý dự án
   IconCircleCheckFilled,// For Đã hoàn thành
   IconHistory,
-  IconList,         // For Lịch sử cập nhật
+  IconList,
+  IconProgress,         // For Lịch sử cập nhật
 } from '@tabler/icons-react'
 // import { AudioWaveform, Command, GalleryVerticalEnd } from 'lucide-react'
 import { type SidebarData } from '../types'
 import { USER_ROLE, USER_ROLE_LABEL } from '@/features/admin/users/data/schema'
 import { Building2, FlaskConical, LockKeyhole, User } from 'lucide-react'
+import { PROJECT_STATUS } from '@/features/companyManage/project/data/schema'
 
-export const sidebarData: SidebarData = {
+export const systemAmdminSidebarData: SidebarData = {
   navGroups: [
     {
-      title: 'Lab Management',
+      title: 'LabOdc System Admin',
       items: [
         {
           title: 'Dashboard',
@@ -139,6 +141,258 @@ export const sidebarData: SidebarData = {
             }
           ]
         }
+      ]
+    },
+  ],
+}
+
+export const labAdminSidebarData: SidebarData = {
+  navGroups: [
+    {
+      title: 'LabOdc Manager',
+      items: [
+        {
+          title: 'Dashboard',
+          url: '/lab-admin',
+          icon: IconLayoutDashboard,
+        },
+        {
+          title: 'Quản lý công ty',
+          icon: IconBuildingStore,
+          items: [
+            {
+              title: 'Tất cả',
+              url: '/lab-admin/companies',
+              icon: IconList,
+            },
+            {
+              title: 'Đang chờ xác thực',
+              url: '/lab-admin/companies?status=["PENDING"]',
+              icon: IconClockHour4,
+            },
+            {
+              title: 'Đang hoạt động',
+              url: '/lab-admin/companies?status=["ACTIVE"]',
+              icon: IconCircleCheck,
+            },
+            {
+              title: 'Đã vô hiệu hóa',
+              url: '/lab-admin/companies?status=["DISABLED"]',
+              icon: IconCircleX,
+            },
+          ]
+        },
+        {
+          title: 'Quản lý dự án',
+          icon: IconClipboardList,
+          items: [
+            {
+              title: 'Đang chờ phê duyệt',
+              url: '/lab-admin',
+              icon: IconClockHour4,
+            },
+            {
+              title: 'Đang hoạt động',
+              url: '/lab-admin',
+              icon: IconCircleCheck,
+            },
+            {
+              title: 'Đã hoàn thành',
+              url: '/lab-admin',
+              icon: IconCircleCheckFilled,
+            },
+            {
+              title: 'Đã hủy',
+              url: '/lab-admin',
+              icon: IconCircleX,
+            },
+          ]
+        },
+      ]
+    },
+  ],
+}
+
+export const supervisorSidebarData: SidebarData = {
+  navGroups: [
+    {
+      title: 'LabOdc Supervisor',
+      items: [
+        {
+          title: 'Dashboard',
+          url: '/admin',
+          icon: IconLayoutDashboard,
+        },
+        {
+          title: 'Quản lý công ty',
+          icon: IconBuildingStore,
+          items: [
+            {
+              title: 'Tất cả',
+              url: '/admin/companies',
+              icon: IconList,
+            },
+            {
+              title: 'Đang chờ xác thực',
+              url: '/admin/companies?status=["PENDING"]',
+              icon: IconClockHour4,
+            },
+            {
+              title: 'Đang hoạt động',
+              url: '/admin/companies?status=["ACTIVE"]',
+              icon: IconCircleCheck,
+            },
+            {
+              title: 'Đã vô hiệu hóa',
+              url: '/admin/companies?status=["DISABLED"]',
+              icon: IconCircleX,
+            },
+          ]
+        },
+        {
+          title: 'Quản lý dự án',
+          icon: IconClipboardList,
+          items: [
+            {
+              title: 'Đang chờ phê duyệt',
+              url: '/',
+              icon: IconClockHour4,
+            },
+            {
+              title: 'Đang hoạt động',
+              url: '/',
+              icon: IconCircleCheck,
+            },
+            {
+              title: 'Đã hoàn thành',
+              url: '/',
+              icon: IconCircleCheckFilled,
+            },
+            {
+              title: 'Đã hủy',
+              url: '/',
+              icon: IconCircleX,
+            },
+          ]
+        },
+      ]
+    },
+  ],
+}
+
+export const companySidebarData: SidebarData = {
+  navGroups: [
+    {
+      title: 'LabOdc Company',
+      items: [
+        {
+          title: 'Dashboard',
+          url: '/company-manage',
+          icon: IconLayoutDashboard,
+        },
+        {
+          title: 'Quản lý dự án',
+          icon: IconClipboardList,
+          items: [
+            {
+              title: 'Tất cả',
+              url: '/company-manage/projects',
+              icon: IconList,
+            },
+            {
+              title: 'Chờ duyệt',
+              url: '/company-manage/projects?status=["' + PROJECT_STATUS.PENDING + '"]',
+              icon: IconClockHour4,
+            },
+            {
+              title: 'Đã duyệt',
+              url: '/company-manage/projects?status=["' + PROJECT_STATUS.APPROVED + '"]',
+              icon: IconCircleCheck,
+            },
+            {
+              title: 'Đang tuyển',
+              url: '/company-manage/projects?status=["' + PROJECT_STATUS.HIRING + '"]',
+              icon: IconUserSearch,
+            },
+            {
+              title: 'Đang thực hiện',
+              url: '/company-manage/projects?status=["' + PROJECT_STATUS.IN_PROGRESS + '"]',
+              icon: IconProgress,
+            },
+            {
+              title: 'Hoàn thành',
+              url: '/company-manage/projects?status=["' + PROJECT_STATUS.COMPLETED + '"]',
+              icon: IconCircleCheckFilled,
+            },
+          ],
+        }
+      ]
+    },
+  ],
+}
+
+export const userSidebarData: SidebarData = {
+  navGroups: [
+    {
+      title: 'LabOdc User',
+      items: [
+        {
+          title: 'Dashboard',
+          url: '/admin',
+          icon: IconLayoutDashboard,
+        },
+        {
+          title: 'Quản lý công ty',
+          icon: IconBuildingStore,
+          items: [
+            {
+              title: 'Tất cả',
+              url: '/admin/companies',
+              icon: IconList,
+            },
+            {
+              title: 'Đang chờ xác thực',
+              url: '/admin/companies?status=["PENDING"]',
+              icon: IconClockHour4,
+            },
+            {
+              title: 'Đang hoạt động',
+              url: '/admin/companies?status=["ACTIVE"]',
+              icon: IconCircleCheck,
+            },
+            {
+              title: 'Đã vô hiệu hóa',
+              url: '/admin/companies?status=["DISABLED"]',
+              icon: IconCircleX,
+            },
+          ]
+        },
+        {
+          title: 'Quản lý dự án',
+          icon: IconClipboardList,
+          items: [
+            {
+              title: 'Đang chờ phê duyệt',
+              url: '/',
+              icon: IconClockHour4,
+            },
+            {
+              title: 'Đang hoạt động',
+              url: '/',
+              icon: IconCircleCheck,
+            },
+            {
+              title: 'Đã hoàn thành',
+              url: '/',
+              icon: IconCircleCheckFilled,
+            },
+            {
+              title: 'Đã hủy',
+              url: '/',
+              icon: IconCircleX,
+            },
+          ]
+        },
       ]
     },
   ],
