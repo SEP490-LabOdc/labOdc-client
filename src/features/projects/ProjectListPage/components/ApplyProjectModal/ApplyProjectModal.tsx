@@ -8,12 +8,12 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog.tsx"
 import { Button } from "@/components/ui/button.tsx"
-import { Input } from "@/components/ui/input.tsx"
-import { Textarea } from "@/components/ui/textarea.tsx"
 import { Label } from "@/components/ui/label.tsx"
 import { Badge } from "@/components/ui/badge.tsx"
 import { Alert, AlertDescription } from "@/components/ui/alert.tsx"
+import { FileUpload } from "@/components/file/FileUpload.tsx"
 import type { Project } from '@/hooks/api/projects'
+import { cn } from '@/lib/utils.ts'
 
 interface ApplyProjectModalProps {
   project: Project | null
@@ -21,69 +21,60 @@ interface ApplyProjectModalProps {
   onClose: () => void
 }
 
-export function ApplyProjectModal({ project, isOpen, onClose }: ApplyProjectModalProps) {
-  const [formData, setFormData] = useState({
-    fullName: '',
-    email: '',
-    phone: '',
-    coverLetter: '',
-    experience: '',
-    expectedSalary: '',
-    availableStartDate: '',
-    portfolio: '',
-    linkedIn: ''
-  })
+interface ApplicationData {
+  userId: string
+  projectId: string
+  cvUrl: string
+}
 
+export function ApplyProjectModal({ project, isOpen, onClose }: ApplyProjectModalProps) {
+  const [cvUrl, setCvUrl] = useState<string | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   if (!project) return null
 
   const handleSubmit = async () => {
+    if (!cvUrl) return
+
     setIsSubmitting(true)
 
-    // Simulate API call
-    setTimeout(() => {
-      console.log('Submitting application:', formData)
+    try {
+      // Chuẩn bị data cho API application
+      const applicationData: ApplicationData = {
+        userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6", // Lấy từ auth context
+        projectId: project.projectId,
+        cvUrl: cvUrl
+      }
 
-      // Reset form and close modal
-      setFormData({
-        fullName: '',
-        email: '',
-        phone: '',
-        coverLetter: '',
-        experience: '',
-        expectedSalary: '',
-        availableStartDate: '',
-        portfolio: '',
-        linkedIn: ''
-      })
+      console.log('Submitting application:', applicationData)
 
+      // Call API ứng tuyển
+      // await apiRequest.post('/api/v1/applications', applicationData)
+
+      // Reset form và đóng modal
+      setCvUrl(null)
       setIsSubmitting(false)
       onClose()
 
-      // Show success message (you can implement toast notification here)
       alert('Đã gửi đơn ứng tuyển thành công! Chúng tôi sẽ phản hồi trong vòng 24-48 giờ.')
-    }, 2000)
+    } catch (error) {
+      console.error('Error submitting application:', error)
+      setIsSubmitting(false)
+      alert('Có lỗi xảy ra khi gửi đơn ứng tuyển. Vui lòng thử lại.')
+    }
   }
 
-  const handleChange = (field: string, value: string) => {
-    setFormData(prev => ({
-      ...prev,
-      [field]: value
-    }))
-  }
-
-  const isFormValid = formData.fullName && formData.email && formData.coverLetter && formData.experience
+  const isFormValid = cvUrl !== null
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className={cn("max-w-4xl")}>
         <DialogHeader>
           <DialogTitle className="text-[#264653] text-xl">Ứng Tuyển Dự Án</DialogTitle>
           <DialogDescription className="text-base">
-            <span className="font-medium text-[#2a9d8f]">{project.title}</span>
+            <span className="font-medium text-[#2a9d8f]">{project.projectName}</span>
             <br />
-            Ngân sách: <span className="font-semibold">${project.budget.toLocaleString()}</span>
+            Thời gian: {new Date(project.startDate).toLocaleDateString('vi-VN')} - {new Date(project.endDate).toLocaleDateString('vi-VN')}
           </DialogDescription>
         </DialogHeader>
 
@@ -91,7 +82,7 @@ export function ApplyProjectModal({ project, isOpen, onClose }: ApplyProjectModa
           <Alert>
             <AlertCircle className="h-4 w-4" />
             <AlertDescription>
-              Hãy điền đầy đủ thông tin để tăng cơ hội được chọn. Các trường có dấu (*) là bắt buộc.
+              Bạn chỉ cần upload CV để ứng tuyển dự án này. Hãy đảm bảo CV của bạn thể hiện được kỹ năng phù hợp.
             </AlertDescription>
           </Alert>
 
@@ -106,104 +97,34 @@ export function ApplyProjectModal({ project, isOpen, onClose }: ApplyProjectModa
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <Label htmlFor="full-name">Họ và Tên *</Label>
-              <Input
-                id="full-name"
-                placeholder="Nguyễn Văn A"
-                value={formData.fullName}
-                onChange={(e) => handleChange('fullName', e.target.value)}
-                required
-              />
-            </div>
-            <div>
-              <Label htmlFor="email">Email *</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="email@example.com"
-                value={formData.email}
-                onChange={(e) => handleChange('email', e.target.value)}
-                required
-              />
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <Label htmlFor="phone">Số Điện Thoại</Label>
-              <Input
-                id="phone"
-                placeholder="0123456789"
-                value={formData.phone}
-                onChange={(e) => handleChange('phone', e.target.value)}
-              />
-            </div>
-            <div>
-              <Label htmlFor="start-date">Có Thể Bắt Đầu</Label>
-              <Input
-                id="start-date"
-                type="date"
-                value={formData.availableStartDate}
-                onChange={(e) => handleChange('availableStartDate', e.target.value)}
-              />
-            </div>
-          </div>
-
           <div>
-            <Label htmlFor="cover-letter">Thư Xin Việc *</Label>
-            <Textarea
-              id="cover-letter"
-              placeholder="Giới thiệu bản thân, lý do ứng tuyển và cách bạn có thể đóng góp cho dự án này..."
-              rows={5}
-              value={formData.coverLetter}
-              onChange={(e) => handleChange('coverLetter', e.target.value)}
-              required
-            />
-          </div>
-
-          <div>
-            <Label htmlFor="experience">Kinh Nghiệm Liên Quan *</Label>
-            <Textarea
-              id="experience"
-              placeholder="Mô tả kinh nghiệm làm việc, dự án đã thực hiện có liên quan đến yêu cầu của dự án này..."
-              rows={4}
-              value={formData.experience}
-              onChange={(e) => handleChange('experience', e.target.value)}
-              required
-            />
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <Label htmlFor="portfolio">Link Portfolio/GitHub</Label>
-              <Input
-                id="portfolio"
-                placeholder="https://github.com/yourname hoặc portfolio link"
-                value={formData.portfolio}
-                onChange={(e) => handleChange('portfolio', e.target.value)}
+            <Label htmlFor="cv-upload" className="text-base font-medium">
+              Upload CV/Resume *
+            </Label>
+            <div className="mt-2">
+              <FileUpload
+                value={cvUrl}
+                onChange={setCvUrl}
+                accept=".pdf,.doc,.docx"
+                maxSize={10}
+                placeholder="Chọn CV để tải lên"
+                disabled={isSubmitting}
+                className="w-full"
               />
             </div>
-            <div>
-              <Label htmlFor="linkedin">LinkedIn Profile</Label>
-              <Input
-                id="linkedin"
-                placeholder="https://linkedin.com/in/yourname"
-                value={formData.linkedIn}
-                onChange={(e) => handleChange('linkedIn', e.target.value)}
-              />
-            </div>
+            <p className="text-sm text-gray-500 mt-2">
+              Hỗ trợ định dạng: PDF, DOC, DOCX (tối đa 10MB)
+            </p>
           </div>
 
-          <div>
-            <Label htmlFor="expected-salary">Mức Lương Mong Muốn (USD)</Label>
-            <Input
-              id="expected-salary"
-              placeholder="Ví dụ: 2000-3000/tháng hoặc có thể thương lượng"
-              value={formData.expectedSalary}
-              onChange={(e) => handleChange('expectedSalary', e.target.value)}
-            />
+          <div className="bg-blue-50 p-4 rounded-lg">
+            <h4 className="font-semibold text-[#264653] mb-2">💡 Lưu ý quan trọng</h4>
+            <ul className="text-sm text-gray-700 space-y-1">
+              <li>• Đảm bảo CV có thông tin liên hệ đầy đủ</li>
+              <li>• Nêu rõ kinh nghiệm liên quan đến các kỹ năng yêu cầu</li>
+              <li>• Include portfolio hoặc link GitHub nếu có</li>
+              <li>• CV nên được cập nhật và phù hợp với dự án</li>
+            </ul>
           </div>
 
           <div className="flex gap-3 pt-4 border-t">
