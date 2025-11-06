@@ -18,13 +18,16 @@ import {
   CommandList,
   CommandSeparator,
 } from '@/components/ui/command'
-import { sidebarData } from './layout/data/sidebar-data'
+import { companySidebarData, labAdminSidebarData, supervisorSidebarData, systemAmdminSidebarData, userSidebarData } from './layout/data/sidebar-data'
 import { ScrollArea } from './ui/scroll-area'
+import { useUser } from '@/context/UserContext'
+import type { SidebarData } from './layout/types'
 
 export function CommandMenu() {
   const navigate = useNavigate()
   const { setTheme } = useTheme()
   const { open, setOpen } = useSearch()
+  const { user } = useUser();
 
   const runCommand = React.useCallback(
     (command: () => unknown) => {
@@ -34,13 +37,31 @@ export function CommandMenu() {
     [setOpen]
   )
 
+  type UserRole = 'SYSTEM_ADMIN' | 'LAB_ADMIN' | 'SUPERVISOR' | 'COMPANY' | 'USER';
+
+  let sidebar: SidebarData;
+
+  const roleSidebar: Record<UserRole, SidebarData> = {
+    SYSTEM_ADMIN: systemAmdminSidebarData,
+    LAB_ADMIN: labAdminSidebarData,
+    SUPERVISOR: supervisorSidebarData,
+    COMPANY: companySidebarData,
+    USER: userSidebarData
+  };
+
+  const DEFAULT_SIDEBAR = userSidebarData;
+
+  const role = user?.role as UserRole | undefined;
+
+  sidebar = role ? roleSidebar[role] : DEFAULT_SIDEBAR;
+
   return (
     <CommandDialog modal open={open} onOpenChange={setOpen}>
       <CommandInput placeholder='Nhập một lệnh hoặc tìm kiếm...' />
       <CommandList>
         <ScrollArea type='hover' className='h-72 pr-1'>
           <CommandEmpty>Không tìm thấy kết quả nào.</CommandEmpty>
-          {sidebarData.navGroups.map((group) => (
+          {sidebar.navGroups.map((group) => (
             <CommandGroup key={group.title} heading={group.title}>
               {group.items.map((navItem, i) => {
                 if (navItem.url)
