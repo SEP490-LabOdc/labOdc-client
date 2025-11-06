@@ -1,6 +1,14 @@
 import { ErrorView } from "@/components/admin/ErrorView"
 import { getMyCompanyProjects } from "@/hooks/api/projects/queries"
 import { getRouteApi } from "@tanstack/react-router"
+import { ProjectsProvider } from "./components/project-provider"
+import { Header } from "@/components/layout/header"
+import { Search } from "@/components/search"
+import { ThemeSwitch } from "@/components/theme-switch"
+import { ConfigDrawer } from "@/components/config-drawer"
+import { ProfileDropdown } from "@/components/profile-dropdown"
+import { Main } from "@/components/layout/main"
+import { ProjectsTable } from "./components/projects-table"
 
 
 
@@ -53,11 +61,13 @@ export default function Project() {
 
     // 4. Lấy dữ liệu khi đã thành công
     // Giả định API response có cấu trúc { data: Company[], ... }
-    const projects = data?.projectResponses || [];
+    const projects = data?.data?.projectResponses || [];
+
+    console.log(projects);
 
     return (
         <>
-            <CompaniesProvider>
+            <ProjectsProvider>
                 <>
                     <Header fixed>
                         <Search />
@@ -70,24 +80,24 @@ export default function Project() {
                     <Main>
                         <div className='mb-2 flex flex-wrap items-center justify-between space-y-2'>
                             <div>
-                                <h2 className='text-2xl font-bold tracking-tight'>Danh sách công ty</h2>
+                                <h2 className='text-2xl font-bold tracking-tight'>Danh sách dự án công ty</h2>
                                 <p className='text-muted-foreground'>
-                                    Quản lý công ty tại đây.
+                                    Quản lý dự án của công ty tại đây.
                                 </p>
                             </div>
                         </div>
                         <div className='-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-y-0 lg:space-x-12'>
                             {/* 5. Điều kiện hóa: Nếu đang tải, hiển thị Skeleton, ngược lại hiển thị Bảng */}
                             {isLoading ? (
-                                <CompaniesTableSkeleton />
+                                <ProjectTableSkeleton />
                             ) : (
-                                <CompaniesTable data={companies} search={search} navigate={navigate} />
+                                <ProjectsTable data={projects} search={search} navigate={navigate} />
                             )}
                         </div>
                     </Main>
                 </>
-                <CompaniesDialogs />
-            </CompaniesProvider>
+                {/* <CompaniesDialogs /> */}
+            </ProjectsProvider>
         </>
     )
 }
