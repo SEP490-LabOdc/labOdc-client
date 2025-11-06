@@ -9,6 +9,7 @@ import { ConfigDrawer } from "@/components/config-drawer"
 import { ProfileDropdown } from "@/components/profile-dropdown"
 import { Main } from "@/components/layout/main"
 import { ProjectsTable } from "./components/projects-table"
+import { ProjectPrimaryButtons } from "./components/project-primary-buttons"
 
 
 
@@ -85,6 +86,7 @@ export default function Project() {
                                     Quản lý dự án của công ty tại đây.
                                 </p>
                             </div>
+                            <ProjectPrimaryButtons />
                         </div>
                         <div className='-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-y-0 lg:space-x-12'>
                             {/* 5. Điều kiện hóa: Nếu đang tải, hiển thị Skeleton, ngược lại hiển thị Bảng */}
