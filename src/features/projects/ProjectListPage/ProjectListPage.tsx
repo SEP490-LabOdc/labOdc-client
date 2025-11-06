@@ -5,10 +5,10 @@ import { Input } from "@/components/ui/input.tsx"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card.tsx"
 import { Badge } from "@/components/ui/badge.tsx"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select.tsx"
-import { projects } from "../data/project-data.ts"
 import { type Project, ProjectTypes } from '@/hooks/api/projects/types.ts'
 import { ProjectDetailModal } from "./components/ProjectDetailModal"
 import { ApplyProjectModal } from "./components/ApplyProjectModal"
+import { useGetAllProjects } from '@/hooks/api/projects'
 
 
 export default function ProjectListPage() {
@@ -19,7 +19,9 @@ export default function ProjectListPage() {
   const [showDetailModal, setShowDetailModal] = useState(false)
   const [showApplyModal, setShowApplyModal] = useState(false)
 
-  const filteredProjects = projects.filter((project) => {
+  const { data: projects } = useGetAllProjects() as { data  : Project[] }
+
+  const filteredProjects = projects.filter((project: Project) => {
     const matchesSearch =
       project.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       project.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -139,7 +141,7 @@ export default function ProjectListPage() {
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredProjects.map((project) => (
+            {filteredProjects.map((project: Project) => (
               <Card key={project.id} className="hover:shadow-lg transition-all duration-300 border-l-4 border-l-[#2a9d8f] hover:scale-105">
                 <CardHeader>
                   <div className="flex justify-between items-start mb-2">
