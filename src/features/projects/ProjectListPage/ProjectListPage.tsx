@@ -1,13 +1,10 @@
 import { useState } from "react"
-import { Search, Filter, Clock, Users, Star } from "lucide-react"
+import { Search, Filter, Clock, Users } from "lucide-react"
 import { Button } from "@/components/ui/button.tsx"
 import { Input } from "@/components/ui/input.tsx"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card.tsx"
-import { Badge } from "@/components/ui/badge.tsx"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select.tsx"
 import { type Project } from '@/hooks/api/projects/types.ts'
-import { ProjectDetailModal } from "./components/ProjectDetailModal"
-import { ApplyProjectModal } from "./components/ApplyProjectModal"
+import { ApplyProjectModal, ProjectDetailModal, ProjectCard } from "./components"
 import { useGetProjectHiring } from '@/hooks/api/projects'
 
 export default function ProjectListPage() {
@@ -56,7 +53,7 @@ export default function ProjectListPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
-      {/* Hero Section - giữ nguyên */}
+      {/* Hero Section */}
       <section className="bg-[#264653] text-white py-20">
         <div className="container mx-auto px-4 text-center">
           <h1 className="text-5xl font-bold mb-6 text-balance">Tìm Dự Án Phù Hợp Với Bạn</h1>
@@ -78,7 +75,7 @@ export default function ProjectListPage() {
         </div>
       </section>
 
-      {/* Search & Filters - Bỏ filter status */}
+      {/* Search & Filters */}
       <section className="py-8 bg-white border-b">
         <div className="container mx-auto px-4">
           <div className="flex flex-col lg:flex-row gap-4 items-center">
@@ -124,78 +121,12 @@ export default function ProjectListPage() {
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredProjects?.map((project: Project) => (
-              <Card key={project.projectId} className="hover:shadow-lg transition-all duration-300 border-l-4 border-l-[#2a9d8f] hover:scale-105">
-                <CardHeader>
-                  <div className="flex justify-between items-start mb-2">
-                    <Badge className="bg-green-100 text-green-800">
-                      Đang Mở
-                    </Badge>
-                    <div className="flex items-center text-sm text-gray-500">
-                      <Users className="h-4 w-4 mr-1" />
-                      {project.currentApplicants} ứng viên
-                    </div>
-                  </div>
-                  <CardTitle className="text-[#264653] text-lg hover:text-[#2a9d8f] transition-colors">
-                    {project.projectName}
-                  </CardTitle>
-                  <CardDescription className="text-sm line-clamp-3">{project.description}</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    <div className="flex flex-wrap gap-1">
-                      {project.skills.slice(0, 3).map((skill) => (
-                        <Badge key={skill.id} variant="outline" className="text-xs bg-[#e9f5f3] text-[#2a9d8f] border-[#2a9d8f]">
-                          {skill.name}
-                        </Badge>
-                      ))}
-                      {project.skills.length > 3 && (
-                        <Badge variant="outline" className="text-xs bg-gray-50">
-                          +{project.skills.length - 3} kỹ năng
-                        </Badge>
-                      )}
-                    </div>
-
-                    <div className="space-y-2">
-                      <div className="flex items-center text-sm text-gray-600">
-                        <Clock className="h-4 w-4 mr-1" />
-                        <span>Bắt đầu: {new Date(project.startDate).toLocaleDateString('vi-VN')}</span>
-                      </div>
-                      <div className="flex items-center text-sm text-gray-600">
-                        <Clock className="h-4 w-4 mr-1" />
-                        <span>Kết thúc: {new Date(project.endDate).toLocaleDateString('vi-VN')}</span>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center text-sm text-gray-500">
-                        <Star className="h-4 w-4 mr-1 fill-yellow-400 text-yellow-400" />
-                        <span>Đánh giá: {(Math.random() * 1 + 4).toFixed(1)}</span>
-                      </div>
-                      <div className="text-xs text-gray-500">
-                        Đăng {Math.floor(Math.random() * 7) + 1} ngày trước
-                      </div>
-                    </div>
-
-                    <div className="flex gap-2 pt-2">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="flex-1 bg-transparent hover:bg-[#f8f9fa]"
-                        onClick={() => handleViewDetails(project)}
-                      >
-                        Chi Tiết
-                      </Button>
-                      <Button
-                        size="sm"
-                        className="bg-[#2a9d8f] hover:bg-[#264653] flex-1"
-                        onClick={() => handleApplyProject(project)}
-                      >
-                        Ứng Tuyển Ngay
-                      </Button>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
+              <ProjectCard
+                key={project.projectId}
+                project={project}
+                onViewDetails={handleViewDetails}
+                onApply={handleApplyProject}
+              />
             ))}
           </div>
 
@@ -217,7 +148,7 @@ export default function ProjectListPage() {
         </div>
       </section>
 
-      {/* Các section khác giữ nguyên */}
+      {/* Tips section */}
       <section className="py-16 bg-slate-50">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
@@ -237,7 +168,7 @@ export default function ProjectListPage() {
             </div>
             <div className="text-center space-y-4">
               <div className="w-16 h-16 bg-[#2a9d8f] rounded-full flex items-center justify-center mx-auto">
-                <Star className="h-8 w-8 text-white" />
+                <Clock className="h-8 w-8 text-white" />
               </div>
               <h3 className="text-xl font-semibold text-[#264653]">Đề Xuất Chất Lượng</h3>
               <p className="text-gray-600">Viết đề xuất chi tiết, thể hiện hiểu biết về dự án và giải pháp</p>
