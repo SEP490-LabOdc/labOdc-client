@@ -1,84 +1,56 @@
-import { useEffect } from 'react'
-import type { JSX } from 'react'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Button } from '@/components/ui/button'
 import {
     Form,
-    FormControl,
     FormField,
     FormItem,
     FormLabel,
+    FormControl,
     FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
-import { SelectDropdown } from '@/components/select-dropdown'
-import { toast } from 'sonner'
-import { useNavigate } from '@tanstack/react-router'
-import { useGetSkills } from '@/hooks/api/skills/queries' // ✅ Hook lấy danh sách kỹ năng
-import apiRequest from '@/config/request'
-import { MultiSelectDropdown } from '@/components/multi-select-dropdown'
+import { Badge } from '@/components/ui/badge'
 
-// ✅ Schema validation cho Project form
-const formSchema = z.object({
-    title: z.string().min(2, 'Tên dự án là bắt buộc.'),
-    description: z.string().min(5, 'Mô tả phải có ít nhất 5 ký tự.'),
-    skillIds: z.array(z.string()).min(1, 'Phải chọn ít nhất một kỹ năng.'),
+/* -------------------- SCHEMA -------------------- */
+const projectSchema = z.object({
+    id: z.string(),
+    title: z.string(),
+    description: z.string(),
+    status: z.string(),
+    startDate: z.string(),
+    endDate: z.string(),
+    budget: z.string(),
+    skills: z.array(
+        z.object({
+            id: z.string(),
+            name: z.string(),
+            description: z.string(),
+        })
+    ),
 })
 
-export type ProjectForm = z.infer<typeof formSchema>
+export type ProjectFormData = z.infer<typeof projectSchema>
 
-export default function ProjectsForm({
-    mode,
+/* -------------------- COMPONENT -------------------- */
+export default function ProjectForm({
     initialData,
 }: {
-    mode: 'create' | 'edit'
-    initialData?: Partial<ProjectForm> & { id?: string }
-}): JSX.Element {
-    const navigate = useNavigate()
-    const isEdit = mode === 'edit'
-    const { data: skills = [], isLoading: skillsLoading } = useGetSkills()
-
-    const form = useForm<ProjectForm>({
-        resolver: zodResolver(formSchema),
-        defaultValues: {
-            title: initialData?.title ?? '',
-            description: initialData?.description ?? '',
-            skillIds: initialData?.skillIds ?? [],
-        },
+    initialData: ProjectFormData
+}) {
+    const form = useForm<ProjectFormData>({
+        resolver: zodResolver(projectSchema),
+        defaultValues: initialData,
     })
 
-    useEffect(() => {
-        if (initialData) form.reset(initialData)
-    }, [initialData, form])
-
-    const onSubmit = async (values: ProjectForm) => {
-        const createPromise = apiRequest.post('/api/v1/projects', values)
-
-        toast.promise(createPromise, {
-            loading: 'Đang tạo dự án...',
-            success: 'Tạo dự án thành công!',
-            error: 'Tạo dự án thất bại!',
-        })
-
-        try {
-            await createPromise
-            navigate({ to: '/company-manage/projects' })
-        } catch (error) {
-            console.error('❌ Create project failed:', error)
-        }
-    }
+    if (!initialData) return null
 
     return (
         <Form {...form}>
-            <form
-                onSubmit={form.handleSubmit(onSubmit)}
-                className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2"
-            >
+            <form className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* ===== CỘT TRÁI ===== */}
-                <div className="space-y-4 px-12">
+                <div className="space-y-4 px-6">
+                    {/* Tên dự án */}
                     <FormField
                         control={form.control}
                         name="title"
@@ -89,10 +61,29 @@ export default function ProjectsForm({
                                         Tên dự án
                                     </FormLabel>
                                     <FormControl className="flex-1">
-                                        <Input
-                                            placeholder="VD: Hệ thống đặt lịch thông minh"
+                                        <Input {...field} disabled />
+                                    </FormControl>
+                                </div>
+                                <FormMessage className="ml-40" />
+                            </FormItem>
+                        )}
+                    />
+
+                    {/* Mô tả */}
+                    <FormField
+                        control={form.control}
+                        name="description"
+                        render={({ field }) => (
+                            <FormItem className="space-y-1">
+                                <div className="flex items-start gap-3">
+                                    <FormLabel className="w-40 text-end text-base font-medium mt-2">
+                                        Mô tả
+                                    </FormLabel>
+                                    <FormControl className="flex-1">
+                                        <textarea
+                                            className="min-h-[100px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm disabled:opacity-80"
                                             {...field}
-                                            disabled={isEdit}
+                                            disabled
                                         />
                                     </FormControl>
                                 </div>
@@ -101,21 +92,21 @@ export default function ProjectsForm({
                         )}
                     />
 
+                    {/* Ngân sách */}
                     <FormField
                         control={form.control}
-                        name="description"
+                        name="budget"
                         render={({ field }) => (
                             <FormItem className="space-y-1">
                                 <div className="flex items-center gap-3">
                                     <FormLabel className="w-40 text-end text-base font-medium">
-                                        Mô tả
+                                        Ngân sách
                                     </FormLabel>
                                     <FormControl className="flex-1">
-                                        <Textarea
-                                            rows={4}
-                                            placeholder="Mô tả ngắn gọn về dự án..."
+                                        <Input
                                             {...field}
-                                            disabled={isEdit}
+                                            disabled
+                                            value={`${Number(initialData.budget).toLocaleString('vi-VN')} VNĐ`}
                                         />
                                     </FormControl>
                                 </div>
@@ -126,66 +117,95 @@ export default function ProjectsForm({
                 </div>
 
                 {/* ===== CỘT PHẢI ===== */}
-                <div className="space-y-4 px-12">
+                <div className="space-y-4 px-6">
+                    {/* Trạng thái */}
                     <FormField
                         control={form.control}
-                        name="skillIds"
+                        name="status"
                         render={({ field }) => (
-                            <FormField
-                                control={form.control}
-                                name="skillIds"
-                                render={({ field }) => (
-                                    <FormItem className="space-y-1">
-                                        <div className="flex items-center gap-3">
-                                            <FormLabel className="w-40 text-end text-base font-medium">
-                                                Kỹ năng yêu cầu
-                                            </FormLabel>
-                                            <div className="flex-1">
-                                                <MultiSelectDropdown
-                                                    items={skills.map((s: any) => ({
-                                                        label: s.name,
-                                                        value: s.id,
-                                                    }))}
-                                                    value={field.value}
-                                                    onChange={field.onChange}
-                                                    placeholder="Chọn kỹ năng"
-                                                    disabled={skillsLoading || isEdit}
-                                                />
-                                            </div>
-                                        </div>
-                                        <FormMessage className="ml-40" />
-                                    </FormItem>
-                                )}
-                            />
+                            <FormItem className="space-y-1">
+                                <div className="flex items-center gap-3">
+                                    <FormLabel className="w-40 text-end text-base font-medium">
+                                        Trạng thái
+                                    </FormLabel>
+                                    <FormControl className="flex-1">
+                                        <Input {...field} disabled />
+                                    </FormControl>
+                                </div>
+                                <FormMessage className="ml-40" />
+                            </FormItem>
+                        )}
+                    />
+
+                    {/* Ngày bắt đầu */}
+                    <FormField
+                        control={form.control}
+                        name="startDate"
+                        render={({ field }) => (
+                            <FormItem className="space-y-1">
+                                <div className="flex items-center gap-3">
+                                    <FormLabel className="w-40 text-end text-base font-medium">
+                                        Ngày bắt đầu
+                                    </FormLabel>
+                                    <FormControl className="flex-1">
+                                        <Input
+                                            value={new Date(field.value).toLocaleDateString('vi-VN')}
+                                            disabled
+                                        />
+                                    </FormControl>
+                                </div>
+                                <FormMessage className="ml-40" />
+                            </FormItem>
+                        )}
+                    />
+
+                    {/* Ngày kết thúc */}
+                    <FormField
+                        control={form.control}
+                        name="endDate"
+                        render={({ field }) => (
+                            <FormItem className="space-y-1">
+                                <div className="flex items-center gap-3">
+                                    <FormLabel className="w-40 text-end text-base font-medium">
+                                        Ngày kết thúc
+                                    </FormLabel>
+                                    <FormControl className="flex-1">
+                                        <Input
+                                            value={new Date(field.value).toLocaleDateString('vi-VN')}
+                                            disabled
+                                        />
+                                    </FormControl>
+                                </div>
+                                <FormMessage className="ml-40" />
+                            </FormItem>
                         )}
                     />
                 </div>
+
+                {/* ===== KỸ NĂNG ===== */}
+                <div className="col-span-2 px-6 space-y-3">
+                    <FormLabel className="block text-base font-medium text-center">
+                        Kỹ năng yêu cầu
+                    </FormLabel>
+                    {initialData.skills && initialData.skills.length > 0 ? (
+                        <div className="flex flex-wrap gap-2 justify-center">
+                            {initialData.skills.map((skill) => (
+                                <Badge
+                                    key={skill.id}
+                                    variant="secondary"
+                                    className="text-sm px-3 py-1"
+                                >
+                                    {skill.name}
+                                </Badge>
+                            ))}
+                        </div>
+                    ) : (
+                        <p className="text-muted-foreground italic text-center">
+                            Không có kỹ năng nào
+                        </p>
+                    )}
+                </div>
             </form>
-
-            {/* --- BUTTONS --- */}
-            <div className="mt-6 flex gap-3 px-12">
-                {!isEdit ? (
-                    <Button type="submit" onClick={form.handleSubmit(onSubmit)}>
-                        Thêm dự án
-                    </Button>
-                ) : (
-                    <Button
-                        type="submit"
-                        variant="secondary"
-                        onClick={form.handleSubmit(onSubmit)}
-                    >
-                        Cập nhật
-                    </Button>
-                )}
-
-                <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => navigate({ to: '/company-manage/projects' })}
-                >
-                    Hủy
-                </Button>
-            </div>
         </Form>
     )
 }
