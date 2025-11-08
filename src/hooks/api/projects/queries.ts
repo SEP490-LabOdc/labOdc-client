@@ -41,11 +41,35 @@ export const useGetProjectsByCompanyId = (companyId: string) =>
   })
 
 export function getMyCompanyProjects() {
-    return useQuery({
-        queryKey: projectKeys.myCompany(),
-        queryFn: async () => {
-            const res = await apiRequest.get('/api/v1/projects/my-company-projects');
-            return res.data;
-        }
-    });
+  return useQuery({
+    queryKey: projectKeys.myCompany(),
+    queryFn: async () => {
+      const res = await apiRequest.get('/api/v1/projects/my-company-projects');
+      return res.data;
+    }
+  });
+}
+
+export function useCreateProject() {
+  return useMutation({
+    mutationFn: async (payload: {
+      title: string
+      description: string
+      skillIds: string[]
+    }) => {
+      const res = await apiRequest.post('/api/v1/projects', payload)
+      return res.data
+    },
+  })
+}
+
+export function useGetProjectById(projectId: string) {
+  return useQuery({
+    queryKey: projectKeys.byId(projectId),
+    queryFn: async () => {
+      const res = await apiRequest.get(`/api/v1/projects/${projectId}`)
+      return res.data
+    },
+    enabled: !!projectId,
+  })
 }
