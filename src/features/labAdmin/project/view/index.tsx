@@ -6,8 +6,10 @@ import { ProfileDropdown } from '@/components/profile-dropdown'
 import { Search } from '@/components/search'
 import { ThemeSwitch } from '@/components/theme-switch'
 import { ErrorView } from '@/components/admin/ErrorView'
-import ProjectForm from '../components/project-form'
+import ProjectPendingForm from '../components/project-pending-form'
 import { useGetProjectById } from '@/hooks/api/projects'
+import { PROJECT_STATUS } from '../data/schema'
+import { StatusAlert } from '@/components/admin/StatusAlert'
 
 const route = getRouteApi('/_authenticated/lab-admin/projects/$projectId/')
 
@@ -63,9 +65,29 @@ export default function ViewProject() {
                         </p>
                     </div>
                 </div>
-
+                {project?.status === PROJECT_STATUS.COMPANY_UPDATE_REQUEST && (
+                    <StatusAlert
+                        variant="warning"
+                        title="Công ty đang trong quá trình cập nhật thông tin."
+                        message="Vui lòng chờ doanh nghiệp hoàn tất các thay đổi được yêu cầu."
+                        className="mb-4"
+                    />
+                )}
+                {project?.status === PROJECT_STATUS.REJECTED && (
+                    <StatusAlert
+                        variant="error"
+                        title="Dự án đã bị từ chối"
+                        message="Dự án này đã bị từ chối và không thể chỉnh sửa thêm."
+                        className="mb-4"
+                    />
+                )}
                 <div className="-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-y-0 lg:space-x-12">
-                    <ProjectForm initialData={project} />
+                    {
+                        (project.status == PROJECT_STATUS.PENDING || project.status == PROJECT_STATUS.COMPANY_UPDATE_REQUEST) && (
+                            <ProjectPendingForm initialData={project} />
+                        )
+                    }
+
                 </div>
             </Main>
         </>
