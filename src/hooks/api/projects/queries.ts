@@ -73,3 +73,15 @@ export function useGetProjectById(projectId: string) {
     enabled: !!projectId,
   })
 }
+
+
+
+export function useGetProjects() {
+  return useQuery({
+    queryKey: projectKeys.list(),
+    queryFn: async () => {
+      const res = await apiRequest.get('/api/v1/projects')
+      return res.data
+    },
+  })
+}

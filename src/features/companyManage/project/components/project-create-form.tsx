@@ -163,7 +163,7 @@ export default function ProjectsForm({
                             render={({ field }) => (
                                 <FormItem className="space-y-1">
                                     <div className="flex items-center gap-3">
-                                        <FormLabel className="w-40 text-end text-base font-medium">
+                                        <FormLabel className="w-20 text-end text-base font-medium">
                                             Mô tả
                                         </FormLabel>
                                         <FormControl className="flex-1">
@@ -187,7 +187,7 @@ export default function ProjectsForm({
             <div className="mt-6 flex gap-3 px-12">
                 {!isEdit ? (
                     <Button type="submit" onClick={form.handleSubmit(onSubmit)}>
-                        Thêm dự án
+                        Tạo dự án
                     </Button>
                 ) : (
                     <Button

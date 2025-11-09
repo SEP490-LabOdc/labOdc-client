@@ -14,7 +14,12 @@ import {
   IconCircleCheckFilled,// For Đã hoàn thành
   IconHistory,
   IconList,
-  IconProgress,         // For Lịch sử cập nhật
+  IconProgress,
+  IconEdit,
+  IconPencilCog,
+  IconUpload,
+  IconCircleXFilled,
+  IconUsersGroup,         // For Lịch sử cập nhật
 } from '@tabler/icons-react'
 // import { AudioWaveform, Command, GalleryVerticalEnd } from 'lucide-react'
 import { type SidebarData } from '../types'
@@ -186,28 +191,24 @@ export const labAdminSidebarData: SidebarData = {
           title: 'Quản lý dự án',
           icon: IconClipboardList,
           items: [
-            {
-              title: 'Đang chờ phê duyệt',
-              url: '/lab-admin',
-              icon: IconClockHour4,
-            },
-            {
-              title: 'Đang hoạt động',
-              url: '/lab-admin',
-              icon: IconCircleCheck,
-            },
-            {
-              title: 'Đã hoàn thành',
-              url: '/lab-admin',
-              icon: IconCircleCheckFilled,
-            },
-            {
-              title: 'Đã hủy',
-              url: '/lab-admin',
-              icon: IconCircleX,
-            },
-          ]
-        },
+            { title: 'Tất cả', url: '/lab-admin/projects', icon: IconList },
+
+            // --- PLANNING ---
+            { title: 'Chờ duyệt', url: '/lab-admin/projects?status=["' + PROJECT_STATUS.PENDING + '"]', icon: IconClockHour4 },
+            { title: 'Công ty cần cập nhật', url: '/lab-admin/projects?status=["' + PROJECT_STATUS.COMPANY_UPDATE_REQUEST + '"]', icon: IconEdit },
+            { title: 'Mentor xây dựng kế hoạch', url: '/lab-admin/projects?status=["' + PROJECT_STATUS.MENTOR_BUILD_PROJECT_PLAN + '"]', icon: IconPencilCog },
+            { title: 'Chờ công ty phê duyệt', url: '/lab-admin/projects?status=["' + PROJECT_STATUS.PENDING_COMPANY_APPROVAL + '"]', icon: IconUserCheck },
+            { title: 'Chờ Lab công bố', url: '/lab-admin/projects?status=["' + PROJECT_STATUS.PENDING_LAB_PUBLISH + '"]', icon: IconUpload },
+            { title: 'Bị từ chối', url: '/lab-admin/projects?status=["' + PROJECT_STATUS.REJECTED + '"]', icon: IconCircleXFilled },
+
+            // --- HIRING ---
+            { title: 'Đang tuyển', url: '/lab-admin/projects?status=["' + PROJECT_STATUS.HIRING + '"]', icon: IconUsersGroup },
+
+            // --- EXECUTING ---
+            { title: 'Đang thực hiện', url: '/lab-admin/projects?status=["' + PROJECT_STATUS.IN_PROGRESS + '"]', icon: IconProgress },
+            { title: 'Hoàn thành', url: '/lab-admin/projects?status=["' + PROJECT_STATUS.COMPLETED + '"]', icon: IconCircleCheckFilled },
+          ],
+        }
       ]
     },
   ],
@@ -303,16 +304,6 @@ export const companySidebarData: SidebarData = {
               title: 'Chờ duyệt',
               url: '/company-manage/projects?status=["' + PROJECT_STATUS.PENDING + '"]',
               icon: IconClockHour4,
-            },
-            {
-              title: 'Đã duyệt',
-              url: '/company-manage/projects?status=["' + PROJECT_STATUS.APPROVED + '"]',
-              icon: IconCircleCheck,
-            },
-            {
-              title: 'Đang tuyển',
-              url: '/company-manage/projects?status=["' + PROJECT_STATUS.HIRING + '"]',
-              icon: IconUserSearch,
             },
             {
               title: 'Đang thực hiện',

@@ -181,6 +181,7 @@ export default function ProjectForm({
                                                 rows={8}
                                                 placeholder="Mô tả ngắn gọn về dự án..."
                                                 {...field}
+                                                disabled
                                             />
                                         </FormControl>
                                     </div>
