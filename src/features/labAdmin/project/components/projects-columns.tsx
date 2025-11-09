@@ -4,10 +4,11 @@ import { Badge } from '@/components/ui/badge'
 import { Checkbox } from '@/components/ui/checkbox'
 import { DataTableColumnHeader } from '@/components/data-table'
 import { LongText } from '@/components/long-text'
-import { PROJECT_STATUS, PROJECT_STATUS_LABEL, type Project } from '../data/schema'
+import { PROJECT_STATUS_LABEL, type Project } from '../data/schema'
 import { DataTableRowActions } from './data-table-row-actions'
 import { Link } from '@tanstack/react-router'
 import { callTypes } from '../data/data'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@radix-ui/react-tooltip'
 
 // Helper format date
 const formatDate = (date: Date) => {
@@ -161,16 +162,22 @@ export const projectsColumns: ColumnDef<Project>[] = [
         cell: ({ row }) => {
             const skills = row.original.skills || []
             return (
-                <div className="flex flex-wrap gap-1">
-                    {skills.length > 0 ? (
-                        skills.map((skill) => (
-                            <Badge key={skill.id} variant="secondary">
-                                {skill.name}
-                            </Badge>
-                        ))
-                    ) : (
-                        <span className="text-muted-foreground text-sm">Không có</span>
-                    )}
+                <div className="relative max-w-[260px] max-h-[3.2rem] overflow-hidden">
+                    <div className="flex flex-wrap gap-1">
+                        {skills.length > 0 ? (
+                            skills.map((skill) => (
+                                <Badge
+                                    key={skill.id}
+                                    variant="secondary"
+                                    className="text-xs px-2 py-0.5"
+                                >
+                                    {skill.name}
+                                </Badge>
+                            ))
+                        ) : (
+                            <span className="text-muted-foreground text-sm">Không có</span>
+                        )}
+                    </div>
                 </div>
             )
         },

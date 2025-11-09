@@ -18,6 +18,7 @@ import { ConfirmDialog } from '@/components/confirm-dialog'
 import { Loader2 } from 'lucide-react'
 import { useState } from 'react'
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select'
+import { useNavigate } from '@tanstack/react-router'
 
 /* -------------------- SCHEMA -------------------- */
 const projectSchema = z.object({
@@ -49,6 +50,8 @@ export default function ProjectForm({
         resolver: zodResolver(projectSchema),
         defaultValues: initialData,
     })
+
+    const navigate = useNavigate();
 
     // === STATE CHO DIALOG PHÊ DUYỆT ===
     const [approveDialogOpen, setApproveDialogOpen] = useState(false)
@@ -106,34 +109,11 @@ export default function ProjectForm({
                             render={({ field }) => (
                                 <FormItem className="space-y-1">
                                     <div className="flex items-center gap-3">
-                                        <FormLabel className="w-40 text-end text-base font-medium">
+                                        <FormLabel className="w-40 block text-end text-base font-medium">
                                             Tên dự án
                                         </FormLabel>
                                         <FormControl className="flex-1">
                                             <Input {...field} disabled />
-                                        </FormControl>
-                                    </div>
-                                    <FormMessage className="ml-40" />
-                                </FormItem>
-                            )}
-                        />
-
-                        {/* Ngân sách */}
-                        <FormField
-                            control={form.control}
-                            name="budget"
-                            render={({ field }) => (
-                                <FormItem className="space-y-1">
-                                    <div className="flex items-center gap-3">
-                                        <FormLabel className="w-40 text-end text-base font-medium">
-                                            Ngân sách
-                                        </FormLabel>
-                                        <FormControl className="flex-1">
-                                            <Input
-                                                {...field}
-                                                disabled
-                                                value={`${Number(initialData.budget).toLocaleString('vi-VN')} VNĐ`}
-                                            />
                                         </FormControl>
                                     </div>
                                     <FormMessage className="ml-40" />
@@ -156,7 +136,7 @@ export default function ProjectForm({
                                 return (
                                     <FormItem className="space-y-1">
                                         <div className="flex items-center gap-3">
-                                            <FormLabel className="w-40 text-end text-base font-medium">
+                                            <FormLabel className="w-40 block text-end text-base font-medium">
                                                 Trạng thái
                                             </FormLabel>
                                             <FormControl className="flex-1">
@@ -168,50 +148,6 @@ export default function ProjectForm({
                                 )
                             }}
                         />
-
-                        {/* Ngày bắt đầu */}
-                        <FormField
-                            control={form.control}
-                            name="startDate"
-                            render={({ field }) => (
-                                <FormItem className="space-y-1">
-                                    <div className="flex items-center gap-3">
-                                        <FormLabel className="w-40 text-end text-base font-medium">
-                                            Ngày bắt đầu
-                                        </FormLabel>
-                                        <FormControl className="flex-1">
-                                            <Input
-                                                value={new Date(field.value).toLocaleDateString('vi-VN')}
-                                                disabled
-                                            />
-                                        </FormControl>
-                                    </div>
-                                    <FormMessage className="ml-40" />
-                                </FormItem>
-                            )}
-                        />
-
-                        {/* Ngày kết thúc */}
-                        <FormField
-                            control={form.control}
-                            name="endDate"
-                            render={({ field }) => (
-                                <FormItem className="space-y-1">
-                                    <div className="flex items-center gap-3">
-                                        <FormLabel className="w-40 text-end text-base font-medium">
-                                            Ngày kết thúc
-                                        </FormLabel>
-                                        <FormControl className="flex-1">
-                                            <Input
-                                                value={new Date(field.value).toLocaleDateString('vi-VN')}
-                                                disabled
-                                            />
-                                        </FormControl>
-                                    </div>
-                                    <FormMessage className="ml-40" />
-                                </FormItem>
-                            )}
-                        />
                     </div>
 
                     {/* ===== MÔ TẢ ===== */}
@@ -222,11 +158,11 @@ export default function ProjectForm({
                             render={({ field }) => (
                                 <FormItem className="space-y-1">
                                     <div className="flex items-center gap-3">
-                                        <FormLabel className="w-20 text-end text-base font-medium">
+                                        <FormLabel className="w-20 block text-end text-base font-medium">
                                             Mô tả
                                         </FormLabel>
                                         <FormControl className="flex-1">
-                                            <Textarea rows={8} {...field} disabled />
+                                            <Textarea rows={12} {...field} disabled />
                                         </FormControl>
                                     </div>
                                     <FormMessage className="ml-40" />
@@ -375,6 +311,13 @@ export default function ProjectForm({
                         </Button>
                         <Button type="button" onClick={() => setUpdateDialogOpen(true)}>
                             Yêu cầu cập nhật
+                        </Button>
+                        <Button
+                            type="button"
+                            variant="outline"
+                            onClick={() => navigate({ to: '/lab-admin/projects' })}
+                        >
+                            Hủy
                         </Button>
                     </div>
                 )
