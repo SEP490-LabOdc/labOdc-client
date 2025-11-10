@@ -46,7 +46,9 @@ export function TalentLayout({ children }: Props) {
                 <ProfileDropdown />
               </div>
             </Header>
-            {children ? children : <Outlet />}
+            <div className="mt-14">
+              {children ? children : <Outlet />}
+            </div>
           </div>
         </SidebarProvider>
       </LayoutProvider>
