@@ -58,3 +58,29 @@ export function getPageNumbers(currentPage: number, totalPages: number) {
 
   return rangeWithDots
 }
+
+// Hàm getStatusColor đã được refactor
+const statusColorMap: Record<string, string> = {
+  Completed: 'bg-green-100 text-green-800',
+  InProgress: 'bg-purple-100 text-purple-800',
+  Pending: 'bg-orange-100 text-orange-800',
+  OnHold: 'bg-gray-100 text-gray-800',
+  High: 'bg-red-100 text-red-800',
+  Paid: 'bg-green-100 text-green-800',
+  Hold: 'bg-orange-100 text-orange-800',
+  Unpaid: 'bg-red-100 text-red-800',
+};
+
+export const getStatusColor = (status: string) => {
+  return statusColorMap[status] || 'bg-gray-100 text-gray-800';
+};
+
+export const getTagColor = (tag: string) => {
+  if (tag.toLowerCase().includes('admin')) {
+    return 'bg-pink-100 text-pink-800';
+  }
+  if (tag.toLowerCase().includes('tech')) {
+    return 'bg-blue-100 text-blue-800';
+  }
+  return 'bg-gray-100 text-gray-800';
+};
