@@ -1,10 +1,10 @@
 import React from 'react'
-import { Card, CardContent, CardTitle } from '@/components/ui/card' // Bỏ CardHeader
+import { Card, CardContent, CardTitle } from '@/components/ui/card'
 import type { Milestone, Task } from '../../data'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Users, User, Plus } from 'lucide-react'
-import { Separator } from '@/components/ui/separator' // Thêm Separator
+import { Separator } from '@/components/ui/separator'
 
 interface MilestoneOverviewTabProps {
   milestone: Milestone;

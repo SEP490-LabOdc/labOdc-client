@@ -26,12 +26,12 @@ const ProjectDetailPage: React.FC = () => {
 
       <div className="max-w-7xl mx-auto grid grid-cols-12 gap-6 p-6">
 
-        {/* === CỘT TRÁI === */}
+        {/* === Left column === */}
         <div className="col-span-12 lg:col-span-4 space-y-6">
           <ProjectSidebar projectData={projectData} tasks={tasks} />
         </div>
 
-        {/* === CỘT PHẢI (TABS) === */}
+        {/* === Right column (TABS) === */}
         <div className="col-span-12 lg:col-span-8">
           <Tabs defaultValue="overview" className="w-full">
             <TabsList className="grid w-full grid-cols-5 h-auto bg-gray-100 p-1 rounded-lg">

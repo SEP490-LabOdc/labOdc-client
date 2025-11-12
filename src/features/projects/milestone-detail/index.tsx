@@ -1,7 +1,6 @@
 import React from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
-// Import data (tất cả data cần thiết cho trang này)
 import {
   projectData,
   milestones,
@@ -10,7 +9,6 @@ import {
   milestoneDocuments
 } from '../data'
 
-// Import các component con của trang
 import { MilestonePageHeader, MilestoneOverviewTab, MilestoneReportsTab, MilestoneSidebar, MilestoneDocumentsTab } from './components'
 
 const currentMilestone = milestones.find(m => m.id === 'milestone-2')
