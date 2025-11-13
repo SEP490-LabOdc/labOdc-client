@@ -109,11 +109,33 @@ export default function ProjectForm({
                             render={({ field }) => (
                                 <FormItem className="space-y-1">
                                     <div className="flex items-center gap-3">
-                                        <FormLabel className="w-40 block text-end text-base font-medium">
+                                        <FormLabel className="w-40  text-end text-base font-medium">
                                             Tên dự án
                                         </FormLabel>
                                         <FormControl className="flex-1">
                                             <Input {...field} disabled />
+                                        </FormControl>
+                                    </div>
+                                    <FormMessage className="ml-40" />
+                                </FormItem>
+                            )}
+                        />
+
+                        <FormField
+                            control={form.control}
+                            name="budget"
+                            render={({ field }) => (
+                                <FormItem className="space-y-1">
+                                    <div className="flex items-center gap-3">
+                                        <FormLabel className="w-40 text-end text-base font-medium">
+                                            Ngân sách (VNĐ)
+                                        </FormLabel>
+                                        <FormControl className="flex-1">
+                                            <Input
+                                                {...field}
+                                                disabled
+                                                value={`${Number(initialData.budget).toLocaleString('vi-VN')}`}
+                                            />
                                         </FormControl>
                                     </div>
                                     <FormMessage className="ml-40" />
@@ -136,7 +158,7 @@ export default function ProjectForm({
                                 return (
                                     <FormItem className="space-y-1">
                                         <div className="flex items-center gap-3">
-                                            <FormLabel className="w-40 block text-end text-base font-medium">
+                                            <FormLabel className="w-40  text-end text-base font-medium">
                                                 Trạng thái
                                             </FormLabel>
                                             <FormControl className="flex-1">
@@ -158,7 +180,7 @@ export default function ProjectForm({
                             render={({ field }) => (
                                 <FormItem className="space-y-1">
                                     <div className="flex items-center gap-3">
-                                        <FormLabel className="w-20 block text-end text-base font-medium">
+                                        <FormLabel className="w-20  text-end text-base font-medium">
                                             Mô tả
                                         </FormLabel>
                                         <FormControl className="flex-1">
@@ -173,7 +195,7 @@ export default function ProjectForm({
 
                     {/* ===== KỸ NĂNG ===== */}
                     <div className="col-span-2 px-6 space-y-3">
-                        <FormLabel className="block text-base font-medium text-center">
+                        <FormLabel className=" text-base block font-medium text-center">
                             Kỹ năng yêu cầu
                         </FormLabel>
                         {initialData.skills && initialData.skills.length > 0 ? (

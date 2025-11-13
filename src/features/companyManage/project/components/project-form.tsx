@@ -79,13 +79,13 @@ export default function ProjectForm({
                             <FormItem className="space-y-1">
                                 <div className="flex items-center gap-3">
                                     <FormLabel className="w-40 text-end text-base font-medium">
-                                        Ngân sách
+                                        Ngân sách (VNĐ)
                                     </FormLabel>
                                     <FormControl className="flex-1">
                                         <Input
                                             {...field}
                                             disabled
-                                            value={`${Number(initialData.budget).toLocaleString('vi-VN')} VNĐ`}
+                                            value={`${Number(initialData.budget).toLocaleString('vi-VN')}`}
                                         />
                                     </FormControl>
                                 </div>
@@ -119,50 +119,6 @@ export default function ProjectForm({
                             )
                         }}
                     />
-
-                    {/* Ngày bắt đầu */}
-                    <FormField
-                        control={form.control}
-                        name="startDate"
-                        render={({ field }) => (
-                            <FormItem className="space-y-1">
-                                <div className="flex items-center gap-3">
-                                    <FormLabel className="w-40 text-end text-base font-medium">
-                                        Ngày bắt đầu
-                                    </FormLabel>
-                                    <FormControl className="flex-1">
-                                        <Input
-                                            value={new Date(field.value).toLocaleDateString('vi-VN')}
-                                            disabled
-                                        />
-                                    </FormControl>
-                                </div>
-                                <FormMessage className="ml-40" />
-                            </FormItem>
-                        )}
-                    />
-
-                    {/* Ngày kết thúc */}
-                    <FormField
-                        control={form.control}
-                        name="endDate"
-                        render={({ field }) => (
-                            <FormItem className="space-y-1">
-                                <div className="flex items-center gap-3">
-                                    <FormLabel className="w-40 text-end text-base font-medium">
-                                        Ngày kết thúc
-                                    </FormLabel>
-                                    <FormControl className="flex-1">
-                                        <Input
-                                            value={new Date(field.value).toLocaleDateString('vi-VN')}
-                                            disabled
-                                        />
-                                    </FormControl>
-                                </div>
-                                <FormMessage className="ml-40" />
-                            </FormItem>
-                        )}
-                    />
                 </div>
 
                 <div className='space-y-4 px-12 md:col-span-2'>
@@ -178,7 +134,7 @@ export default function ProjectForm({
                                         </FormLabel>
                                         <FormControl className="flex-1">
                                             <Textarea
-                                                rows={8}
+                                                rows={15}
                                                 placeholder="Mô tả ngắn gọn về dự án..."
                                                 {...field}
                                             />

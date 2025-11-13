@@ -14,18 +14,16 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
-import { SelectDropdown } from '@/components/select-dropdown'
 import { toast } from 'sonner'
 import { useNavigate } from '@tanstack/react-router'
-import { useGetSkills } from '@/hooks/api/skills/queries' // ✅ Hook lấy danh sách kỹ năng
-import apiRequest from '@/config/request'
+import { useGetSkills } from '@/hooks/api/skills/queries'
 import { MultiSelectDropdown } from '@/components/multi-select-dropdown'
 import { useCreateProject } from '@/hooks/api/projects'
 
-// ✅ Schema validation cho Project form
 const formSchema = z.object({
     title: z.string().min(2, 'Tên dự án là bắt buộc.'),
     description: z.string().min(5, 'Mô tả phải có ít nhất 5 ký tự.'),
+    budget: z.coerce.number<number>().min(0, "Giá trị nhỏ nhất là 0"),
     skillIds: z.array(z.string()).min(1, 'Phải chọn ít nhất một kỹ năng.'),
 })
 
@@ -41,13 +39,14 @@ export default function ProjectsForm({
     const navigate = useNavigate()
     const isEdit = mode === 'edit'
     const { data: skills = [], isLoading: skillsLoading } = useGetSkills()
-    const { mutateAsync: createProject } = useCreateProject();
+    const { mutateAsync: createProject } = useCreateProject()
 
     const form = useForm<ProjectForm>({
         resolver: zodResolver(formSchema),
         defaultValues: {
             title: initialData?.title ?? '',
             description: initialData?.description ?? '',
+            budget: initialData?.budget ?? 0,
             skillIds: initialData?.skillIds ?? [],
         },
     })
@@ -67,7 +66,7 @@ export default function ProjectsForm({
 
         try {
             const data = await createPromise
-            console.log('✅ Project created:', data.data.id);
+            console.log('✅ Project created:', data.data.id)
             navigate({ to: '/company-manage/projects' })
         } catch (error) {
             console.error('❌ Create project failed:', error)
@@ -82,6 +81,7 @@ export default function ProjectsForm({
             >
                 {/* ===== CỘT TRÁI ===== */}
                 <div className="space-y-4 px-12">
+                    {/* Tên dự án */}
                     <FormField
                         control={form.control}
                         name="title"
@@ -104,6 +104,29 @@ export default function ProjectsForm({
                         )}
                     />
 
+                    {/* 🔹 NEW: Ngân sách */}
+                    <FormField
+                        control={form.control}
+                        name="budget"
+                        render={({ field }) => (
+                            <FormItem className="space-y-1">
+                                <div className="flex items-center gap-3">
+                                    <FormLabel className="w-40 text-end text-base font-medium">
+                                        Ngân sách (VND)
+                                    </FormLabel>
+                                    <FormControl className="flex-1">
+                                        <Input
+                                            type="number"
+                                            {...field}
+                                            // react-hook-form truyền string, z.coerce sẽ convert về number
+                                            disabled={isEdit}
+                                        />
+                                    </FormControl>
+                                </div>
+                                <FormMessage className="ml-40" />
+                            </FormItem>
+                        )}
+                    />
                 </div>
 
                 {/* ===== CỘT PHẢI ===== */}
@@ -119,7 +142,6 @@ export default function ProjectsForm({
                                             Kỹ năng yêu cầu
                                         </FormLabel>
                                         <div className="flex-1 space-y-3">
-                                            {/* --- Dropdown chọn kỹ năng --- */}
                                             <MultiSelectDropdown
                                                 items={skills.map((s: any) => ({
                                                     label: s.name,
@@ -131,11 +153,12 @@ export default function ProjectsForm({
                                                 disabled={skillsLoading || isEdit}
                                             />
 
-                                            {/* --- Danh sách kỹ năng đã chọn --- */}
                                             {field.value && field.value.length > 0 && (
                                                 <div className="flex flex-wrap gap-2 pt-1">
                                                     {field.value.map((skillId: string) => {
-                                                        const skill = skills.find((s: any) => s.id === skillId)
+                                                        const skill = skills.find(
+                                                            (s: any) => s.id === skillId
+                                                        )
                                                         return (
                                                             <span
                                                                 key={skillId}
@@ -155,7 +178,9 @@ export default function ProjectsForm({
                         />
                     </div>
                 </div>
-                <div className='space-y-4 px-12 md:col-span-2'>
+
+                {/* Mô tả */}
+                <div className="space-y-4 px-12 md:col-span-2">
                     <div className="space-y-4 px-12">
                         <FormField
                             control={form.control}

@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { projectKeys } from './query-keys.ts'
 import apiRequest from '@/config/request';
 
@@ -27,6 +27,7 @@ export function useCreateProject() {
       title: string
       description: string
       skillIds: string[]
+      budget: number
     }) => {
       const res = await apiRequest.post('/api/v1/projects', payload)
       return res.data
