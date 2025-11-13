@@ -14,7 +14,9 @@ import {
   Tag,
   CheckSquare,
   Briefcase,
-  Circle, // Vẫn cần Circle cho trạng thái đóng
+  Circle,
+  // 1. Thêm icon cho nút mới
+  ArrowRight,
 } from 'lucide-react'
 import { getStatusColor, getTagColor } from '@/lib/utils'
 import type { ProjectData } from '../../data'
@@ -24,7 +26,7 @@ interface ProjectOverviewTabProps {
 }
 
 export const ProjectOverviewTab: React.FC<ProjectOverviewTabProps> = ({ projectData }) => {
-  const [isHiring, setIsHiring] = useState(false); // Mặc định là Tắt
+  const [isHiring, setIsHiring] = useState(false); // Bạn có thể đổi thành true để test
 
   return (
     <Card>
@@ -54,7 +56,7 @@ export const ProjectOverviewTab: React.FC<ProjectOverviewTabProps> = ({ projectD
             </div>
           </div>
 
-          {/* === HÀNG HIRING (ĐÃ CẬP NHẬT VỚI ANIMATION CONDITIONAL) === */}
+          {/* Hàng Hiring */}
           <div className="flex items-start">
             <div className="w-40 flex-shrink-0 flex items-center gap-3 text-sm text-gray-600">
               <Briefcase className="h-4 w-4" />
@@ -66,6 +68,7 @@ export const ProjectOverviewTab: React.FC<ProjectOverviewTabProps> = ({ projectD
                 checked={isHiring}
                 onCheckedChange={setIsHiring}
               />
+
               {isHiring ? (
                 <span className="relative flex h-3 w-3">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
@@ -76,6 +79,7 @@ export const ProjectOverviewTab: React.FC<ProjectOverviewTabProps> = ({ projectD
                   className="h-3 w-3 text-red-500 fill-red-500"
                 />
               )}
+
               <Label
                 htmlFor="hiring-status"
                 className={`text-sm font-bold ${isHiring ? 'text-green-700' : 'text-red-700'}`}
@@ -84,6 +88,25 @@ export const ProjectOverviewTab: React.FC<ProjectOverviewTabProps> = ({ projectD
               </Label>
             </div>
           </div>
+
+          {/* === 2. THÊM NÚT ĐIỀU HƯỚNG KHI HIRING === */}
+          {isHiring && (
+            <div className="flex items-start">
+              {/* Giữ lề trái 160px (w-40) để căn chỉnh thẳng hàng */}
+              <div className="w-40 flex-shrink-0" />
+              <div className="flex-1">
+                <Button
+                  size="sm"
+                  className="bg-blue-600 hover:bg-blue-700 text-white"
+                  // Thêm onClick để điều hướng (ví dụ dùng react-router)
+                  // onClick={() => navigate(`/projects/${projectData.id}/candidates`)}
+                >
+                  Xem danh sách ứng viên
+                  <ArrowRight className="h-4 w-4 ml-2" />
+                </Button>
+              </div>
+            </div>
+          )}
           {/* === HẾT PHẦN CẬP NHẬT === */}
 
 
