@@ -14,11 +14,9 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
-import { SelectDropdown } from '@/components/select-dropdown'
 import { toast } from 'sonner'
 import { useNavigate } from '@tanstack/react-router'
-import { useGetSkills } from '@/hooks/api/skills/queries' // ✅ Hook lấy danh sách kỹ năng
-import apiRequest from '@/config/request'
+import { useGetSkills } from '@/hooks/api/skills'
 import { MultiSelectDropdown } from '@/components/multi-select-dropdown'
 import { useCreateProject } from '@/hooks/api/projects'
 

@@ -1,2 +1,2 @@
-export { skillKeys } from './query-keys.ts'
-export { useGetSkills } from './queries.ts'
+export * from './query-keys.ts'
+export * from './queries.ts'

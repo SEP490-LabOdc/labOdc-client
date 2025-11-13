@@ -11,7 +11,7 @@ export const useGetProjectHiring = () =>
     },
   });
 
-export function getMyCompanyProjects() {
+export function useGetMyCompanyProjects() {
   return useQuery({
     queryKey: projectKeys.myCompany(),
     queryFn: async () => {
@@ -19,19 +19,6 @@ export function getMyCompanyProjects() {
       return res.data;
     }
   });
-}
-
-export function useCreateProject() {
-  return useMutation({
-    mutationFn: async (payload: {
-      title: string
-      description: string
-      skillIds: string[]
-    }) => {
-      const res = await apiRequest.post('/api/v1/projects', payload)
-      return res.data
-    },
-  })
 }
 
 export function useGetProjectById(projectId: string) {
@@ -52,5 +39,35 @@ export function useGetProjects() {
       const res = await apiRequest.get('/api/v1/projects')
       return res.data
     },
+  })
+}
+
+export function useGetProjectsParticipants(projectId: string) {
+  return useQuery({
+    queryKey: projectKeys.getProjectParticipants(projectId),
+    queryFn: async () => {
+      const { data } = await apiRequest.get(`/api/v1/projects/${projectId}/participants`);
+      return data;
+    }
+  })
+}
+
+export function useGetProjectMilestones(projectId: string) {
+  return useQuery({
+    queryKey: projectKeys.getProjectMilestones(projectId),
+    queryFn: async () => {
+      const { data } = await apiRequest.get(`/api/v1/projects/{projectId}/milestones`);
+      return data;
+    }
+  })
+}
+
+export function useGetProjectApplicants(projectId: string) {
+  return useQuery({
+    queryKey: projectKeys.getProjectApplicants(projectId),
+    queryFn: async () => {
+      const { data } = await apiRequest.get(`/api/v1/projects/{projectId}/applicants`);
+      return data;
+    }
   })
 }
