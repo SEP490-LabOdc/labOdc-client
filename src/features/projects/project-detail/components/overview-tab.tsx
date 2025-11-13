@@ -15,7 +15,6 @@ import {
   CheckSquare,
   Briefcase,
   Circle,
-  // 1. Thêm icon cho nút mới
   ArrowRight,
 } from 'lucide-react'
 import { getStatusColor, getTagColor } from '@/lib/utils'
@@ -96,7 +95,6 @@ export const ProjectOverviewTab: React.FC<ProjectOverviewTabProps> = ({ projectD
           {/* === 2. THÊM NÚT ĐIỀU HƯỚNG KHI HIRING === */}
           {isHiring && (
             <div className="flex items-start">
-              {/* Giữ lề trái 160px (w-40) để căn chỉnh thẳng hàng */}
               <div className="w-40 flex-shrink-0" />
               <div className="flex-1">
                 <Button
