@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { Upload, X, FileIcon, AlertCircle, Loader2, Eye, RotateCcw } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button.tsx';
+import { cn } from '@/lib/utils.ts';
 import { useUploadFile } from '@/hooks/api/file'
 
 interface FileUploadProps {

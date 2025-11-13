@@ -6,7 +6,8 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog.tsx"
 import { Badge } from "@/components/ui/badge.tsx"
-import { type Project, ProjectTypes } from '@/hooks/api/projects/types.ts'
+import { type Project } from '@/hooks/api/projects/types.ts'
+import { Clock, Users } from 'lucide-react'
 
 interface ProjectDetailModalProps {
   project: Project | null
@@ -17,41 +18,26 @@ interface ProjectDetailModalProps {
 export function ProjectDetailModal({ project, isOpen, onClose }: ProjectDetailModalProps) {
   if (!project) return null
 
-  const getStatusText = (status: ProjectTypes): string => {
-    const statusMap: Record<ProjectTypes, string> = {
-      [ProjectTypes.OPEN]: 'Đang Mở',
-      [ProjectTypes.IN_PROGRESS]: 'Đang Thực Hiện',
-      [ProjectTypes.COMPLETED]: 'Hoàn Thành',
-      [ProjectTypes.CLOSED]: 'Đã Đóng'
-    }
-    return statusMap[status] || status
-  }
-
-  const getStatusColor = (status: ProjectTypes): string => {
-    const colorMap: Record<ProjectTypes, string> = {
-      [ProjectTypes.OPEN]: 'bg-green-100 text-green-800',
-      [ProjectTypes.IN_PROGRESS]: 'bg-blue-100 text-blue-800',
-      [ProjectTypes.COMPLETED]: 'bg-gray-100 text-gray-800',
-      [ProjectTypes.CLOSED]: 'bg-red-100 text-red-800'
-    }
-    return colorMap[status] || 'bg-gray-100 text-gray-800'
-  }
+  const projectDuration = Math.ceil(
+    (new Date(project.endDate).getTime() - new Date(project.startDate).getTime()) / (1000 * 60 * 60 * 24 * 30)
+  )
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="text-[#264653] text-2xl">{project.title}</DialogTitle>
+          <DialogTitle className="text-[#264653] text-2xl">{project.projectName}</DialogTitle>
           <DialogDescription>Chi tiết thông tin dự án</DialogDescription>
         </DialogHeader>
 
         <div className="space-y-6">
           <div className="flex items-center gap-4">
-            <Badge className={getStatusColor(project.status as ProjectTypes)}>
-              {getStatusText(project.status as ProjectTypes)}
+            <Badge className="bg-green-100 text-green-800">
+              Đang Mở
             </Badge>
-            <div className="text-sm text-gray-500">
-              Đăng ngày: {new Date(project.createdAt).toLocaleDateString('vi-VN')}
+            <div className="flex items-center text-sm text-gray-500">
+              <Users className="h-4 w-4 mr-1" />
+              {project.currentApplicants} ứng viên đã ứng tuyển
             </div>
           </div>
 
@@ -94,41 +80,33 @@ export function ProjectDetailModal({ project, isOpen, onClose }: ProjectDetailMo
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-600">Thời gian thực hiện:</span>
-                    <span className="font-medium">
-                      {Math.ceil((new Date(project.endDate).getTime() - new Date(project.startDate).getTime()) / (1000 * 60 * 60 * 24 * 30))} tháng
-                    </span>
+                    <span className="font-medium">{projectDuration} tháng</span>
                   </div>
                 </div>
               </div>
 
               <div>
-                <h4 className="font-semibold mb-2 text-[#264653]">Ngân Sách</h4>
-                <p className="text-2xl font-bold text-[#2a9d8f]">${project.budget.toLocaleString()}</p>
-                <p className="text-sm text-gray-600">Có thể thương lượng</p>
+                <h4 className="font-semibold mb-2 text-[#264653]">Thông Tin Dự Án</h4>
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Mã dự án:</span>
+                    <span className="font-medium font-mono">{project.projectId.slice(0, 8)}...</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Số mentor:</span>
+                    <span className="font-medium">{project.mentors.length} mentor</span>
+                  </div>
+                </div>
               </div>
             </div>
 
             <div className="space-y-4">
               <div>
-                <h4 className="font-semibold mb-2 text-[#264653]">Thông Tin Liên Hệ</h4>
-                <div className="space-y-2 text-sm">
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Company ID:</span>
-                    <span className="font-medium">{project.companyId.slice(0, 8)}...</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Mentor ID:</span>
-                    <span className="font-medium">{project.mentorId.slice(0, 8)}...</span>
-                  </div>
-                </div>
-              </div>
-
-              <div>
                 <h4 className="font-semibold mb-2 text-[#264653]">Trạng Thái Ứng Tuyển</h4>
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
                     <span className="text-gray-600">Số ứng viên hiện tại:</span>
-                    <span className="font-medium">{Math.floor(Math.random() * 20) + 5}</span>
+                    <span className="font-medium">{project.currentApplicants} ứng viên</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-600">Hạn ứng tuyển:</span>
@@ -136,9 +114,36 @@ export function ProjectDetailModal({ project, isOpen, onClose }: ProjectDetailMo
                       {Math.floor(Math.random() * 10) + 3} ngày nữa
                     </span>
                   </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Cơ hội được chọn:</span>
+                    <span className="font-medium text-green-600">
+                      {project.currentApplicants === 0 ? 'Rất cao' :
+                        project.currentApplicants < 5 ? 'Cao' : 'Trung bình'}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <h4 className="font-semibold mb-2 text-[#264653]">Thông Tin Liên Hệ</h4>
+                <div className="p-3 bg-gray-50 rounded-lg">
+                  <div className="flex items-center text-sm text-gray-600">
+                    <Clock className="h-4 w-4 mr-2" />
+                    <span>Phản hồi thường trong vòng 24h</span>
+                  </div>
                 </div>
               </div>
             </div>
+          </div>
+
+          <div className="bg-blue-50 p-4 rounded-lg">
+            <h4 className="font-semibold text-[#264653] mb-2">💡 Lời khuyên ứng tuyển</h4>
+            <ul className="text-sm text-gray-700 space-y-1">
+              <li>• Đọc kỹ mô tả dự án và yêu cầu kỹ năng</li>
+              <li>• Chuẩn bị portfolio phù hợp với công nghệ sử dụng</li>
+              <li>• Viết cover letter thể hiện hiểu biết về dự án</li>
+              <li>• Đề xuất timeline và phương pháp thực hiện cụ thể</li>
+            </ul>
           </div>
         </div>
       </DialogContent>

@@ -1,0 +1,1 @@
+export { TalentLayout } from './talent-layout.tsx'
