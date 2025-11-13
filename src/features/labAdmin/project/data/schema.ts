@@ -15,13 +15,13 @@ export const PROJECT_STATUS = {
 
 // ===== Project Status Labels =====
 export const PROJECT_STATUS_LABEL: Record<ProjectStatus, string> = {
-    [PROJECT_STATUS.PENDING]: 'Chờ duyệt',
+    [PROJECT_STATUS.PENDING]: 'Chờ lab admin duyệt',
     [PROJECT_STATUS.COMPANY_UPDATE_REQUEST]: 'Công ty cần cập nhật thông tin',
-    [PROJECT_STATUS.REJECTED]: 'Bị từ chối',
-    [PROJECT_STATUS.MENTOR_BUILD_PROJECT_PLAN]: 'Mentor đang xây dựng kế hoạch',
-    [PROJECT_STATUS.PENDING_COMPANY_APPROVAL]: 'Chờ công ty phê duyệt kế hoạch',
-    [PROJECT_STATUS.PENDING_LAB_PUBLISH]: 'Chờ Lab admin công bố dự án',
-    [PROJECT_STATUS.HIRING]: 'Đang tuyển',
+    [PROJECT_STATUS.REJECTED]: 'Đã bị hủy',
+    [PROJECT_STATUS.MENTOR_BUILD_PROJECT_PLAN]: 'Mentor lên kế hoạch',
+    [PROJECT_STATUS.PENDING_COMPANY_APPROVAL]: 'Chờ công ty phê duyệt',
+    [PROJECT_STATUS.PENDING_LAB_PUBLISH]: 'Chờ Lab admin công bố',
+    [PROJECT_STATUS.HIRING]: 'Đang tuyển nhân sự',
     [PROJECT_STATUS.IN_PROGRESS]: 'Đang thực hiện',
     [PROJECT_STATUS.COMPLETED]: 'Hoàn thành',
 }
