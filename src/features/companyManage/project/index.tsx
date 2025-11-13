@@ -1,5 +1,5 @@
 import { ErrorView } from "@/components/admin/ErrorView"
-import { getMyCompanyProjects } from "@/hooks/api/projects/queries"
+import { useGetMyCompanyProjects } from "@/hooks/api/projects"
 import { getRouteApi } from "@tanstack/react-router"
 import { ProjectsProvider } from "./components/project-provider"
 import { Header } from "@/components/layout/header"
@@ -10,8 +10,6 @@ import { ProfileDropdown } from "@/components/profile-dropdown"
 import { Main } from "@/components/layout/main"
 import { ProjectsTable } from "./components/projects-table"
 import { ProjectPrimaryButtons } from "./components/project-primary-buttons"
-
-
 
 const route = getRouteApi('/_authenticated/company-manage/projects/')
 
@@ -47,7 +45,7 @@ export default function Project() {
     const search = route.useSearch()
     const navigate = route.useNavigate()
 
-    const { data, isLoading, isError, error } = getMyCompanyProjects()
+    const { data, isLoading, isError, error } = useGetMyCompanyProjects()
 
     // 3. Xử lý trạng thái Error
     if (isError) {
