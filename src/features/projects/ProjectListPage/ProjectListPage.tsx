@@ -1,34 +1,37 @@
 import { useState } from "react"
-import { Search, Filter, Clock, DollarSign, Users, Star } from "lucide-react"
+import { Search, Filter, Clock, Users } from "lucide-react"
 import { Button } from "@/components/ui/button.tsx"
 import { Input } from "@/components/ui/input.tsx"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card.tsx"
-import { Badge } from "@/components/ui/badge.tsx"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select.tsx"
-import { type Project, ProjectTypes } from '@/hooks/api/projects/types.ts'
-import { ProjectDetailModal } from "./components/ProjectDetailModal"
-import { ApplyProjectModal } from "./components/ApplyProjectModal"
-import { useGetAllProjects } from '@/hooks/api/projects'
-
+import { type Project } from '@/hooks/api/projects/types.ts'
+import { ApplyProjectModal, ProjectDetailModal, ProjectCard } from "./components"
+import { useGetProjectHiring } from '@/hooks/api/projects'
 
 export default function ProjectListPage() {
   const [searchTerm, setSearchTerm] = useState("")
-  const [selectedType, setSelectedType] = useState<string>("all")
   const [selectedDuration, setSelectedDuration] = useState("all")
   const [selectedProject, setSelectedProject] = useState<Project | null>(null)
   const [showDetailModal, setShowDetailModal] = useState(false)
   const [showApplyModal, setShowApplyModal] = useState(false)
 
-  const { data: projects } = useGetAllProjects() as { data  : Project[] }
+  const { data: projects, isPending } = useGetProjectHiring()
 
-  const filteredProjects = projects.filter((project: Project) => {
+  const filteredProjects = projects?.data?.data ? projects.data.data.filter((project: Project) => {
     const matchesSearch =
-      project.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      project.projectName.toLowerCase().includes(searchTerm.toLowerCase()) ||
       project.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
       project.skills.some((skill) => skill.name.toLowerCase().includes(searchTerm.toLowerCase()))
-    const matchesType = selectedType === "all" || project.status === selectedType
-    return matchesSearch && matchesType
-  })
+
+    let matchesDuration = true
+    if (selectedDuration !== "all") {
+      const duration = Math.ceil((new Date(project.endDate).getTime() - new Date(project.startDate).getTime()) / (1000 * 60 * 60 * 24 * 30))
+      if (selectedDuration === "short") matchesDuration = duration < 3
+      else if (selectedDuration === "medium") matchesDuration = duration >= 3 && duration <= 6
+      else if (selectedDuration === "long") matchesDuration = duration > 6
+    }
+
+    return matchesSearch && matchesDuration
+  }) : []
 
   const handleViewDetails = (project: Project) => {
     setSelectedProject(project)
@@ -40,24 +43,12 @@ export default function ProjectListPage() {
     setShowApplyModal(true)
   }
 
-  const getStatusText = (status: ProjectTypes): string => {
-    const statusMap: Record<ProjectTypes, string> = {
-      [ProjectTypes.OPEN]: 'Đang Mở',
-      [ProjectTypes.IN_PROGRESS]: 'Đang Thực Hiện',
-      [ProjectTypes.COMPLETED]: 'Hoàn Thành',
-      [ProjectTypes.CLOSED]: 'Đã Đóng'
-    }
-    return statusMap[status] || status
-  }
-
-  const getStatusColor = (status: ProjectTypes): string => {
-    const colorMap: Record<ProjectTypes, string> = {
-      [ProjectTypes.OPEN]: 'bg-green-100 text-green-800',
-      [ProjectTypes.IN_PROGRESS]: 'bg-blue-100 text-blue-800',
-      [ProjectTypes.COMPLETED]: 'bg-gray-100 text-gray-800',
-      [ProjectTypes.CLOSED]: 'bg-red-100 text-red-800'
-    }
-    return colorMap[status] || 'bg-gray-100 text-gray-800'
+  if (isPending) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-gray-500">Đang tải dự án...</div>
+      </div>
+    )
   }
 
   return (
@@ -98,18 +89,6 @@ export default function ProjectListPage() {
               />
             </div>
             <div className="flex gap-4 items-center">
-              <Select value={selectedType} onValueChange={setSelectedType}>
-                <SelectTrigger className="w-40">
-                  <SelectValue placeholder="Trạng Thái" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">Tất Cả</SelectItem>
-                  <SelectItem value={ProjectTypes.OPEN}>Đang Mở</SelectItem>
-                  <SelectItem value={ProjectTypes.IN_PROGRESS}>Đang Thực Hiện</SelectItem>
-                  <SelectItem value={ProjectTypes.COMPLETED}>Hoàn Thành</SelectItem>
-                  <SelectItem value={ProjectTypes.CLOSED}>Đã Đóng</SelectItem>
-                </SelectContent>
-              </Select>
               <Select value={selectedDuration} onValueChange={setSelectedDuration}>
                 <SelectTrigger className="w-40">
                   <SelectValue placeholder="Thời Gian" />
@@ -136,91 +115,22 @@ export default function ProjectListPage() {
           <div className="flex justify-between items-center mb-8">
             <div>
               <h2 className="text-3xl font-bold text-[#264653]">Dự Án Có Sẵn</h2>
-              <p className="text-gray-600 mt-2">Tìm thấy {filteredProjects.length} dự án phù hợp</p>
+              <p className="text-gray-600 mt-2">Tìm thấy {filteredProjects?.length || 0} dự án phù hợp</p>
             </div>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredProjects.map((project: Project) => (
-              <Card key={project.id} className="hover:shadow-lg transition-all duration-300 border-l-4 border-l-[#2a9d8f] hover:scale-105">
-                <CardHeader>
-                  <div className="flex justify-between items-start mb-2">
-                    <Badge className={getStatusColor(project.status as ProjectTypes)}>
-                      {getStatusText(project.status as ProjectTypes)}
-                    </Badge>
-                    <div className="flex items-center text-sm text-gray-500">
-                      <Users className="h-4 w-4 mr-1" />
-                      {Math.floor(Math.random() * 15) + 5} ứng viên
-                    </div>
-                  </div>
-                  <CardTitle className="text-[#264653] text-lg hover:text-[#2a9d8f] transition-colors">
-                    {project.title}
-                  </CardTitle>
-                  <CardDescription className="text-sm line-clamp-3">{project.description}</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    <div className="flex flex-wrap gap-1">
-                      {project.skills.slice(0, 3).map((skill) => (
-                        <Badge key={skill.id} variant="outline" className="text-xs bg-[#e9f5f3] text-[#2a9d8f] border-[#2a9d8f]">
-                          {skill.name}
-                        </Badge>
-                      ))}
-                      {project.skills.length > 3 && (
-                        <Badge variant="outline" className="text-xs bg-gray-50">
-                          +{project.skills.length - 3} kỹ năng
-                        </Badge>
-                      )}
-                    </div>
-
-                    <div className="space-y-2">
-                      <div className="flex justify-between text-sm text-gray-600">
-                        <div className="flex items-center">
-                          <Clock className="h-4 w-4 mr-1" />
-                          <span>Hạn: {new Date(project.endDate).toLocaleDateString('vi-VN')}</span>
-                        </div>
-                      </div>
-                      <div className="flex items-center text-sm text-gray-600">
-                        <DollarSign className="h-4 w-4 mr-1" />
-                        <span className="font-semibold text-[#264653]">Ngân sách: ${project.budget.toLocaleString()}</span>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center text-sm text-gray-500">
-                        <Star className="h-4 w-4 mr-1 fill-yellow-400 text-yellow-400" />
-                        <span>Đánh giá: {(Math.random() * 1 + 4).toFixed(1)}</span>
-                      </div>
-                      <div className="text-xs text-gray-500">
-                        Đăng {Math.floor(Math.random() * 7) + 1} ngày trước
-                      </div>
-                    </div>
-
-                    <div className="flex gap-2 pt-2">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="flex-1 bg-transparent hover:bg-[#f8f9fa]"
-                        onClick={() => handleViewDetails(project)}
-                      >
-                        Chi Tiết
-                      </Button>
-                      <Button
-                        size="sm"
-                        className="bg-[#2a9d8f] hover:bg-[#264653] flex-1"
-                        onClick={() => handleApplyProject(project)}
-                        disabled={project.status === ProjectTypes.CLOSED || project.status === ProjectTypes.COMPLETED}
-                      >
-                        {project.status === ProjectTypes.OPEN ? 'Ứng Tuyển Ngay' : 'Không Khả Dụng'}
-                      </Button>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
+            {filteredProjects?.map((project: Project) => (
+              <ProjectCard
+                key={project.projectId}
+                project={project}
+                onViewDetails={handleViewDetails}
+                onApply={handleApplyProject}
+              />
             ))}
           </div>
 
-          {filteredProjects.length === 0 && (
+          {(!projects?.data || projects.data.length === 0) && (
             <div className="text-center py-12">
               <div className="text-gray-500 text-lg mb-4">Không tìm thấy dự án phù hợp</div>
               <p className="text-gray-400 mb-6">Thử thay đổi bộ lọc hoặc từ khóa tìm kiếm</p>
@@ -228,7 +138,6 @@ export default function ProjectListPage() {
                 variant="outline"
                 onClick={() => {
                   setSearchTerm("")
-                  setSelectedType("all")
                   setSelectedDuration("all")
                 }}
               >
@@ -239,7 +148,7 @@ export default function ProjectListPage() {
         </div>
       </section>
 
-      {/* Success Tips Section */}
+      {/* Tips section */}
       <section className="py-16 bg-slate-50">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
@@ -259,7 +168,7 @@ export default function ProjectListPage() {
             </div>
             <div className="text-center space-y-4">
               <div className="w-16 h-16 bg-[#2a9d8f] rounded-full flex items-center justify-center mx-auto">
-                <Star className="h-8 w-8 text-white" />
+                <Clock className="h-8 w-8 text-white" />
               </div>
               <h3 className="text-xl font-semibold text-[#264653]">Đề Xuất Chất Lượng</h3>
               <p className="text-gray-600">Viết đề xuất chi tiết, thể hiện hiểu biết về dự án và giải pháp</p>
@@ -275,7 +184,6 @@ export default function ProjectListPage() {
         </div>
       </section>
 
-      {/* CTA Section */}
       <section className="py-16 bg-[#264653] text-white">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl font-bold mb-6">Sẵn Sàng Bắt Đầu Sự Nghiệp?</h2>
@@ -297,7 +205,6 @@ export default function ProjectListPage() {
         </div>
       </section>
 
-      {/* Modals */}
       <ProjectDetailModal
         project={selectedProject}
         isOpen={showDetailModal}

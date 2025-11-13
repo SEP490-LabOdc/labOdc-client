@@ -23,7 +23,7 @@ import {
 } from '@/features/companies/pages/public/CompanySignUpPage/components/company-register.schema.ts'
 import type { CompanyCreatePayload, CompanyPayload, CompanyUpdateRegister } from '@/features/companies/types.ts'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { FileUpload } from '@/features/companies/pages/public/CompanySignUpPage/components/FileUpload.tsx'
+import { FileUpload } from '@/components/file/FileUpload.tsx'
 
 interface RegisterCompanyFormProps {
   initialData?: CompanyUpdateRegister;
