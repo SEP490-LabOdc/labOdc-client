@@ -13,6 +13,7 @@ import {
     useGetCompanyChecklists,
 } from '@/hooks/api/companies/queries'
 import { ErrorView } from '@/components/admin/ErrorView'
+import { StatusAlert } from '@/components/admin/StatusAlert'
 
 const route = getRouteApi('/_authenticated/lab-admin/companies/approve/')
 
@@ -150,28 +151,12 @@ export default function ApproveCompany() {
                     </div>
 
                     {company?.status === 'UPDATE_REQUIRED' && (
-                        <div className="mb-4 flex items-center gap-3 rounded-lg border border-primary/20 bg-primary/10 p-3 text-primary">
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                className="h-6 w-6 text-primary shrink-0 ms-2"
-                                viewBox="0 0 20 20"
-                                fill="currentColor"
-                            >
-                                <path
-                                    fillRule="evenodd"
-                                    d="M18 10A8 8 0 11 2 10a8 8 0 0116 0zm-7-4a1 1 0 10-2 0v4a1 1 0 002 0V6zm0 6a1 1 0 10-2 0v.01a1 1 0 002 0V12z"
-                                    clipRule="evenodd"
-                                />
-                            </svg>
-                            <div>
-                                <p className="font-medium">
-                                    Công ty đang trong quá trình cập nhật thông tin.
-                                </p>
-                                <p className="text-sm text-muted-foreground">
-                                    Vui lòng chờ doanh nghiệp hoàn tất các thay đổi được yêu cầu.
-                                </p>
-                            </div>
-                        </div>
+                        <StatusAlert
+                            variant="warning"
+                            title="Công ty đang trong quá trình cập nhật thông tin."
+                            message="Vui lòng chờ doanh nghiệp hoàn tất các thay đổi được yêu cầu."
+                            className="mb-4"
+                        />
                     )}
 
                     <div className="-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-y-0 lg:space-x-12">
