@@ -45,6 +45,7 @@ import { Route as authForgotPasswordIndexRouteImport } from './routes/(auth)/for
 import { Route as publicCompaniesCompanyIdRouteImport } from './routes/(public)/companies/$companyId'
 import { Route as AuthenticatedAdminSettingsRouteRouteImport } from './routes/_authenticated/admin/settings/route'
 import { Route as AuthenticatedTalentMyProjectsIndexRouteImport } from './routes/_authenticated/talent/my-projects/index'
+import { Route as AuthenticatedLabAdminProjectsIndexRouteImport } from './routes/_authenticated/lab-admin/projects/index'
 import { Route as AuthenticatedLabAdminCompaniesIndexRouteImport } from './routes/_authenticated/lab-admin/companies/index'
 import { Route as AuthenticatedCompanyManageProjectsIndexRouteImport } from './routes/_authenticated/company-manage/projects/index'
 import { Route as AuthenticatedCompanyAdminProjectsIndexRouteImport } from './routes/_authenticated/company-admin/projects/index'
@@ -55,8 +56,10 @@ import { Route as AuthenticatedAdminCompaniesIndexRouteImport } from './routes/_
 import { Route as AuthenticatedAdminSettingsAppearanceRouteImport } from './routes/_authenticated/admin/settings/appearance'
 import { Route as AuthenticatedAdminSettingsAccountRouteImport } from './routes/_authenticated/admin/settings/account'
 import { Route as AuthenticatedTalentMyProjectsDetailIndexRouteImport } from './routes/_authenticated/talent/my-projects/detail/index'
+import { Route as AuthenticatedLabAdminProjectsProjectIdIndexRouteImport } from './routes/_authenticated/lab-admin/projects/$projectId/index'
 import { Route as AuthenticatedLabAdminCompaniesEditIndexRouteImport } from './routes/_authenticated/lab-admin/companies/edit/index'
 import { Route as AuthenticatedLabAdminCompaniesApproveIndexRouteImport } from './routes/_authenticated/lab-admin/companies/approve/index'
+import { Route as AuthenticatedCompanyManageProjectsViewIndexRouteImport } from './routes/_authenticated/company-manage/projects/view/index'
 import { Route as AuthenticatedCompanyManageProjectsCreateIndexRouteImport } from './routes/_authenticated/company-manage/projects/create/index'
 import { Route as AuthenticatedCompanyAdminProjectsCreateIndexRouteImport } from './routes/_authenticated/company-admin/projects/create/index'
 import { Route as AuthenticatedCompanyAdminProjectsProjectIdIndexRouteImport } from './routes/_authenticated/company-admin/projects/$projectId/index'
@@ -257,6 +260,12 @@ const AuthenticatedTalentMyProjectsIndexRoute =
     path: '/my-projects/',
     getParentRoute: () => AuthenticatedTalentRouteRoute,
   } as any)
+const AuthenticatedLabAdminProjectsIndexRoute =
+  AuthenticatedLabAdminProjectsIndexRouteImport.update({
+    id: '/projects/',
+    path: '/projects/',
+    getParentRoute: () => AuthenticatedLabAdminRouteRoute,
+  } as any)
 const AuthenticatedLabAdminCompaniesIndexRoute =
   AuthenticatedLabAdminCompaniesIndexRouteImport.update({
     id: '/companies/',
@@ -317,6 +326,12 @@ const AuthenticatedTalentMyProjectsDetailIndexRoute =
     path: '/my-projects/detail/',
     getParentRoute: () => AuthenticatedTalentRouteRoute,
   } as any)
+const AuthenticatedLabAdminProjectsProjectIdIndexRoute =
+  AuthenticatedLabAdminProjectsProjectIdIndexRouteImport.update({
+    id: '/projects/$projectId/',
+    path: '/projects/$projectId/',
+    getParentRoute: () => AuthenticatedLabAdminRouteRoute,
+  } as any)
 const AuthenticatedLabAdminCompaniesEditIndexRoute =
   AuthenticatedLabAdminCompaniesEditIndexRouteImport.update({
     id: '/companies/edit/',
@@ -328,6 +343,12 @@ const AuthenticatedLabAdminCompaniesApproveIndexRoute =
     id: '/companies/approve/',
     path: '/companies/approve/',
     getParentRoute: () => AuthenticatedLabAdminRouteRoute,
+  } as any)
+const AuthenticatedCompanyManageProjectsViewIndexRoute =
+  AuthenticatedCompanyManageProjectsViewIndexRouteImport.update({
+    id: '/projects/view/',
+    path: '/projects/view/',
+    getParentRoute: () => AuthenticatedCompanyManageRouteRoute,
   } as any)
 const AuthenticatedCompanyManageProjectsCreateIndexRoute =
   AuthenticatedCompanyManageProjectsCreateIndexRouteImport.update({
@@ -427,6 +448,7 @@ export interface FileRoutesByFullPath {
   '/company-admin/projects': typeof AuthenticatedCompanyAdminProjectsIndexRoute
   '/company-manage/projects': typeof AuthenticatedCompanyManageProjectsIndexRoute
   '/lab-admin/companies': typeof AuthenticatedLabAdminCompaniesIndexRoute
+  '/lab-admin/projects': typeof AuthenticatedLabAdminProjectsIndexRoute
   '/talent/my-projects': typeof AuthenticatedTalentMyProjectsIndexRoute
   '/admin/companies/approve': typeof AuthenticatedAdminCompaniesApproveIndexRoute
   '/admin/companies/edit': typeof AuthenticatedAdminCompaniesEditIndexRoute
@@ -435,8 +457,10 @@ export interface FileRoutesByFullPath {
   '/company-admin/projects/$projectId': typeof AuthenticatedCompanyAdminProjectsProjectIdIndexRoute
   '/company-admin/projects/create': typeof AuthenticatedCompanyAdminProjectsCreateIndexRoute
   '/company-manage/projects/create': typeof AuthenticatedCompanyManageProjectsCreateIndexRoute
+  '/company-manage/projects/view': typeof AuthenticatedCompanyManageProjectsViewIndexRoute
   '/lab-admin/companies/approve': typeof AuthenticatedLabAdminCompaniesApproveIndexRoute
   '/lab-admin/companies/edit': typeof AuthenticatedLabAdminCompaniesEditIndexRoute
+  '/lab-admin/projects/$projectId': typeof AuthenticatedLabAdminProjectsProjectIdIndexRoute
   '/talent/my-projects/detail': typeof AuthenticatedTalentMyProjectsDetailIndexRoute
   '/talent/my-projects/detail/candidates': typeof AuthenticatedTalentMyProjectsDetailCandidatesIndexRoute
   '/talent/my-projects/detail/milestone-detail': typeof AuthenticatedTalentMyProjectsDetailMilestoneDetailIndexRoute
@@ -477,6 +501,7 @@ export interface FileRoutesByTo {
   '/company-admin/projects': typeof AuthenticatedCompanyAdminProjectsIndexRoute
   '/company-manage/projects': typeof AuthenticatedCompanyManageProjectsIndexRoute
   '/lab-admin/companies': typeof AuthenticatedLabAdminCompaniesIndexRoute
+  '/lab-admin/projects': typeof AuthenticatedLabAdminProjectsIndexRoute
   '/talent/my-projects': typeof AuthenticatedTalentMyProjectsIndexRoute
   '/admin/companies/approve': typeof AuthenticatedAdminCompaniesApproveIndexRoute
   '/admin/companies/edit': typeof AuthenticatedAdminCompaniesEditIndexRoute
@@ -485,8 +510,10 @@ export interface FileRoutesByTo {
   '/company-admin/projects/$projectId': typeof AuthenticatedCompanyAdminProjectsProjectIdIndexRoute
   '/company-admin/projects/create': typeof AuthenticatedCompanyAdminProjectsCreateIndexRoute
   '/company-manage/projects/create': typeof AuthenticatedCompanyManageProjectsCreateIndexRoute
+  '/company-manage/projects/view': typeof AuthenticatedCompanyManageProjectsViewIndexRoute
   '/lab-admin/companies/approve': typeof AuthenticatedLabAdminCompaniesApproveIndexRoute
   '/lab-admin/companies/edit': typeof AuthenticatedLabAdminCompaniesEditIndexRoute
+  '/lab-admin/projects/$projectId': typeof AuthenticatedLabAdminProjectsProjectIdIndexRoute
   '/talent/my-projects/detail': typeof AuthenticatedTalentMyProjectsDetailIndexRoute
   '/talent/my-projects/detail/candidates': typeof AuthenticatedTalentMyProjectsDetailCandidatesIndexRoute
   '/talent/my-projects/detail/milestone-detail': typeof AuthenticatedTalentMyProjectsDetailMilestoneDetailIndexRoute
@@ -537,6 +564,7 @@ export interface FileRoutesById {
   '/_authenticated/company-admin/projects/': typeof AuthenticatedCompanyAdminProjectsIndexRoute
   '/_authenticated/company-manage/projects/': typeof AuthenticatedCompanyManageProjectsIndexRoute
   '/_authenticated/lab-admin/companies/': typeof AuthenticatedLabAdminCompaniesIndexRoute
+  '/_authenticated/lab-admin/projects/': typeof AuthenticatedLabAdminProjectsIndexRoute
   '/_authenticated/talent/my-projects/': typeof AuthenticatedTalentMyProjectsIndexRoute
   '/_authenticated/admin/companies/approve/': typeof AuthenticatedAdminCompaniesApproveIndexRoute
   '/_authenticated/admin/companies/edit/': typeof AuthenticatedAdminCompaniesEditIndexRoute
@@ -545,8 +573,10 @@ export interface FileRoutesById {
   '/_authenticated/company-admin/projects/$projectId/': typeof AuthenticatedCompanyAdminProjectsProjectIdIndexRoute
   '/_authenticated/company-admin/projects/create/': typeof AuthenticatedCompanyAdminProjectsCreateIndexRoute
   '/_authenticated/company-manage/projects/create/': typeof AuthenticatedCompanyManageProjectsCreateIndexRoute
+  '/_authenticated/company-manage/projects/view/': typeof AuthenticatedCompanyManageProjectsViewIndexRoute
   '/_authenticated/lab-admin/companies/approve/': typeof AuthenticatedLabAdminCompaniesApproveIndexRoute
   '/_authenticated/lab-admin/companies/edit/': typeof AuthenticatedLabAdminCompaniesEditIndexRoute
+  '/_authenticated/lab-admin/projects/$projectId/': typeof AuthenticatedLabAdminProjectsProjectIdIndexRoute
   '/_authenticated/talent/my-projects/detail/': typeof AuthenticatedTalentMyProjectsDetailIndexRoute
   '/_authenticated/talent/my-projects/detail/candidates/': typeof AuthenticatedTalentMyProjectsDetailCandidatesIndexRoute
   '/_authenticated/talent/my-projects/detail/milestone-detail/': typeof AuthenticatedTalentMyProjectsDetailMilestoneDetailIndexRoute
@@ -596,6 +626,7 @@ export interface FileRouteTypes {
     | '/company-admin/projects'
     | '/company-manage/projects'
     | '/lab-admin/companies'
+    | '/lab-admin/projects'
     | '/talent/my-projects'
     | '/admin/companies/approve'
     | '/admin/companies/edit'
@@ -604,8 +635,10 @@ export interface FileRouteTypes {
     | '/company-admin/projects/$projectId'
     | '/company-admin/projects/create'
     | '/company-manage/projects/create'
+    | '/company-manage/projects/view'
     | '/lab-admin/companies/approve'
     | '/lab-admin/companies/edit'
+    | '/lab-admin/projects/$projectId'
     | '/talent/my-projects/detail'
     | '/talent/my-projects/detail/candidates'
     | '/talent/my-projects/detail/milestone-detail'
@@ -646,6 +679,7 @@ export interface FileRouteTypes {
     | '/company-admin/projects'
     | '/company-manage/projects'
     | '/lab-admin/companies'
+    | '/lab-admin/projects'
     | '/talent/my-projects'
     | '/admin/companies/approve'
     | '/admin/companies/edit'
@@ -654,8 +688,10 @@ export interface FileRouteTypes {
     | '/company-admin/projects/$projectId'
     | '/company-admin/projects/create'
     | '/company-manage/projects/create'
+    | '/company-manage/projects/view'
     | '/lab-admin/companies/approve'
     | '/lab-admin/companies/edit'
+    | '/lab-admin/projects/$projectId'
     | '/talent/my-projects/detail'
     | '/talent/my-projects/detail/candidates'
     | '/talent/my-projects/detail/milestone-detail'
@@ -705,6 +741,7 @@ export interface FileRouteTypes {
     | '/_authenticated/company-admin/projects/'
     | '/_authenticated/company-manage/projects/'
     | '/_authenticated/lab-admin/companies/'
+    | '/_authenticated/lab-admin/projects/'
     | '/_authenticated/talent/my-projects/'
     | '/_authenticated/admin/companies/approve/'
     | '/_authenticated/admin/companies/edit/'
@@ -713,8 +750,10 @@ export interface FileRouteTypes {
     | '/_authenticated/company-admin/projects/$projectId/'
     | '/_authenticated/company-admin/projects/create/'
     | '/_authenticated/company-manage/projects/create/'
+    | '/_authenticated/company-manage/projects/view/'
     | '/_authenticated/lab-admin/companies/approve/'
     | '/_authenticated/lab-admin/companies/edit/'
+    | '/_authenticated/lab-admin/projects/$projectId/'
     | '/_authenticated/talent/my-projects/detail/'
     | '/_authenticated/talent/my-projects/detail/candidates/'
     | '/_authenticated/talent/my-projects/detail/milestone-detail/'
@@ -995,6 +1034,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedTalentMyProjectsIndexRouteImport
       parentRoute: typeof AuthenticatedTalentRouteRoute
     }
+    '/_authenticated/lab-admin/projects/': {
+      id: '/_authenticated/lab-admin/projects/'
+      path: '/projects'
+      fullPath: '/lab-admin/projects'
+      preLoaderRoute: typeof AuthenticatedLabAdminProjectsIndexRouteImport
+      parentRoute: typeof AuthenticatedLabAdminRouteRoute
+    }
     '/_authenticated/lab-admin/companies/': {
       id: '/_authenticated/lab-admin/companies/'
       path: '/companies'
@@ -1065,6 +1111,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedTalentMyProjectsDetailIndexRouteImport
       parentRoute: typeof AuthenticatedTalentRouteRoute
     }
+    '/_authenticated/lab-admin/projects/$projectId/': {
+      id: '/_authenticated/lab-admin/projects/$projectId/'
+      path: '/projects/$projectId'
+      fullPath: '/lab-admin/projects/$projectId'
+      preLoaderRoute: typeof AuthenticatedLabAdminProjectsProjectIdIndexRouteImport
+      parentRoute: typeof AuthenticatedLabAdminRouteRoute
+    }
     '/_authenticated/lab-admin/companies/edit/': {
       id: '/_authenticated/lab-admin/companies/edit/'
       path: '/companies/edit'
@@ -1078,6 +1131,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/lab-admin/companies/approve'
       preLoaderRoute: typeof AuthenticatedLabAdminCompaniesApproveIndexRouteImport
       parentRoute: typeof AuthenticatedLabAdminRouteRoute
+    }
+    '/_authenticated/company-manage/projects/view/': {
+      id: '/_authenticated/company-manage/projects/view/'
+      path: '/projects/view'
+      fullPath: '/company-manage/projects/view'
+      preLoaderRoute: typeof AuthenticatedCompanyManageProjectsViewIndexRouteImport
+      parentRoute: typeof AuthenticatedCompanyManageRouteRoute
     }
     '/_authenticated/company-manage/projects/create/': {
       id: '/_authenticated/company-manage/projects/create/'
@@ -1289,6 +1349,7 @@ interface AuthenticatedCompanyManageRouteRouteChildren {
   AuthenticatedCompanyManageIndexRoute: typeof AuthenticatedCompanyManageIndexRoute
   AuthenticatedCompanyManageProjectsIndexRoute: typeof AuthenticatedCompanyManageProjectsIndexRoute
   AuthenticatedCompanyManageProjectsCreateIndexRoute: typeof AuthenticatedCompanyManageProjectsCreateIndexRoute
+  AuthenticatedCompanyManageProjectsViewIndexRoute: typeof AuthenticatedCompanyManageProjectsViewIndexRoute
 }
 
 const AuthenticatedCompanyManageRouteRouteChildren: AuthenticatedCompanyManageRouteRouteChildren =
@@ -1298,6 +1359,8 @@ const AuthenticatedCompanyManageRouteRouteChildren: AuthenticatedCompanyManageRo
       AuthenticatedCompanyManageProjectsIndexRoute,
     AuthenticatedCompanyManageProjectsCreateIndexRoute:
       AuthenticatedCompanyManageProjectsCreateIndexRoute,
+    AuthenticatedCompanyManageProjectsViewIndexRoute:
+      AuthenticatedCompanyManageProjectsViewIndexRoute,
   }
 
 const AuthenticatedCompanyManageRouteRouteWithChildren =
@@ -1308,8 +1371,10 @@ const AuthenticatedCompanyManageRouteRouteWithChildren =
 interface AuthenticatedLabAdminRouteRouteChildren {
   AuthenticatedLabAdminIndexRoute: typeof AuthenticatedLabAdminIndexRoute
   AuthenticatedLabAdminCompaniesIndexRoute: typeof AuthenticatedLabAdminCompaniesIndexRoute
+  AuthenticatedLabAdminProjectsIndexRoute: typeof AuthenticatedLabAdminProjectsIndexRoute
   AuthenticatedLabAdminCompaniesApproveIndexRoute: typeof AuthenticatedLabAdminCompaniesApproveIndexRoute
   AuthenticatedLabAdminCompaniesEditIndexRoute: typeof AuthenticatedLabAdminCompaniesEditIndexRoute
+  AuthenticatedLabAdminProjectsProjectIdIndexRoute: typeof AuthenticatedLabAdminProjectsProjectIdIndexRoute
 }
 
 const AuthenticatedLabAdminRouteRouteChildren: AuthenticatedLabAdminRouteRouteChildren =
@@ -1317,10 +1382,14 @@ const AuthenticatedLabAdminRouteRouteChildren: AuthenticatedLabAdminRouteRouteCh
     AuthenticatedLabAdminIndexRoute: AuthenticatedLabAdminIndexRoute,
     AuthenticatedLabAdminCompaniesIndexRoute:
       AuthenticatedLabAdminCompaniesIndexRoute,
+    AuthenticatedLabAdminProjectsIndexRoute:
+      AuthenticatedLabAdminProjectsIndexRoute,
     AuthenticatedLabAdminCompaniesApproveIndexRoute:
       AuthenticatedLabAdminCompaniesApproveIndexRoute,
     AuthenticatedLabAdminCompaniesEditIndexRoute:
       AuthenticatedLabAdminCompaniesEditIndexRoute,
+    AuthenticatedLabAdminProjectsProjectIdIndexRoute:
+      AuthenticatedLabAdminProjectsProjectIdIndexRoute,
   }
 
 const AuthenticatedLabAdminRouteRouteWithChildren =
