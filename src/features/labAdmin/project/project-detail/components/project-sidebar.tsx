@@ -7,39 +7,38 @@ import { Button } from '@/components/ui/button'
 import { Plus, ChevronDown } from 'lucide-react'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { Separator } from '@/components/ui/separator'
-import { getStatusColor } from '@/lib/utils'
+import { cn, getStatusColor } from '@/lib/utils'
+import { Link } from '@tanstack/react-router'
+import { PROJECT_STATUS_LABEL } from '../../data/schema'
+import { callTypes } from '../../data/data'
 
 // Định nghĩa kiểu dữ liệu cho props
-type ProjectData = {
-  client: string;
-  totalCost: number;
-  hoursOfWork: number;
-  createdOn: string;
-  startedOn: string;
-  dueDate: string;
-  dueDateTag: string;
-  createdBy: { name: string; avatar: string; };
-  priority: string;
-}
+// type ProjectData = {
+//   client: string;
+//   totalCost: number;
+//   hoursOfWork: number;
+//   createdOn: string;
+//   startedOn: string;
+//   dueDate: string;
+//   dueDateTag: string;
+//   createdBy: { name: string; avatar: string; };
+//   priority: string;
+// }
 
-type Task = {
-  id: number;
-  name: string;
-  status: string;
-  assignees: { name: string; avatar: string; }[];
-  completed: boolean;
-}
+// type Task = {
+//   id: number;
+//   name: string;
+//   status: string;
+//   assignees: { name: string; avatar: string; }[];
+//   completed: boolean;
+// }
 
-interface ProjectSidebarProps {
-  projectData: ProjectData;
-  tasks: Task[];
-}
+// interface ProjectSidebarProps {
+//   projectData: ProjectData;
+//   tasks: Task[];
+// }
 
-export const ProjectSidebar: React.FC<ProjectSidebarProps> = ({ projectData, tasks }) => {
-  // Logic tính toán giờ thuộc về component này
-  const completedTasksCount = tasks.filter(task => task.completed).length;
-  const tasksCompletionPercentage = tasks.length > 0 ? Math.round((completedTasksCount / tasks.length) * 100) : 0;
-
+export const ProjectSidebar: React.FC<any> = ({ initialData }) => {
   return (
     <Card className="w-full">
       <CardHeader>
@@ -49,11 +48,11 @@ export const ProjectSidebar: React.FC<ProjectSidebarProps> = ({ projectData, tas
         {/* Phần Project Details */}
         <div className="space-y-3 text-sm">
           {[
-            { label: 'Client', value: projectData.client },
-            { label: 'Project Total Cost', value: `$${projectData.totalCost}` },
-            { label: 'Hours of Work', value: `${projectData.hoursOfWork} hrs` },
-            { label: 'Created on', value: projectData.createdOn },
-            { label: 'Started on', value: projectData.startedOn },
+            { label: 'Công ty', value: 'abac' },
+            { label: 'Tổng chi phí dự án', value: `${initialData?.budget} VNĐ` },
+            { label: 'Số giờ làm việc', value: `${initialData?.createdAt} giờ` },
+            { label: 'Ngày tạo', value: initialData?.createdAt },
+            { label: 'Ngày bắt đầu', value: initialData?.startDate || 'Đang lên kết hoạch   ' },
           ].map((item, index) => (
             <div key={index} className="flex justify-between items-center">
               <span className="text-gray-600">{item.label}:</span>
@@ -62,40 +61,35 @@ export const ProjectSidebar: React.FC<ProjectSidebarProps> = ({ projectData, tas
           ))}
 
           <div className="flex justify-between items-center">
-            <span className="text-gray-600">Due Date:</span>
-            <div className="flex items-center gap-2">
-              <span className="font-medium text-gray-800">{projectData.dueDate}</span>
-              <Badge className="bg-red-100 text-red-800 text-xs px-2 py-0.5 rounded-full">
-                {projectData.dueDateTag}
-              </Badge>
-            </div>
-          </div>
-
-          <div className="flex justify-between items-center">
-            <span className="text-gray-600">Created by:</span>
+            <span className="text-gray-600">Người tạo:</span>
             <div className="flex items-center gap-2">
               <Avatar className="h-6 w-6">
-                <AvatarImage src={projectData.createdBy.avatar} />
-                <AvatarFallback>{projectData.createdBy.name[0]}</AvatarFallback>
+                <AvatarImage src={initialData?.createdByAvarta} />
+                <AvatarFallback>{initialData?.createdByName}</AvatarFallback>
               </Avatar>
-              <span className="font-medium text-gray-800">{projectData.createdBy.name}</span>
+              <span className="font-medium text-gray-800">{initialData?.createdBy?.name}</span>
             </div>
           </div>
-
           <div className="flex justify-between items-center">
-            <span className="text-gray-600">Priority:</span>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Badge className={`${getStatusColor(projectData.priority)} cursor-pointer flex items-center gap-1`}>
-                  {projectData.priority} <ChevronDown className="h-3 w-3" />
-                </Badge>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                <DropdownMenuItem>High</DropdownMenuItem>
-                <DropdownMenuItem>Medium</DropdownMenuItem>
-                <DropdownMenuItem>Low</DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <span className="text-gray-600">Trạng thái:</span>
+            <div className="flex items-center gap-2">
+              {(() => {
+                const status = initialData?.status;
+
+                const vietnameseStatusLabel =
+                  PROJECT_STATUS_LABEL[status as keyof typeof PROJECT_STATUS_LABEL];
+
+                const badgeColor = callTypes.get(status);
+
+                return (
+                  <div className="flex space-x-2">
+                    <Badge variant="outline" className={cn(' px-3 py-1 rounded text-xs font-medium', badgeColor)}>
+                      {vietnameseStatusLabel}
+                    </Badge>
+                  </div>
+                );
+              })()}
+            </div>
           </div>
         </div>
 
@@ -105,16 +99,13 @@ export const ProjectSidebar: React.FC<ProjectSidebarProps> = ({ projectData, tas
         {/* Phần Tasks Details */}
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <CardTitle className="text-lg font-semibold">Tasks Details</CardTitle>
-            <Button variant="ghost" size="sm" className="text-orange-600 hover:text-orange-700">
-              <Plus className="h-4 w-4 mr-1" /> New task
-            </Button>
+            <CardTitle className="text-lg font-semibold"> Milestone hiện tại</CardTitle>
           </div>
           <div className="text-center">
-            <div className="text-sm text-gray-600">Tasks Done</div>
-            <div className="text-2xl font-bold mt-1">{completedTasksCount} / {tasks.length}</div>
-            <Progress value={tasksCompletionPercentage} className="mt-3 h-2" />
-            <div className="text-sm text-gray-600 mt-2">{tasksCompletionPercentage}% Completed</div>
+            <Link to='/404'>
+              Patient appointment booking
+            </Link>
+
           </div>
         </div>
       </CardContent>

@@ -18,7 +18,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { ProjectPageHeader, ProjectSidebar, ProjectActivityTab, ProjectTasksTab, ProjectFilesTab, ProjectInvoicesTab, ProjectOverviewTab } from './components'
 
 // Component chính
-const ProjectDetailPage: React.FC = () => {
+const ProjectDetailPage: React.FC<any> = (
+  { initialData }
+) => {
+
+  console.log(initialData);
   return (
     <div className="min-h-screen bg-gray-50">
       {/* === HEADER === */}
@@ -28,7 +32,7 @@ const ProjectDetailPage: React.FC = () => {
 
         {/* === Left column === */}
         <div className="col-span-12 lg:col-span-4 space-y-6">
-          <ProjectSidebar projectData={projectData} tasks={tasks} />
+          <ProjectSidebar initialData={initialData} />
         </div>
 
         {/* === Right column (TABS) === */}
@@ -43,7 +47,7 @@ const ProjectDetailPage: React.FC = () => {
             </TabsList>
 
             <TabsContent value="overview" className="mt-6">
-              <ProjectOverviewTab projectData={projectData} />
+              <ProjectOverviewTab initialData={initialData} />
             </TabsContent>
 
             <TabsContent value="tasks" className="mt-6">

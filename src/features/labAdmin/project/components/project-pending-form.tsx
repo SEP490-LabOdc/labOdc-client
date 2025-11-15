@@ -90,7 +90,7 @@ export default function ProjectForm({
     const handleSelectMentor1 = (value: string) => {
         if (value && value === mentor2) {
             toast.error("Mentor 1 và Mentor 2 không được trùng nhau!");
-            return; // ⛔ không cho cập nhật
+            return;
         }
         setMentor1(value);
     };
@@ -370,7 +370,7 @@ export default function ProjectForm({
             </Form>
 
             {
-                initialData.status == PROJECT_STATUS.COMPANY_UPDATE_REQUEST ? (
+                initialData.status == PROJECT_STATUS.UPDATE_REQUIRED ? (
                     <p className="text-sm text-muted-foreground italic mt-2 text-center">
                         Công ty đang trong quá trình cập nhật thông tin — bạn không thể chỉnh sửa hoặc phê duyệt lúc này.
                     </p>

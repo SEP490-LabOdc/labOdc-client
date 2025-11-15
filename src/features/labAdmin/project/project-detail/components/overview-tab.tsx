@@ -2,6 +2,12 @@ import React, { useState } from 'react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import {
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
+  TooltipProvider,
+} from "@/components/ui/tooltip";
 import { Button } from '@/components/ui/button'
 import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
@@ -18,14 +24,11 @@ import {
   // 1. Thêm icon cho nút mới
   ArrowRight,
 } from 'lucide-react'
-import { getStatusColor, getTagColor } from '@/lib/utils'
-import type { ProjectData } from '../../data'
+import { cn, getStatusColor, getTagColor } from '@/lib/utils'
+import { PROJECT_STATUS_LABEL } from '../../data/schema';
+import { callTypes } from '../../data/data';
 
-interface ProjectOverviewTabProps {
-  projectData: ProjectData;
-}
-
-export const ProjectOverviewTab: React.FC<ProjectOverviewTabProps> = ({ projectData }) => {
+export const ProjectOverviewTab: React.FC<any> = ({ initialData }) => {
   const [isHiring, setIsHiring] = useState(false); // Bạn có thể đổi thành true để test
 
   return (
@@ -35,8 +38,8 @@ export const ProjectOverviewTab: React.FC<ProjectOverviewTabProps> = ({ projectD
         <div className="flex items-start gap-4">
           <CircleDotDashed className="h-10 w-10 text-purple-600 flex-shrink-0" />
           <div>
-            <h2 className="text-2xl font-bold">{projectData.name}</h2>
-            <p className="text-sm text-gray-500">Mã dự án: {projectData.id}</p>
+            <h2 className="text-2xl font-bold">{initialData?.title}</h2>
+            <p className="text-sm text-gray-500">Mã dự án: {initialData?.id}</p>
           </div>
         </div>
 
@@ -50,9 +53,22 @@ export const ProjectOverviewTab: React.FC<ProjectOverviewTabProps> = ({ projectD
               <span>Trạng thái</span>
             </div>
             <div className="flex-1">
-              <Badge className={`${getStatusColor(projectData.status)} px-3 py-1 rounded text-xs font-medium`}>
-                {projectData.status}
-              </Badge>
+              {(() => {
+                const status = initialData?.status;
+
+                const vietnameseStatusLabel =
+                  PROJECT_STATUS_LABEL[status as keyof typeof PROJECT_STATUS_LABEL];
+
+                const badgeColor = callTypes.get(status);
+
+                return (
+                  <div className="flex space-x-2">
+                    <Badge variant="outline" className={cn(' px-3 py-1 rounded text-xs font-medium', badgeColor)}>
+                      {vietnameseStatusLabel}
+                    </Badge>
+                  </div>
+                );
+              })()}
             </div>
           </div>
 
@@ -98,8 +114,8 @@ export const ProjectOverviewTab: React.FC<ProjectOverviewTabProps> = ({ projectD
                 <Button
                   size="sm"
                   className="bg-blue-600 hover:bg-blue-700 text-white"
-                  // Thêm onClick để điều hướng (ví dụ dùng react-router)
-                  // onClick={() => navigate(`/projects/${projectData.id}/candidates`)}
+                // Thêm onClick để điều hướng (ví dụ dùng react-router)
+                // onClick={() => navigate(`/projects/${projectData.id}/candidates`)}
                 >
                   Xem danh sách ứng viên
                   <ArrowRight className="h-4 w-4 ml-2" />
@@ -109,39 +125,15 @@ export const ProjectOverviewTab: React.FC<ProjectOverviewTabProps> = ({ projectD
           )}
           {/* === HẾT PHẦN CẬP NHẬT === */}
 
-
-          {/* Hàng Team */}
-          <div className="flex items-start">
-            <div className="w-40 flex-shrink-0 flex items-center gap-3 text-sm text-gray-600">
-              <Users className="h-4 w-4" />
-              <span>Đội ngũ</span>
-            </div>
-            <div className="flex-1 flex flex-wrap items-center gap-2">
-              {projectData.team.map((member, index) => (
-                <div key={index} className="inline-flex items-center gap-2 bg-gray-100 rounded-full px-2 py-1">
-                  <Avatar className="h-6 w-6">
-                    <AvatarImage src={member.avatar} />
-                    <AvatarFallback>{member.name[0]}</AvatarFallback>
-                  </Avatar>
-                  <span className="font-medium text-sm text-gray-800">{member.name}</span>
-                </div>
-              ))}
-              <Button variant="ghost" size="sm" className="text-gray-600 hover:text-gray-900 text-sm p-1 h-auto">
-                <Plus className="h-4 w-4 mr-1" />
-                Thêm mới
-              </Button>
-            </div>
-          </div>
-
           {/* Hàng Team Lead */}
           <div className="flex items-start">
             <div className="w-40 flex-shrink-0 flex items-center gap-3 text-sm text-gray-600">
               <User className="h-4 w-4" />
-              <span>Trưởng nhóm</span>
+              <span>Mentor</span>
             </div>
             <div className="flex-1 flex flex-wrap items-center gap-2">
-              {projectData.teamLead.map((member, index) => (
-                <div key={index} className="inline-flex items-center gap-2 bg-gray-100 rounded-full px-2 py-1">
+              {initialData?.mentors.map((member: any) => (
+                <div className="inline-flex items-center gap-2 bg-gray-100 rounded-full px-2 py-1">
                   <Avatar className="h-6 w-6">
                     <AvatarImage src={member.avatar} />
                     <AvatarFallback>{member.name[0]}</AvatarFallback>
@@ -149,31 +141,15 @@ export const ProjectOverviewTab: React.FC<ProjectOverviewTabProps> = ({ projectD
                   <span className="font-medium text-sm text-gray-800">{member.name}</span>
                 </div>
               ))}
-              <Button variant="ghost" size="sm" className="text-gray-600 hover:text-gray-900 text-sm p-1 h-auto">
-                <Plus className="h-4 w-4 mr-1" />
-                Thêm mới
-              </Button>
-            </div>
-          </div>
+              {
+                initialData?.mentors.length < 2 && (
+                  <Button variant="ghost" size="sm" className="text-gray-600 hover:text-gray-900 text-sm p-1 h-auto">
+                    <Plus className="h-4 w-4 mr-1" />
+                    Thêm mới
+                  </Button>
+                )
+              }
 
-          {/* Hàng Project Manager */}
-          <div className="flex items-start">
-            <div className="w-40 flex-shrink-0 flex items-center gap-3 text-sm text-gray-600">
-              <User className="h-4 w-4" />
-              <span>Quản lý dự án</span>
-            </div>
-            <div className="flex-1 flex flex-wrap items-center gap-2">
-              <div className="inline-flex items-center gap-2 bg-gray-100 rounded-full px-2 py-1">
-                <Avatar className="h-6 w-6">
-                  <AvatarImage src={projectData.projectManager.avatar} />
-                  <AvatarFallback>{projectData.projectManager.name[0]}</AvatarFallback>
-                </Avatar>
-                <span className="font-medium text-sm text-gray-800">{projectData.projectManager.name}</span>
-              </div>
-              <Button variant="ghost" size="sm" className="text-gray-600 hover:text-gray-900 text-sm p-1 h-auto">
-                <Plus className="h-4 w-4 mr-1" />
-                Thêm mới
-              </Button>
             </div>
           </div>
 
@@ -181,14 +157,31 @@ export const ProjectOverviewTab: React.FC<ProjectOverviewTabProps> = ({ projectD
           <div className="flex items-start">
             <div className="w-40 flex-shrink-0 flex items-center gap-3 text-sm text-gray-600">
               <Tag className="h-4 w-4" />
-              <span>Nhãn</span>
+              <span>Kỹ năng</span>
             </div>
             <div className="flex-1 flex flex-wrap items-center gap-2">
-              {projectData.tags.map((tag, index) => (
-                <Badge key={index} className={`px-3 py-1 text-sm rounded ${getTagColor(tag)}`}>
-                  {tag}
-                </Badge>
-              ))}
+              <TooltipProvider>
+                <div className="flex-1 flex flex-wrap items-center gap-2">
+                  {initialData?.skills.map((skill: any) => (
+                    <Tooltip key={skill.id}>
+                      <TooltipTrigger>
+                        <Badge
+                          variant="secondary"
+                          className="text-sm px-3 py-1 cursor-help"
+                        >
+                          {skill.name}
+                        </Badge>
+                      </TooltipTrigger>
+
+                      {skill.description && (
+                        <TooltipContent className="max-w-xs">
+                          {skill.description}
+                        </TooltipContent>
+                      )}
+                    </Tooltip>
+                  ))}
+                </div>
+              </TooltipProvider>
             </div>
           </div>
 
@@ -199,18 +192,11 @@ export const ProjectOverviewTab: React.FC<ProjectOverviewTabProps> = ({ projectD
               <span>Mô tả</span>
             </div>
             <div className="flex-1">
-              <p className="text-sm text-gray-600 leading-relaxed">{projectData.description}</p>
+              <p className="text-sm text-gray-600 leading-relaxed">{initialData?.description}</p>
             </div>
           </div>
         </div>
 
-        {/* Phần Time Spent on this project */}
-        <div className="pt-6 border-t">
-          <div className="flex justify-between items-center bg-slate-200 rounded-lg p-4 text-sm">
-            <span className="text-gray-700">Thời gian dành cho dự án</span>
-            <span className="font-bold text-gray-900">{projectData.timeSpent}/{projectData.totalHours} Giờ</span>
-          </div>
-        </div>
       </CardContent>
     </Card>
   )
