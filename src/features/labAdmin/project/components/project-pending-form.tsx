@@ -19,6 +19,10 @@ import { Loader2 } from 'lucide-react'
 import { useState } from 'react'
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select'
 import { useNavigate } from '@tanstack/react-router'
+import { useGetMentorByProjectId } from '@/hooks/api/users'
+import { SelectDropdown } from '@/components/select-dropdown'
+import { toast } from 'sonner'
+import { useLabAdminApproveProject } from '@/hooks/api/projects'
 
 /* -------------------- SCHEMA -------------------- */
 const projectSchema = z.object({
@@ -64,23 +68,6 @@ export default function ProjectForm({
     const [requestNote, setRequestNote] = useState('')
     const [loadingUpdate, setLoadingUpdate] = useState(false)
 
-    const mentors = [
-        { id: 'm1', name: 'Nguyễn Văn A' },
-        { id: 'm2', name: 'Trần Thị B' },
-        { id: 'm3', name: 'Lê Văn C' },
-        { id: 'm4', name: 'Phạm Thị D' },
-    ]
-
-    // --- PHÊ DUYỆT ---
-    const handleApprove = () => {
-        setLoadingAction(true)
-        setTimeout(() => {
-            console.log('✅ Mentors đã chọn:', [mentor1, mentor2].filter(Boolean))
-            setLoadingAction(false)
-            setApproveDialogOpen(false)
-        }, 1000)
-    }
-
     // --- YÊU CẦU CẬP NHẬT ---
     const handleSendUpdate = () => {
         setLoadingUpdate(true)
@@ -95,6 +82,62 @@ export default function ProjectForm({
     if (!initialData) return null
 
     const canApprove = mentor1 !== '' || mentor2 !== ''
+
+
+    const { data: mentors = [], isLoading: mentorLoading } =
+        useGetMentorByProjectId(initialData.id);
+
+    const handleSelectMentor1 = (value: string) => {
+        if (value && value === mentor2) {
+            toast.error("Mentor 1 và Mentor 2 không được trùng nhau!");
+            return; // ⛔ không cho cập nhật
+        }
+        setMentor1(value);
+    };
+
+    const handleSelectMentor2 = (value: string) => {
+        if (value && value === mentor1) {
+            toast.error("Mentor 1 và Mentor 2 không được trùng nhau!");
+            return;
+        }
+        setMentor2(value);
+    };
+
+    const approveProject = useLabAdminApproveProject();
+
+    const handleApprove = async () => {
+        const mentorIds = [mentor1, mentor2].filter(Boolean);
+
+        if (mentorIds.length === 0) {
+            toast.error("Vui lòng chọn ít nhất 1 mentor.");
+            return;
+        }
+
+        if (mentor1 && mentor2 && mentor1 === mentor2) {
+            toast.error("Mentor 1 và Mentor 2 không được trùng nhau!");
+            return;
+        }
+
+        const assignPromise = approveProject.mutateAsync({
+            projectId: initialData.id,
+            userIds: mentorIds
+        });
+
+        toast.promise(assignPromise, {
+            loading: "Đang phê duyệt...",
+            success: "Phê duyệt thành công!",
+            error: "Phê duyệt thất bại!",
+        });
+
+        try {
+            const data = await assignPromise;
+            console.log("✅ Assigned mentors:", data);
+
+            setApproveDialogOpen(false);
+        } catch (error) {
+            console.error("❌ Approve failed:", error);
+        }
+    };
 
     return (
         <>
@@ -184,7 +227,7 @@ export default function ProjectForm({
                                             Mô tả
                                         </FormLabel>
                                         <FormControl className="flex-1">
-                                            <Textarea rows={12} {...field} disabled />
+                                            <Textarea rows={15} {...field} disabled />
                                         </FormControl>
                                     </div>
                                     <FormMessage className="ml-40" />
@@ -216,7 +259,7 @@ export default function ProjectForm({
                             </p>
                         )}
                     </div>
-                    {/* ===== DIALOG PHÊ DUYỆT ===== */}
+                    {/* ==== CONFIRMDIALOG PHÊ DUYỆT ===== */}
                     <ConfirmDialog
                         open={approveDialogOpen}
                         onOpenChange={setApproveDialogOpen}
@@ -237,49 +280,54 @@ export default function ProjectForm({
                         disabled={!canApprove}
                     >
                         <div className="space-y-5">
+
+                            {/* Mentor 1 */}
                             <FormItem className="space-y-1">
                                 <div className="flex items-center gap-3">
                                     <FormLabel className="text-sm font-medium w-20">Mentor 1</FormLabel>
                                     <FormControl className="flex-1">
-                                        <Select value={mentor1} onValueChange={setMentor1}>
-                                            <SelectTrigger className="mt-1 w-70">
-                                                <SelectValue placeholder="Chọn mentor thứ nhất" />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                {mentors.map((m) => (
-                                                    <SelectItem key={m.id} value={m.id}>
-                                                        {m.name}
-                                                    </SelectItem>
-                                                ))}
-                                            </SelectContent>
-                                        </Select>
+                                        <SelectDropdown
+                                            defaultValue={mentor1}
+                                            onValueChange={handleSelectMentor1}
+                                            showSearch
+                                            placeholder="Chọn mentor"
+                                            items={mentors.map((m: any) => ({
+                                                label: m.name,
+                                                label2: m.email,
+                                                value: m.id,
+                                            }))}
+                                            className="w-90"
+                                        />
                                     </FormControl>
                                 </div>
                                 <FormMessage className="ml-40" />
                             </FormItem>
 
-                            <FormItem className="space-y-1 pb-2">
+                            {/* Mentor 2 */}
+                            <FormItem className="space-y-1">
                                 <div className="flex items-center gap-3">
                                     <FormLabel className="text-sm font-medium w-20">Mentor 2</FormLabel>
                                     <FormControl className="flex-1">
-                                        <Select value={mentor2} onValueChange={setMentor2}>
-                                            <SelectTrigger className="mt-1 w-70">
-                                                <SelectValue placeholder="Chọn mentor thứ hai" />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                {mentors.map((m) => (
-                                                    <SelectItem key={m.id} value={m.id}>
-                                                        {m.name}
-                                                    </SelectItem>
-                                                ))}
-                                            </SelectContent>
-                                        </Select>
+                                        <SelectDropdown
+                                            defaultValue={mentor2}
+                                            onValueChange={handleSelectMentor2}
+                                            showSearch
+                                            placeholder="Chọn mentor"
+                                            items={mentors.map((m: any) => ({
+                                                label: m.name,
+                                                label2: m.email,
+                                                value: m.id,
+                                            }))}
+                                            className="w-90"
+                                        />
                                     </FormControl>
                                 </div>
                                 <FormMessage className="ml-40" />
                             </FormItem>
+
                         </div>
                     </ConfirmDialog>
+
 
                     {/* ===== DIALOG YÊU CẦU CẬP NHẬT ===== */}
                     <ConfirmDialog
