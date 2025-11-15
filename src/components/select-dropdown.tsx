@@ -16,11 +16,11 @@ interface SelectDropdownProps {
   defaultValue: string | undefined
   placeholder?: string
   isPending?: boolean
-  items: { label: string; value: string }[] | undefined
+  items: { label: string; value: string; label2: string | null }[] | undefined
   disabled?: boolean
   className?: string
   isControlled?: boolean
-  showSearch?: boolean // 👈 Optional prop (mặc định là false)
+  showSearch?: boolean
 }
 
 export function SelectDropdown({
@@ -32,7 +32,7 @@ export function SelectDropdown({
   disabled,
   className = '',
   isControlled = false,
-  showSearch = false, // 👈 Mặc định là không có search
+  showSearch = false,
 }: SelectDropdownProps) {
   const [search, setSearch] = useState('')
 
@@ -40,24 +40,34 @@ export function SelectDropdown({
     ? { value: defaultValue, onValueChange }
     : { defaultValue, onValueChange }
 
-  // Nếu không bật search thì không lọc danh sách
-  const filteredItems =
-    showSearch && search
-      ? items.filter((item) =>
-        item.label.toLowerCase().includes(search.toLowerCase())
-      )
-      : items
+  const lower = search.toLowerCase()
+  const matchedIds = new Set<string>()
+
+  if (showSearch && search.trim()) {
+    items.forEach((item) => {
+      const text = `${item.label} ${item.label2 ?? ''}`.toLowerCase()
+      if (text.includes(lower)) matchedIds.add(item.value)
+    })
+  }
 
   return (
     <Select {...defaultState}>
       <FormControl>
         <SelectTrigger disabled={disabled} className={cn(className)}>
-          <SelectValue placeholder={placeholder ?? 'Select'} />
+          <div className="flex items-center gap-2">
+            {(() => {
+              const found = items.find((i) => i.value === defaultValue);
+              return found ? (
+                <div className="font-medium">{found.label}</div>
+              ) : (
+                <span className="text-muted-foreground">{placeholder}</span>
+              );
+            })()}
+          </div>
         </SelectTrigger>
       </FormControl>
 
       <SelectContent className="p-0">
-        {/* Optional search bar */}
         {showSearch && (
           <div className="sticky top-0 z-10 bg-background p-2 border-b">
             <div className="relative">
@@ -65,7 +75,7 @@ export function SelectDropdown({
               <Input
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                onKeyDown={(e) => e.stopPropagation()} // Giữ focus khi gõ
+                onKeyDown={(e) => e.stopPropagation()}
                 placeholder="Tìm kiếm..."
                 className="pl-8 h-8 text-sm"
               />
@@ -81,16 +91,31 @@ export function SelectDropdown({
                 Loading...
               </div>
             </SelectItem>
-          ) : filteredItems.length > 0 ? (
-            filteredItems.map(({ label, value }) => (
-              <SelectItem key={value} value={value}>
-                {label}
-              </SelectItem>
-            ))
           ) : (
-            <SelectItem disabled value="no-results">
-              Không tìm thấy kết quả
-            </SelectItem>
+            items.map((item) => {
+              const isMatch =
+                !showSearch || !search || matchedIds.has(item.value)
+
+              return (
+                <SelectItem
+                  key={item.value}
+                  value={item.value}
+                  className={cn("!p-0 !h-auto", !isMatch && "hidden")}
+                >
+                  <div className="flex w-full items-center justify-between px-2 py-2">
+                    {/* Label bên trái */}
+                    <div className="font-medium">{item.label}</div>
+
+                    {/* Email align-right sát mép phải */}
+                    {item.label2 && (
+                      <div className="text-xs text-muted-foreground whitespace-nowrap text-right ml-4 mr-2">
+                        {item.label2}
+                      </div>
+                    )}
+                  </div>
+                </SelectItem>
+              )
+            })
           )}
         </div>
       </SelectContent>
