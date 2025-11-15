@@ -5,7 +5,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Plus } from 'lucide-react'
 import { getStatusColor } from '@/lib/utils'
-import type { Task } from '../../data/project-mock-data'
+import type { Task } from '../project-mock-data'
 import { useNavigate } from '@tanstack/react-router'
 
 interface ProjectTasksTabProps {

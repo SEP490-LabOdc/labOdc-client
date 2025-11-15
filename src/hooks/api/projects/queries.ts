@@ -55,3 +55,15 @@ export function useGetProjects() {
     },
   })
 }
+
+export function useLabAdminApproveProject() {
+  return useMutation({
+    mutationFn: async (payload: {
+      projectId: string
+      userIds: string[]
+    }) => {
+      const res = await apiRequest.post('/api/v1/project-members', payload)
+      return res.data
+    },
+  })
+}

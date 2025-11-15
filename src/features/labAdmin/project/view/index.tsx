@@ -10,7 +10,7 @@ import ProjectPendingForm from '../components/project-pending-form'
 import { useGetProjectById } from '@/hooks/api/projects'
 import { PROJECT_STATUS } from '../data/schema'
 import { StatusAlert } from '@/components/admin/StatusAlert'
-import ProjectBuildPlanForm from '../components/project-build-plan-form'
+import ProjectDetailPage from '../project-detail'
 
 const route = getRouteApi('/_authenticated/lab-admin/projects/$projectId/')
 
@@ -66,7 +66,7 @@ export default function ViewProject() {
                         </p>
                     </div>
                 </div>
-                {project?.status === PROJECT_STATUS.COMPANY_UPDATE_REQUEST && (
+                {project?.status === PROJECT_STATUS.UPDATE_REQUIRED && (
                     <StatusAlert
                         variant="warning"
                         title="Công ty đang trong quá trình cập nhật thông tin."
@@ -82,7 +82,7 @@ export default function ViewProject() {
                         className="mb-4"
                     />
                 )}
-                {project?.status === PROJECT_STATUS.MENTOR_BUILD_PROJECT_PLAN && (
+                {project?.status === PROJECT_STATUS.PLANNING && (
                     <StatusAlert
                         variant="info"
                         title="Đang xây dựng kế hoạch dự án"
@@ -90,26 +90,18 @@ export default function ViewProject() {
                         className="mb-4"
                     />
                 )}
-
-                {project?.status === PROJECT_STATUS.PENDING_COMPANY_APPROVAL && (
-                    <StatusAlert
-                        variant="warning"
-                        title="Đang chờ doanh nghiệp phê duyệt"
-                        message="Dự án hiện đang chờ doanh nghiệp xem xét và phê duyệt trước khi được triển khai."
-                        className="mb-4"
-                    />
-                )}
                 <div className="-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-y-0 lg:space-x-12">
                     {
-                        (project.status == PROJECT_STATUS.PENDING || project.status == PROJECT_STATUS.COMPANY_UPDATE_REQUEST) && (
+                        (project.status == PROJECT_STATUS.PENDING || project.status == PROJECT_STATUS.UPDATE_REQUIRED) && (
                             <ProjectPendingForm initialData={project} />
                         )
                     }
                     {
-                        (project.status == PROJECT_STATUS.MENTOR_BUILD_PROJECT_PLAN || project.status == PROJECT_STATUS.PENDING_COMPANY_APPROVAL || project.start == PROJECT_STATUS.PENDING_LAB_PUBLISH) && (
-                            <ProjectBuildPlanForm initialData={project} />
+                        (project.status == PROJECT_STATUS.PLANNING) && (
+                            <ProjectDetailPage />
                         )
                     }
+                    {/* initialData={project} */}
 
                 </div>
             </Main>
