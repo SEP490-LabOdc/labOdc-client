@@ -51,7 +51,7 @@ const ProjectDetailPage: React.FC<any> = (
             </TabsContent>
 
             <TabsContent value="tasks" className="mt-6">
-              <ProjectTasksTab tasks={tasks} />
+              <ProjectTasksTab initialData={initialData} />
             </TabsContent>
 
             <TabsContent value="files" className="mt-6">
