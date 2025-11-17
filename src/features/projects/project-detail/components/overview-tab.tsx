@@ -15,18 +15,21 @@ import {
   CheckSquare,
   Briefcase,
   Circle,
-  // 1. Thêm icon cho nút mới
   ArrowRight,
 } from 'lucide-react'
 import { getStatusColor, getTagColor } from '@/lib/utils'
 import type { ProjectData } from '../../data'
+import { useNavigate } from '@tanstack/react-router'
 
 interface ProjectOverviewTabProps {
   projectData: ProjectData;
 }
 
 export const ProjectOverviewTab: React.FC<ProjectOverviewTabProps> = ({ projectData }) => {
-  const [isHiring, setIsHiring] = useState(false); // Bạn có thể đổi thành true để test
+  const navigate = useNavigate();
+
+  const [isHiring, setIsHiring] = useState(false);
+
 
   return (
     <Card>
@@ -92,14 +95,12 @@ export const ProjectOverviewTab: React.FC<ProjectOverviewTabProps> = ({ projectD
           {/* === 2. THÊM NÚT ĐIỀU HƯỚNG KHI HIRING === */}
           {isHiring && (
             <div className="flex items-start">
-              {/* Giữ lề trái 160px (w-40) để căn chỉnh thẳng hàng */}
               <div className="w-40 flex-shrink-0" />
               <div className="flex-1">
                 <Button
                   size="sm"
                   className="bg-blue-600 hover:bg-blue-700 text-white"
-                  // Thêm onClick để điều hướng (ví dụ dùng react-router)
-                  // onClick={() => navigate(`/projects/${projectData.id}/candidates`)}
+                  onClick={() => navigate({ to: `/projects/${projectData.id}/candidates`})}
                 >
                   Xem danh sách ứng viên
                   <ArrowRight className="h-4 w-4 ml-2" />
@@ -107,8 +108,6 @@ export const ProjectOverviewTab: React.FC<ProjectOverviewTabProps> = ({ projectD
               </div>
             </div>
           )}
-          {/* === HẾT PHẦN CẬP NHẬT === */}
-
 
           {/* Hàng Team */}
           <div className="flex items-start">

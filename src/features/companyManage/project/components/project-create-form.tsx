@@ -16,7 +16,7 @@ import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { toast } from 'sonner'
 import { useNavigate } from '@tanstack/react-router'
-import { useGetSkills } from '@/hooks/api/skills/queries'
+import { useGetSkills } from '@/hooks/api/skills'
 import { MultiSelectDropdown } from '@/components/multi-select-dropdown'
 import { useCreateProject } from '@/hooks/api/projects'
 
