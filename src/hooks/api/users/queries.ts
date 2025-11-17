@@ -141,3 +141,22 @@ export const useCreateUser = () => {
         },
     })
 }
+
+
+export const fetchMentorsByProjectId = async (projectId: string) => {
+    const response = await apiRequest.get(
+        `/api/v1/project-members/available-mentors/${projectId}`
+    );
+
+    return response.data;
+};
+
+export const useGetMentorByProjectId = (projectId: string | null) =>
+    useQuery({
+        queryKey: userKeys.availableMentors(projectId),
+        queryFn: async () => {
+            const res = await fetchMentorsByProjectId(projectId!);
+            return res.data;
+        },
+        enabled: !!projectId,
+    });
