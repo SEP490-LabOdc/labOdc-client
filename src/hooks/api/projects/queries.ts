@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { projectKeys } from './query-keys.ts'
 import apiRequest from '@/config/request';
 
@@ -21,6 +21,20 @@ export function useGetMyCompanyProjects() {
   });
 }
 
+export function useCreateProject() {
+  return useMutation({
+    mutationFn: async (payload: {
+      title: string
+      description: string
+      skillIds: string[]
+      budget: number
+    }) => {
+      const res = await apiRequest.post('/api/v1/projects', payload)
+      return res.data
+    },
+  })
+}
+
 export function useGetProjectById(projectId: string) {
   return useQuery({
     queryKey: projectKeys.byId(projectId),
@@ -37,6 +51,18 @@ export function useGetProjects() {
     queryKey: projectKeys.list(),
     queryFn: async () => {
       const res = await apiRequest.get('/api/v1/projects')
+      return res.data
+    },
+  })
+}
+
+export function useLabAdminApproveProject() {
+  return useMutation({
+    mutationFn: async (payload: {
+      projectId: string
+      userIds: string[]
+    }) => {
+      const res = await apiRequest.post('/api/v1/project-members', payload)
       return res.data
     },
   })

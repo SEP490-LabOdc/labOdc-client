@@ -3,27 +3,25 @@ import { z } from 'zod'
 // ===== Project Status =====
 export const PROJECT_STATUS = {
     PENDING: 'PENDING',
-    COMPANY_UPDATE_REQUEST: 'COMPANY_UPDATE_REQUEST',
+    UPDATE_REQUIRED: 'UPDATE_REQUIRED',
     REJECTED: 'REJECTED',
-    MENTOR_BUILD_PROJECT_PLAN: 'MENTOR_BUILD_PROJECT_PLAN',
-    PENDING_COMPANY_APPROVAL: 'PENDING_COMPANY_APPROVAL',
-    PENDING_LAB_PUBLISH: 'PENDING_LAB_PUBLISH',
-    HIRING: 'HIRING',
-    IN_PROGRESS: 'IN_PROGRESS',
-    COMPLETED: 'COMPLETED',
+    PLANNING: 'PLANNING',
+    ON_GOING: 'ON_GOING',
+    CLOSED: 'CLOSED',
+    PAUSED: 'PAUSED',
+    COMPLETE: 'COMPLETE',
 } as const
 
 // ===== Project Status Labels =====
 export const PROJECT_STATUS_LABEL: Record<ProjectStatus, string> = {
-    [PROJECT_STATUS.PENDING]: 'Chờ lab admin duyệt',
-    [PROJECT_STATUS.COMPANY_UPDATE_REQUEST]: 'Công ty cần cập nhật thông tin',
-    [PROJECT_STATUS.REJECTED]: 'Đã bị hủy',
-    [PROJECT_STATUS.MENTOR_BUILD_PROJECT_PLAN]: 'Mentor lên kế hoạch',
-    [PROJECT_STATUS.PENDING_COMPANY_APPROVAL]: 'Chờ công ty phê duyệt',
-    [PROJECT_STATUS.PENDING_LAB_PUBLISH]: 'Chờ Lab admin công bố',
-    [PROJECT_STATUS.HIRING]: 'Đang tuyển nhân sự',
-    [PROJECT_STATUS.IN_PROGRESS]: 'Đang thực hiện',
-    [PROJECT_STATUS.COMPLETED]: 'Hoàn thành',
+    PENDING: 'Chờ Lab Admin duyệt',
+    UPDATE_REQUIRED: 'Doanh nghiệp cập nhật thông tin',
+    REJECTED: 'Đã bị hủy',
+    PLANNING: 'Đang lên kế hoạch',
+    ON_GOING: 'Đang thực hiện',
+    CLOSED: 'Đã đóng',
+    PAUSED: 'Tạm dừng',
+    COMPLETE: 'Hoàn thành',
 }
 
 export const PROJECT_STATUS_OPTIONS = Object.entries(PROJECT_STATUS_LABEL).map(

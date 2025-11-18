@@ -319,7 +319,11 @@ export default function CompanyForm({
                                                 defaultValue={field.value}
                                                 onValueChange={field.onChange}
                                                 placeholder=""
-                                                items={DOMAIN_OPTIONS}
+                                                items={DOMAIN_OPTIONS.map((d) => ({
+                                                    label: d.label,
+                                                    value: d.value,
+                                                    label2: null,
+                                                }))}
                                                 showSearch
                                                 className="w-full"
                                                 disabled
