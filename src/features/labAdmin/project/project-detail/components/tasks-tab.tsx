@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Loader2, Plus } from 'lucide-react'
 import { getStatusColor } from '@/lib/utils'
 import type { Task } from '../project-mock-data'
-import { useNavigate } from '@tanstack/react-router'
+import { Link, useNavigate, useRouterState } from '@tanstack/react-router'
 import { useGetMilestonesByProjectId } from '@/hooks/api/milestones'
 
 // interface ProjectTasksTabProps {
@@ -15,10 +15,6 @@ import { useGetMilestonesByProjectId } from '@/hooks/api/milestones'
 
 export const ProjectTasksTab: React.FC<any> = ({ initialData }) => {
   const navigate = useNavigate();
-
-  const handleNavigate = async (taskId: number) => {
-    await navigate({ to: `/${taskId}` });
-  }
 
   const {
     data: milestones = [],
@@ -58,17 +54,14 @@ export const ProjectTasksTab: React.FC<any> = ({ initialData }) => {
               key={task.id}
               className="flex items-center p-3 border rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors"
             >
-              <a
-                href={`/milestones/${task.id}`}
-                onClick={(e) => {
-                  e.preventDefault();
-                  handleNavigate(task.id);
-                }}
+              <Link
+                to={`/lab-admin/projects/$projectId/$milestoneId`}
+                params={{ milestoneId: task.id, projectId: initialData?.id }}
                 className="font-medium flex-grow text-gray-800 hover:text-orange-600 hover:underline cursor-pointer"
                 title={`Xem chi tiết: ${task.title}`}
               >
                 {task.title}
-              </a>
+              </Link>
 
               {/* Status */}
               <Badge
