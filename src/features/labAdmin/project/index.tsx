@@ -1,5 +1,5 @@
 import { ErrorView } from "@/components/admin/ErrorView"
-import { getMyCompanyProjects, useGetProjects } from "@/hooks/api/projects/queries"
+import { useGetMyCompanyProjects, useGetProjects } from "@/hooks/api/projects/queries"
 import { getRouteApi } from "@tanstack/react-router"
 import { ProjectsProvider } from "./components/project-provider"
 import { Header } from "@/components/layout/header"
