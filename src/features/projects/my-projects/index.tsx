@@ -87,7 +87,7 @@ export default function MyProjectPage() {
   }
 
   return (
-    <div className="mt-12">
+    <div>
       <div className="container mx-auto px-8 py-6">
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
