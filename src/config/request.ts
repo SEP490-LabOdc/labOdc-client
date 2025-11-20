@@ -69,9 +69,17 @@ apiRequest.interceptors.response.use(
       return Promise.reject(error);
     }
 
-    if (error.response?.status === 401 && !originalRequest._retry) {
+    if (error.response?.status === 401) {
+      if (originalRequest._retry) {
+        handleAuthenticationFailure('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.');
+        return Promise.reject(error);
+      }
 
-      if (isRefreshing) {
+      const { refreshToken } = useAuthStore.getState();
+      if (isRefreshing || !refreshToken) {
+        if (!isRefreshing) {
+          handleAuthenticationFailure('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.');
+        }
         return new Promise<AxiosResponse>((resolve, reject) => {
           failedQueue.push({
             resolve: (token?: string) => {
@@ -87,15 +95,9 @@ apiRequest.interceptors.response.use(
         });
       }
 
+      // Thử refresh token
       originalRequest._retry = true;
       isRefreshing = true;
-
-      const { refreshToken } = useAuthStore.getState();
-
-      if (!refreshToken) {
-        isRefreshing = false;
-        return Promise.reject(error);
-      }
 
       try {
         const userId = localStorage.getItem("user_id") || "";
@@ -110,20 +112,9 @@ apiRequest.interceptors.response.use(
         return apiRequest(originalRequest);
 
       } catch (refreshError) {
-        const refreshErr = refreshError as AxiosError<ApiErrorResponse>;
         processQueue(new Error('Token refresh failed'), null);
 
-        const isRefreshTokenExpired = refreshErr.response?.status === 401 ||
-          refreshErr.response?.status === 403 ||
-          refreshErr.response?.data?.message?.includes('expired') ||
-          refreshErr.response?.data?.message?.includes('invalid');
-
-        if (isRefreshTokenExpired) {
-          handleAuthenticationFailure('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.');
-        } else {
-          toast.error('Lỗi kết nối. Vui lòng thử lại.');
-        }
-
+        handleAuthenticationFailure('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.');
         return Promise.reject(refreshError);
       } finally {
         isRefreshing = false;
@@ -137,12 +128,14 @@ apiRequest.interceptors.response.use(
 
 const handleAuthenticationFailure = (message: string): void => {
   useAuthStore.getState().logout();
-  toast.error(message);
-
   if (typeof window !== 'undefined') {
-    window.dispatchEvent(new CustomEvent('auth:logout', {
-      detail: { message, redirectTo: '/sign-in' }
-    }));
+    toast.error(message, {
+      duration: 2000,
+    });
+
+    setTimeout(() => {
+      window.location.href = '/sign-in';
+    }, 2000);
   }
 };
 

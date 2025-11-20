@@ -1,11 +1,13 @@
 import { useState } from "react"
-import { Search, Filter, Clock, Users } from "lucide-react"
+import { Search, Filter } from "lucide-react"
 import { Button } from "@/components/ui/button.tsx"
 import { Input } from "@/components/ui/input.tsx"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select.tsx"
 import { type Project } from '@/hooks/api/projects/types.ts'
 import { ApplyProjectModal, ProjectDetailModal, ProjectCard } from "./components"
 import { useGetProjectHiring } from '@/hooks/api/projects'
+import { useAuthStore } from '@/stores/auth-store.ts'
+import { useNavigate } from '@tanstack/react-router'
 
 export default function ProjectListPage() {
   const [searchTerm, setSearchTerm] = useState("")
@@ -14,7 +16,9 @@ export default function ProjectListPage() {
   const [showDetailModal, setShowDetailModal] = useState(false)
   const [showApplyModal, setShowApplyModal] = useState(false)
 
+  const navigate = useNavigate()
   const { data: projects, isPending } = useGetProjectHiring()
+  const { isAuthenticated } = useAuthStore()
 
   const filteredProjects = projects?.data?.data ? projects.data.data.filter((project: Project) => {
     const matchesSearch =
@@ -38,7 +42,14 @@ export default function ProjectListPage() {
     setShowDetailModal(true)
   }
 
-  const handleApplyProject = (project: Project) => {
+  const handleApplyProject = async (project: Project) => {
+    if (!isAuthenticated()) {
+      // Store the project ID to redirect back after login
+      sessionStorage.setItem("pendingApplication", project.projectId.toString())
+      await navigate({ to: "/sign-in" })
+      return
+    }
+
     setSelectedProject(project)
     setShowApplyModal(true)
   }
@@ -145,63 +156,6 @@ export default function ProjectListPage() {
               </Button>
             </div>
           )}
-        </div>
-      </section>
-
-      {/* Tips section */}
-      <section className="py-16 bg-slate-50">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-[#264653] mb-4">Mẹo Ứng Tuyển Thành Công</h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">
-              Tăng cơ hội được chọn với những lời khuyên từ các chuyên gia
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="text-center space-y-4">
-              <div className="w-16 h-16 bg-[#e9c46a] rounded-full flex items-center justify-center mx-auto">
-                <Users className="h-8 w-8 text-[#264653]" />
-              </div>
-              <h3 className="text-xl font-semibold text-[#264653]">Hồ Sơ Chuyên Nghiệp</h3>
-              <p className="text-gray-600">Tạo hồ sơ đầy đủ với kỹ năng, kinh nghiệm và portfolio ấn tượng</p>
-            </div>
-            <div className="text-center space-y-4">
-              <div className="w-16 h-16 bg-[#2a9d8f] rounded-full flex items-center justify-center mx-auto">
-                <Clock className="h-8 w-8 text-white" />
-              </div>
-              <h3 className="text-xl font-semibold text-[#264653]">Đề Xuất Chất Lượng</h3>
-              <p className="text-gray-600">Viết đề xuất chi tiết, thể hiện hiểu biết về dự án và giải pháp</p>
-            </div>
-            <div className="text-center space-y-4">
-              <div className="w-16 h-16 bg-[#f4a261] rounded-full flex items-center justify-center mx-auto">
-                <Clock className="h-8 w-8 text-white" />
-              </div>
-              <h3 className="text-xl font-semibold text-[#264653]">Phản Hồi Nhanh</h3>
-              <p className="text-gray-600">Ứng tuyển sớm và phản hồi kịp thời với nhà tuyển dụng</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="py-16 bg-[#264653] text-white">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold mb-6">Sẵn Sàng Bắt Đầu Sự Nghiệp?</h2>
-          <p className="text-xl mb-8 text-slate-200 max-w-2xl mx-auto">
-            Tham gia cộng đồng talent và kết nối với các cơ hội việc làm tốt nhất
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" className="bg-[#e76f51] hover:bg-[#f4a261] text-white font-semibold">
-              Tạo Hồ Sơ Miễn Phí
-            </Button>
-            <Button
-              size="lg"
-              variant="outline"
-              className="border-white text-white hover:bg-white hover:text-[#264653] bg-transparent"
-            >
-              Tìm Hiểu Thêm
-            </Button>
-          </div>
         </div>
       </section>
 
