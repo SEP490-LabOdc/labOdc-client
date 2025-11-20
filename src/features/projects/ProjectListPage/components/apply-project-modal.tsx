@@ -12,7 +12,10 @@ import { Label } from "@/components/ui/label.tsx"
 import { Badge } from "@/components/ui/badge.tsx"
 import { Alert, AlertDescription } from "@/components/ui/alert.tsx"
 import { FileUpload } from "@/components/file/FileUpload.tsx"
+import { toast } from "sonner"
 import type { Project } from '@/hooks/api/projects'
+import { useCreateProjectApplication } from '@/hooks/api/projects/mutation.ts'
+import { useAuthStore } from '@/stores/auth-store.ts'
 import { cn } from '@/lib/utils.ts'
 
 interface ApplyProjectModalProps {
@@ -21,50 +24,40 @@ interface ApplyProjectModalProps {
   onClose: () => void
 }
 
-interface ApplicationData {
-  userId: string
-  projectId: string
-  cvUrl: string
-}
-
 export function ApplyProjectModal({ project, isOpen, onClose }: ApplyProjectModalProps) {
   const [cvUrl, setCvUrl] = useState<string | null>(null)
-  const [isSubmitting, setIsSubmitting] = useState(false)
+  const { user } = useAuthStore()
+  const createApplicationMutation = useCreateProjectApplication()
 
   if (!project) return null
 
   const handleSubmit = async () => {
-    if (!cvUrl) return
-
-    setIsSubmitting(true)
+    if (!user?.userId || !cvUrl) return
 
     try {
-      // Chuẩn bị data cho API application
-      const applicationData: ApplicationData = {
-        userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6", // Lấy từ auth context
+      await createApplicationMutation.mutateAsync({
+        userId: user.userId,
         projectId: project.projectId,
         cvUrl: cvUrl
-      }
-
-      console.log('Submitting application:', applicationData)
-
-      // Call API ứng tuyển
-      // await apiRequest.post('/api/v1/applications', applicationData)
+      })
 
       // Reset form và đóng modal
       setCvUrl(null)
-      setIsSubmitting(false)
       onClose()
 
-      alert('Đã gửi đơn ứng tuyển thành công! Chúng tôi sẽ phản hồi trong vòng 24-48 giờ.')
+      toast.success("Gửi đơn ứng tuyển thành công!", {
+        description: "Chúng tôi sẽ phản hồi trong vòng 24-48 giờ."
+      })
     } catch (error) {
       console.error('Error submitting application:', error)
-      setIsSubmitting(false)
-      alert('Có lỗi xảy ra khi gửi đơn ứng tuyển. Vui lòng thử lại.')
+      toast.error("Gửi đơn ứng tuyển thất bại", {
+        description: "Có lỗi xảy ra. Vui lòng thử lại sau."
+      })
     }
   }
 
   const isFormValid = cvUrl !== null
+  const isSubmitting = createApplicationMutation.isPending
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>

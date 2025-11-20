@@ -1,4 +1,3 @@
-// src/features/projects/components/projects-columns.tsx
 import { type ColumnDef } from '@tanstack/react-table'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Button } from '@/components/ui/button'
@@ -6,6 +5,7 @@ import { Badge } from '@/components/ui/badge'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Edit, Trash2 } from 'lucide-react'
 import { type Project } from '../data/schema'
+import { Link } from '@tanstack/react-router'
 
 const statusConfig = {
   active: { label: 'Đang hoạt động', className: 'bg-green-100 text-green-800' },
@@ -48,7 +48,7 @@ export const projectsColumns: ColumnDef<Project>[] = [
     accessorKey: 'projectName',
     header: 'Tên dự án',
     cell: ({ row }) => (
-      <div className="font-medium">{row.getValue('projectName')}</div>
+      <Link to={'/talent/my-projects/detail'} className="font-medium hover:underline">{row.getValue('projectName')}</Link>
     ),
   },
   {

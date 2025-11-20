@@ -28,3 +28,19 @@ export function useUpdateStatusHiring() {
     }
   })
 }
+
+export function useCreateProjectApplication() {
+  return useMutation({
+    mutationFn: async (payload: {
+      userId: string
+      projectId: string
+      cvUrl: string
+    }) => {
+      const { data } = await apiRequest.post(
+        `/api/v1/project-applications/apply`,
+        payload,
+      )
+      return data
+    }
+  })
+}
