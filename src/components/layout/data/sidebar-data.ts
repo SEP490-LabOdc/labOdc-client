@@ -195,20 +195,60 @@ export const labAdminSidebarData: SidebarData = {
 
             // --- PLANNING ---
             { title: 'Chờ duyệt', url: '/lab-admin/projects?status=["' + PROJECT_STATUS.PENDING + '"]', icon: IconClockHour4 },
-            { title: 'Công ty cần cập nhật', url: '/lab-admin/projects?status=["' + PROJECT_STATUS.COMPANY_UPDATE_REQUEST + '"]', icon: IconEdit },
-            { title: 'Mentor xây dựng kế hoạch', url: '/lab-admin/projects?status=["' + PROJECT_STATUS.MENTOR_BUILD_PROJECT_PLAN + '"]', icon: IconPencilCog },
-            { title: 'Chờ công ty phê duyệt', url: '/lab-admin/projects?status=["' + PROJECT_STATUS.PENDING_COMPANY_APPROVAL + '"]', icon: IconUserCheck },
-            { title: 'Chờ Lab công bố', url: '/lab-admin/projects?status=["' + PROJECT_STATUS.PENDING_LAB_PUBLISH + '"]', icon: IconUpload },
+            { title: 'Công ty cập nhật', url: '/lab-admin/projects?status=["' + PROJECT_STATUS.UPDATE_REQUIRED + '"]', icon: IconEdit },
+            { title: 'Xây dựng kế hoạch', url: '/lab-admin/projects?status=["' + PROJECT_STATUS.PLANNING + '"]', icon: IconPencilCog },
             { title: 'Bị từ chối', url: '/lab-admin/projects?status=["' + PROJECT_STATUS.REJECTED + '"]', icon: IconCircleXFilled },
-
-            // --- HIRING ---
-            { title: 'Đang tuyển', url: '/lab-admin/projects?status=["' + PROJECT_STATUS.HIRING + '"]', icon: IconUsersGroup },
-
             // --- EXECUTING ---
-            { title: 'Đang thực hiện', url: '/lab-admin/projects?status=["' + PROJECT_STATUS.IN_PROGRESS + '"]', icon: IconProgress },
-            { title: 'Hoàn thành', url: '/lab-admin/projects?status=["' + PROJECT_STATUS.COMPLETED + '"]', icon: IconCircleCheckFilled },
+            { title: 'Đang thực hiện', url: '/lab-admin/projects?status=["' + PROJECT_STATUS.ON_GOING + '"]', icon: IconProgress },
+            { title: 'Hoàn thành', url: '/lab-admin/projects?status=["' + PROJECT_STATUS.COMPLETE + '"]', icon: IconCircleCheckFilled },
           ],
-        }
+        },
+        {
+          title: 'Người dùng',
+          icon: IconUsers,
+          items: [
+            {
+              title: 'Tất cả',
+              url: '/lab-admin/users',
+              icon: IconUserSearch,
+            },
+            {
+              title: 'Đang hoạt động',
+              url: `/lab-admin/users?status=["ACTIVE"]`,
+              icon: IconUserCheck,
+            },
+            {
+              title: 'Đã ngừng hoạt động',
+              url: '/lab-admin/users?status=["INACTIVE"]',
+              icon: IconUserOff,
+            },
+            {
+              title: USER_ROLE_LABEL[USER_ROLE.SYSTEM_ADMIN],
+              url: '/lab-admin/users?role=["' + USER_ROLE.SYSTEM_ADMIN + '"]',
+              icon: LockKeyhole,
+            },
+            {
+              title: USER_ROLE_LABEL[USER_ROLE.LAB_ADMIN],
+              url: '/lab-admin/users?role=["' + USER_ROLE.LAB_ADMIN + '"]',
+              icon: FlaskConical,
+            },
+            {
+              title: USER_ROLE_LABEL[USER_ROLE.COMPANY],
+              url: '/lab-admin/users?role=["' + USER_ROLE.COMPANY + '"]',
+              icon: Building2,
+            },
+            {
+              title: USER_ROLE_LABEL[USER_ROLE.SUPERVISOR],
+              url: '/lab-admin/users?role=["' + USER_ROLE.SUPERVISOR + '"]',
+              icon: IconUserStar,
+            },
+            {
+              title: USER_ROLE_LABEL[USER_ROLE.USER],
+              url: '/lab-admin/users?role=["' + USER_ROLE.USER + '"]',
+              icon: User,
+            },
+          ]
+        },
       ]
     },
   ],
@@ -305,16 +345,16 @@ export const companySidebarData: SidebarData = {
               url: '/company-manage/projects?status=["' + PROJECT_STATUS.PENDING + '"]',
               icon: IconClockHour4,
             },
-            {
-              title: 'Đang thực hiện',
-              url: '/company-manage/projects?status=["' + PROJECT_STATUS.IN_PROGRESS + '"]',
-              icon: IconProgress,
-            },
-            {
-              title: 'Hoàn thành',
-              url: '/company-manage/projects?status=["' + PROJECT_STATUS.COMPLETED + '"]',
-              icon: IconCircleCheckFilled,
-            },
+            // {
+            //   title: 'Đang thực hiện',
+            //   url: '/company-manage/projects?status=["' + PROJECT_STATUS.IN_PROGRESS + '"]',
+            //   icon: IconProgress,
+            // },
+            // {
+            //   title: 'Hoàn thành',
+            //   url: '/company-manage/projects?status=["' + PROJECT_STATUS.COMPLETED + '"]',
+            //   icon: IconCircleCheckFilled,
+            // },
           ],
         }
       ]
