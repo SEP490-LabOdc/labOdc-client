@@ -34,7 +34,7 @@ export function useCreateProjectApplication() {
     mutationFn: async (payload: {
       userId: string
       projectId: string
-      coverLetter: string
+      cvUrl: string
     }) => {
       const { data } = await apiRequest.post(
         `/api/v1/project-applications/apply`,
