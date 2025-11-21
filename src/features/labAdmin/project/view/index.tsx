@@ -57,7 +57,7 @@ export default function ViewProject() {
                 </div>
             </Header>
 
-            <Main>
+            <Main className='pt-0'>
                 {
                     (project.status == PROJECT_STATUS.PENDING || project.status == PROJECT_STATUS.UPDATE_REQUIRED) && (
                         <div className="mb-2 flex flex-wrap items-center justify-between space-y-2">
@@ -95,14 +95,14 @@ export default function ViewProject() {
                         message="Mentor đang trong quá trình hoàn thiện kế hoạch thực hiện dự án."
                     />
                 )}
-                <div className="-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-y-0 lg:space-x-12">
-                    {
-                        (project.status == PROJECT_STATUS.PENDING || project.status == PROJECT_STATUS.UPDATE_REQUIRED) && (
+                {
+                    (project.status == PROJECT_STATUS.PENDING || project.status == PROJECT_STATUS.UPDATE_REQUIRED) && (
+                        <div className="-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-y-0 lg:space-x-12">
                             <ProjectPendingForm initialData={project} />
-                        )
-                    }
-                    {/* initialData={project} */}
-                </div>
+                        </div>
+
+                    )
+                }
                 {
                     (project.status == PROJECT_STATUS.PLANNING) && (
                         <ProjectDetailPage initialData={project} />

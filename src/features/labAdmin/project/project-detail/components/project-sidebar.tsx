@@ -11,6 +11,7 @@ import { cn, getStatusColor } from '@/lib/utils'
 import { Link } from '@tanstack/react-router'
 import { PROJECT_STATUS_LABEL } from '../../data/schema'
 import { callTypes } from '../../data/data'
+import { calculateDays, formatDate, formatVND } from '@/helpers/customUtils'
 
 // Định nghĩa kiểu dữ liệu cho props
 // type ProjectData = {
@@ -47,12 +48,20 @@ export const ProjectSidebar: React.FC<any> = ({ initialData }) => {
       <CardContent>
         {/* Phần Project Details */}
         <div className="space-y-3 text-sm">
+          <div className="flex justify-between items-center">
+            <span className="text-gray-600">Công ty:</span>
+            <Link to='/401'>
+              <span className="font-medium text-gray-800">{initialData?.companyName} </span>
+            </Link>
+          </div>
           {[
-            { label: 'Công ty', value: 'abac' },
-            { label: 'Tổng chi phí dự án', value: `${initialData?.budget} VNĐ` },
-            { label: 'Số giờ làm việc', value: `${initialData?.createdAt} giờ` },
-            { label: 'Ngày tạo', value: initialData?.createdAt },
-            { label: 'Ngày bắt đầu', value: initialData?.startDate || 'Đang lên kết hoạch   ' },
+            { label: 'Tổng chi phí dự án', value: formatVND(initialData?.budget) },
+            { label: 'Số ngày thực hiện', value: calculateDays(initialData?.createdAt) },
+            { label: 'Ngày tạo', value: formatDate(initialData?.createdAt) },
+            {
+              label: 'Ngày bắt đầu',
+              value: initialData?.startDate ? formatDate(initialData?.startDate) : 'Đang lên kế hoạch'
+            },
           ].map((item, index) => (
             <div key={index} className="flex justify-between items-center">
               <span className="text-gray-600">{item.label}:</span>
@@ -63,11 +72,14 @@ export const ProjectSidebar: React.FC<any> = ({ initialData }) => {
           <div className="flex justify-between items-center">
             <span className="text-gray-600">Người tạo:</span>
             <div className="flex items-center gap-2">
-              <Avatar className="h-6 w-6">
-                <AvatarImage src={initialData?.createdByAvarta} />
-                <AvatarFallback>{initialData?.createdByName}</AvatarFallback>
-              </Avatar>
-              <span className="font-medium text-gray-800">{initialData?.createdBy?.name}</span>
+              <Link className='flex items-center gap-2' to='/401'>
+                <Avatar className="h-6 w-6">
+                  <AvatarImage src={initialData?.createdByAvatar} />
+                  <AvatarFallback>{initialData?.createdByName[0]}</AvatarFallback>
+                </Avatar>
+                <span className="font-medium text-gray-800">{initialData?.createdByName}</span>
+              </Link>
+
             </div>
           </div>
           <div className="flex justify-between items-center">
@@ -103,7 +115,8 @@ export const ProjectSidebar: React.FC<any> = ({ initialData }) => {
           </div>
           <div className="text-center">
             <Link to='/404'>
-              Patient appointment booking
+              {/*  currentMilestoneId*/}
+              {initialData?.currentMilestoneName}
             </Link>
 
           </div>

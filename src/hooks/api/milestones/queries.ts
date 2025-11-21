@@ -25,3 +25,16 @@ export function useGetMilestoneById(milestoneId: string) {
     enabled: !!milestoneId,
   })
 }
+
+export function useGetMilestonesById(milestoneId: string) {
+    return useQuery({
+        queryKey: milestoneKeys.detail(milestoneId),
+        queryFn: async () => {
+            const res = await apiRequest.get(
+                `/api/v1/project-milestones/${milestoneId}`
+            );
+            return res.data.data;
+        },
+        enabled: !!milestoneId,
+    });
+}

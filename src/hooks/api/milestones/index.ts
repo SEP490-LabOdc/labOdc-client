@@ -1,2 +1,2 @@
 export { milestoneKeys } from './query-keys.ts'
-export { useGetMilestonesByProjectId } from './queries.ts'
+export { useGetMilestonesByProjectId, useGetMilestonesById } from './queries.ts'
