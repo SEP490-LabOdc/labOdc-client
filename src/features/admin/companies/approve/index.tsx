@@ -9,12 +9,9 @@ import { CompaniesProvider } from '../components/companies-provider'
 import CompanyApprovingForm from '../components/companies-approving-form'
 import {
     useGetCheckList,
-    useGetCompanyById,
     useGetCompanyChecklists,
 } from '@/hooks/api/companies/queries'
 import { ErrorView } from '@/components/admin/ErrorView'
-
-const route = getRouteApi('/_authenticated/admin/companies/approve/')
 
 const ApprovingTableSkeleton = () => (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2 animate-pulse">
@@ -66,14 +63,7 @@ const ApprovingTableSkeleton = () => (
     </div>
 )
 
-export default function ApproveCompany() {
-    const search = route.useSearch()
-    const companyQuery = useGetCompanyById(search.id)
-    const { data: companyData, isLoading: isCompanyLoading, isError: isCompanyError, error: companyError } = companyQuery
-
-    const company = companyData?.data
-    const companyId = company?.id
-    const isUpdateRequired = company?.status === 'UPDATE_REQUIRED'
+export default function ApproveCompany({ company }: { company: any }) {
 
     // Luôn lấy checklist template
     const {
@@ -87,23 +77,18 @@ export default function ApproveCompany() {
     const {
         data: companyChecklistData,
         isLoading: isCompanyChecklistLoading,
-    } = useGetCompanyChecklists(companyId)
+    } = useGetCompanyChecklists(company.id)
 
-    // Khi một trong hai có lỗi
-    if (isCompanyError || isChecklistError) {
+    if (isChecklistError) {
         const message =
-            companyError?.message || checklistError?.message || 'Không thể tải dữ liệu.'
+            checklistError?.message || 'Không thể tải dữ liệu.'
         return (
             <ErrorView
                 title="Lỗi Tải Dữ Liệu"
-                description="Không thể kết nối đến server hoặc tải thông tin công ty/checklist."
+                description="Không thể kết nối đến server hoặc tải thông tin checklist."
                 details={message}
             />
         )
-    }
-
-    if (isCompanyLoading || isChecklistLoading || (isUpdateRequired && isCompanyChecklistLoading)) {
-        return <ApprovingTableSkeleton />
     }
 
     let finalChecklist = baseChecklistData?.[0]
@@ -124,6 +109,9 @@ export default function ApproveCompany() {
             })),
         }
     }
+
+    console.log(companyChecklistData);
+    console.log('companyid', company);
 
     return (
         <CompaniesProvider>
@@ -175,7 +163,7 @@ export default function ApproveCompany() {
                     )}
 
                     <div className="-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-y-0 lg:space-x-12">
-                        {isCompanyLoading ? (
+                        {isCompanyChecklistLoading || isChecklistLoading ? (
                             <ApprovingTableSkeleton />
                         ) : (
                             <CompanyApprovingForm
