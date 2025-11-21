@@ -110,9 +110,6 @@ export default function ApproveCompany({ company }: { company: any }) {
         }
     }
 
-    console.log(companyChecklistData);
-    console.log('companyid', company);
-
     return (
         <CompaniesProvider>
             <>
