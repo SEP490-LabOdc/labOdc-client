@@ -16,62 +16,17 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
 import { ProjectsTable } from "../components"
-import { type Project } from "../data/schema"
-
-// Mock data
-const mockProjects: Project[] = [
-  {
-    id: "1",
-    projectId: "PRO-001",
-    projectName: "Office Management App",
-    description: "Ứng dụng quản lý văn phòng hiện đại",
-    leader: {
-      id: "leader1",
-      name: "Nguyễn Văn A",
-      avatar: "/avatars/leader1.jpg"
-    },
-    team: [
-      { id: "dev1", name: "Trần B", avatar: "/avatars/dev1.jpg" },
-      { id: "dev2", name: "Lê C", avatar: "/avatars/dev2.jpg" },
-      { id: "dev3", name: "Phạm D", avatar: "/avatars/dev3.jpg" },
-      { id: "dev4", name: "Hoàng E", avatar: "/avatars/dev4.jpg" },
-    ],
-    deadline: "2024-09-12",
-    priority: "high",
-    status: "active",
-    role: "Frontend Developer",
-    progress: 75
-  },
-  {
-    id: "2",
-    projectId: "PRO-002",
-    projectName: "E-commerce Platform",
-    description: "Nền tảng thương mại điện tử",
-    leader: {
-      id: "leader2",
-      name: "Lê Thị B",
-      avatar: "/avatars/leader2.jpg"
-    },
-    team: [
-      { id: "dev5", name: "Vũ F", avatar: "/avatars/dev5.jpg" },
-      { id: "dev6", name: "Đỗ G", avatar: "/avatars/dev6.jpg" },
-    ],
-    deadline: "2024-10-15",
-    priority: "medium",
-    status: "active",
-    role: "Full Stack Developer",
-    progress: 60
-  },
-  // Add more mock data...
-]
+import { useUser } from '@/context/UserContext'
+import { useGetMyProjects } from '@/hooks/api/projects'
 
 export default function MyProjectPage() {
-  const [userId] = useState("user123") // Mock user ID - replace with actual auth
+  const { user } = useUser()
 
-  const mockSearch = {}
+  const [status, setStatus] = useState('') // hoặc giá trị mặc định khác
+  const { data: projects, isLoading, error } = useGetMyProjects(status)
   const mockNavigate = () => {}
 
-  if (!userId) {
+  if (!user) {
     return (
       <div className="mt-12">
         <div className="container mx-auto px-8 py-12 text-center">
@@ -84,6 +39,14 @@ export default function MyProjectPage() {
         </div>
       </div>
     )
+  }
+
+  if (isLoading) {
+    return <div>Loading...</div>
+  }
+
+  if (error) {
+    return <div>Error loading projects</div>
   }
 
   return (
@@ -130,8 +93,8 @@ export default function MyProjectPage() {
 
         {/* Table */}
         <ProjectsTable
-          data={mockProjects}
-          search={mockSearch}
+          data={projects.data}
+          search={{}}
           navigate={mockNavigate}
         />
       </div>

@@ -1,18 +1,9 @@
 import { type ColumnDef } from '@tanstack/react-table'
 import { Checkbox } from '@/components/ui/checkbox'
-import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Edit, Trash2 } from 'lucide-react'
+import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { type Project } from '../data/schema'
 import { Link } from '@tanstack/react-router'
-
-const statusConfig = {
-  active: { label: 'Đang hoạt động', className: 'bg-green-100 text-green-800' },
-  inactive: { label: 'Không hoạt động', className: 'bg-red-100 text-red-800' },
-  completed: { label: 'Hoàn thành', className: 'bg-blue-100 text-blue-800' },
-  pending: { label: 'Đang chờ', className: 'bg-yellow-100 text-yellow-800' },
-}
 
 export const projectsColumns: ColumnDef<Project>[] = [
   {
@@ -38,28 +29,41 @@ export const projectsColumns: ColumnDef<Project>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: 'projectId',
+    accessorKey: 'id',
     header: 'Mã dự án',
-    cell: ({ row }) => (
-      <div className="font-mono text-sm">{row.getValue('projectId')}</div>
-    ),
+    cell: ({ row }) => {
+      const id = row.getValue('id') as string
+      return <div className="font-mono text-sm">{id.slice(0, 8)}</div>
+    },
   },
   {
-    accessorKey: 'projectName',
+    accessorKey: 'title',
     header: 'Tên dự án',
-    cell: ({ row }) => (
-      <Link to={'/talent/my-projects/detail'} className="font-medium hover:underline">{row.getValue('projectName')}</Link>
-    ),
+    cell: ({ row }) => {
+      const projectId = row.original.id
+      return (
+        <Link
+          to={'/mentor/projects/$projectId'}
+          params={{ projectId }}
+          className="font-medium hover:underline"
+        >
+          {row.getValue('title')}
+        </Link>
+      )
+    },
   },
   {
-    accessorKey: 'leader',
+    accessorKey: 'mentors',
     header: 'Trưởng nhóm',
     cell: ({ row }) => {
-      const leader = row.getValue('leader') as Project['leader']
+      const mentors = row.getValue('mentors') as Project['mentors']
+      const leader = mentors.find(m => m.leader)
+
+      if (!leader) return <span className="text-sm text-gray-400">Chưa có</span>
+
       return (
         <div className="flex items-center gap-2">
           <Avatar className="h-8 w-8">
-            <AvatarImage src={leader.avatar} />
             <AvatarFallback>
               {leader.name.split(' ').map(n => n[0]).join('')}
             </AvatarFallback>
@@ -70,40 +74,15 @@ export const projectsColumns: ColumnDef<Project>[] = [
     },
   },
   {
-    accessorKey: 'team',
-    header: 'Nhóm',
-    cell: ({ row }) => {
-      const team = row.getValue('team') as Project['team']
-      const displayTeam = team.slice(0, 3)
-      const remainingCount = team.length - 3
-
-      return (
-        <div className="flex items-center gap-1">
-          {displayTeam.map((member) => (
-            <Avatar key={member.id} className="h-7 w-7 border-2 border-white">
-              <AvatarImage src={member.avatar} />
-              <AvatarFallback className="text-xs">
-                {member.name.split(' ').map(n => n[0]).join('')}
-              </AvatarFallback>
-            </Avatar>
-          ))}
-          {remainingCount > 0 && (
-            <Badge variant="secondary" className="text-xs">
-              +{remainingCount}
-            </Badge>
-          )}
-        </div>
-      )
-    },
-  },
-  {
-    accessorKey: 'deadline',
+    accessorKey: 'endDate',
     header: 'Ngày kết thúc',
     cell: ({ row }) => {
-      const deadline = new Date(row.getValue('deadline'))
+      const endDate = row.getValue('endDate')
+      if (!endDate) return <span className="text-sm text-gray-400">Chưa xác định</span>
+
       return (
         <div className="text-sm">
-          {deadline.toLocaleDateString('vi-VN')}
+          {new Date(endDate as string).toLocaleDateString('vi-VN')}
         </div>
       )
     },
@@ -112,8 +91,15 @@ export const projectsColumns: ColumnDef<Project>[] = [
     accessorKey: 'status',
     header: 'Trạng thái',
     cell: ({ row }) => {
-      const status = row.getValue('status') as keyof typeof statusConfig
-      const config = statusConfig[status]
+      const statusMap = {
+        PLANNING: { label: 'Đang lên kế hoạch', className: 'bg-yellow-100 text-yellow-800' },
+        IN_PROGRESS: { label: 'Đang thực hiện', className: 'bg-blue-100 text-blue-800' },
+        COMPLETED: { label: 'Hoàn thành', className: 'bg-green-100 text-green-800' },
+        ON_HOLD: { label: 'Tạm dừng', className: 'bg-red-100 text-red-800' },
+      }
+
+      const status = row.getValue('status') as keyof typeof statusMap
+      const config = statusMap[status]
 
       return (
         <Badge className={`${config.className} rounded-full`}>
@@ -121,19 +107,5 @@ export const projectsColumns: ColumnDef<Project>[] = [
         </Badge>
       )
     },
-  },
-  {
-    id: 'actions',
-    header: 'Hành động',
-    cell: ({ row }) => (
-      <div className="flex items-center gap-1">
-        <Button variant="ghost" size="sm">
-          <Edit className="h-4 w-4" />
-        </Button>
-        <Button variant="ghost" size="sm" className="text-red-600">
-          <Trash2 className="h-4 w-4" />
-        </Button>
-      </div>
-    ),
   },
 ]
