@@ -97,7 +97,7 @@ export const ProjectOverviewTab: React.FC<ProjectOverviewTabProps> = ({ projectD
                   <Button
                     size="sm"
                     className="bg-blue-600 hover:bg-blue-700 text-white"
-                    onClick={() => navigate({ to: `/projects/${projectData.id}/candidates`})}
+                    onClick={() => navigate({ to: `/mentor/projects/${projectData.id}/candidates`})}
                   >
                     Xem danh sách ứng viên
                     <ArrowRight className="h-4 w-4 ml-2" />

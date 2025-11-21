@@ -92,7 +92,7 @@ export function useGetProjectApplicants(projectId: string) {
   return useQuery({
     queryKey: projectKeys.getProjectApplicants(projectId),
     queryFn: async () => {
-      const { data } = await apiRequest.get(`/api/v1/projects/{projectId}/applicants`);
+      const { data } = await apiRequest.get(`/api/v1/projects/${projectId}/applicants`);
       return data;
     }
   })
