@@ -9,5 +9,6 @@ export const projectKeys = {
   getProjectParticipants: (projectId: string) => ['project-participants', { projectId }] as const,
   getProjectMilestones: (projectId: string) => ['project-milestones', { projectId }] as const,
   getProjectApplicants: (projectId: string) => ['project-applicants', { projectId }] as const,
+  getMyProjects: (status: string) => ['my-projects', { status }] as const,
 };
 

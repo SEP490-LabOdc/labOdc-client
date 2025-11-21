@@ -82,7 +82,7 @@ export function useGetProjectMilestones(projectId: string) {
   return useQuery({
     queryKey: projectKeys.getProjectMilestones(projectId),
     queryFn: async () => {
-      const { data } = await apiRequest.get(`/api/v1/projects/{projectId}/milestones`);
+      const { data } = await apiRequest.get(`/api/v1/projects/${projectId}/milestones`);
       return data;
     }
   })
@@ -93,6 +93,16 @@ export function useGetProjectApplicants(projectId: string) {
     queryKey: projectKeys.getProjectApplicants(projectId),
     queryFn: async () => {
       const { data } = await apiRequest.get(`/api/v1/projects/{projectId}/applicants`);
+      return data;
+    }
+  })
+}
+
+export function useGetMyProjects(status: string) {
+  return useQuery({
+    queryKey: projectKeys.getMyProjects(status),
+    queryFn: async () => {
+      const { data } = await apiRequest.get(`/api/v1/projects/my-projects?status=${status}`);
       return data;
     }
   })
