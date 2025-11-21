@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 import { milestoneKeys } from './query-keys'
 import apiRequest from '@/config/request';
 
@@ -13,6 +13,17 @@ export function useGetMilestonesByProjectId(projectId: string) {
         },
         enabled: !!projectId,
     })
+}
+
+export function useGetMilestoneById(milestoneId: string) {
+  return useQuery({
+    queryKey: milestoneKeys.detail(milestoneId),
+    queryFn: async () => {
+      const res = await apiRequest.get(`/api/v1/project-milestones/${milestoneId}`)
+      return res.data
+    },
+    enabled: !!milestoneId,
+  })
 }
 
 export function useGetMilestonesById(milestoneId: string) {

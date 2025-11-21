@@ -2,8 +2,8 @@ import { type ColumnDef } from '@tanstack/react-table'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Badge } from '@/components/ui/badge'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
-import { type Project } from '../data/schema'
 import { Link } from '@tanstack/react-router'
+import type { Project } from '@/features/projects/data/schema.ts'
 
 export const projectsColumns: ColumnDef<Project>[] = [
   {
@@ -40,14 +40,15 @@ export const projectsColumns: ColumnDef<Project>[] = [
     accessorKey: 'title',
     header: 'Tên dự án',
     cell: ({ row }) => {
+      const title = row.getValue('title') as string
       const projectId = row.original.id
       return (
         <Link
-          to={'/mentor/projects/$projectId'}
+          to="/mentor/projects/$projectId"
           params={{ projectId }}
           className="font-medium hover:underline"
         >
-          {row.getValue('title')}
+          {title}
         </Link>
       )
     },
