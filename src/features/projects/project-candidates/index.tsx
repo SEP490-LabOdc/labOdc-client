@@ -51,7 +51,7 @@ export const CandidateListPage: React.FC = () => {
 
         {/* Table với filters */}
         <CandidatesTable
-          data={candidates.data}
+          data={candidates}
           search={{}}
           navigate={mockNavigate}
         />
