@@ -118,4 +118,26 @@ export const getTagColor = (tag: string) => {
   return 'bg-gray-100 text-gray-800'
 }
 
+const candidateStatusColorMap: Record<string, string> = {
+  'PENDING': 'bg-yellow-100 text-yellow-800 border-yellow-200',
+  'APPROVED': 'bg-green-100 text-green-800 border-green-200',
+  'REJECTED': 'bg-red-100 text-red-800 border-red-200',
+}
+
+// Candidate status label mapping
+const candidateStatusLabelMap: Record<string, string> = {
+  'PENDING': 'Đang chờ',
+  'APPROVED': 'Đã duyệt',
+  'REJECTED': 'Từ chối',
+}
+
+export function getCandidateStatusColor(status: string): string {
+  return candidateStatusColorMap[status] || 'bg-gray-100 text-gray-800 border-gray-200'
+}
+
+export function getCandidateStatusLabel(status: string): string {
+  return candidateStatusLabelMap[status] || status
+}
+
+
 
