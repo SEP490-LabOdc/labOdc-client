@@ -37,14 +37,14 @@ export function CommandMenu() {
     [setOpen]
   )
 
-  type UserRole = 'SYSTEM_ADMIN' | 'LAB_ADMIN' | 'SUPERVISOR' | 'COMPANY' | 'USER';
+  type UserRole = 'SYSTEM_ADMIN' | 'LAB_ADMIN' | 'MENTOR' | 'COMPANY' | 'USER';
 
   let sidebar: SidebarData;
 
   const roleSidebar: Record<UserRole, SidebarData> = {
     SYSTEM_ADMIN: systemAmdminSidebarData,
     LAB_ADMIN: labAdminSidebarData,
-    SUPERVISOR: supervisorSidebarData,
+    MENTOR: supervisorSidebarData,
     COMPANY: companySidebarData,
     USER: userSidebarData
   };
