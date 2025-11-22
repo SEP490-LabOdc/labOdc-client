@@ -8,6 +8,8 @@ import { ThemeSwitch } from '@/components/theme-switch'
 import { ErrorView } from '@/components/admin/ErrorView'
 import ProjectForm from '../components/project-form'
 import { useGetProjectById } from '@/hooks/api/projects'
+import { PROJECT_STATUS } from '../data/schema'
+import { StatusAlert } from '@/components/admin/StatusAlert'
 
 const route = getRouteApi('/_authenticated/company-manage/projects/view/')
 
@@ -64,6 +66,25 @@ export default function ViewProject() {
                         </p>
                     </div>
                 </div>
+
+                {project?.status === PROJECT_STATUS.PENDING && (
+                    <StatusAlert
+                        variant="info"
+                        title="Dự án đang chờ phê duyệt"
+                        message="Dự án đang chờ Lab Admin xem xét và phê duyệt. Vui lòng quay lại sau."
+                        className="mb-4"
+                    />
+                )}
+
+                {project?.status === PROJECT_STATUS.UPDATE_REQUIRED && (
+                    <StatusAlert
+                        variant="warning"
+                        title="Cần cập nhật thông tin"
+                        message="Dự án cần được doanh nghiệp cập nhật thông tin theo yêu cầu. Vui lòng chờ doanh nghiệp hoàn tất."
+                        className="mb-4"
+                    />
+                )}
+
 
                 <div className="-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-y-0 lg:space-x-12">
                     <ProjectForm initialData={project} />
