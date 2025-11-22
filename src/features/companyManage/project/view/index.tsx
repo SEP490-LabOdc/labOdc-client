@@ -10,6 +10,7 @@ import ProjectForm from '../components/project-form'
 import { useGetProjectById } from '@/hooks/api/projects'
 import { PROJECT_STATUS } from '../data/schema'
 import { StatusAlert } from '@/components/admin/StatusAlert'
+import ProjectDetailPage from '../project-detail'
 
 const route = getRouteApi('/_authenticated/company-manage/projects/view/')
 
@@ -85,10 +86,34 @@ export default function ViewProject() {
                     />
                 )}
 
+                {project?.status === PROJECT_STATUS.REJECTED && (
+                    <StatusAlert
+                        variant="error"
+                        title="Dự án đã bị từ chối"
+                        message="Dự án này đã bị từ chối và không thể chỉnh sửa thêm."
+                        className="mb-4"
+                    />
+                )}
+                {project?.status === PROJECT_STATUS.PLANNING && (
+                    <StatusAlert
+                        variant="info"
+                        title="Đang xây dựng kế hoạch dự án"
+                        message="Mentor đang trong quá trình hoàn thiện kế hoạch thực hiện dự án."
+                    />
+                )}
+                {
+                    (project.status == PROJECT_STATUS.PENDING || project.status == PROJECT_STATUS.UPDATE_REQUIRED) && (
+                        <div className="-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-y-0 lg:space-x-12">
+                            <ProjectForm initialData={project} />
+                        </div>
 
-                <div className="-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-y-0 lg:space-x-12">
-                    <ProjectForm initialData={project} />
-                </div>
+                    )
+                }
+                {
+                    (project.status == PROJECT_STATUS.PLANNING) && (
+                        <ProjectDetailPage initialData={project} />
+                    )
+                }
             </Main>
         </>
     )

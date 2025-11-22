@@ -21,6 +21,8 @@ import { useNavigate } from '@tanstack/react-router'
 import { toast } from 'sonner'
 import { useLabAdminApproveProject } from '@/hooks/api/projects'
 import { AddMemberModal } from './add-member-modal'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
+import { formatVND } from '@/helpers/customUtils'
 
 /* -------------------- SCHEMA -------------------- */
 const projectSchema = z.object({
@@ -78,197 +80,202 @@ export default function ProjectForm({
 
     const approveProject = useLabAdminApproveProject();
 
+    const statusLabel =
+        PROJECT_STATUS_LABEL[initialData.status as keyof typeof PROJECT_STATUS_LABEL] ??
+        "Không xác định"
+
     return (
         <>
-            <Form {...form}>
-                <form className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {/* ===== CỘT TRÁI ===== */}
-                    <div className="space-y-4 px-6">
-                        {/* Tên dự án */}
-                        <FormField
-                            control={form.control}
-                            name="title"
-                            render={({ field }) => (
-                                <FormItem className="space-y-1">
-                                    <div className="flex items-center gap-3">
-                                        <FormLabel className="w-40  text-end text-base font-medium">
+            <div className="max-w-5xl mx-auto py-2">
+                <Form {...form}>
+                    <form className="space-y-8">
+                        {/* ===== Thông tin chung ===== */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+                            {/* Tên dự án */}
+                            <FormField
+                                control={form.control}
+                                name="title"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel className="text-base font-medium">
                                             Tên dự án
                                         </FormLabel>
-                                        <FormControl className="flex-1">
+                                        <FormControl>
                                             <Input {...field} disabled />
                                         </FormControl>
-                                    </div>
-                                    <FormMessage className="ml-40" />
-                                </FormItem>
-                            )}
-                        />
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
 
-                        <FormField
-                            control={form.control}
-                            name="budget"
-                            render={({ field }) => (
-                                <FormItem className="space-y-1">
-                                    <div className="flex items-center gap-3">
-                                        <FormLabel className="w-40 text-end text-base font-medium">
+                            {/* Ngân sách */}
+                            <FormField
+                                control={form.control}
+                                name="budget"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel className="text-base font-medium">
                                             Ngân sách (VNĐ)
                                         </FormLabel>
-                                        <FormControl className="flex-1">
+                                        <FormControl>
                                             <Input
                                                 {...field}
                                                 disabled
-                                                value={`${Number(initialData.budget).toLocaleString('vi-VN')}`}
+                                                value={formatVND(initialData.budget)}
                                             />
                                         </FormControl>
-                                    </div>
-                                    <FormMessage className="ml-40" />
-                                </FormItem>
-                            )}
-                        />
-                    </div>
-
-                    {/* ===== CỘT PHẢI ===== */}
-                    <div className="space-y-4 px-6">
-                        {/* Trạng thái */}
-                        <FormField
-                            control={form.control}
-                            name="status"
-                            render={({ field }) => {
-                                const statusLabel =
-                                    PROJECT_STATUS_LABEL[field.value as keyof typeof PROJECT_STATUS_LABEL] ||
-                                    'Không xác định'
-
-                                return (
-                                    <FormItem className="space-y-1">
-                                        <div className="flex items-center gap-3">
-                                            <FormLabel className="w-40  text-end text-base font-medium">
-                                                Trạng thái
-                                            </FormLabel>
-                                            <FormControl className="flex-1">
-                                                <Input value={statusLabel} disabled />
-                                            </FormControl>
-                                        </div>
-                                        <FormMessage className="ml-40" />
+                                        <FormMessage />
                                     </FormItem>
-                                )
-                            }}
-                        />
-                    </div>
+                                )}
+                            />
 
-                    {/* ===== MÔ TẢ ===== */}
-                    <div className="space-y-4 px-12 md:col-span-2">
-                        <FormField
-                            control={form.control}
-                            name="description"
-                            render={({ field }) => (
-                                <FormItem className="space-y-1">
-                                    <div className="flex items-center gap-3">
-                                        <FormLabel className="w-20  text-end text-base font-medium">
+                            {/* Trạng thái */}
+                            <FormField
+                                control={form.control}
+                                name="status"
+                                render={() => (
+                                    <FormItem>
+                                        <FormLabel className="text-base font-medium">
+                                            Trạng thái
+                                        </FormLabel>
+                                        <FormControl>
+                                            <Input value={statusLabel} disabled />
+                                        </FormControl>
+                                    </FormItem>
+                                )}
+                            />
+                        </div>
+
+                        <div className="">
+                            <FormLabel className="text-base font-medium block mb-3">
+                                Kỹ năng yêu cầu
+                            </FormLabel>
+
+                            {initialData.skills.length > 0 ? (
+                                <div className="flex flex-wrap gap-3">
+                                    {initialData.skills.map((skill: any) => {
+                                        return (
+                                            <Tooltip>
+                                                <TooltipTrigger>
+                                                    <Badge
+                                                        variant="secondary"
+                                                        className="text-sm px-3 py-1 cursor-help"
+                                                    >
+                                                        {skill.name}
+                                                    </Badge>
+                                                </TooltipTrigger>
+
+                                                {skill.description && (
+                                                    <TooltipContent className="max-w-xs">
+                                                        {skill.description}
+                                                    </TooltipContent>
+                                                )}
+                                            </Tooltip>
+                                        )
+                                    })}
+                                </div>
+                            ) : (
+                                <p className="text-muted-foreground italic">
+                                    Không có kỹ năng nào
+                                </p>
+                            )}
+                        </div>
+
+                        {/* ===== Mô tả ===== */}
+                        <div>
+                            <FormField
+                                control={form.control}
+                                name="description"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel className="text-base font-medium">
                                             Mô tả
                                         </FormLabel>
-                                        <FormControl className="flex-1">
-                                            <Textarea rows={15} {...field} disabled />
+                                        <FormControl>
+                                            <Textarea
+                                                rows={10}
+                                                {...field}
+                                                disabled
+                                                className="resize-none"
+                                            />
                                         </FormControl>
-                                    </div>
-                                    <FormMessage className="ml-40" />
-                                </FormItem>
-                            )}
-                        />
-                    </div>
-
-                    {/* ===== KỸ NĂNG ===== */}
-                    <div className="col-span-2 px-6 space-y-3">
-                        <FormLabel className=" text-base block font-medium text-center">
-                            Kỹ năng yêu cầu
-                        </FormLabel>
-                        {initialData.skills && initialData.skills.length > 0 ? (
-                            <div className="flex flex-wrap gap-2 justify-center">
-                                {initialData.skills.map((skill) => (
-                                    <Badge
-                                        key={skill.id}
-                                        variant="secondary"
-                                        className="text-sm px-3 py-1"
-                                    >
-                                        {skill.name}
-                                    </Badge>
-                                ))}
-                            </div>
-                        ) : (
-                            <p className="text-muted-foreground italic text-center">
-                                Không có kỹ năng nào
-                            </p>
-                        )}
-                    </div>
-                    <AddMemberModal
-                        isOpen={addMentorOpen}
-                        onClose={() => setAddMentorOpen(false)}
-                        onAddMembers={(members) => {
-                            const mentorIds = members.map((m) => m.id);
-
-                            if (mentorIds.length === 0) {
-                                toast.error("Vui lòng chọn ít nhất 1 mentor.");
-                                return;
-                            }
-
-                            const assignPromise = approveProject.mutateAsync({
-                                projectId: initialData.id,
-                                userIds: mentorIds,
-                            });
-
-                            // Hiển thị toast loading / success / error
-                            toast.promise(assignPromise, {
-                                loading: "Đang phê duyệt...",
-                                success: "Phê duyệt thành công!",
-                                error: "Phê duyệt thất bại!",
-                            });
-
-                            assignPromise
-                                .then(() => {
-                                    setAddMentorOpen(false); // đóng modal
-                                })
-                                .catch(() => { });
-                        }}
-                        projectId={initialData?.id}
-                    />
-
-                    {/* ===== DIALOG YÊU CẦU CẬP NHẬT ===== */}
-                    <ConfirmDialog
-                        open={updateDialogOpen}
-                        onOpenChange={setUpdateDialogOpen}
-                        title="Yêu cầu cập nhật thông tin"
-                        desc="Hãy nhập ghi chú gửi đến doanh nghiệp để họ biết cần cập nhật gì."
-                        cancelBtnText="Hủy"
-                        confirmText={
-                            loadingUpdate ? (
-                                <>
-                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                    Đang gửi...
-                                </>
-                            ) : (
-                                'Gửi yêu cầu'
-                            )
-                        }
-                        handleConfirm={handleSendUpdate}
-                        disabled={!requestNote.trim()}
-                    >
-                        <div className="space-y-3">
-                            <FormLabel className="text-sm font-medium" htmlFor="request-note">
-                                Ghi chú
-                            </FormLabel>
-                            <Textarea
-                                id="request-note"
-                                placeholder="Nhập ghi chú cho doanh nghiệp..."
-                                rows={5}
-                                value={requestNote}
-                                onChange={(e) => setRequestNote(e.target.value)}
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
                             />
-                            <p className="text-xs text-muted-foreground italic">
-                                Khi bạn nhấn <span className="font-medium">"Gửi yêu cầu"</span>, hệ thống sẽ
-                                gửi thông báo đến người liên hệ của doanh nghiệp.
-                            </p>
                         </div>
-                    </ConfirmDialog>
-                </form>
-            </Form>
+                        <AddMemberModal
+                            isOpen={addMentorOpen}
+                            onClose={() => setAddMentorOpen(false)}
+                            onAddMembers={(members) => {
+                                const mentorIds = members.map((m) => m.id);
+
+                                if (mentorIds.length === 0) {
+                                    toast.error("Vui lòng chọn ít nhất 1 mentor.");
+                                    return;
+                                }
+
+                                const assignPromise = approveProject.mutateAsync({
+                                    projectId: initialData.id,
+                                    userIds: mentorIds,
+                                });
+
+                                // Hiển thị toast loading / success / error
+                                toast.promise(assignPromise, {
+                                    loading: "Đang phê duyệt...",
+                                    success: "Phê duyệt thành công!",
+                                    error: "Phê duyệt thất bại!",
+                                });
+
+                                assignPromise
+                                    .then(() => {
+                                        setAddMentorOpen(false); // đóng modal
+                                    })
+                                    .catch(() => { });
+                            }}
+                            projectId={initialData?.id}
+                        />
+
+                        {/* ===== DIALOG YÊU CẦU CẬP NHẬT ===== */}
+                        <ConfirmDialog
+                            open={updateDialogOpen}
+                            onOpenChange={setUpdateDialogOpen}
+                            title="Yêu cầu cập nhật thông tin"
+                            desc="Hãy nhập ghi chú gửi đến doanh nghiệp để họ biết cần cập nhật gì."
+                            cancelBtnText="Hủy"
+                            confirmText={
+                                loadingUpdate ? (
+                                    <>
+                                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                        Đang gửi...
+                                    </>
+                                ) : (
+                                    'Gửi yêu cầu'
+                                )
+                            }
+                            handleConfirm={handleSendUpdate}
+                            disabled={!requestNote.trim()}
+                        >
+                            <div className="space-y-3">
+                                <FormLabel className="text-sm font-medium" htmlFor="request-note">
+                                    Ghi chú
+                                </FormLabel>
+                                <Textarea
+                                    id="request-note"
+                                    placeholder="Nhập ghi chú cho doanh nghiệp..."
+                                    rows={5}
+                                    value={requestNote}
+                                    onChange={(e) => setRequestNote(e.target.value)}
+                                />
+                                <p className="text-xs text-muted-foreground italic">
+                                    Khi bạn nhấn <span className="font-medium">"Gửi yêu cầu"</span>, hệ thống sẽ
+                                    gửi thông báo đến người liên hệ của doanh nghiệp.
+                                </p>
+                            </div>
+                        </ConfirmDialog>
+                    </form>
+                </Form>
+            </div>
 
             {
                 initialData.status == PROJECT_STATUS.UPDATE_REQUIRED ? (
