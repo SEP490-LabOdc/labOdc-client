@@ -11,7 +11,7 @@ export const userStatusSchema = z.nativeEnum(USER_STATUS);
 export type UserStatus = z.infer<typeof userStatusSchema>;
 
 export const USER_STATUS_LABEL: Record<UserStatus, string> = {
-    [USER_STATUS.ACTIVE]: 'Hoạt động',
+    [USER_STATUS.ACTIVE]: 'Đang hoạt động',
     [USER_STATUS.INACTIVE]: 'Ngừng hoạt động',
     [USER_STATUS.INVITED]: 'Đã mời',
     [USER_STATUS.SUSPENDED]: 'Tạm khóa',
@@ -44,6 +44,13 @@ export const USER_ROLE_OPTIONS = Object.entries(USER_ROLE_LABEL).map(
     ([value, label]) => ({ value, label })
 );
 
+export const GENDER_LABEL: Record<string, string> = {
+    MALE: "Nam",
+    FEMALE: "Nữ",
+    OTHER: "",
+    null: "",
+    undefined: "",
+}
 
 export const userSchema = z.object({
     id: z.string().uuid(),

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import type { JSX } from 'react'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
@@ -13,14 +13,11 @@ import {
     FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { SelectDropdown } from '@/components/select-dropdown'
 import { useNavigate } from '@tanstack/react-router'
 import { DatePicker } from '@/components/date-picker'
 import { toast } from 'sonner'
-import { USER_ROLE_OPTIONS, USER_STATUS } from '../data/schema'
-import { ConfirmDialog } from '@/components/confirm-dialog'
-import { Loader2 } from 'lucide-react'
-import { useCreateUser, useUpdateUserRole, useUpdateUserStatus } from '@/hooks/api/users/queries'
+import { GENDER_LABEL, USER_ROLE_LABEL, USER_STATUS, USER_STATUS_LABEL, type UserRole, type UserStatus } from '../data/schema'
+import { useCreateUser, useUpdateUserStatus } from '@/hooks/api/users/queries'
 
 // ✅ Schema cập nhật
 const formSchema = z.object({
@@ -47,7 +44,7 @@ export default function UsersForm({
 }): JSX.Element {
     const navigate = useNavigate()
     const isEdit = mode === 'edit'
-    const { mutateAsync: updateUserRole } = useUpdateUserRole();
+    // const { mutateAsync: updateUserRole } = useUpdateUserRole();
     const { mutateAsync: updateUserStatus } = useUpdateUserStatus();
     const { mutateAsync: createUser } = useCreateUser();
 
@@ -91,36 +88,36 @@ export default function UsersForm({
         }
     }
 
-    const [isRoleModalOpen, setRoleModalOpen] = useState(false)
-    const [selectedRole, setSelectedRole] = useState(initialData?.role ?? "")
-    const [loadingAction, setLoadingAction] = useState<"UPDATE_ROLE" | null>(null)
+    // const [isRoleModalOpen, setRoleModalOpen] = useState(false)
+    // const [selectedRole, setSelectedRole] = useState(initialData?.role ?? "")
+    // const [loadingAction, setLoadingAction] = useState<"UPDATE_ROLE" | null>(null)
 
-    const handleChangeRole = async () => {
-        if (!initialData?.id || !selectedRole) return
+    // const handleChangeRole = async () => {
+    //     if (!initialData?.id || !selectedRole) return
 
-        setLoadingAction("UPDATE_ROLE")
+    //     setLoadingAction("UPDATE_ROLE")
 
-        const updatePromise = updateUserRole({
-            id: initialData.id,
-            roleName: selectedRole,
-        })
+    //     const updatePromise = updateUserRole({
+    //         id: initialData.id,
+    //         roleName: selectedRole,
+    //     })
 
-        toast.promise(updatePromise, {
-            loading: "Đang cập nhật vai trò...",
-            success: "Cập nhật vai trò thành công!",
-            error: "Cập nhật vai trò thất bại!",
-        })
+    //     toast.promise(updatePromise, {
+    //         loading: "Đang cập nhật vai trò...",
+    //         success: "Cập nhật vai trò thành công!",
+    //         error: "Cập nhật vai trò thất bại!",
+    //     })
 
-        try {
-            await updatePromise
-            form.setValue("role", selectedRole);
-            setRoleModalOpen(false);
-        } catch (error) {
-            console.error("❌ Update role failed:", error)
-        } finally {
-            setLoadingAction(null)
-        }
-    }
+    //     try {
+    //         await updatePromise
+    //         form.setValue("role", selectedRole);
+    //         setRoleModalOpen(false);
+    //     } catch (error) {
+    //         console.error("❌ Update role failed:", error)
+    //     } finally {
+    //         setLoadingAction(null)
+    //     }
+    // }
 
     const handleToggleStatus = async () => {
         if (!initialData?.id) return
@@ -165,7 +162,7 @@ export default function UsersForm({
                             render={({ field }) => (
                                 <FormItem className="space-y-1">
                                     <div className="flex items-center gap-3">
-                                        <FormLabel className="w-40 text-end text-base font-medium">
+                                        <FormLabel className="w-40 text-end text-base block font-medium">
                                             Họ và tên
                                         </FormLabel>
                                         <FormControl className="flex-1">
@@ -183,7 +180,7 @@ export default function UsersForm({
                             render={({ field }) => (
                                 <FormItem className="space-y-1">
                                     <div className="flex items-center gap-3">
-                                        <FormLabel className="w-40 text-end text-base font-medium">
+                                        <FormLabel className="w-40 text-end text-base block font-medium">
                                             Email
                                         </FormLabel>
                                         <FormControl className="flex-1">
@@ -201,7 +198,7 @@ export default function UsersForm({
                             render={({ field }) => (
                                 <FormItem className="space-y-1">
                                     <div className="flex items-center gap-3">
-                                        <FormLabel className="w-40 text-end text-base font-medium">
+                                        <FormLabel className="w-40 text-end text-base block font-medium">
                                             Số điện thoại
                                         </FormLabel>
                                         <FormControl className="flex-1">
@@ -219,7 +216,7 @@ export default function UsersForm({
                             render={({ field }) => (
                                 <FormItem className="space-y-1">
                                     <div className="flex items-center gap-3">
-                                        <FormLabel className="w-40 text-end text-base font-medium">
+                                        <FormLabel className="w-40 text-end text-base block font-medium">
                                             Địa chỉ
                                         </FormLabel>
                                         <FormControl className="flex-1">
@@ -238,7 +235,7 @@ export default function UsersForm({
                                 render={({ field }) => (
                                     <FormItem className="space-y-1">
                                         <div className="flex items-center gap-3">
-                                            <FormLabel className="w-40 text-end text-base font-medium">
+                                            <FormLabel className="w-40 text-end text-base block font-medium">
                                                 Mật khẩu
                                             </FormLabel>
                                             <FormControl className="flex-1">
@@ -264,18 +261,14 @@ export default function UsersForm({
                             render={({ field }) => (
                                 <FormItem className="space-y-1">
                                     <div className="flex items-center gap-3">
-                                        <FormLabel className="w-40 text-end text-base font-medium">
+                                        <FormLabel className="w-40 text-end text-base block font-medium">
                                             Vai trò
                                         </FormLabel>
                                         <div className="flex-1">
-                                            <SelectDropdown
-                                                key={field.value}
-                                                defaultValue={field.value}
-                                                onValueChange={field.onChange}
-                                                placeholder="Chọn vai trò"
-                                                items={USER_ROLE_OPTIONS}
-                                                className="w-full"
+                                            <Input
+                                                value={USER_ROLE_LABEL[field.value as UserRole] ?? "Không xác định"}
                                                 disabled={isEdit}
+                                                readOnly
                                             />
                                         </div>
                                     </div>
@@ -290,21 +283,14 @@ export default function UsersForm({
                             render={({ field }) => (
                                 <FormItem className="space-y-1">
                                     <div className="flex items-center gap-3">
-                                        <FormLabel className="w-40 text-end text-base font-medium">
+                                        <FormLabel className="w-40 text-end text-base block font-medium">
                                             Giới tính
                                         </FormLabel>
                                         <div className="flex-1">
-                                            <SelectDropdown
-                                                defaultValue={field.value}
-                                                onValueChange={field.onChange}
-                                                items={[
-                                                    { label: 'Nam', value: 'MALE' },
-                                                    { label: 'Nữ', value: 'FEMALE' },
-                                                    { label: '', value: 'OTHER' },
-                                                ]}
-                                                placeholder="Chọn giới tính"
-                                                className="w-full"
+                                            <Input
+                                                value={GENDER_LABEL[field.value as any] ?? "Không xác định"}
                                                 disabled={isEdit}
+                                                readOnly
                                             />
                                         </div>
                                     </div>
@@ -319,21 +305,14 @@ export default function UsersForm({
                             render={({ field }) => (
                                 <FormItem className="space-y-1">
                                     <div className="flex items-center gap-3">
-                                        <FormLabel className="w-40 text-end text-base font-medium">
+                                        <FormLabel className="w-40 text-end text-base block font-medium">
                                             Trạng thái
                                         </FormLabel>
                                         <div className="flex-1">
-                                            <SelectDropdown
-                                                key={field.value}
-                                                defaultValue={field.value}
-                                                onValueChange={field.onChange}
-                                                items={[
-                                                    { label: 'Hoạt động', value: 'ACTIVE' },
-                                                    { label: 'Vô hiệu hóa', value: 'INACTIVE' },
-                                                ]}
-                                                placeholder="Chọn trạng thái"
-                                                className="w-full"
+                                            <Input
+                                                value={USER_STATUS_LABEL[field.value as UserStatus] ?? "Không xác định"}
                                                 disabled={isEdit}
+                                                readOnly
                                             />
                                         </div>
                                     </div>
@@ -348,7 +327,7 @@ export default function UsersForm({
                             render={({ field }) => (
                                 <FormItem className="space-y-1">
                                     <div className="flex items-center gap-3">
-                                        <FormLabel className="w-40 text-end text-base font-medium">
+                                        <FormLabel className="w-40 text-end text-base block font-medium">
                                             Ngày sinh
                                         </FormLabel>
                                         <div className="flex-1">
