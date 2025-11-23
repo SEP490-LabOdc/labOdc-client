@@ -4,6 +4,7 @@ import { Badge } from '@/components/ui/badge'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Link } from '@tanstack/react-router'
 import type { Project } from '@/features/projects/data/schema.ts'
+import { getProjectStatusColor, getProjectStatusLabel } from '@/lib/utils.ts'
 
 export const projectsColumns: ColumnDef<Project>[] = [
   {
@@ -92,19 +93,11 @@ export const projectsColumns: ColumnDef<Project>[] = [
     accessorKey: 'status',
     header: 'Trạng thái',
     cell: ({ row }) => {
-      const statusMap = {
-        PLANNING: { label: 'Đang lên kế hoạch', className: 'bg-yellow-100 text-yellow-800' },
-        IN_PROGRESS: { label: 'Đang thực hiện', className: 'bg-blue-100 text-blue-800' },
-        COMPLETED: { label: 'Hoàn thành', className: 'bg-green-100 text-green-800' },
-        ON_HOLD: { label: 'Tạm dừng', className: 'bg-red-100 text-red-800' },
-      }
-
-      const status = row.getValue('status') as keyof typeof statusMap
-      const config = statusMap[status]
+      const status = row.getValue('status') as string
 
       return (
-        <Badge className={`${config.className} rounded-full`}>
-          {config.label}
+        <Badge className={`${getProjectStatusColor(status)} rounded-full`}>
+          {getProjectStatusLabel(status)}
         </Badge>
       )
     },

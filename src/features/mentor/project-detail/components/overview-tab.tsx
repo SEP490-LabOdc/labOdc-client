@@ -17,10 +17,13 @@ import {
   Circle,
   ArrowRight,
 } from 'lucide-react'
-import { getStatusColor, getTagColor } from '@/lib/utils'
+import { getProjectStatusColor, getProjectStatusLabel, getTagColor } from '@/lib/utils'
 import { useNavigate } from '@tanstack/react-router'
 import { AddMemberModal } from '@/features/projects/components'
 import type { ProjectDetail } from '@/hooks/api/projects/types'
+import { toast } from 'sonner'
+import { projectKeys, useUpdateStatusHiring } from '@/hooks/api/projects'
+import { useQueryClient } from '@tanstack/react-query'
 
 interface ProjectOverviewTabProps {
   projectData: ProjectDetail;
@@ -28,8 +31,39 @@ interface ProjectOverviewTabProps {
 
 export const ProjectOverviewTab: React.FC<ProjectOverviewTabProps> = ({ projectData }) => {
   const navigate = useNavigate();
-  const [isHiring, setIsHiring] = useState(false);
+  const [isHiring, setIsHiring] = useState(projectData.isOpenForApplications);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const updateStatusMutation = useUpdateStatusHiring();
+  const queryClient = useQueryClient();
+
+  const handleToggleHiring = async (checked: boolean) => {
+    updateStatusMutation.mutate(
+      {
+        projectId: projectData.id,
+        isHiring: checked,
+      },
+      {
+        onSuccess: async () => {
+          // Chỉ invalidate query khi mutation thành công
+          await queryClient.invalidateQueries({
+            queryKey: projectKeys.byId(projectData.id)
+          });
+
+          setIsHiring(checked);
+          toast.success(
+            checked
+              ? 'Đã mở tuyển dụng cho dự án'
+              : 'Đã đóng tuyển dụng cho dự án'
+          );
+        },
+        onError: (error) => {
+          toast.error('Cập nhật trạng thái thất bại');
+          console.error('Error updating hiring status:', error);
+        }
+      }
+    );
+  };
 
   const handleAddMembers = (selectedUsers: Array<{ id: string; name: string }>) => {
     console.log("Các thành viên được thêm:", selectedUsers);
@@ -56,8 +90,8 @@ export const ProjectOverviewTab: React.FC<ProjectOverviewTabProps> = ({ projectD
                 <span>Trạng thái</span>
               </div>
               <div className="flex-1">
-                <Badge className={`${getStatusColor(projectData.status)} px-3 py-1 rounded text-xs font-medium`}>
-                  {projectData.status}
+                <Badge className={`${getProjectStatusColor(projectData.status)} px-3 py-1 rounded text-xs font-medium`}>
+                  {getProjectStatusLabel(projectData.status)}
                 </Badge>
               </div>
             </div>
@@ -71,7 +105,8 @@ export const ProjectOverviewTab: React.FC<ProjectOverviewTabProps> = ({ projectD
                 <Switch
                   id="hiring-status"
                   checked={isHiring}
-                  onCheckedChange={setIsHiring}
+                  onCheckedChange={handleToggleHiring}
+                  disabled={updateStatusMutation.isPending}
                 />
                 {isHiring ? (
                   <span className="relative flex h-3 w-3">
@@ -97,7 +132,7 @@ export const ProjectOverviewTab: React.FC<ProjectOverviewTabProps> = ({ projectD
                   <Button
                     size="sm"
                     className="bg-blue-600 hover:bg-blue-700 text-white"
-                    onClick={() => navigate({ to: `/projects/${projectData.id}/candidates`})}
+                    onClick={() => navigate({ to: `/mentor/projects/${projectData.id}/candidates`})}
                   >
                     Xem danh sách ứng viên
                     <ArrowRight className="h-4 w-4 ml-2" />

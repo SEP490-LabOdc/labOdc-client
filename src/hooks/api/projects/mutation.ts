@@ -21,7 +21,7 @@ export function useUpdateStatusHiring() {
       isHiring: boolean
     }) => {
       const { data } = await apiRequest.patch(
-        `/api/v1/projects/${payload.projectId}/open-for-applicatiions`,
+        `/api/v1/projects/${payload.projectId}/open-for-applications`,
         { isOpenForApplications: payload.isHiring },
       )
       return data
