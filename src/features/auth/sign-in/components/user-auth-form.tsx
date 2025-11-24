@@ -39,12 +39,12 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
     },
   })
 
-  type UserRole = 'SYSTEM_ADMIN' | 'LAB_ADMIN' | 'SUPERVISOR' | 'COMPANY' | 'USER';
+  type UserRole = 'SYSTEM_ADMIN' | 'LAB_ADMIN' | 'MENTOR' | 'COMPANY' | 'USER';
 
   const roleNavigateRoute: Record<UserRole, string> = {
     SYSTEM_ADMIN: '/admin/',
     LAB_ADMIN: '/lab-admin/',
-    SUPERVISOR: '/',
+    MENTOR: '/mentor',
     COMPANY: '/company-manage/',
     USER: '/'
   };

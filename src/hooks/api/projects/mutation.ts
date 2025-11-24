@@ -44,3 +44,26 @@ export function useCreateProjectApplication() {
     }
   })
 }
+
+export function useApproveProjectApplication() {
+  return useMutation({
+    mutationFn: async (projectApplicationId: string) => {
+      const { data } = await apiRequest.post(
+        `/api/v1/project-applications/${projectApplicationId}/approve`
+      )
+      return data
+    },
+  })
+}
+
+export function useRejectProjectApplication() {
+  return useMutation({
+    mutationFn: async (payload: {projectApplicationId: string, reviewNotes: string}) => {
+      const { data } = await apiRequest.post(
+        `/api/v1/project-applications/${payload.projectApplicationId}/reject`,
+        { reviewNotes: payload.reviewNotes }
+      )
+      return data
+    }
+  })
+}
