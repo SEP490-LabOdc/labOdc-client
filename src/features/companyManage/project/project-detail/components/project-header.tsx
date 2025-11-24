@@ -2,11 +2,13 @@ import React from 'react'
 import { Button } from '@/components/ui/button'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { ChevronLeft, Edit, MoreHorizontal } from 'lucide-react'
+import { useNavigate } from '@tanstack/react-router'
 
 export const ProjectPageHeader: React.FC = () => {
+  const navigate = useNavigate();
   return (
     <div className="bg-white px-6 py-4 border-b flex items-center justify-between">
-      <Button variant="ghost" className="flex items-center gap-2 text-gray-600">
+      <Button variant="ghost" className="flex items-center gap-2 text-gray-600" onClick={() => navigate({ to: '/lab-admin/projects' })}>
         <ChevronLeft className="h-4 w-4" />
         Back to List
       </Button>

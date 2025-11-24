@@ -49,30 +49,35 @@ export const ProjectTasksTab: React.FC<any> = ({ initialData }) => {
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
-          {milestones.map((task: any) => (
-            <div
-              key={task.id}
-              className="flex items-center p-3 border rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors"
-            >
-              <Link
-                to={`/lab-admin/projects/$projectId/$milestoneId`}
-                params={{ milestoneId: task.id, projectId: initialData?.id }}
-                className="font-medium flex-grow text-gray-800 hover:text-orange-600 hover:underline cursor-pointer"
-                title={`Xem chi tiết: ${task.title}`}
+          {milestones.length === 0 ? (
+            <p className="text-center text-gray-500 italic py-4">
+              Chưa có cột mốc nào.
+            </p>
+          ) : (
+            milestones.map((task: any) => (
+              <div
+                key={task.id}
+                className="flex items-center p-3 border rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors"
               >
-                {task.title}
-              </Link>
+                <Link
+                  to={`/lab-admin/projects/$projectId/$milestoneId`}
+                  params={{ milestoneId: task.id, projectId: initialData?.id }}
+                  className="font-medium flex-grow text-gray-800 hover:text-orange-600 hover:underline cursor-pointer"
+                  title={`Xem chi tiết: ${task.title}`}
+                >
+                  {task.title}
+                </Link>
 
-              {/* Status */}
-              <Badge
-                className={`${getStatusColor(
-                  task.status
-                )} rounded-full px-3 py-1 text-xs flex-shrink-0 mr-3`}
-              >
-                {task.status}
-              </Badge>
-            </div>
-          ))}
+                <Badge
+                  className={`${getStatusColor(
+                    task.status
+                  )} rounded-full px-3 py-1 text-xs flex-shrink-0 mr-3`}
+                >
+                  {task.status}
+                </Badge>
+              </div>
+            ))
+          )}
         </div>
       </CardContent>
     </Card>

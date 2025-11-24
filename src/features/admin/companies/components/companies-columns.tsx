@@ -56,10 +56,7 @@ export const companiesColumns: ColumnDef<Company>[] = [
                     const status = row.getValue('status');
                     const id = row.original.id;
 
-                    const linkTo =
-                        status === COMPANY_STATUS.PENDING || status === COMPANY_STATUS.UPDATE_REQUIRED
-                            ? `/admin/companies/approve?id=${id}`
-                            : `/admin/companies/edit?id=${id}`;
+                    const linkTo = `/admin/companies/${id}`
 
                     return (
                         <Link to={linkTo} className="hover:underline">

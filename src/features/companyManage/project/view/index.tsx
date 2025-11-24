@@ -8,6 +8,9 @@ import { ThemeSwitch } from '@/components/theme-switch'
 import { ErrorView } from '@/components/admin/ErrorView'
 import ProjectForm from '../components/project-form'
 import { useGetProjectById } from '@/hooks/api/projects'
+import { PROJECT_STATUS } from '../data/schema'
+import { StatusAlert } from '@/components/admin/StatusAlert'
+import ProjectDetailPage from '../project-detail'
 
 const route = getRouteApi('/_authenticated/company-manage/projects/view/')
 
@@ -65,9 +68,52 @@ export default function ViewProject() {
                     </div>
                 </div>
 
-                <div className="-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-y-0 lg:space-x-12">
-                    <ProjectForm initialData={project} />
-                </div>
+                {project?.status === PROJECT_STATUS.PENDING && (
+                    <StatusAlert
+                        variant="info"
+                        title="Dự án đang chờ phê duyệt"
+                        message="Dự án đang chờ Lab Admin xem xét và phê duyệt. Vui lòng quay lại sau."
+                        className="mb-4"
+                    />
+                )}
+
+                {project?.status === PROJECT_STATUS.UPDATE_REQUIRED && (
+                    <StatusAlert
+                        variant="warning"
+                        title="Cần cập nhật thông tin"
+                        message="Dự án cần được doanh nghiệp cập nhật thông tin theo yêu cầu. Vui lòng chờ doanh nghiệp hoàn tất."
+                        className="mb-4"
+                    />
+                )}
+
+                {project?.status === PROJECT_STATUS.REJECTED && (
+                    <StatusAlert
+                        variant="error"
+                        title="Dự án đã bị từ chối"
+                        message="Dự án này đã bị từ chối và không thể chỉnh sửa thêm."
+                        className="mb-4"
+                    />
+                )}
+                {project?.status === PROJECT_STATUS.PLANNING && (
+                    <StatusAlert
+                        variant="info"
+                        title="Đang xây dựng kế hoạch dự án"
+                        message="Mentor đang trong quá trình hoàn thiện kế hoạch thực hiện dự án."
+                    />
+                )}
+                {
+                    (project.status == PROJECT_STATUS.PENDING || project.status == PROJECT_STATUS.UPDATE_REQUIRED) && (
+                        <div className="-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-y-0 lg:space-x-12">
+                            <ProjectForm initialData={project} />
+                        </div>
+
+                    )
+                }
+                {
+                    (project.status == PROJECT_STATUS.PLANNING) && (
+                        <ProjectDetailPage initialData={project} />
+                    )
+                }
             </Main>
         </>
     )
