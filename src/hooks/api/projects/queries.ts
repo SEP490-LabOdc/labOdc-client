@@ -107,3 +107,13 @@ export function useGetMyProjects(status: string) {
     }
   })
 }
+
+export function useGetProjectDocuments(status: string) {
+  return useQuery({
+    queryKey: projectKeys.getMyProjects(status),
+    queryFn: async () => {
+      const { data } = await apiRequest.get(`/api/v1/project-documents`);
+      return data;
+    }
+  })
+}

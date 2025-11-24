@@ -8,6 +8,7 @@ import { ApplyProjectModal, ProjectDetailModal, ProjectCard } from "./components
 import { useGetProjectHiring } from '@/hooks/api/projects'
 import { useAuthStore } from '@/stores/auth-store.ts'
 import { useNavigate } from '@tanstack/react-router'
+import { toast } from 'sonner'
 
 export default function ProjectListPage() {
   const [searchTerm, setSearchTerm] = useState("")
@@ -46,6 +47,7 @@ export default function ProjectListPage() {
     if (!isAuthenticated()) {
       // Store the project ID to redirect back after login
       sessionStorage.setItem("pendingApplication", project.projectId.toString())
+      toast.info("Vui lòng đăng nhập để ứng tuyển dự án")
       await navigate({ to: "/sign-in" })
       return
     }
@@ -165,11 +167,13 @@ export default function ProjectListPage() {
         onClose={() => setShowDetailModal(false)}
       />
 
-      <ApplyProjectModal
-        project={selectedProject}
-        isOpen={showApplyModal}
-        onClose={() => setShowApplyModal(false)}
-      />
+      {isAuthenticated() && (
+        <ApplyProjectModal
+          project={selectedProject}
+          isOpen={showApplyModal}
+          onClose={() => setShowApplyModal(false)}
+        />
+      )}
     </div>
   )
 }
