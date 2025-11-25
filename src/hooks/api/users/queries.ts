@@ -2,7 +2,6 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
 import apiRequest from '@/config/request';
 import { userKeys } from './query-keys';
-import { projectKeys } from '@/hooks/api/projects'
 
 export type UpdateProfilePayload = {
     fullName: string

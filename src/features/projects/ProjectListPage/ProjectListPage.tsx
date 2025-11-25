@@ -87,25 +87,13 @@ export default function ProjectListPage() {
           <p className="text-xl mb-8 text-slate-200 max-w-2xl mx-auto text-pretty">
             Khám phá các dự án thú vị, ứng tuyển với kỹ năng của bạn và phát triển sự nghiệp cùng các công ty hàng đầu.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" className="bg-[#e9c46a] text-[#264653] hover:bg-[#f4a261] font-semibold">
-              Tạo Hồ Sơ Talent
-            </Button>
-            <Button
-              size="lg"
-              variant="outline"
-              className="border-white text-white hover:bg-white hover:text-[#264653] bg-transparent"
-            >
-              Xem Dự Án Phù Hợp
-            </Button>
-          </div>
         </div>
       </section>
 
       <section className="py-8 bg-white border-b">
         <div className="container mx-auto px-4">
           <div className="flex flex-col lg:flex-row gap-4 items-center">
-            <div className="relative flex-1 max-w-md">
+            <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
               <Input
                 placeholder="Tìm kiếm dự án theo từ khóa, kỹ năng..."

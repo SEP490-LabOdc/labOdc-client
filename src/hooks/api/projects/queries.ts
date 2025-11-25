@@ -124,12 +124,13 @@ export function useGetProjectDocuments(status: string) {
   })
 }
 
-export function useGetProjectApplicationStatus(projectId: string) {
+export function useGetProjectApplicationStatus(projectId: string | undefined) {
   return useQuery({
     queryKey: projectKeys.getProjectApplicationStatus(projectId),
     queryFn: async () => {
       const { data } = await apiRequest.get(`/api/v1/projects/${projectId}/application-status`);
       return data;
-    }
+    },
+    enabled: !!projectId,
   })
 }

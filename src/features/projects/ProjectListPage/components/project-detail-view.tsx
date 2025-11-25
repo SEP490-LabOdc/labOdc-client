@@ -1,7 +1,10 @@
+// typescript
 import { Badge } from "@/components/ui/badge.tsx";
 import { type Project } from '@/hooks/api/projects/types.ts';
 import { Clock, Users } from 'lucide-react';
 import { Button } from "@/components/ui/button.tsx";
+import { useGetProjectApplicationStatus } from '@/hooks/api/projects/queries.ts';
+import { format } from 'date-fns';
 
 interface ProjectDetailViewProps {
   project: Project | null
@@ -9,6 +12,8 @@ interface ProjectDetailViewProps {
 }
 
 export function ProjectDetailView({ project, onApply }: ProjectDetailViewProps) {
+  const { data: applicationStatus, isLoading: isAppLoading } = useGetProjectApplicationStatus(project?.projectId);
+
   if (!project) {
     return (
       <div className="p-10 text-center text-gray-500 bg-white rounded-lg shadow-md sticky top-6 h-[calc(100vh-80px)]">
@@ -19,25 +24,40 @@ export function ProjectDetailView({ project, onApply }: ProjectDetailViewProps) 
     );
   }
 
+  const canApply = applicationStatus?.data?.canApply ?? true;
+  const applicationInfo = applicationStatus?.data ?? null;
+
   const projectDuration = Math.ceil(
     (new Date(project.endDate).getTime() - new Date(project.startDate).getTime()) / (1000 * 60 * 60 * 24 * 30)
   );
 
   return (
     <div className="bg-white p-6 rounded-lg shadow-md sticky top-6 overflow-y-auto h-[calc(100vh-80px)]">
-
-      {/* HEADER VÀ NÚT ỨNG TUYỂN (VỊ TRÍ MỚI) */}
       <div className="border-b pb-4 mb-4">
         <h2 className="text-[#264653] text-3xl font-bold">{project.projectName}</h2>
         <p className="text-gray-500 mt-1 mb-3">Chi tiết thông tin dự án</p>
 
-        {/* NÚT ỨNG TUYỂN ĐÃ ĐƯA LÊN ĐẦU */}
         <Button
           className="w-full bg-red-600 hover:bg-red-700 text-lg py-3 font-bold mt-2"
           onClick={() => onApply(project)}
+          disabled={!canApply || isAppLoading}
         >
-          Ứng Tuyển Dự Án Này
+          {isAppLoading ? 'Đang kiểm tra...' : (!canApply ?  'Đã ứng tuyển' : 'Ứng Tuyển Dự Án Này')}
         </Button>
+
+        {applicationInfo && (
+          <div className="mt-3 text-sm text-gray-700">
+            <div>Trạng thái: <span className="font-medium">{applicationInfo.status ?? 'Đã nộp'}</span></div>
+            {applicationInfo.submittedAt && (
+              <div>Thời gian nộp: <span className="font-medium">{format(new Date(applicationInfo.submittedAt), 'dd/MM/yyyy HH:mm')}</span></div>
+            )}
+            {applicationInfo.fileLink && (
+              <div>
+                Tệp đính kèm: <a className="text-blue-600 underline" href={applicationInfo.fileLink} target="_blank" rel="noreferrer">{applicationInfo.fileName ?? 'Tải xuống'}</a>
+              </div>
+            )}
+          </div>
+        )}
       </div>
 
       {/* BODY CONTENT */}
