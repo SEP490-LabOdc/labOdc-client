@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { projectKeys } from './query-keys.ts'
 import apiRequest from '@/config/request';
 
@@ -57,6 +57,7 @@ export function useGetProjects() {
 }
 
 export function useLabAdminApproveProject() {
+  const queryClient = useQueryClient();;
   return useMutation({
     mutationFn: async (payload: {
       projectId: string
@@ -64,6 +65,11 @@ export function useLabAdminApproveProject() {
     }) => {
       const res = await apiRequest.post('/api/v1/project-members', payload)
       return res.data
+    },
+    onSuccess: (_, payload) => {
+      queryClient.invalidateQueries({
+        queryKey: projectKeys.byId(payload.projectId),
+      });
     },
   })
 }

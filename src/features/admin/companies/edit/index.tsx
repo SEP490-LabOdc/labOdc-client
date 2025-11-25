@@ -7,43 +7,8 @@ import { Search } from '@/components/search'
 import { ThemeSwitch } from '@/components/theme-switch'
 import { CompaniesProvider } from '../components/companies-provider'
 import CompanyForm from '../components/companies-forms'
-import { useGetCompanyById } from '@/hooks/api/companies/queries'
-import { ErrorView } from '@/components/admin/ErrorView'
 
-
-const route = getRouteApi('/_authenticated/admin/companies/edit/')
-
-export default function EditCompany() {
-    const search = route.useSearch()
-    const companyId = search.id;
-    // const navigate = route.useNavigate()
-    const {
-        data: companyData,
-        isLoading,
-        isError,
-        error,
-    } = useGetCompanyById(companyId)
-
-    if (isError) {
-        return (
-            <ErrorView
-                title="Lỗi tải dữ liệu"
-                description="Không thể tải thông tin công ty cần chỉnh sửa."
-                details={error?.message}
-            />
-        )
-    }
-
-    if (isLoading) {
-        return (
-            <div className="flex h-screen flex-col items-center justify-center">
-                <p className="text-muted-foreground">Đang tải thông tin công ty...</p>
-            </div>
-        )
-    }
-
-    const company = companyData?.data;
-
+export default function EditCompany(company: any) {
     return (
         <CompaniesProvider>
             <>

@@ -27,10 +27,9 @@ import {
 import { cn, getStatusColor, getTagColor } from '@/lib/utils'
 import { PROJECT_STATUS_LABEL } from '../../data/schema';
 import { callTypes } from '../../data/data';
+import { Link } from '@tanstack/react-router';
 
 export const ProjectOverviewTab: React.FC<any> = ({ initialData }) => {
-  const [isHiring, setIsHiring] = useState(false); // Bạn có thể đổi thành true để test
-
   return (
     <Card>
       <CardContent className="p-6 space-y-6">
@@ -79,13 +78,13 @@ export const ProjectOverviewTab: React.FC<any> = ({ initialData }) => {
               <span>Tuyển dụng</span>
             </div>
             <div className="flex-1 flex items-center gap-3">
-              <Switch
+              {/* <Switch
                 id="hiring-status"
                 checked={isHiring}
                 onCheckedChange={setIsHiring}
-              />
+              /> */}
 
-              {isHiring ? (
+              {initialData?.isOpenForApplications ? (
                 <span className="relative flex h-3 w-3">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
@@ -98,31 +97,28 @@ export const ProjectOverviewTab: React.FC<any> = ({ initialData }) => {
 
               <Label
                 htmlFor="hiring-status"
-                className={`text-sm font-bold ${isHiring ? 'text-green-700' : 'text-red-700'}`}
+                className={`text-sm font-bold ${initialData?.isOpenForApplications ? 'text-green-700' : 'text-red-700'}`}
               >
-                {isHiring ? "Dự án đang tuyển" : "Dự án đã đóng tuyển"}
+                {initialData?.isOpenForApplications ? "Dự án đang tuyển dụng" : "Dự án đã đóng tuyển dụng"}
               </Label>
             </div>
           </div>
 
           {/* === 2. THÊM NÚT ĐIỀU HƯỚNG KHI HIRING === */}
-          {isHiring && (
+          {/* {initialData?.isOpenForApplications && (
             <div className="flex items-start">
-              {/* Giữ lề trái 160px (w-40) để căn chỉnh thẳng hàng */}
               <div className="w-40 flex-shrink-0" />
               <div className="flex-1">
                 <Button
                   size="sm"
                   className="bg-blue-600 hover:bg-blue-700 text-white"
-                // Thêm onClick để điều hướng (ví dụ dùng react-router)
-                // onClick={() => navigate(`/projects/${projectData.id}/candidates`)}
                 >
                   Xem danh sách ứng viên
                   <ArrowRight className="h-4 w-4 ml-2" />
                 </Button>
               </div>
             </div>
-          )}
+          )} */}
           {/* === HẾT PHẦN CẬP NHẬT === */}
 
           {/* Hàng Team Lead */}
@@ -134,11 +130,13 @@ export const ProjectOverviewTab: React.FC<any> = ({ initialData }) => {
             <div className="flex-1 flex flex-wrap items-center gap-2">
               {initialData?.mentors.map((member: any) => (
                 <div className="inline-flex items-center gap-2 bg-gray-100 rounded-full px-2 py-1">
-                  <Avatar className="h-6 w-6">
-                    <AvatarImage src={member.avatar} />
-                    <AvatarFallback>{member.name[0]}</AvatarFallback>
-                  </Avatar>
-                  <span className="font-medium text-sm text-gray-800">{member.name}</span>
+                  <Link className='flex items-center gap-2' to='/lab-admin/users/$userId' params={{ userId: member.id }}>
+                    <Avatar className="h-6 w-6">
+                      <AvatarImage src={member.avatar} />
+                      <AvatarFallback>{member.name[0]}</AvatarFallback>
+                    </Avatar>
+                    <span className="font-medium text-sm text-gray-800">{member.name}</span>
+                  </Link>
                 </div>
               ))}
               {

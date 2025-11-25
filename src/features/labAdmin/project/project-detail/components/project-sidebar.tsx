@@ -72,14 +72,19 @@ export const ProjectSidebar: React.FC<any> = ({ initialData }) => {
           <div className="flex justify-between items-center">
             <span className="text-gray-600">Người tạo:</span>
             <div className="flex items-center gap-2">
-              <Link className='flex items-center gap-2' to='/401'>
-                <Avatar className="h-6 w-6">
-                  <AvatarImage src={initialData?.createdByAvatar} />
-                  <AvatarFallback>{initialData?.createdByName[0]}</AvatarFallback>
-                </Avatar>
-                <span className="font-medium text-gray-800">{initialData?.createdByName}</span>
-              </Link>
-
+              {
+                initialData?.createdByName && (
+                  <div className="inline-flex items-center gap-2 bg-gray-100 rounded-full px-2 py-1">
+                    <Link className='flex items-center gap-2' to='/lab-admin/users/$userId' params={{ userId: initialData?.createdBy }}>
+                      <Avatar className="h-6 w-6">
+                        <AvatarImage src={initialData?.createdByAvatar} />
+                        <AvatarFallback>{initialData?.createdByName[0] || ''}</AvatarFallback>
+                      </Avatar>
+                      <span className="font-medium text-gray-800">{initialData?.createdByName}</span>
+                    </Link>
+                  </div>
+                )
+              }
             </div>
           </div>
           <div className="flex justify-between items-center">

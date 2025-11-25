@@ -273,7 +273,7 @@ export default function CompanyApprovingForm({
                                                     className="flex items-start gap-3 border-b pb-2 border-muted/30"
                                                 >
                                                     <Checkbox
-                                                        className='mt-1 border-white'
+                                                        className='mt-1 border'
                                                         checked={verification[item.id]}
                                                         disabled={isUpdateLocked}
                                                         onCheckedChange={(checked) =>

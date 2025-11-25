@@ -17,9 +17,7 @@ import { SelectDropdown } from '@/components/select-dropdown'
 import { useNavigate } from '@tanstack/react-router'
 import { DatePicker } from '@/components/date-picker'
 import { toast } from 'sonner'
-import { USER_ROLE_OPTIONS, USER_STATUS } from '../data/schema'
-import { ConfirmDialog } from '@/components/confirm-dialog'
-import { Loader2 } from 'lucide-react'
+import { USER_ROLE, USER_ROLE_OPTIONS, USER_STATUS } from '../data/schema'
 import { useCreateUser, useUpdateUserRole, useUpdateUserStatus } from '@/hooks/api/users/queries'
 
 // ✅ Schema cập nhật
@@ -47,7 +45,7 @@ export default function UsersForm({
 }): JSX.Element {
     const navigate = useNavigate()
     const isEdit = mode === 'edit'
-    const { mutateAsync: updateUserRole } = useUpdateUserRole();
+    // const { mutateAsync: updateUserRole } = useUpdateUserRole();
     const { mutateAsync: updateUserStatus } = useUpdateUserStatus();
     const { mutateAsync: createUser } = useCreateUser();
 
@@ -57,8 +55,8 @@ export default function UsersForm({
             fullName: initialData?.fullName ?? '',
             email: initialData?.email ?? '',
             phone: initialData?.phone ?? '',
-            role: initialData?.role ?? '',
-            gender: initialData?.gender ?? 'OTHER',
+            role: initialData?.role ?? USER_ROLE.SUPERVISOR,
+            gender: initialData?.gender ?? 'MALE',
             birthDate: initialData?.birthDate
                 ? new Date(initialData.birthDate)
                 : undefined,
@@ -91,36 +89,36 @@ export default function UsersForm({
         }
     }
 
-    const [isRoleModalOpen, setRoleModalOpen] = useState(false)
-    const [selectedRole, setSelectedRole] = useState(initialData?.role ?? "")
-    const [loadingAction, setLoadingAction] = useState<"UPDATE_ROLE" | null>(null)
+    // const [isRoleModalOpen, setRoleModalOpen] = useState(false)
+    // const [selectedRole, setSelectedRole] = useState(initialData?.role ?? "")
+    // const [loadingAction, setLoadingAction] = useState<"UPDATE_ROLE" | null>(null)
 
-    const handleChangeRole = async () => {
-        if (!initialData?.id || !selectedRole) return
+    // const handleChangeRole = async () => {
+    //     if (!initialData?.id || !selectedRole) return
 
-        setLoadingAction("UPDATE_ROLE")
+    //     setLoadingAction("UPDATE_ROLE")
 
-        const updatePromise = updateUserRole({
-            id: initialData.id,
-            roleName: selectedRole,
-        })
+    //     const updatePromise = updateUserRole({
+    //         id: initialData.id,
+    //         roleName: selectedRole,
+    //     })
 
-        toast.promise(updatePromise, {
-            loading: "Đang cập nhật vai trò...",
-            success: "Cập nhật vai trò thành công!",
-            error: "Cập nhật vai trò thất bại!",
-        })
+    //     toast.promise(updatePromise, {
+    //         loading: "Đang cập nhật vai trò...",
+    //         success: "Cập nhật vai trò thành công!",
+    //         error: "Cập nhật vai trò thất bại!",
+    //     })
 
-        try {
-            await updatePromise
-            form.setValue("role", selectedRole);
-            setRoleModalOpen(false);
-        } catch (error) {
-            console.error("❌ Update role failed:", error)
-        } finally {
-            setLoadingAction(null)
-        }
-    }
+    //     try {
+    //         await updatePromise
+    //         form.setValue("role", selectedRole);
+    //         setRoleModalOpen(false);
+    //     } catch (error) {
+    //         console.error("❌ Update role failed:", error)
+    //     } finally {
+    //         setLoadingAction(null)
+    //     }
+    // }
 
     const handleToggleStatus = async () => {
         if (!initialData?.id) return
@@ -150,6 +148,14 @@ export default function UsersForm({
         }
     }
 
+    const ALLOWED_ROLES = ["LAB_ADMIN", "SUPERVISOR", "USER"] as const
+    type AllowedRole = typeof ALLOWED_ROLES[number]
+
+    const FILTERED_ROLE_OPTIONS = USER_ROLE_OPTIONS.filter(
+        (r): r is { label: string; value: AllowedRole } =>
+            ALLOWED_ROLES.includes(r.value as AllowedRole)
+    )
+
     return (
         <>
             <Form {...form}>
@@ -165,7 +171,7 @@ export default function UsersForm({
                             render={({ field }) => (
                                 <FormItem className="space-y-1">
                                     <div className="flex items-center gap-3">
-                                        <FormLabel className="w-40 text-end text-base font-medium">
+                                        <FormLabel className="w-40 text-end text-base block font-medium">
                                             Họ và tên
                                         </FormLabel>
                                         <FormControl className="flex-1">
@@ -183,7 +189,7 @@ export default function UsersForm({
                             render={({ field }) => (
                                 <FormItem className="space-y-1">
                                     <div className="flex items-center gap-3">
-                                        <FormLabel className="w-40 text-end text-base font-medium">
+                                        <FormLabel className="w-40 text-end text-base block font-medium">
                                             Email
                                         </FormLabel>
                                         <FormControl className="flex-1">
@@ -201,7 +207,7 @@ export default function UsersForm({
                             render={({ field }) => (
                                 <FormItem className="space-y-1">
                                     <div className="flex items-center gap-3">
-                                        <FormLabel className="w-40 text-end text-base font-medium">
+                                        <FormLabel className="w-40 text-end text-base block font-medium">
                                             Số điện thoại
                                         </FormLabel>
                                         <FormControl className="flex-1">
@@ -219,7 +225,7 @@ export default function UsersForm({
                             render={({ field }) => (
                                 <FormItem className="space-y-1">
                                     <div className="flex items-center gap-3">
-                                        <FormLabel className="w-40 text-end text-base font-medium">
+                                        <FormLabel className="w-40 text-end text-base block font-medium">
                                             Địa chỉ
                                         </FormLabel>
                                         <FormControl className="flex-1">
@@ -238,7 +244,7 @@ export default function UsersForm({
                                 render={({ field }) => (
                                     <FormItem className="space-y-1">
                                         <div className="flex items-center gap-3">
-                                            <FormLabel className="w-40 text-end text-base font-medium">
+                                            <FormLabel className="w-40 text-end text-base block font-medium">
                                                 Mật khẩu
                                             </FormLabel>
                                             <FormControl className="flex-1">
@@ -264,21 +270,26 @@ export default function UsersForm({
                             render={({ field }) => (
                                 <FormItem className="space-y-1">
                                     <div className="flex items-center gap-3">
-                                        <FormLabel className="w-40 text-end text-base font-medium">
+                                        <FormLabel className="w-40 text-end text-base block font-medium">
                                             Vai trò
                                         </FormLabel>
+
                                         <div className="flex-1">
                                             <SelectDropdown
                                                 key={field.value}
                                                 defaultValue={field.value}
                                                 onValueChange={field.onChange}
                                                 placeholder="Chọn vai trò"
-                                                items={USER_ROLE_OPTIONS}
+                                                items={FILTERED_ROLE_OPTIONS.map(r => ({
+                                                    ...r,
+                                                    label2: null,
+                                                }))}
                                                 className="w-full"
                                                 disabled={isEdit}
                                             />
                                         </div>
                                     </div>
+
                                     <FormMessage className="ml-40" />
                                 </FormItem>
                             )}
@@ -290,7 +301,7 @@ export default function UsersForm({
                             render={({ field }) => (
                                 <FormItem className="space-y-1">
                                     <div className="flex items-center gap-3">
-                                        <FormLabel className="w-40 text-end text-base font-medium">
+                                        <FormLabel className="w-40 text-end text-base block font-medium">
                                             Giới tính
                                         </FormLabel>
                                         <div className="flex-1">
@@ -298,9 +309,9 @@ export default function UsersForm({
                                                 defaultValue={field.value}
                                                 onValueChange={field.onChange}
                                                 items={[
-                                                    { label: 'Nam', value: 'MALE' },
-                                                    { label: 'Nữ', value: 'FEMALE' },
-                                                    { label: '', value: 'OTHER' },
+                                                    { label: 'Nam', value: 'MALE', label2: null },
+                                                    { label: 'Nữ', value: 'FEMALE', label2: null },
+                                                    { label: 'Khác', value: 'OTHER', label2: null },
                                                 ]}
                                                 placeholder="Chọn giới tính"
                                                 className="w-full"
@@ -319,7 +330,7 @@ export default function UsersForm({
                             render={({ field }) => (
                                 <FormItem className="space-y-1">
                                     <div className="flex items-center gap-3">
-                                        <FormLabel className="w-40 text-end text-base font-medium">
+                                        <FormLabel className="w-40 text-end text-base block font-medium">
                                             Trạng thái
                                         </FormLabel>
                                         <div className="flex-1">
@@ -328,8 +339,8 @@ export default function UsersForm({
                                                 defaultValue={field.value}
                                                 onValueChange={field.onChange}
                                                 items={[
-                                                    { label: 'Hoạt động', value: 'ACTIVE' },
-                                                    { label: 'Vô hiệu hóa', value: 'INACTIVE' },
+                                                    { label: 'Hoạt động', value: USER_STATUS.ACTIVE, label2: null },
+                                                    { label: 'Ngừng hoạt động', value: USER_STATUS.INACTIVE, label2: null },
                                                 ]}
                                                 placeholder="Chọn trạng thái"
                                                 className="w-full"
@@ -348,7 +359,7 @@ export default function UsersForm({
                             render={({ field }) => (
                                 <FormItem className="space-y-1">
                                     <div className="flex items-center gap-3">
-                                        <FormLabel className="w-40 text-end text-base font-medium">
+                                        <FormLabel className="w-40 text-end text-base block font-medium">
                                             Ngày sinh
                                         </FormLabel>
                                         <div className="flex-1">
@@ -370,59 +381,6 @@ export default function UsersForm({
                             )}
                         />
                     </div>
-                    <ConfirmDialog
-                        open={isRoleModalOpen}
-                        onOpenChange={setRoleModalOpen}
-                        title="Đổi vai trò người dùng"
-                        desc={
-                            <div className="space-y-3">
-                                <p className="text-sm text-muted-foreground">
-                                    Chọn vai trò mới cho người dùng này. Sau khi xác nhận, hệ thống sẽ cập nhật ngay.
-                                </p>
-                            </div>
-                        }
-                        cancelBtnText="Hủy"
-                        confirmText={
-                            loadingAction === "UPDATE_ROLE" ? (
-                                <>
-                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                    Đang cập nhật...
-                                </>
-                            ) : (
-                                "Xác nhận"
-                            )
-                        }
-                        handleConfirm={handleChangeRole}
-                        disabled={!selectedRole}
-                    >
-                        <FormField
-                            control={form.control}
-                            name="role"
-                            render={({ field }) => (
-                                <FormItem className="space-y-1">
-                                    <div className="flex items-center gap-3">
-                                        <FormLabel className="w-40 text-end text-base font-medium">
-                                            Vai trò
-                                        </FormLabel>
-                                        <div className="flex-1">
-                                            <SelectDropdown
-                                                defaultValue={field.value}
-                                                onValueChange={setSelectedRole}
-                                                placeholder="Chọn vai trò"
-                                                items={USER_ROLE_OPTIONS}
-                                                className="w-full"
-                                            />
-                                        </div>
-                                    </div>
-                                    <FormMessage className="ml-40" />
-                                </FormItem>
-                            )}
-                        />
-                        <p className="text-xs text-muted-foreground italic mt-2">
-                            Vai trò hiện tại:{" "}
-                            <span className="font-medium text-foreground">{initialData?.role || "Chưa có"}</span>
-                        </p>
-                    </ConfirmDialog>
                 </form>
             </Form>
 
@@ -430,13 +388,6 @@ export default function UsersForm({
             <div className="mt-3 pt-3 flex gap-3">
                 {isEdit && (
                     <>
-                        <Button
-                            type="button"
-                            onClick={() => setRoleModalOpen(true)}
-                        >
-                            Đổi vai trò
-                        </Button>
-
                         {initialData?.status === USER_STATUS.ACTIVE ? (
                             <Button
                                 type="button"

@@ -335,26 +335,13 @@ export const companySidebarData: SidebarData = {
           title: 'Quản lý dự án',
           icon: IconClipboardList,
           items: [
-            {
-              title: 'Tất cả',
-              url: '/company-manage/projects',
-              icon: IconList,
-            },
-            {
-              title: 'Chờ duyệt',
-              url: '/company-manage/projects?status=["' + PROJECT_STATUS.PENDING + '"]',
-              icon: IconClockHour4,
-            },
-            // {
-            //   title: 'Đang thực hiện',
-            //   url: '/company-manage/projects?status=["' + PROJECT_STATUS.IN_PROGRESS + '"]',
-            //   icon: IconProgress,
-            // },
-            // {
-            //   title: 'Hoàn thành',
-            //   url: '/company-manage/projects?status=["' + PROJECT_STATUS.COMPLETED + '"]',
-            //   icon: IconCircleCheckFilled,
-            // },
+            { title: 'Tất cả', url: '/company-manage/projects', icon: IconList },
+            { title: 'Chờ duyệt', url: '/company-manage/projects?status=["' + PROJECT_STATUS.PENDING + '"]', icon: IconClockHour4 },
+            { title: 'Công ty cập nhật', url: '/company-manage/projects?status=["' + PROJECT_STATUS.UPDATE_REQUIRED + '"]', icon: IconEdit },
+            { title: 'Xây dựng kế hoạch', url: '/company-manage/projects?status=["' + PROJECT_STATUS.PLANNING + '"]', icon: IconPencilCog },
+            { title: 'Bị từ chối', url: '/company-manage/projects?status=["' + PROJECT_STATUS.REJECTED + '"]', icon: IconCircleXFilled },
+            { title: 'Đang thực hiện', url: '/company-manage/projects?status=["' + PROJECT_STATUS.ON_GOING + '"]', icon: IconProgress },
+            { title: 'Hoàn thành', url: '/company-manage/projects?status=["' + PROJECT_STATUS.COMPLETE + '"]', icon: IconCircleCheckFilled },
           ],
         }
       ]
