@@ -71,8 +71,7 @@ import { Route as AuthenticatedCompanyAdminProjectsCreateIndexRouteImport } from
 import { Route as AuthenticatedCompanyAdminProjectsProjectIdIndexRouteImport } from './routes/_authenticated/company-admin/projects/$projectId/index'
 import { Route as AuthenticatedAdminUsersInfoIndexRouteImport } from './routes/_authenticated/admin/users/info/index'
 import { Route as AuthenticatedAdminUsersCreateIndexRouteImport } from './routes/_authenticated/admin/users/create/index'
-import { Route as AuthenticatedAdminCompaniesEditIndexRouteImport } from './routes/_authenticated/admin/companies/edit/index'
-import { Route as AuthenticatedAdminCompaniesApproveIndexRouteImport } from './routes/_authenticated/admin/companies/approve/index'
+import { Route as AuthenticatedAdminCompaniesCompanyIdIndexRouteImport } from './routes/_authenticated/admin/companies/$companyId/index'
 import { Route as AuthenticatedTalentMyProjectsDetailMilestoneDetailIndexRouteImport } from './routes/_authenticated/talent/my-projects/detail/milestone-detail/index'
 import { Route as AuthenticatedTalentMyProjectsDetailCandidatesIndexRouteImport } from './routes/_authenticated/talent/my-projects/detail/candidates/index'
 import { Route as AuthenticatedMentorProjectsProjectIdCandidatesIndexRouteImport } from './routes/_authenticated/mentor/projects/$projectId/candidates/index'
@@ -425,16 +424,10 @@ const AuthenticatedAdminUsersCreateIndexRoute =
     path: '/users/create/',
     getParentRoute: () => AuthenticatedAdminRouteRoute,
   } as any)
-const AuthenticatedAdminCompaniesEditIndexRoute =
-  AuthenticatedAdminCompaniesEditIndexRouteImport.update({
-    id: '/companies/edit/',
-    path: '/companies/edit/',
-    getParentRoute: () => AuthenticatedAdminRouteRoute,
-  } as any)
-const AuthenticatedAdminCompaniesApproveIndexRoute =
-  AuthenticatedAdminCompaniesApproveIndexRouteImport.update({
-    id: '/companies/approve/',
-    path: '/companies/approve/',
+const AuthenticatedAdminCompaniesCompanyIdIndexRoute =
+  AuthenticatedAdminCompaniesCompanyIdIndexRouteImport.update({
+    id: '/companies/$companyId/',
+    path: '/companies/$companyId/',
     getParentRoute: () => AuthenticatedAdminRouteRoute,
   } as any)
 const AuthenticatedTalentMyProjectsDetailMilestoneDetailIndexRoute =
@@ -517,8 +510,7 @@ export interface FileRoutesByFullPath {
   '/lab-admin/users': typeof AuthenticatedLabAdminUsersIndexRoute
   '/mentor/projects': typeof AuthenticatedMentorProjectsIndexRoute
   '/talent/my-projects': typeof AuthenticatedTalentMyProjectsIndexRoute
-  '/admin/companies/approve': typeof AuthenticatedAdminCompaniesApproveIndexRoute
-  '/admin/companies/edit': typeof AuthenticatedAdminCompaniesEditIndexRoute
+  '/admin/companies/$companyId': typeof AuthenticatedAdminCompaniesCompanyIdIndexRoute
   '/admin/users/create': typeof AuthenticatedAdminUsersCreateIndexRoute
   '/admin/users/info': typeof AuthenticatedAdminUsersInfoIndexRoute
   '/company-admin/projects/$projectId': typeof AuthenticatedCompanyAdminProjectsProjectIdIndexRoute
@@ -578,8 +570,7 @@ export interface FileRoutesByTo {
   '/lab-admin/users': typeof AuthenticatedLabAdminUsersIndexRoute
   '/mentor/projects': typeof AuthenticatedMentorProjectsIndexRoute
   '/talent/my-projects': typeof AuthenticatedTalentMyProjectsIndexRoute
-  '/admin/companies/approve': typeof AuthenticatedAdminCompaniesApproveIndexRoute
-  '/admin/companies/edit': typeof AuthenticatedAdminCompaniesEditIndexRoute
+  '/admin/companies/$companyId': typeof AuthenticatedAdminCompaniesCompanyIdIndexRoute
   '/admin/users/create': typeof AuthenticatedAdminUsersCreateIndexRoute
   '/admin/users/info': typeof AuthenticatedAdminUsersInfoIndexRoute
   '/company-admin/projects/$projectId': typeof AuthenticatedCompanyAdminProjectsProjectIdIndexRoute
@@ -650,8 +641,7 @@ export interface FileRoutesById {
   '/_authenticated/lab-admin/users/': typeof AuthenticatedLabAdminUsersIndexRoute
   '/_authenticated/mentor/projects/': typeof AuthenticatedMentorProjectsIndexRoute
   '/_authenticated/talent/my-projects/': typeof AuthenticatedTalentMyProjectsIndexRoute
-  '/_authenticated/admin/companies/approve/': typeof AuthenticatedAdminCompaniesApproveIndexRoute
-  '/_authenticated/admin/companies/edit/': typeof AuthenticatedAdminCompaniesEditIndexRoute
+  '/_authenticated/admin/companies/$companyId/': typeof AuthenticatedAdminCompaniesCompanyIdIndexRoute
   '/_authenticated/admin/users/create/': typeof AuthenticatedAdminUsersCreateIndexRoute
   '/_authenticated/admin/users/info/': typeof AuthenticatedAdminUsersInfoIndexRoute
   '/_authenticated/company-admin/projects/$projectId/': typeof AuthenticatedCompanyAdminProjectsProjectIdIndexRoute
@@ -721,8 +711,7 @@ export interface FileRouteTypes {
     | '/lab-admin/users'
     | '/mentor/projects'
     | '/talent/my-projects'
-    | '/admin/companies/approve'
-    | '/admin/companies/edit'
+    | '/admin/companies/$companyId'
     | '/admin/users/create'
     | '/admin/users/info'
     | '/company-admin/projects/$projectId'
@@ -782,8 +771,7 @@ export interface FileRouteTypes {
     | '/lab-admin/users'
     | '/mentor/projects'
     | '/talent/my-projects'
-    | '/admin/companies/approve'
-    | '/admin/companies/edit'
+    | '/admin/companies/$companyId'
     | '/admin/users/create'
     | '/admin/users/info'
     | '/company-admin/projects/$projectId'
@@ -853,8 +841,7 @@ export interface FileRouteTypes {
     | '/_authenticated/lab-admin/users/'
     | '/_authenticated/mentor/projects/'
     | '/_authenticated/talent/my-projects/'
-    | '/_authenticated/admin/companies/approve/'
-    | '/_authenticated/admin/companies/edit/'
+    | '/_authenticated/admin/companies/$companyId/'
     | '/_authenticated/admin/users/create/'
     | '/_authenticated/admin/users/info/'
     | '/_authenticated/company-admin/projects/$projectId/'
@@ -1332,18 +1319,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminUsersCreateIndexRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
     }
-    '/_authenticated/admin/companies/edit/': {
-      id: '/_authenticated/admin/companies/edit/'
-      path: '/companies/edit'
-      fullPath: '/admin/companies/edit'
-      preLoaderRoute: typeof AuthenticatedAdminCompaniesEditIndexRouteImport
-      parentRoute: typeof AuthenticatedAdminRouteRoute
-    }
-    '/_authenticated/admin/companies/approve/': {
-      id: '/_authenticated/admin/companies/approve/'
-      path: '/companies/approve'
-      fullPath: '/admin/companies/approve'
-      preLoaderRoute: typeof AuthenticatedAdminCompaniesApproveIndexRouteImport
+    '/_authenticated/admin/companies/$companyId/': {
+      id: '/_authenticated/admin/companies/$companyId/'
+      path: '/companies/$companyId'
+      fullPath: '/admin/companies/$companyId'
+      preLoaderRoute: typeof AuthenticatedAdminCompaniesCompanyIdIndexRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
     }
     '/_authenticated/talent/my-projects/detail/milestone-detail/': {
@@ -1473,8 +1453,7 @@ interface AuthenticatedAdminRouteRouteChildren {
   AuthenticatedAdminCompaniesIndexRoute: typeof AuthenticatedAdminCompaniesIndexRoute
   AuthenticatedAdminTasksIndexRoute: typeof AuthenticatedAdminTasksIndexRoute
   AuthenticatedAdminUsersIndexRoute: typeof AuthenticatedAdminUsersIndexRoute
-  AuthenticatedAdminCompaniesApproveIndexRoute: typeof AuthenticatedAdminCompaniesApproveIndexRoute
-  AuthenticatedAdminCompaniesEditIndexRoute: typeof AuthenticatedAdminCompaniesEditIndexRoute
+  AuthenticatedAdminCompaniesCompanyIdIndexRoute: typeof AuthenticatedAdminCompaniesCompanyIdIndexRoute
   AuthenticatedAdminUsersCreateIndexRoute: typeof AuthenticatedAdminUsersCreateIndexRoute
   AuthenticatedAdminUsersInfoIndexRoute: typeof AuthenticatedAdminUsersInfoIndexRoute
 }
@@ -1488,10 +1467,8 @@ const AuthenticatedAdminRouteRouteChildren: AuthenticatedAdminRouteRouteChildren
       AuthenticatedAdminCompaniesIndexRoute,
     AuthenticatedAdminTasksIndexRoute: AuthenticatedAdminTasksIndexRoute,
     AuthenticatedAdminUsersIndexRoute: AuthenticatedAdminUsersIndexRoute,
-    AuthenticatedAdminCompaniesApproveIndexRoute:
-      AuthenticatedAdminCompaniesApproveIndexRoute,
-    AuthenticatedAdminCompaniesEditIndexRoute:
-      AuthenticatedAdminCompaniesEditIndexRoute,
+    AuthenticatedAdminCompaniesCompanyIdIndexRoute:
+      AuthenticatedAdminCompaniesCompanyIdIndexRoute,
     AuthenticatedAdminUsersCreateIndexRoute:
       AuthenticatedAdminUsersCreateIndexRoute,
     AuthenticatedAdminUsersInfoIndexRoute:
