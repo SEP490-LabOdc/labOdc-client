@@ -1,10 +1,10 @@
-import { useState } from "react"
-import { Search, Filter } from "lucide-react"
+import React, { useState } from "react"
+import { Search, Filter } from 'lucide-react'
 import { Button } from "@/components/ui/button.tsx"
 import { Input } from "@/components/ui/input.tsx"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select.tsx"
 import { type Project } from '@/hooks/api/projects/types.ts'
-import { ApplyProjectModal, ProjectDetailModal, ProjectCard } from "./components"
+import { ApplyProjectModal, ProjectCard, ProjectDetailView } from './components'
 import { useGetProjectHiring } from '@/hooks/api/projects'
 import { useAuthStore } from '@/stores/auth-store.ts'
 import { useNavigate } from '@tanstack/react-router'
@@ -12,40 +12,55 @@ import { toast } from 'sonner'
 
 export default function ProjectListPage() {
   const [searchTerm, setSearchTerm] = useState("")
-  const [selectedDuration, setSelectedDuration] = useState("all")
+  const [selectedDuration, setSelectedDuration] = useState("all") // Biến cũ
+  const [selectedDisplayPriority, setSelectedDisplayPriority] = useState("newest");
   const [selectedProject, setSelectedProject] = useState<Project | null>(null)
-  const [showDetailModal, setShowDetailModal] = useState(false)
   const [showApplyModal, setShowApplyModal] = useState(false)
 
   const navigate = useNavigate()
   const { data: projects, isPending } = useGetProjectHiring()
   const { isAuthenticated } = useAuthStore()
 
-  const filteredProjects = projects?.data?.data ? projects.data.data.filter((project: Project) => {
-    const matchesSearch =
-      project.projectName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      project.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      project.skills.some((skill) => skill.name.toLowerCase().includes(searchTerm.toLowerCase()))
+  const filteredAndSortedProjects = projects?.data?.data ? projects.data.data
+    .filter((project: Project) => {
+      const matchesSearch = project.projectName.toLowerCase().includes(searchTerm.toLowerCase())
 
-    let matchesDuration = true
-    if (selectedDuration !== "all") {
-      const duration = Math.ceil((new Date(project.endDate).getTime() - new Date(project.startDate).getTime()) / (1000 * 60 * 60 * 24 * 30))
-      if (selectedDuration === "short") matchesDuration = duration < 3
-      else if (selectedDuration === "medium") matchesDuration = duration >= 3 && duration <= 6
-      else if (selectedDuration === "long") matchesDuration = duration > 6
+      let matchesDuration = true
+      if (selectedDuration !== "all") {
+        const duration = Math.ceil((new Date(project.endDate).getTime() - new Date(project.startDate).getTime()) / (1000 * 60 * 60 * 24 * 30))
+        if (selectedDuration === "short") matchesDuration = duration < 3
+        else if (selectedDuration === "medium") matchesDuration = duration >= 3 && duration <= 6
+        else if (selectedDuration === "long") matchesDuration = duration > 6
+      }
+
+      return matchesSearch && matchesDuration
+    })
+    .sort((a: Project, b: Project) => {
+      if (selectedDisplayPriority === "newest") {
+        return new Date(b.startDate).getTime() - new Date(a.startDate).getTime();
+      }
+      if (selectedDisplayPriority === "urgent") {
+        return a.currentApplicants - b.currentApplicants;
+      }
+      if (selectedDisplayPriority === "high_salary") {
+        return b.skills.length - a.skills.length;
+      }
+      return 0;
+    }) : []
+
+  React.useEffect(() => {
+    if (!selectedProject && filteredAndSortedProjects.length > 0) {
+      setSelectedProject(filteredAndSortedProjects[0]);
     }
+  }, [projects, filteredAndSortedProjects]);
 
-    return matchesSearch && matchesDuration
-  }) : []
 
-  const handleViewDetails = (project: Project) => {
-    setSelectedProject(project)
-    setShowDetailModal(true)
-  }
+  const handleSelectProject = (project: Project) => {
+    setSelectedProject(project);
+  };
 
   const handleApplyProject = async (project: Project) => {
     if (!isAuthenticated()) {
-      // Store the project ID to redirect back after login
       sessionStorage.setItem("pendingApplication", project.projectId.toString())
       toast.info("Vui lòng đăng nhập để ứng tuyển dự án")
       await navigate({ to: "/sign-in" })
@@ -65,8 +80,7 @@ export default function ProjectListPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
-      {/* Hero Section */}
+    <div className="min-h-screen bg-white">
       <section className="bg-[#264653] text-white py-20">
         <div className="container mx-auto px-4 text-center">
           <h1 className="text-5xl font-bold mb-6 text-balance">Tìm Dự Án Phù Hợp Với Bạn</h1>
@@ -88,7 +102,6 @@ export default function ProjectListPage() {
         </div>
       </section>
 
-      {/* Search & Filters */}
       <section className="py-8 bg-white border-b">
         <div className="container mx-auto px-4">
           <div className="flex flex-col lg:flex-row gap-4 items-center">
@@ -122,51 +135,45 @@ export default function ProjectListPage() {
         </div>
       </section>
 
-      {/* Project Listings */}
-      <section className="py-12">
-        <div className="container mx-auto px-4">
-          <div className="flex justify-between items-center mb-8">
-            <div>
-              <h2 className="text-3xl font-bold text-[#264653]">Dự Án Có Sẵn</h2>
-              <p className="text-gray-600 mt-2">Tìm thấy {filteredProjects?.length || 0} dự án phù hợp</p>
+      <section className="py-8 bg-gray-50 min-h-[calc(100vh-200px)]">
+        <div className="container mx-auto text-lg font-medium text-[#264653] mb-6">
+          Tìm thấy <span className="font-bold">{filteredAndSortedProjects?.length || 0}</span> việc làm phù hợp.
+        </div>
+        <div className="container mx-auto px-4 grid grid-cols-1 lg:grid-cols-5 gap-8">
+          <div className="lg:col-span-2">
+            <div className="grid grid-cols-1 gap-4">
+              {filteredAndSortedProjects?.map((project: Project) => (
+                <ProjectCard
+                  key={project.projectId}
+                  project={project}
+                  onViewDetails={() => { /* Not used */ }}
+                  onApply={handleApplyProject}
+                  onSelect={handleSelectProject}
+                  isSelected={selectedProject?.projectId === project.projectId}
+                />
+              ))}
             </div>
+
+            {(filteredAndSortedProjects.length === 0 && !isPending) && (
+              <div className="text-center py-12 bg-white rounded-lg shadow-sm">
+                <div className="text-gray-500 text-lg mb-4">Không tìm thấy dự án nào.</div>
+                <Button variant="outline" onClick={() => { setSearchTerm(""); setSelectedDisplayPriority("newest"); }}>
+                  Xóa Bộ Lọc
+                </Button>
+              </div>
+            )}
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredProjects?.map((project: Project) => (
-              <ProjectCard
-                key={project.projectId}
-                project={project}
-                onViewDetails={handleViewDetails}
-                onApply={handleApplyProject}
-              />
-            ))}
+          <div className="lg:col-span-3">
+            <ProjectDetailView
+              project={selectedProject}
+              onApply={handleApplyProject}
+            />
           </div>
-
-          {(!projects?.data || projects.data.length === 0) && (
-            <div className="text-center py-12">
-              <div className="text-gray-500 text-lg mb-4">Không tìm thấy dự án phù hợp</div>
-              <p className="text-gray-400 mb-6">Thử thay đổi bộ lọc hoặc từ khóa tìm kiếm</p>
-              <Button
-                variant="outline"
-                onClick={() => {
-                  setSearchTerm("")
-                  setSelectedDuration("all")
-                }}
-              >
-                Xóa Bộ Lọc
-              </Button>
-            </div>
-          )}
         </div>
       </section>
 
-      <ProjectDetailModal
-        project={selectedProject}
-        isOpen={showDetailModal}
-        onClose={() => setShowDetailModal(false)}
-      />
-
+      {/* Modals giữ nguyên */}
       {isAuthenticated() && (
         <ApplyProjectModal
           project={selectedProject}
