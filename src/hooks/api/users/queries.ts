@@ -160,3 +160,23 @@ export const useGetMentorByProjectId = (projectId: string | null) =>
         },
         enabled: !!projectId,
     });
+
+
+export interface UpdatePasswordPayload {
+    id: string;
+    payload: {
+        currentPassword: string;
+        newPassword: string;
+        confirmPassword: string;
+        passwordMatch: true;
+    };
+}
+
+export const useUpdatePassword = () => {
+    return useMutation({
+        mutationFn: async ({ id, payload }: UpdatePasswordPayload) => {
+            const res = await apiRequest.put(`/api/v1/users/${id}/password`, payload);
+            return res.data;
+        },
+    });
+};

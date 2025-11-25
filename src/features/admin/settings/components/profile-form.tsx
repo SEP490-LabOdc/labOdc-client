@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { email, z } from 'zod'
+import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 
@@ -20,6 +20,7 @@ import { useGetUserById, useUpdateProfile } from '@/hooks/api/users'
 import { toast } from 'sonner'
 import type { UpdateProfilePayload } from '@/hooks/api/users/queries'
 import { DatePicker } from '@/components/date-picker'
+import { ImageUpload } from '@/components/admin/ImageUpload'
 
 // ============================
 //  SCHEMA
@@ -30,7 +31,7 @@ const profileSchema = z.object({
     gender: z.enum(['MALE', 'FEMALE', 'OTHER']),
     birthDate: z.date().optional(),
     address: z.string().optional(),
-    avatarUrl: z.string().url('URL ảnh không hợp lệ.').optional(),
+    avatarUrl: z.string('Cần cập nhật ảnh đại diện.').optional(),
     email: z.string().optional()
 })
 
@@ -223,12 +224,17 @@ export function ProfileForm() {
                     {/* Avatar */}
                     <FormField
                         control={form.control}
-                        name="avatarUrl"
+                        name='avatarUrl'
                         render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Ảnh đại diện (URL)</FormLabel>
+                            <FormItem className="md:col-span-2">
+                                <FormLabel className="text-sm font-medium text-[#264653]">
+                                    Ảnh đại diện
+                                </FormLabel>
                                 <FormControl>
-                                    <Input placeholder="https://..." {...field} />
+                                    <ImageUpload
+                                        value={field.value}
+                                        onChange={(url) => field.onChange(url)}
+                                    />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>

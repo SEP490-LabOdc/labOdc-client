@@ -136,6 +136,9 @@ export function ImageUpload({
                         {isUploading ? "Đang tải lên..." : placeholder}
                     </p>
                     <p className="text-xs text-gray-400 mt-1">Kéo & thả ảnh vào đây</p>
+                    <p className="text-xs text-gray-400 mt-1">
+                        Hỗ trợ: JPG, JPEG, PNG, WEBP • Tối đa {maxSize}MB
+                    </p>
                 </div>
             ) : (
                 <div
