@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
 import apiRequest from '@/config/request';
 import { userKeys } from './query-keys';
+import { projectKeys } from '@/hooks/api/projects'
 
 export type UpdateProfilePayload = {
     fullName: string
@@ -160,3 +161,13 @@ export const useGetMentorByProjectId = (projectId: string | null) =>
         },
         enabled: !!projectId,
     });
+
+export function useGetMySubmittedCv() {
+  return useQuery({
+    queryKey: userKeys.mySubmittedCv,
+    queryFn: async () => {
+      const { data } = await apiRequest.get(`/api/v1/project-applications/my-submitted-cvs`);
+      return data;
+    }
+  })
+}

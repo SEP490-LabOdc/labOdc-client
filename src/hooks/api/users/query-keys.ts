@@ -5,5 +5,6 @@ export const userKeys = {
         "project-members",
         "available-mentors",
         projectId
-    ]
+    ],
+    mySubmittedCv: ['my-submitted-cv'] as const,
 }
