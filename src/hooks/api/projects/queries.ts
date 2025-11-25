@@ -2,14 +2,17 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { projectKeys } from './query-keys.ts'
 import apiRequest from '@/config/request';
 
-export const useGetProjectHiring = () =>
+export const useGetProjectHiring = (page: number = 1, pageSize: number = 3) =>
   useQuery({
-    queryKey: projectKeys.getProjectHiring,
+    queryKey: [...projectKeys.getProjectHiring, page, pageSize],
     queryFn: async () => {
-      const { data } = await apiRequest.get('/api/v1/projects/hiring');
+      const { data } = await apiRequest.get('/api/v1/projects/hiring', {
+        params: { page, pageSize }
+      });
       return data;
     },
   });
+
 
 export function useGetMyCompanyProjects() {
   return useQuery({
