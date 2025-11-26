@@ -2,14 +2,17 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { projectKeys } from './query-keys.ts'
 import apiRequest from '@/config/request';
 
-export const useGetProjectHiring = () =>
+export const useGetProjectHiring = (page: number = 1, pageSize: number = 3) =>
   useQuery({
-    queryKey: projectKeys.getProjectHiring,
+    queryKey: [...projectKeys.getProjectHiring, page, pageSize],
     queryFn: async () => {
-      const { data } = await apiRequest.get('/api/v1/projects/hiring');
+      const { data } = await apiRequest.get('/api/v1/projects/hiring', {
+        params: { page, pageSize }
+      });
       return data;
     },
   });
+
 
 export function useGetMyCompanyProjects() {
   return useQuery({
@@ -98,7 +101,7 @@ export function useGetProjectApplicants(projectId: string) {
   return useQuery({
     queryKey: projectKeys.getProjectApplicants(projectId),
     queryFn: async () => {
-      const { data } = await apiRequest.get(`/api/v1/projects/{projectId}/applicants`);
+      const { data } = await apiRequest.get(`/api/v1/projects/${projectId}/applicants`);
       return data;
     }
   })
@@ -111,5 +114,38 @@ export function useGetMyProjects(status: string) {
       const { data } = await apiRequest.get(`/api/v1/projects/my-projects?status=${status}`);
       return data;
     }
+  })
+}
+
+export function useGetProjectDocuments(status: string) {
+  return useQuery({
+    queryKey: projectKeys.getMyProjects(status),
+    queryFn: async () => {
+      const { data } = await apiRequest.get(`/api/v1/project-documents`);
+      return data;
+    }
+  })
+}
+
+export function useGetProjectApplicationStatus(projectId: string | undefined) {
+  return useQuery({
+    queryKey: projectKeys.getProjectApplicationStatus(projectId),
+    queryFn: async () => {
+      const { data } = await apiRequest.get(`/api/v1/projects/${projectId}/application-status`);
+      return data;
+    },
+    enabled: !!projectId,
+  })
+}
+
+
+export function useGetProjectMembers(projectId: string) {
+  return useQuery({
+    queryKey: projectKeys.getProjectMembers(projectId),
+    queryFn: async () => {
+      const { data } = await apiRequest.get(`/api/v1/projects/${projectId}/project-members`);
+      return data;
+    },
+    enabled: !!projectId,
   })
 }

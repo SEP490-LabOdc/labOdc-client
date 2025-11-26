@@ -10,7 +10,7 @@ import {
 const ProjectDetailPage: React.FC = () => {
   const { projectId } = useParams({ strict: false })
   const { data: projectData, isLoading: isLoadingProject, error: projectError } = useGetProjectById(projectId as string)
-  const { data: milestonesData, isLoading: isLoadingMilestones } = useGetProjectMilestones(projectId as string)
+  const { data: milestonesData, isLoading: isLoadingMilestones, refetch: refetchMilestones } = useGetProjectMilestones(projectId as string)
 
   if (isLoadingProject) {
     return (
@@ -63,7 +63,11 @@ const ProjectDetailPage: React.FC = () => {
                   <p className="mt-4 text-gray-600">Đang tải milestones...</p>
                 </div>
               ) : (
-                <MilestonesTab milestones={milestonesData.data} />
+                <MilestonesTab
+                  milestones={milestonesData.data}
+                  projectId={projectId as string}
+                  onRefresh={() => refetchMilestones()}
+                />
               )}
             </TabsContent>
 

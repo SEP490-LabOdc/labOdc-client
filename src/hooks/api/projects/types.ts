@@ -36,6 +36,7 @@ export interface ProjectDetail {
   title: string
   description: string
   status: string
+  isOpenForApplications: boolean
   startDate: string
   endDate: string
   budget: number

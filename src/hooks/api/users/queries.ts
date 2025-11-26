@@ -161,7 +161,6 @@ export const useGetMentorByProjectId = (projectId: string | null) =>
         enabled: !!projectId,
     });
 
-
 export interface UpdatePasswordPayload {
     id: string;
     payload: {
@@ -180,3 +179,14 @@ export const useUpdatePassword = () => {
         },
     });
 };
+
+export function useGetMySubmittedCv() {
+  return useQuery({
+    queryKey: userKeys.mySubmittedCv,
+    queryFn: async () => {
+      const { data } = await apiRequest.get(`/api/v1/project-applications/my-submitted-cvs`);
+      return data;
+    }
+  })
+}
+

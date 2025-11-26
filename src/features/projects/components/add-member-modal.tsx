@@ -15,40 +15,43 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Badge } from '@/components/ui/badge'
 import { Search, X, Users } from 'lucide-react'
-import { Label } from '@/components/ui/label.tsx'
+import { Label } from '@/components/ui/label'
+import { getLastNameForAvatar } from '@/helpers/stringUtils'
 
 interface SystemUser {
-  id: string;
-  name: string;
-  avatar: string;
-  email: string;
+  projectMemberId: string
+  fullName: string
+  avatarUrl: string
+  email: string
+  roleName: string
 }
-
-const mockAvailableUsers: SystemUser[] = [
-  { id: 'user-1', name: 'Hoàng Văn An', avatar: 'https://api.dicebear.com/7.x/adventurer/svg?seed=An', email: 'an@example.com' },
-  { id: 'user-2', name: 'Trần Thị Bích', avatar: 'https://api.dicebear.com/7.x/adventurer/svg?seed=Bich', email: 'bich@example.com' },
-  { id: 'user-3', name: 'Lê Văn Cường', avatar: 'https://api.dicebear.com/7.x/adventurer/svg?seed=Cuong', email: 'cuong@example.com' },
-  { id: 'user-4', name: 'Phạm Thị Dung', avatar: 'https://api.dicebear.com/7.x/adventurer/svg?seed=Dung', email: 'dung@example.com' },
-  { id: 'user-5', name: 'Nguyễn Văn Giang', avatar: 'https://api.dicebear.com/7.x/adventurer/svg?seed=Giang', email: 'giang@example.com' },
-  { id: 'user-6', name: 'Vũ Thị Hà', avatar: 'https://api.dicebear.com/7.x/adventurer/svg?seed=Ha', email: 'ha@example.com' },
-]
 
 interface AddMemberModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onAddMembers: (selectedUsers: SystemUser[]) => void;
+  isOpen: boolean
+  onClose: () => void
+  onAddMembers: (selectedUserIds: string[]) => void
+  projectMembers?: SystemUser[]
 }
 
-export function AddMemberModal({ isOpen, onClose, onAddMembers }: AddMemberModalProps) {
+export function AddMemberModal({
+                                 isOpen,
+                                 onClose,
+                                 onAddMembers,
+                                 projectMembers = []
+                               }: AddMemberModalProps) {
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedUsers, setSelectedUsers] = useState<SystemUser[]>([])
 
-  const filteredUsers = mockAvailableUsers.filter(user =>
-    user.name.toLowerCase().includes(searchQuery.toLowerCase())
+  // Lọc chỉ lấy các thành viên có roleName là TALENT
+  const talentMembers = projectMembers.filter(user => user.roleName === 'TALENT')
+
+  const filteredUsers = talentMembers.filter(user =>
+    user.fullName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    user.email.toLowerCase().includes(searchQuery.toLowerCase())
   )
 
   const isUserSelected = (user: SystemUser) => {
-    return selectedUsers.some(selected => selected.id === user.id)
+    return selectedUsers.some(selected => selected.projectMemberId === user.projectMemberId)
   }
 
   const handleSelectUser = (user: SystemUser, isChecked: boolean) => {
@@ -57,14 +60,20 @@ export function AddMemberModal({ isOpen, onClose, onAddMembers }: AddMemberModal
         setSelectedUsers([...selectedUsers, user])
       }
     } else {
-      setSelectedUsers(selectedUsers.filter(selected => selected.id !== user.id))
+      setSelectedUsers(selectedUsers.filter(selected => selected.projectMemberId !== user.projectMemberId))
     }
   }
 
   const handleSubmit = () => {
-    onAddMembers(selectedUsers)
+    onAddMembers(selectedUsers.map(user => user.projectMemberId))
     onClose()
     setSelectedUsers([])
+    setSearchQuery('')
+  }
+
+  const getAvatarUrl = (fullName: string) => {
+    const lastName = getLastNameForAvatar(fullName)
+    return `https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(lastName)}`
   }
 
   return (
@@ -73,10 +82,10 @@ export function AddMemberModal({ isOpen, onClose, onAddMembers }: AddMemberModal
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-xl">
             <Users className="h-5 w-5" />
-            Thêm thành viên
+            Thêm thành viên vào Milestone
           </DialogTitle>
           <DialogDescription>
-            Tìm kiếm và chọn nhiều thành viên để thêm vào dự án.
+            Chọn Talent từ danh sách dự án để thêm vào milestone này.
           </DialogDescription>
         </DialogHeader>
 
@@ -97,17 +106,19 @@ export function AddMemberModal({ isOpen, onClose, onAddMembers }: AddMemberModal
               <div className="flex flex-wrap gap-2 p-3 border rounded-md bg-gray-50 min-h-[40px]">
                 {selectedUsers.map(user => (
                   <Badge
-                    key={user.id}
+                    key={user.projectMemberId}
                     variant="secondary"
                     className="flex items-center gap-2 p-1 pr-2"
                   >
                     <Avatar className="h-5 w-5">
-                      <AvatarImage src={user.avatar} />
-                      <AvatarFallback>{user.name[0]}</AvatarFallback>
+                      <AvatarImage src={user.avatarUrl} />
+                      <AvatarFallback>
+                        <img src={getAvatarUrl(user.fullName)} alt={user.fullName} />
+                      </AvatarFallback>
                     </Avatar>
-                    <span className="font-medium">{user.name}</span>
+                    <span className="font-medium">{user.fullName}</span>
                     <button
-                      onClick={() => handleSelectUser(user, false)} // Bấm X để bỏ chọn
+                      onClick={() => handleSelectUser(user, false)}
                       className="rounded-full hover:bg-gray-300"
                     >
                       <X className="h-3 w-3" />
@@ -118,29 +129,31 @@ export function AddMemberModal({ isOpen, onClose, onAddMembers }: AddMemberModal
             </div>
           )}
 
-          <Label className="text-sm font-medium">Kết quả tìm kiếm</Label>
+          <Label className="text-sm font-medium">
+            Talent trong dự án ({talentMembers.length})
+          </Label>
           <ScrollArea className="h-[250px] border rounded-md">
             <div className="p-4 space-y-3">
               {filteredUsers.length > 0 ? (
                 filteredUsers.map(user => (
-                  <div key={user.id} className="flex items-center gap-3">
+                  <div key={user.projectMemberId} className="flex items-center gap-3">
                     <Checkbox
-                      id={`user-${user.id}`}
-                      // Kiểm tra xem người dùng này đã được chọn chưa
+                      id={`user-${user.projectMemberId}`}
                       checked={isUserSelected(user)}
-                      // Hàm xử lý khi check/uncheck
                       onCheckedChange={(isChecked) => handleSelectUser(user, !!isChecked)}
                     />
                     <Label
-                      htmlFor={`user-${user.id}`}
+                      htmlFor={`user-${user.projectMemberId}`}
                       className="flex-1 flex items-center gap-3 cursor-pointer"
                     >
                       <Avatar className="h-8 w-8">
-                        <AvatarImage src={user.avatar} />
-                        <AvatarFallback>{user.name[0]}</AvatarFallback>
+                        <AvatarImage src={user.avatarUrl} />
+                        <AvatarFallback>
+                          <img src={getAvatarUrl(user.fullName)} alt={user.fullName} />
+                        </AvatarFallback>
                       </Avatar>
                       <div>
-                        <div className="font-semibold">{user.name}</div>
+                        <div className="font-semibold">{user.fullName}</div>
                         <div className="text-xs text-gray-500">{user.email}</div>
                       </div>
                     </Label>
@@ -148,7 +161,9 @@ export function AddMemberModal({ isOpen, onClose, onAddMembers }: AddMemberModal
                 ))
               ) : (
                 <p className="text-sm text-gray-500 text-center py-4">
-                  Không tìm thấy thành viên nào.
+                  {searchQuery
+                    ? 'Không tìm thấy Talent nào.'
+                    : 'Dự án chưa có Talent nào.'}
                 </p>
               )}
             </div>
@@ -161,7 +176,7 @@ export function AddMemberModal({ isOpen, onClose, onAddMembers }: AddMemberModal
           </DialogClose>
           <Button
             onClick={handleSubmit}
-            disabled={selectedUsers.length === 0} // Vô hiệu hóa nếu chưa chọn ai
+            disabled={selectedUsers.length === 0}
           >
             Thêm {selectedUsers.length > 0 ? `${selectedUsers.length} thành viên` : ''}
           </Button>
