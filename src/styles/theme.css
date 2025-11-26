@@ -1,4 +1,12 @@
 :root {
+  /* Add fonts here */
+  --font-inter: "Inter", sans-serif;
+  --font-manrope: "Manrope", sans-serif;
+  --font-system: system-ui, sans-serif;
+  --font-poppins: "Poppins", sans-serif;
+  --font-roboto: "Roboto", sans-serif;
+  --font-jetbrains: "JetBrains Mono", sans-serif;
+
   /* Added Lab ODC Platform brand colors */
   --color-brand-dark-teal: #264653;
   --color-brand-green-teal: #2a9d8f;
@@ -13,19 +21,23 @@
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
-  --primary: #264653; /* Dark Teal */
+  --primary: #264653;
+  /* Dark Teal */
   --primary-foreground: oklch(0.985 0 0);
-  --secondary: #2a9d8f; /* Green Teal */
+  --secondary: #2a9d8f;
+  /* Green Teal */
   --secondary-foreground: oklch(0.985 0 0);
   --muted: oklch(0.97 0 0);
   --muted-foreground: oklch(0.556 0 0);
-  --accent: #e9c46a; /* Warm Yellow */
+  --accent: #e9c46a;
+  /* Warm Yellow */
   --accent-foreground: oklch(0.205 0 0);
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(0.577 0.245 27.325);
   --border: oklch(0.922 0 0);
   --input: oklch(0.922 0 0);
-  --ring: #2a9d8f; /* Green Teal for focus rings */
+  --ring: #2a9d8f;
+  /* Green Teal for focus rings */
   --chart-1: #264653;
   --chart-2: #2a9d8f;
   --chart-3: #e9c46a;
@@ -49,7 +61,8 @@
   --card-foreground: oklch(0.985 0 0);
   --popover: oklch(0.145 0 0);
   --popover-foreground: oklch(0.985 0 0);
-  --primary: #2a9d8f; /* Lighter brand color for dark mode */
+  --primary: #2a9d8f;
+  /* Lighter brand color for dark mode */
   --primary-foreground: oklch(0.205 0 0);
   --secondary: #264653;
   --secondary-foreground: oklch(0.985 0 0);
