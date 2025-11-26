@@ -137,3 +137,15 @@ export function useGetProjectApplicationStatus(projectId: string | undefined) {
     enabled: !!projectId,
   })
 }
+
+
+export function useGetProjectMembers(projectId: string) {
+  return useQuery({
+    queryKey: projectKeys.getProjectMembers(projectId),
+    queryFn: async () => {
+      const { data } = await apiRequest.get(`/api/v1/projects/${projectId}/project-members`);
+      return data;
+    },
+    enabled: !!projectId,
+  })
+}

@@ -138,3 +138,10 @@ export function getAvatarFallback(fullName: string | null | undefined): string {
 
   return (firstInitial + lastInitial).toUpperCase();
 }
+
+// src/helpers/stringUtils.ts (thêm function này)
+export const getLastNameForAvatar = (fullName: string): string => {
+  const parts = fullName.trim().split(' ')
+  return parts[parts.length - 1] || fullName
+}
+

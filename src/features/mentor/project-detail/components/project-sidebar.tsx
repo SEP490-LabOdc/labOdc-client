@@ -13,30 +13,18 @@ interface ProjectSidebarProps {
 }
 
 export const ProjectSidebar: React.FC<ProjectSidebarProps> = ({ projectData }) => {
-
-  const calculateDaysRemaining = (endDate: string): string => {
-    const end = new Date(endDate)
-    const today = new Date()
-    const diffTime = end.getTime() - today.getTime()
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
-
-    if (diffDays < 0) return 'Quá hạn'
-    if (diffDays === 0) return 'Hôm nay'
-    return `${diffDays} ngày`
-  }
-
   return (
     <Card className="w-full">
       <CardHeader>
-        <CardTitle className="text-lg font-semibold">Project Details</CardTitle>
+        <CardTitle className="text-lg font-semibold">Thông tin dự án</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="space-y-3 text-sm">
           {[
-            { label: 'Client', value: projectData.companyName },
-            { label: 'Project Total Cost', value: `$${projectData.budget}` },
-            { label: 'Created on', value: new Date(projectData.createdAt).toLocaleDateString('vi-VN') },
-            { label: 'Started on', value: new Date(projectData.startDate).toLocaleDateString('vi-VN') },
+            { label: 'Khách hàng', value: projectData.companyName },
+            { label: 'Tổng chi phí dự án', value: `$${projectData.budget}` },
+            { label: 'Ngày tạo', value: new Date(projectData.createdAt).toLocaleDateString('vi-VN') },
+            { label: 'Ngày bắt đầu', value: new Date(projectData.startDate).toLocaleDateString('vi-VN') },
           ].map((item, index) => (
             <div key={index} className="flex justify-between items-center">
               <span className="text-gray-600">{item.label}:</span>
@@ -45,19 +33,16 @@ export const ProjectSidebar: React.FC<ProjectSidebarProps> = ({ projectData }) =
           ))}
 
           <div className="flex justify-between items-center">
-            <span className="text-gray-600">Due Date:</span>
+            <span className="text-gray-600">Ngày kết thúc:</span>
             <div className="flex items-center gap-2">
               <span className="font-medium text-gray-800">
                 {new Date(projectData.endDate).toLocaleDateString('vi-VN')}
               </span>
-              <Badge className="bg-red-100 text-red-800 text-xs px-2 py-0.5 rounded-full">
-                {calculateDaysRemaining(projectData.endDate)}
-              </Badge>
             </div>
           </div>
 
           <div className="flex justify-between items-center">
-            <span className="text-gray-600">Created by:</span>
+            <span className="text-gray-600">Người tạo:</span>
             <div className="flex items-center gap-2">
               <Avatar className="h-6 w-6">
                 <AvatarImage src={projectData.createdByAvatar} />
@@ -68,17 +53,17 @@ export const ProjectSidebar: React.FC<ProjectSidebarProps> = ({ projectData }) =
           </div>
 
           <div className="flex justify-between items-center">
-            <span className="text-gray-600">Priority:</span>
+            <span className="text-gray-600">Độ ưu tiên:</span>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Badge className={`${getStatusColor('Medium')} cursor-pointer flex items-center gap-1`}>
-                  Medium <ChevronDown className="h-3 w-3" />
+                  Trung bình <ChevronDown className="h-3 w-3" />
                 </Badge>
               </DropdownMenuTrigger>
               <DropdownMenuContent>
-                <DropdownMenuItem>High</DropdownMenuItem>
-                <DropdownMenuItem>Medium</DropdownMenuItem>
-                <DropdownMenuItem>Low</DropdownMenuItem>
+                <DropdownMenuItem>Cao</DropdownMenuItem>
+                <DropdownMenuItem>Trung bình</DropdownMenuItem>
+                <DropdownMenuItem>Thấp</DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
