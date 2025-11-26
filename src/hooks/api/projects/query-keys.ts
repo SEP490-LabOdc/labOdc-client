@@ -11,5 +11,6 @@ export const projectKeys = {
   getProjectApplicants: (projectId: string) => ['project-applicants', { projectId }] as const,
   getMyProjects: (status: string) => ['my-projects', { status }] as const,
   getProjectApplicationStatus: (projectId: string | undefined) => ['project-application-status', { projectId }] as const,
+  getProjectMembers: (projectId: string) => ['project-members', { projectId }] as const,
 };
 

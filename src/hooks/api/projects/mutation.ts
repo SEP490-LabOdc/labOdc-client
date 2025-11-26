@@ -85,3 +85,18 @@ export function useCreateMilestone() {
     }
   })
 }
+
+export function useAddTalentToMilestone() {
+  return useMutation({
+    mutationFn: async (payload: {
+      milestoneId: string
+      projectMemberIds: string[]
+    }) => {
+      const { data } = await apiRequest.post(
+        `/api/v1/milestone-members/talent`,
+        payload
+      )
+      return data
+    }
+  })
+}

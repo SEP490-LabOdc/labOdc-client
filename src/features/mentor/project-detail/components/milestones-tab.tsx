@@ -3,13 +3,17 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Progress } from '@/components/ui/progress'
-import { CalendarDays, CheckCircle2, Circle, Clock, Plus, Users } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { CalendarDays, CheckCircle2, Circle, Clock, Plus, UserPlus, Users } from 'lucide-react'
 import { getStatusColor } from '@/lib/utils'
 import { getAvatarFallback } from '@/helpers/stringUtils'
 import { useNavigate } from '@tanstack/react-router'
 import type { Milestone } from '@/hooks/api/projects/types'
-import { CreateMilestoneModal } from '@/features/mentor/project-detail/components/create-milestone-modal.tsx'
-import { Button } from '@/components/ui/button.tsx'
+import { CreateMilestoneModal } from './create-milestone-modal'
+import { AddMemberModal } from '@/features/projects/components/add-member-modal'
+import { useAddTalentToMilestone } from '@/hooks/api/projects/mutation'
+import { useGetProjectMembers } from '@/hooks/api/projects/queries'
+import { toast } from 'sonner'
 
 interface MilestonesTabProps {
   milestones: Milestone[]
@@ -21,9 +25,37 @@ export const MilestonesTab: React.FC<MilestonesTabProps> = ({
                                                               milestones,
                                                               projectId,
                                                               onRefresh
-}) => {
+                                                            }) => {
   const navigate = useNavigate()
-  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
+  const [isAddMemberModalOpen, setIsAddMemberModalOpen] = useState(false)
+  const [selectedMilestoneId, setSelectedMilestoneId] = useState<string | null>(null)
+
+  const { data: projectMembersData, isLoading: isLoadingMembers } = useGetProjectMembers(projectId)
+  const addTalentMutation = useAddTalentToMilestone()
+
+  const projectMembers = projectMembersData?.data || []
+
+  const handleAddMembers = async (selectedUserIds: string[]) => {
+    if (!selectedMilestoneId) return
+
+    try {
+      await addTalentMutation.mutateAsync({
+        milestoneId: selectedMilestoneId,
+        projectMemberIds: selectedUserIds
+      })
+      toast.success('Thêm thành viên vào milestone thành công')
+      onRefresh?.()
+    } catch (error) {
+      console.log(error)
+      toast.error('Thêm thành viên thất bại')
+    }
+  }
+
+  const openAddMemberModal = (milestoneId: string) => {
+    setSelectedMilestoneId(milestoneId)
+    setIsAddMemberModalOpen(true)
+  }
 
   const calculateProgress = (startDate: string, endDate: string): number => {
     const start = new Date(startDate).getTime()
@@ -62,11 +94,12 @@ export const MilestonesTab: React.FC<MilestonesTabProps> = ({
     <div className="space-y-3">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-lg font-semibold">Milestones</h2>
-        <Button onClick={() => setIsModalOpen(true)} size="sm">
+        <Button onClick={() => setIsCreateModalOpen(true)} size="sm">
           <Plus className="h-4 w-4 mr-2" />
           Tạo Milestone
         </Button>
       </div>
+
       {milestones.map((milestone) => {
         const talents = milestone.talents || []
         const mentors = milestone.mentors || []
@@ -109,58 +142,71 @@ export const MilestonesTab: React.FC<MilestonesTabProps> = ({
 
                   <Progress value={progress} className="h-1.5" />
 
-                  <div className="flex items-center gap-6 pt-2">
-                    <div className="flex items-center gap-2">
-                      <div className="flex items-center gap-1.5 text-xs text-gray-600">
-                        <Users className="h-3.5 w-3.5" />
-                        <span>Talents</span>
+                  <div className="flex items-center justify-between pt-2">
+                    <div className="flex items-center gap-6">
+                      <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-1.5 text-xs text-gray-600">
+                          <Users className="h-3.5 w-3.5" />
+                          <span>Talents</span>
+                        </div>
+                        <div className="flex -space-x-2">
+                          {talents.length > 0 ? (
+                            talents.slice(0, 3).map((talent) => (
+                              <Avatar key={talent.userId} className="h-6 w-6 border-2 border-white">
+                                <AvatarImage src={talent.avatar} alt={talent.name} />
+                                <AvatarFallback className="text-xs">
+                                  {getAvatarFallback(talent.name)}
+                                </AvatarFallback>
+                              </Avatar>
+                            ))
+                          ) : (
+                            <span className="text-xs text-gray-400">Chưa có</span>
+                          )}
+                          {talents.length > 3 && (
+                            <div className="h-6 w-6 rounded-full bg-gray-200 border-2 border-white flex items-center justify-center">
+                              <span className="text-xs font-medium text-gray-600">+{talents.length - 3}</span>
+                            </div>
+                          )}
+                        </div>
                       </div>
-                      <div className="flex -space-x-2">
-                        {talents.length > 0 ? (
-                          talents.slice(0, 3).map((talent) => (
-                            <Avatar key={talent.userId} className="h-6 w-6 border-2 border-white">
-                              <AvatarImage src={talent.avatar} alt={talent.name} />
-                              <AvatarFallback className="text-xs">
-                                {getAvatarFallback(talent.name)}
-                              </AvatarFallback>
-                            </Avatar>
-                          ))
-                        ) : (
-                          <span className="text-xs text-gray-400">Chưa có</span>
-                        )}
-                        {talents.length > 3 && (
-                          <div className="h-6 w-6 rounded-full bg-gray-200 border-2 border-white flex items-center justify-center">
-                            <span className="text-xs font-medium text-gray-600">+{talents.length - 3}</span>
-                          </div>
-                        )}
+
+                      <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-1.5 text-xs text-gray-600">
+                          <Users className="h-3.5 w-3.5" />
+                          <span>Mentors</span>
+                        </div>
+                        <div className="flex -space-x-2">
+                          {mentors.length > 0 ? (
+                            mentors.slice(0, 3).map((mentor) => (
+                              <Avatar key={mentor.userId} className="h-6 w-6 border-2 border-white">
+                                <AvatarImage src={mentor.avatar} alt={mentor.name} />
+                                <AvatarFallback className="text-xs">
+                                  {getAvatarFallback(mentor.name)}
+                                </AvatarFallback>
+                              </Avatar>
+                            ))
+                          ) : (
+                            <span className="text-xs text-gray-400">Chưa có</span>
+                          )}
+                          {mentors.length > 3 && (
+                            <div className="h-6 w-6 rounded-full bg-gray-200 border-2 border-white flex items-center justify-center">
+                              <span className="text-xs font-medium text-gray-600">+{mentors.length - 3}</span>
+                            </div>
+                          )}
+                        </div>
                       </div>
                     </div>
 
-                    <div className="flex items-center gap-2">
-                      <div className="flex items-center gap-1.5 text-xs text-gray-600">
-                        <Users className="h-3.5 w-3.5" />
-                        <span>Mentors</span>
-                      </div>
-                      <div className="flex -space-x-2">
-                        {mentors.length > 0 ? (
-                          mentors.slice(0, 3).map((mentor) => (
-                            <Avatar key={mentor.userId} className="h-6 w-6 border-2 border-white">
-                              <AvatarImage src={mentor.avatar} alt={mentor.name} />
-                              <AvatarFallback className="text-xs">
-                                {getAvatarFallback(mentor.name)}
-                              </AvatarFallback>
-                            </Avatar>
-                          ))
-                        ) : (
-                          <span className="text-xs text-gray-400">Chưa có</span>
-                        )}
-                        {mentors.length > 3 && (
-                          <div className="h-6 w-6 rounded-full bg-gray-200 border-2 border-white flex items-center justify-center">
-                            <span className="text-xs font-medium text-gray-600">+{mentors.length - 3}</span>
-                          </div>
-                        )}
-                      </div>
-                    </div>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => openAddMemberModal(milestone.id)}
+                      disabled={isLoadingMembers}
+                      className="ml-4"
+                    >
+                      <UserPlus className="h-4 w-4 mr-1" />
+                      Thêm thành viên
+                    </Button>
                   </div>
                 </div>
               </div>
@@ -181,10 +227,20 @@ export const MilestonesTab: React.FC<MilestonesTabProps> = ({
       )}
 
       <CreateMilestoneModal
-        open={isModalOpen}
-        onOpenChange={setIsModalOpen}
+        open={isCreateModalOpen}
+        onOpenChange={setIsCreateModalOpen}
         projectId={projectId}
         onSuccess={onRefresh}
+      />
+
+      <AddMemberModal
+        isOpen={isAddMemberModalOpen}
+        onClose={() => {
+          setIsAddMemberModalOpen(false)
+          setSelectedMilestoneId(null)
+        }}
+        onAddMembers={handleAddMembers}
+        projectMembers={projectMembers}
       />
     </div>
   )
