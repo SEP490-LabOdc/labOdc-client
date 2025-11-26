@@ -13,6 +13,7 @@ import { Input } from "@/components/ui/input";
 import { useGetUserById, useUpdatePassword } from "@/hooks/api/users";
 import { toast } from "sonner";
 import { useForm } from "react-hook-form";
+import { PasswordInput } from "@/components/password-input";
 
 export function AccountForm() {
     const userId =
@@ -100,8 +101,8 @@ export function AccountForm() {
                                 <FormLabel className="text-sm font-medium text-gray-700 dark:text-gray-300">
                                     Mật khẩu hiện tại
                                 </FormLabel>
-                                <Input
-                                    type="password"
+                                <PasswordInput
+                                    placeholder="********"
                                     value={passwordFields.currentPassword}
                                     onChange={(e) =>
                                         setPasswordFields({
@@ -109,11 +110,6 @@ export function AccountForm() {
                                             currentPassword: e.target.value,
                                         })
                                     }
-                                    className="
-                    bg-blue-50 dark:bg-neutral-800
-                    dark:text-white
-                    dark:border-neutral-700
-                "
                                 />
                             </div>
 
@@ -122,8 +118,8 @@ export function AccountForm() {
                                 <FormLabel className="text-sm font-medium text-gray-700 dark:text-gray-300">
                                     Mật khẩu mới
                                 </FormLabel>
-                                <Input
-                                    type="password"
+                                <PasswordInput
+                                    placeholder="********"
                                     value={passwordFields.newPassword}
                                     onChange={(e) =>
                                         setPasswordFields({
@@ -131,7 +127,6 @@ export function AccountForm() {
                                             newPassword: e.target.value,
                                         })
                                     }
-                                    className="dark:bg-neutral-800 dark:text-white dark:border-neutral-700"
                                 />
                             </div>
 
@@ -140,8 +135,8 @@ export function AccountForm() {
                                 <FormLabel className="text-sm font-medium text-gray-700 dark:text-gray-300">
                                     Xác nhận mật khẩu mới
                                 </FormLabel>
-                                <Input
-                                    type="password"
+                                <PasswordInput
+                                    placeholder="********"
                                     value={passwordFields.confirmPassword}
                                     onChange={(e) =>
                                         setPasswordFields({
@@ -149,7 +144,6 @@ export function AccountForm() {
                                             confirmPassword: e.target.value,
                                         })
                                     }
-                                    className="dark:bg-neutral-800 dark:text-white dark:border-neutral-700"
                                 />
                             </div>
 
