@@ -67,3 +67,21 @@ export function useRejectProjectApplication() {
     }
   })
 }
+
+export function useCreateMilestone() {
+  return useMutation({
+    mutationFn: async (payload: {
+      projectId: string
+      title: string
+      description: string
+      startDate: string
+      endDate: string
+    }) => {
+      const { data } = await apiRequest.post(
+        `/api/v1/project-milestones`,
+        payload
+      )
+      return data
+    }
+  })
+}

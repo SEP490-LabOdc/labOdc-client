@@ -1,20 +1,29 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Progress } from '@/components/ui/progress'
-import { CalendarDays, CheckCircle2, Circle, Clock, Users } from 'lucide-react'
+import { CalendarDays, CheckCircle2, Circle, Clock, Plus, Users } from 'lucide-react'
 import { getStatusColor } from '@/lib/utils'
 import { getAvatarFallback } from '@/helpers/stringUtils'
 import { useNavigate } from '@tanstack/react-router'
 import type { Milestone } from '@/hooks/api/projects/types'
+import { CreateMilestoneModal } from '@/features/mentor/project-detail/components/create-milestone-modal.tsx'
+import { Button } from '@/components/ui/button.tsx'
 
 interface MilestonesTabProps {
   milestones: Milestone[]
+  projectId: string
+  onRefresh?: () => void
 }
 
-export const MilestonesTab: React.FC<MilestonesTabProps> = ({ milestones }) => {
+export const MilestonesTab: React.FC<MilestonesTabProps> = ({
+                                                              milestones,
+                                                              projectId,
+                                                              onRefresh
+}) => {
   const navigate = useNavigate()
+  const [isModalOpen, setIsModalOpen] = useState(false)
 
   const calculateProgress = (startDate: string, endDate: string): number => {
     const start = new Date(startDate).getTime()
@@ -51,6 +60,13 @@ export const MilestonesTab: React.FC<MilestonesTabProps> = ({ milestones }) => {
 
   return (
     <div className="space-y-3">
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-lg font-semibold">Milestones</h2>
+        <Button onClick={() => setIsModalOpen(true)} size="sm">
+          <Plus className="h-4 w-4 mr-2" />
+          Tạo Milestone
+        </Button>
+      </div>
       {milestones.map((milestone) => {
         const talents = milestone.talents || []
         const mentors = milestone.mentors || []
@@ -163,6 +179,13 @@ export const MilestonesTab: React.FC<MilestonesTabProps> = ({ milestones }) => {
           </CardContent>
         </Card>
       )}
+
+      <CreateMilestoneModal
+        open={isModalOpen}
+        onOpenChange={setIsModalOpen}
+        projectId={projectId}
+        onSuccess={onRefresh}
+      />
     </div>
   )
 }
