@@ -100,3 +100,21 @@ export function useAddTalentToMilestone() {
     }
   })
 }
+
+export function useAddProjectDocuments() {
+  return useMutation({
+    mutationFn: async (payload: {
+      projectId: string
+      documentName: string
+      documentUrl: string
+      documentType: string
+    }) => {
+      const { data } = await apiRequest.post(
+        `/api/v1/project-documents`,
+        payload
+      )
+      return data
+    }
+  })
+}
+

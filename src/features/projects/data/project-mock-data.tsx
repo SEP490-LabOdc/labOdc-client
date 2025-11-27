@@ -37,14 +37,7 @@ export interface Task {
   completed: boolean;
 }
 
-export interface File {
-  id: number;
-  name: string;
-  size: string;
-  uploadedBy: TeamMember;
-  uploadedOn: string;
-  type: string;
-}
+
 
 export interface Note {
   id: number;
