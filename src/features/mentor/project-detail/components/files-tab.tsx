@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { MoreHorizontal, Plus, FileText, Download } from 'lucide-react'
+import { MoreHorizontal, Plus, FileText, Download, Loader2 } from 'lucide-react'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,6 +10,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { Separator } from '@/components/ui/separator'
 import { UploadFileModal } from './upload-file-modal'
+import { useGetProjectDocuments } from '@/hooks/api/projects/queries'
 
 export interface ProjectDocument {
   id: string
@@ -22,24 +23,19 @@ export interface ProjectDocument {
 
 interface ProjectFilesTabProps {
   projectImages: string[]
-  files: ProjectDocument[]
   projectId: string
-  onRefresh?: () => void
 }
 
 export const ProjectFilesTab: React.FC<ProjectFilesTabProps> = ({
                                                                   projectImages,
-                                                                  files,
                                                                   projectId,
-                                                                  onRefresh
                                                                 }) => {
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false)
 
+  // Sử dụng hook đã có để fetch documents
+  const { data: documentsResponse, isLoading, refetch } = useGetProjectDocuments(projectId)
 
-  // const formatFileSize = (url: string) => {
-  //   // Placeholder - bạn có thể tính toán size thực tế nếu cần
-  //   return 'N/A'
-  // }
+  const files = documentsResponse?.data || []
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('vi-VN', {
@@ -60,6 +56,10 @@ export const ProjectFilesTab: React.FC<ProjectFilesTabProps> = ({
 
   const handleViewFile = (url: string) => {
     window.open(url, '_blank')
+  }
+
+  const handleRefresh = () => {
+    refetch()
   }
 
   return (
@@ -103,54 +103,62 @@ export const ProjectFilesTab: React.FC<ProjectFilesTabProps> = ({
               Add New
             </Button>
           </div>
-          <div className="space-y-3">
-            {files.length > 0 ? (
-              files.map((file) => (
-                <div
-                  key={file.id}
-                  className="flex items-center justify-between p-3 border rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors"
-                >
-                  <div className="flex items-center gap-3 flex-1 min-w-0">
-                    <FileText className="h-8 w-8 text-gray-500 flex-shrink-0" />
-                    <div className="min-w-0">
-                      <p className="font-medium text-gray-800 truncate">{file.documentName}</p>
-                      <p className="text-sm text-gray-500">
-                        {file.documentType.toUpperCase()} • {formatDate(file.uploadedAt)}
-                      </p>
+
+          {isLoading ? (
+            <div className="flex items-center justify-center py-8">
+              <Loader2 className="h-6 w-6 animate-spin" />
+              <span className="ml-2">Đang tải...</span>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {files.length > 0 ? (
+                files.map((file: ProjectDocument) => (
+                  <div
+                    key={file.id}
+                    className="flex items-center justify-between p-3 border rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors"
+                  >
+                    <div className="flex items-center gap-3 flex-1 min-w-0">
+                      <FileText className="h-8 w-8 text-gray-500 flex-shrink-0" />
+                      <div className="min-w-0">
+                        <p className="font-medium text-gray-800 truncate">{file.documentName}</p>
+                        <p className="text-sm text-gray-500">
+                          {file.documentType.toUpperCase()} • {formatDate(file.uploadedAt)}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2 flex-shrink-0">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-8 w-8"
+                        onClick={() => handleDownload(file.documentUrl, file.documentName)}
+                      >
+                        <Download className="h-4 w-4" />
+                      </Button>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" size="icon" className="h-8 w-8">
+                            <MoreHorizontal className="h-4 w-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuItem onClick={() => handleViewFile(file.documentUrl)}>
+                            View
+                          </DropdownMenuItem>
+                          <DropdownMenuItem className="text-red-600">Delete</DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
                     </div>
                   </div>
-                  <div className="flex items-center gap-2 flex-shrink-0">
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-8 w-8"
-                      onClick={() => handleDownload(file.documentUrl, file.documentName)}
-                    >
-                      <Download className="h-4 w-4" />
-                    </Button>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon" className="h-8 w-8">
-                          <MoreHorizontal className="h-4 w-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuItem onClick={() => handleViewFile(file.documentUrl)}>
-                          View
-                        </DropdownMenuItem>
-                        <DropdownMenuItem className="text-red-600">Delete</DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </div>
+                ))
+              ) : (
+                <div className="text-center py-8 text-gray-500">
+                  <FileText className="h-12 w-12 mx-auto mb-2 text-gray-400" />
+                  <p className="text-sm">Chưa có tài liệu nào</p>
                 </div>
-              ))
-            ) : (
-              <div className="text-center py-8 text-gray-500">
-                <FileText className="h-12 w-12 mx-auto mb-2 text-gray-400" />
-                <p className="text-sm">Chưa có tài liệu nào</p>
-              </div>
-            )}
-          </div>
+              )}
+            </div>
+          )}
         </div>
       </CardContent>
 
@@ -158,7 +166,7 @@ export const ProjectFilesTab: React.FC<ProjectFilesTabProps> = ({
         isOpen={isUploadModalOpen}
         onClose={() => setIsUploadModalOpen(false)}
         projectId={projectId}
-        onSuccess={onRefresh}
+        onSuccess={handleRefresh}
       />
     </Card>
   )
