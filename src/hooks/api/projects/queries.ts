@@ -123,7 +123,8 @@ export function useGetProjectDocuments(projectId: string) {
     queryFn: async () => {
       const { data } = await apiRequest.get(`/api/v1/projects/${projectId}/documents`);
       return data;
-    }
+    },
+    enabled: !!projectId,
   })
 }
 
@@ -147,5 +148,16 @@ export function useGetProjectMembers(projectId: string) {
       return data;
     },
     enabled: !!projectId,
+  })
+}
+
+export function useGetProjectMilestoneDocuments(milestoneId: string) {
+  return useQuery({
+    queryKey: projectKeys.getProjectMilestoneDocuments(milestoneId),
+    queryFn: async () => {
+      const { data } = await apiRequest.get(`/api/v1/project-milestones/${milestoneId}/documents`);
+      return data;
+    },
+    enabled: !!milestoneId,
   })
 }

@@ -61,7 +61,7 @@ const MilestoneDetailPage: React.FC = () => {
             </TabsContent>
 
             <TabsContent value="documents" className="mt-6">
-              <MilestoneDocumentsTab />
+              <MilestoneDocumentsTab milestoneId={milestoneId as string} />
             </TabsContent>
           </Tabs>
         </div>
