@@ -24,10 +24,13 @@ export function FontProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const applyFont = (font: string) => {
       const root = document.documentElement
+
       root.classList.forEach((cls) => {
         if (cls.startsWith('font-')) root.classList.remove(cls)
       })
       root.classList.add(`font-${font}`)
+      root.style.setProperty("--font-sans", `var(--font-${font})`);
+      root.style.setProperty("--default-font-family", `var(--font-${font})`);
     }
 
     applyFont(font)
