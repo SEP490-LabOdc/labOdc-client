@@ -33,7 +33,7 @@ const getRoleBasePath = (role: string): string => {
     'SYSTEM_ADMIN': '/admin',
     'LAB_ADMIN': '/lab-admin',
     'MENTOR': '/mentor',
-    'COMPANY': '/company',
+    'COMPANY': '/company-manage',
     'USER': '/talent'
   }
   return rolePathMap[role] || '/talent'
