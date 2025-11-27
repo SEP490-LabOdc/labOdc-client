@@ -117,13 +117,14 @@ export function useGetMyProjects(status: string) {
   })
 }
 
-export function useGetProjectDocuments(status: string) {
+export function useGetProjectDocuments(projectId: string) {
   return useQuery({
-    queryKey: projectKeys.getMyProjects(status),
+    queryKey: projectKeys.getProjectDocuments(projectId),
     queryFn: async () => {
-      const { data } = await apiRequest.get(`/api/v1/project-documents`);
+      const { data } = await apiRequest.get(`/api/v1/projects/${projectId}/documents`);
       return data;
-    }
+    },
+    enabled: !!projectId,
   })
 }
 
@@ -147,5 +148,16 @@ export function useGetProjectMembers(projectId: string) {
       return data;
     },
     enabled: !!projectId,
+  })
+}
+
+export function useGetProjectMilestoneDocuments(milestoneId: string) {
+  return useQuery({
+    queryKey: projectKeys.getProjectMilestoneDocuments(milestoneId),
+    queryFn: async () => {
+      const { data } = await apiRequest.get(`/api/v1/project-milestones/${milestoneId}/documents`);
+      return data;
+    },
+    enabled: !!milestoneId,
   })
 }
