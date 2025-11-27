@@ -1,22 +1,29 @@
-import { Link } from '@tanstack/react-router'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Button } from '@/components/ui/button'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuShortcut,
-  DropdownMenuTrigger,
-  DropdownMenuGroup,
-} from '@/components/ui/dropdown-menu'
-import { Palette, UserCog2, Wrench } from 'lucide-react'
+import { useUser } from '@/context/UserContext'
 import { useAuthStore } from '@/stores/auth-store.ts'
 import { useNavigate } from '@tanstack/react-router'
 import { toast } from 'sonner'
-import { useUser } from '@/context/UserContext'
+import { Button } from '@/components/ui/button.tsx'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar.tsx'
+import {
+  DropdownMenu,
+  DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem,
+  DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuShortcut,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu.tsx'
 import { getAvatarFallback } from '@/helpers/stringUtils.ts'
+import { Palette, UserCog2, Wrench } from 'lucide-react'
+
+// Define helper function inside component
+const getRoleBasePath = (role: string): string => {
+  const rolePathMap: Record<string, string> = {
+    'SYSTEM_ADMIN': '/admin',
+    'LAB_ADMIN': '/lab-admin',
+    'MENTOR': '/mentor',
+    'COMPANY': '/company',
+    'USER': '/talent'
+  }
+  return rolePathMap[role] || '/talent'
+}
 
 export function ProfileDropdown() {
   const logout = useAuthStore(state => state.logout)
@@ -29,6 +36,10 @@ export function ProfileDropdown() {
     toast.success('Đăng xuất thành công!')
   }
 
+  const handleNavigation = (path: string) => {
+    window.location.href = path
+  }
+
   if (!user) {
     return (
       <Button variant="ghost" className="relative h-8 w-8 rounded-full">
@@ -39,14 +50,14 @@ export function ProfileDropdown() {
     )
   }
 
+  const basePath = getRoleBasePath(user.role)
+
   return (
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="relative h-8 w-8 rounded-full">
           <Avatar className="size-10">
-            <AvatarImage
-              src={user.avatarUrl}
-              alt="user" />
+            <AvatarImage src={user.avatarUrl} alt="user" />
             <AvatarFallback>{getAvatarFallback(user.fullName)}</AvatarFallback>
           </Avatar>
         </Button>
@@ -62,23 +73,17 @@ export function ProfileDropdown() {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem asChild>
-            <Link to="/admin/settings">
-              <UserCog2 />
-              Hồ sơ
-            </Link>
+          <DropdownMenuItem onClick={() => handleNavigation(`${basePath}/settings`)}>
+            <UserCog2 />
+            Hồ sơ
           </DropdownMenuItem>
-          <DropdownMenuItem asChild>
-            <Link to="/admin/settings/account">
-              <Wrench />
-              Tài khoản
-            </Link>
+          <DropdownMenuItem onClick={() => handleNavigation(`${basePath}/settings/account`)}>
+            <Wrench />
+            Tài khoản
           </DropdownMenuItem>
-          <DropdownMenuItem asChild>
-            <Link to="/admin/settings/appearance">
-              <Palette />
-              Giao diện
-            </Link>
+          <DropdownMenuItem onClick={() => handleNavigation(`${basePath}/settings/appearance`)}>
+            <Palette />
+            Giao diện
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
