@@ -24,7 +24,7 @@ export const talentSidebarData: SidebarData = {
           items: [
             {
               title: 'Tất cả',
-              url: '/talent/my-projects',
+              url: '/talent/projects',
               icon: IconList,
             },
             {
