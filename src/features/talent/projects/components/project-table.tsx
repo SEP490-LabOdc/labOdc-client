@@ -1,4 +1,3 @@
-// src/features/projects/components/projects-table.tsx
 import { useEffect, useState } from 'react'
 import {
   type SortingState,
@@ -23,9 +22,8 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { DataTablePagination, DataTableToolbar } from '@/components/data-table'
-import { PROJECT_STATUS_OPTIONS, type Project } from '../data/schema.ts'
-import { useUser } from '@/context/UserContext'
-import { createProjectsColumns } from './projects-columns.tsx'
+import { PROJECT_STATUS_OPTIONS, type Project } from '@/features/projects/data/schema.ts'
+import { projectsColumns as columns } from './projects-columns'
 
 type ProjectsTableProps = {
   data: Project[]
@@ -37,8 +35,6 @@ export function ProjectsTable({ data, search, navigate }: ProjectsTableProps) {
   const [rowSelection, setRowSelection] = useState({})
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
   const [sorting, setSorting] = useState<SortingState>([])
-  const { user } = useUser()
-  const columns = createProjectsColumns(user?.role || 'USER')
 
   const {
     columnFilters,
@@ -52,7 +48,7 @@ export function ProjectsTable({ data, search, navigate }: ProjectsTableProps) {
     pagination: { defaultPage: 1, defaultPageSize: 10 },
     globalFilter: { enabled: false },
     columnFilters: [
-      { columnId: 'projectName', searchKey: 'search', type: 'string' },
+      { columnId: 'title', searchKey: 'search', type: 'string' },
       { columnId: 'status', searchKey: 'status', type: 'array' },
       { columnId: 'priority', searchKey: 'priority', type: 'array' }
     ],
@@ -91,7 +87,7 @@ export function ProjectsTable({ data, search, navigate }: ProjectsTableProps) {
       <DataTableToolbar
         table={table}
         searchPlaceholder='Tìm kiếm dự án...'
-        searchKey='projectName'
+        searchKey='title'
         filters={[
           {
             columnId: 'status',

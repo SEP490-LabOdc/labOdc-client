@@ -2,10 +2,11 @@ import { type ColumnDef } from '@tanstack/react-table'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Badge } from '@/components/ui/badge'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
-import { type Project } from '../data/schema'
 import { Link } from '@tanstack/react-router'
+import type { Project } from '@/features/projects/data/schema.ts'
+import { getProjectStatusColor, getProjectStatusLabel } from '@/lib/utils.ts'
 
-export const createProjectsColumns = (userRole: string): ColumnDef<Project>[] => [
+export const projectsColumns: ColumnDef<Project>[] = [
   {
     id: 'select',
     header: ({ table }) => (
@@ -40,31 +41,15 @@ export const createProjectsColumns = (userRole: string): ColumnDef<Project>[] =>
     accessorKey: 'title',
     header: 'Tên dự án',
     cell: ({ row }) => {
+      const title = row.getValue('title') as string
       const projectId = row.original.id
-
-      const getProjectLink = (role: string, id: string) => {
-        switch (role) {
-          case 'LAB_ADMIN':
-            return { to: '/lab-admin/projects/$projectId' as const, params: { projectId: id } }
-          case 'MENTOR':
-            return { to: '/mentor/projects/$projectId' as const, params: { projectId: id } }
-          case 'SYSTEM_ADMIN':
-          case 'COMPANY':
-          case 'USER':
-            return { to: '/talent/projects/$projectId' as const, params: { projectId: id } }
-          default:
-            return { to: '/talent/projects/$projectId' as const, params: { projectId: id } }
-        }
-      }
-
-      const linkProps = getProjectLink(userRole, projectId)
-
       return (
         <Link
-          {...linkProps}
+          to="/mentor/projects/$projectId"
+          params={{ projectId }}
           className="font-medium hover:underline"
         >
-          {row.getValue('title')}
+          {title}
         </Link>
       )
     },
@@ -108,19 +93,11 @@ export const createProjectsColumns = (userRole: string): ColumnDef<Project>[] =>
     accessorKey: 'status',
     header: 'Trạng thái',
     cell: ({ row }) => {
-      const statusMap = {
-        PLANNING: { label: 'Đang lên kế hoạch', className: 'bg-yellow-100 text-yellow-800' },
-        IN_PROGRESS: { label: 'Đang thực hiện', className: 'bg-blue-100 text-blue-800' },
-        COMPLETED: { label: 'Hoàn thành', className: 'bg-green-100 text-green-800' },
-        ON_HOLD: { label: 'Tạm dừng', className: 'bg-red-100 text-red-800' },
-      }
-
-      const status = row.getValue('status') as keyof typeof statusMap
-      const config = statusMap[status]
+      const status = row.getValue('status') as string
 
       return (
-        <Badge className={`${config.className} rounded-full`}>
-          {config.label}
+        <Badge className={`${getProjectStatusColor(status)} rounded-full`}>
+          {getProjectStatusLabel(status)}
         </Badge>
       )
     },

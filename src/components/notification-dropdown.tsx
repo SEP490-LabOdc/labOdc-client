@@ -22,6 +22,7 @@ import { useQueryClient } from '@tanstack/react-query'
 import { notificationsKeys, useGetUserNotifications, useGetUserNotificationsUnread } from '@/hooks/api/notifications'
 import { useNotificationSubscription } from '@/hooks/use-notifications'
 import { Link } from '@tanstack/react-router'
+import { useMarkNotificationAsRead } from '@/hooks/api/notifications/queries.ts'
 
 type Notification = {
   notificationRecipientId: string;
@@ -59,6 +60,8 @@ export function NotificationDropdown() {
     isLoading: isLoadingUnread,
     isError: isErrorUnread
   } = useGetUserNotificationsUnread(userId);
+
+  const markAsReadMutation = useMarkNotificationAsRead();
 
   const notificationTopic = `/user/queue/notifications`;
 
@@ -103,6 +106,15 @@ export function NotificationDropdown() {
     }
   }
 
+  const handleNotificationClick = (notification: Notification) => {
+    if (!notification.readStatus) {
+      markAsReadMutation.mutate({
+        userId,
+        notificationRecipientId: notification.notificationRecipientId
+      });
+    }
+  };
+
   const renderNotificationList = (
     list: Notification[] | undefined,
     isLoading: boolean,
@@ -144,6 +156,7 @@ export function NotificationDropdown() {
           'focus:bg-accent hover:bg-accent/50',
           !item.readStatus && 'bg-accent/30 border-l-2 border-l-primary'
         )}
+        onClick={() => handleNotificationClick(item)}
       >
         <Link to={item.deepLink} className='w-full'>
           <div className='flex items-start justify-between w-full'>
