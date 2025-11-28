@@ -6,8 +6,6 @@ import {
   IconClipboardList,
   IconCircleCheckFilled,
   IconList,
-  IconClock,
-  IconAlertCircle,
 } from '@tabler/icons-react'
 import type { SidebarData } from '@/components/layout/types.ts'
 import { ProjectTypes } from '@/hooks/api/projects/types'
