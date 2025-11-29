@@ -186,3 +186,32 @@ export function useUpdateProjectStatus() {
     }
   })
 }
+
+export function useUpdateProject() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (payload: {
+      projectId: string;
+      title: string;
+      description: string;
+      budget: number;
+      skillIds: string[];
+    }) => {
+      const { projectId, ...body } = payload;
+
+      const { data } = await apiRequest.put(
+        `/api/v1/projects/${projectId}`,
+        body
+      );
+
+      return data;
+    },
+
+    onSuccess: (_, payload) => {
+      queryClient.invalidateQueries({
+        queryKey: projectKeys.byId(payload.projectId),
+      });
+    },
+  });
+}

@@ -56,7 +56,7 @@ export const projectsColumns: ColumnDef<Project>[] = [
         ),
         cell: ({ row }) => {
             const id = row.original.id
-            const linkTo = `/company-manage/projects/view?id=${id}`
+            const linkTo = `/company-manage/projects/${id}`
 
             return (
                 <LongText className="max-w-40 ps-3">
