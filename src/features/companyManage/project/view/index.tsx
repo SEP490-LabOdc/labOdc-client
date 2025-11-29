@@ -12,11 +12,10 @@ import { PROJECT_STATUS } from '../data/schema'
 import { StatusAlert } from '@/components/admin/StatusAlert'
 import ProjectDetailPage from '../project-detail'
 
-const route = getRouteApi('/_authenticated/company-manage/projects/view/')
+const route = getRouteApi('/_authenticated/company-manage/projects/$projectId/')
 
 export default function ViewProject() {
-    const search = route.useSearch()
-    const projectId = search.id
+    const { projectId } = route.useParams()
 
     const {
         data: projectData,
@@ -56,7 +55,7 @@ export default function ViewProject() {
                 </div>
             </Header>
 
-            <Main>
+            <Main className='pt-0'>
                 <div className="mb-2 flex flex-wrap items-center justify-between space-y-2">
                     <div>
                         <h2 className="text-2xl font-bold tracking-tight">
