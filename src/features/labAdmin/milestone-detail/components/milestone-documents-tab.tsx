@@ -1,66 +1,127 @@
 import React from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
-import { MoreHorizontal, Plus, FileText, Download } from 'lucide-react'
+import { FileText, Plus, Download, MoreHorizontal, Loader2 } from 'lucide-react'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import type { File as ProjectFile } from '../../data/project-mock-data' // Dùng lại interface 'File'
+import { useGetProjectMilestoneDocuments } from '@/hooks/api/projects/queries'
 
-interface MilestoneDocumentsTabProps {
-  documents: ProjectFile[];
+interface MilestoneDocument {
+  id: string
+  fileName: string
+  fileUrl: string
+  s3Key: string
+  uploadedAt: string
+  entityId: string
 }
 
-export const MilestoneDocumentsTab: React.FC<MilestoneDocumentsTabProps> = ({ documents }) => {
+interface MilestoneDocumentsTabProps {
+  milestoneId: string
+}
+
+export const MilestoneDocumentsTab: React.FC<MilestoneDocumentsTabProps> = ({ milestoneId }) => {
+  const { data: documentsResponse, isLoading, error } = useGetProjectMilestoneDocuments(milestoneId)
+
+  const documents: MilestoneDocument[] = documentsResponse?.data || []
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('vi-VN', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    })
+  }
+
+  const handleDownload = (url: string, fileName: string) => {
+    const link = document.createElement('a')
+    link.href = url
+    link.download = fileName
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+  }
+
+  const handleViewFile = (url: string) => {
+    window.open(url, '_blank')
+  }
+
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between">
-        <CardTitle className="text-lg font-semibold">Tài liệu Cột mốc</CardTitle>
+        <CardTitle className="text-lg font-semibold">Tài liệu Milestone</CardTitle>
         <Button size="sm" className="bg-orange-600 hover:bg-orange-700">
           <Plus className="h-4 w-4 mr-2" />
           Tải lên
         </Button>
       </CardHeader>
       <CardContent>
-        <div className="space-y-3">
-          {documents.map((file) => (
-            <div key={file.id} className="flex items-center justify-between p-3 border rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors">
-              <div className="flex items-center gap-3">
-                <FileText className="h-8 w-8 text-gray-500 flex-shrink-0" />
-                <div>
-                  <p className="font-medium text-gray-800">{file.name}</p>
-                  <p className="text-sm text-gray-500">
-                    {file.size} • {file.uploadedOn}
-                  </p>
+        {isLoading ? (
+          <div className="flex items-center justify-center py-12">
+            <Loader2 className="h-6 w-6 animate-spin" />
+            <span className="ml-2">Đang tải tài liệu...</span>
+          </div>
+        ) : error ? (
+          <div className="text-center py-12 text-red-500">
+            <FileText className="h-12 w-12 mx-auto mb-4 text-red-400" />
+            <p className="text-sm">Lỗi khi tải tài liệu</p>
+          </div>
+        ) : documents.length === 0 ? (
+          <div className="text-center py-12 text-gray-500">
+            <FileText className="h-12 w-12 mx-auto mb-4 text-gray-400" />
+            <p className="text-sm">Chưa có tài liệu nào</p>
+          </div>
+        ) : (
+          <div className="space-y-3">
+            {documents.map((document: MilestoneDocument) => (
+              <div
+                key={document.id}
+                className="flex items-center justify-between p-4 border rounded-lg bg-white hover:bg-gray-50 transition-colors"
+              >
+                <div className="flex items-center gap-3 flex-1 min-w-0">
+                  <FileText className="h-8 w-8 text-gray-500 flex-shrink-0" />
+                  <div className="min-w-0">
+                    <p className="font-medium text-gray-800 truncate">{document.fileName}</p>
+                    <p className="text-sm text-gray-500">
+                      Tải lên: {formatDate(document.uploadedAt)}
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2 flex-shrink-0">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8"
+                    onClick={() => handleDownload(document.fileUrl, document.fileName)}
+                    title="Tải xuống"
+                  >
+                    <Download className="h-4 w-4" />
+                  </Button>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" size="icon" className="h-8 w-8">
+                        <MoreHorizontal className="h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem onClick={() => handleViewFile(document.fileUrl)}>
+                        Xem tài liệu
+                      </DropdownMenuItem>
+                      <DropdownMenuItem className="text-red-600">
+                        Xóa
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </div>
               </div>
-              <div className="flex items-center gap-2 flex-shrink-0">
-                <Avatar className="h-7 w-7">
-                  <AvatarImage src={file.uploadedBy.avatar} />
-                  <AvatarFallback className="text-xs">{file.uploadedBy.name[0]}</AvatarFallback>
-                </Avatar>
-                <Button variant="ghost" size="icon" className="h-8 w-8">
-                  <Download className="h-4 w-4" />
-                </Button>
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="icon" className="h-8 w-8">
-                      <MoreHorizontal className="h-4 w-4" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuItem>View</DropdownMenuItem>
-                    <DropdownMenuItem>Delete</DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </CardContent>
     </Card>
   )
