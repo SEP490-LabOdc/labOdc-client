@@ -4,9 +4,10 @@ import {
   IconCircleCheck,
   IconCircleX,
   IconClipboardList,
-  IconCircleCheckFilled, IconList,
+  IconList,
 } from '@tabler/icons-react'
 import type { SidebarData } from '@/components/layout/types.ts'
+import { ProjectTypes } from '@/hooks/api/projects'
 
 export const talentSidebarData: SidebarData = {
   navGroups: [
@@ -24,27 +25,32 @@ export const talentSidebarData: SidebarData = {
           items: [
             {
               title: 'Tất cả',
-              url: '/talent/my-projects',
+              url: '/talent/projects',
               icon: IconList,
             },
             {
               title: 'Đã ứng tuyển',
-              url: '/talent/projects?status=["PENDING"]',
+              url: `/talent/my-applications`,
+              icon: IconClockHour4,
+            },
+            {
+              title: 'Đang lên kế hoạch',
+              url: `/talent/projects?status=${ProjectTypes.PLANNING}`,
               icon: IconClockHour4,
             },
             {
               title: 'Đang tiến hành',
-              url: '/company-admin/projects?status=["IN_PROGRESS"]',
+              url: `/talent/projects?status=${ProjectTypes.ON_GOING}`,
               icon: IconCircleCheck,
             },
             {
-              title: 'Đã hoàn thành',
-              url: '/company-admin/projects?status=["COMPLETED"]',
-              icon: IconCircleCheckFilled,
+              title: 'Đã tạm dừng',
+              url: `/talent/projects?status=${ProjectTypes.PAUSED}`,
+              icon: IconCircleX,
             },
             {
-              title: 'Đã hủy',
-              url: '/company-admin/projects?status=[CLOSED"]',
+              title: 'Đã đóng',
+              url: `/talent/projects?status=${ProjectTypes.CLOSED}`,
               icon: IconCircleX,
             },
           ]

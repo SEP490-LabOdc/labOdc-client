@@ -1,4 +1,3 @@
-import { useState } from "react"
 import { Plus, Download } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
@@ -15,14 +14,17 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
-import { ProjectsTable } from "../components"
+import { ProjectsTable } from "./components"
 import { useUser } from '@/context/UserContext'
 import { useGetMyProjects } from '@/hooks/api/projects'
+import { useSearch } from '@tanstack/react-router'
 
-export default function MyProjectPage() {
+export default function TalentProjectPage() {
   const { user } = useUser()
+  const search = useSearch({ from: '/_authenticated/talent/projects/' })
 
-  const [status, setStatus] = useState('') // hoặc giá trị mặc định khác
+  const status = search.status || ''
+
   const { data: projects, isLoading, error } = useGetMyProjects(status)
   const mockNavigate = () => {}
 
@@ -42,27 +44,34 @@ export default function MyProjectPage() {
   }
 
   if (isLoading) {
-    return <div>Loading...</div>
+    return (
+      <div className="container mx-auto px-8 py-12 text-center">
+        <div className="text-gray-500">Đang tải dữ liệu...</div>
+      </div>
+    )
   }
 
   if (error) {
-    return <div>Error loading projects</div>
+    return (
+      <div className="container mx-auto px-8 py-12 text-center">
+        <div className="text-red-500">Lỗi khi tải dữ liệu dự án</div>
+      </div>
+    )
   }
 
   return (
     <div>
       <div className="container mx-auto px-8 py-6">
-        {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <div>
             <Breadcrumb>
               <BreadcrumbList>
                 <BreadcrumbItem>
-                  <BreadcrumbLink href="/employee">Employee</BreadcrumbLink>
+                  <BreadcrumbLink href="/mentor">Mentor</BreadcrumbLink>
                 </BreadcrumbItem>
                 <BreadcrumbSeparator />
                 <BreadcrumbItem>
-                  <BreadcrumbPage>Projects</BreadcrumbPage>
+                  <BreadcrumbPage>Dự án</BreadcrumbPage>
                 </BreadcrumbItem>
               </BreadcrumbList>
             </Breadcrumb>
@@ -91,9 +100,8 @@ export default function MyProjectPage() {
           </div>
         </div>
 
-        {/* Table */}
         <ProjectsTable
-          data={projects.data}
+          data={projects?.data || []}
           search={{}}
           navigate={mockNavigate}
         />

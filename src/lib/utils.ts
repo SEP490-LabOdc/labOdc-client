@@ -139,5 +139,18 @@ export function getCandidateStatusLabel(status: string): string {
   return candidateStatusLabelMap[status] || status
 }
 
+// Define helper function inside component
+export const getRoleBasePath = (role: string): string => {
+  const rolePathMap: Record<string, string> = {
+    'SYSTEM_ADMIN': '/admin',
+    'LAB_ADMIN': '/lab-admin',
+    'MENTOR': '/mentor',
+    'COMPANY': '/company',
+    'USER': '/talent'
+  }
+  return rolePathMap[role] || '/talent'
+}
+
+
 
 

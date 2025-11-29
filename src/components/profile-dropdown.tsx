@@ -12,7 +12,6 @@ import {
 } from '@/components/ui/dropdown-menu.tsx'
 import { getAvatarFallback } from '@/helpers/stringUtils.ts'
 import { Palette, UserCog2, Wrench } from 'lucide-react'
-
 // Define helper function inside component
 const getRoleBasePath = (role: string): string => {
   const rolePathMap: Record<string, string> = {
@@ -24,6 +23,7 @@ const getRoleBasePath = (role: string): string => {
   }
   return rolePathMap[role] || '/talent'
 }
+import { getRoleBasePath } from '@/lib/utils.ts'
 
 export function ProfileDropdown() {
   const logout = useAuthStore(state => state.logout)
