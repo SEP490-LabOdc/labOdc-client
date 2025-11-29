@@ -138,7 +138,7 @@ export const CreateMilestoneModal: React.FC<CreateMilestoneModalProps> = ({
                 name="endDate"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Ngày kết thúc</FormLabel>
+                    <FormLabel>Ngày kết thúc dự kiến</FormLabel>
                     <FormControl>
                       <Input type="date" {...field} />
                     </FormControl>

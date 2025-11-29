@@ -36,7 +36,6 @@ const ProjectDetailPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <ProjectPageHeader />
-
       <div className="max-w-7xl mx-auto grid grid-cols-12 gap-6 p-6">
         <div className="col-span-12 lg:col-span-4 space-y-6">
           <ProjectSidebar projectData={projectData.data} />

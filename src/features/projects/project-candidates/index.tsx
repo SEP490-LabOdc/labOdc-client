@@ -1,8 +1,9 @@
+import React from 'react'
 import { useNavigate, useParams } from '@tanstack/react-router'
 import { useGetProjectApplicants } from '@/hooks/api/projects/queries'
 import { CandidatesTable } from './components/candidate-table'
 import { Button } from '@/components/ui/button'
-import { ChevronLeft, Plus } from 'lucide-react'
+import { ChevronLeft } from 'lucide-react'
 
 export const CandidateListPage: React.FC = () => {
   const { projectId } = useParams({ strict: false })
@@ -43,10 +44,6 @@ export const CandidateListPage: React.FC = () => {
               Quản lý các ứng viên cho dự án.
             </p>
           </div>
-          <Button size="sm" className="bg-orange-600 hover:bg-orange-700">
-            <Plus className="h-4 w-4 mr-2" />
-            Thêm Ứng viên
-          </Button>
         </div>
 
         {/* Table với filters */}
