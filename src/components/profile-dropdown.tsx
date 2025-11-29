@@ -13,16 +13,7 @@ import {
 import { getAvatarFallback } from '@/helpers/stringUtils.ts'
 import { Palette, UserCog2, Wrench } from 'lucide-react'
 // Define helper function inside component
-const getRoleBasePath = (role: string): string => {
-  const rolePathMap: Record<string, string> = {
-    'SYSTEM_ADMIN': '/admin',
-    'LAB_ADMIN': '/lab-admin',
-    'MENTOR': '/mentor',
-    'COMPANY': '/company-manage',
-    'USER': '/talent'
-  }
-  return rolePathMap[role] || '/talent'
-}
+
 import { getRoleBasePath } from '@/lib/utils.ts'
 
 export function ProfileDropdown() {
