@@ -38,6 +38,15 @@ export function useCreateProject() {
   })
 }
 
+export const getProjectByIdQueryOptions = (projectId: string) => ({
+  queryKey: projectKeys.byId(projectId),
+  queryFn: async () => {
+    const res = await apiRequest.get(`/api/v1/projects/${projectId}`)
+    return res.data
+  },
+  enabled: !!projectId,
+})
+
 export function useGetProjectById(projectId: string) {
   return useQuery({
     queryKey: projectKeys.byId(projectId),

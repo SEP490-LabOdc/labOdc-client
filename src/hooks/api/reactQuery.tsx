@@ -47,3 +47,17 @@
 //     };
 //   }
 // }
+
+import { QueryClient } from '@tanstack/react-query'
+
+export const queryClient = new QueryClient({
+  // mutationCache: new MutationCache({
+  //   onError: onRequestError
+  // }),
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      retry: 1
+    }
+  }
+});

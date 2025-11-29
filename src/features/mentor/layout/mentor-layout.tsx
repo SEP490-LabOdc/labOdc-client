@@ -1,3 +1,4 @@
+import React from 'react'
 import Cookies from 'js-cookie'
 import { Outlet } from '@tanstack/react-router'
 import { cn } from '@/lib/utils'
@@ -12,6 +13,7 @@ import { NotificationDropdown } from '@/components/notification-dropdown.tsx'
 import { ProfileDropdown } from '@/components/profile-dropdown.tsx'
 import { Header } from '@/components/layout/header.tsx'
 import { MentorSidebar } from './mentor-sidebar.tsx'
+import { BreadcrumbNav } from '@/components/breadcrumb-nav.tsx'
 
 interface Props {
   children?: React.ReactNode
@@ -47,6 +49,7 @@ export function MentorLayout({ children }: Props) {
               </div>
             </Header>
             <div className="mt-14">
+              <BreadcrumbNav/>
               {children ? children : <Outlet />}
             </div>
           </div>

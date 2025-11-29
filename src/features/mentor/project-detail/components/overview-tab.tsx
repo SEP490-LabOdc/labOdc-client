@@ -62,8 +62,6 @@ export const ProjectOverviewTab: React.FC<ProjectOverviewTabProps> = ({ projectD
     );
   };
 
-  const teamLeaders = projectData.mentors.filter(m => m.leader);
-
   return (
     <>
       <Card>
@@ -160,14 +158,16 @@ export const ProjectOverviewTab: React.FC<ProjectOverviewTabProps> = ({ projectD
                 <span>Giảng viên</span>
               </div>
               <div className="flex-1 flex flex-wrap items-center gap-2">
-                {teamLeaders.map((leader) => (
+                {projectData.mentors ? projectData.mentors.map((leader) => (
                   <div key={leader.id} className="inline-flex items-center gap-2 bg-gray-100 rounded-full px-2 py-1">
                     <Avatar className="h-6 w-6">
                       <AvatarFallback>{leader.name[0]}</AvatarFallback>
                     </Avatar>
                     <span className="font-medium text-sm text-gray-800">{leader.name}</span>
                   </div>
-                ))}
+                )): (
+                  <span className="text-sm text-gray-500">Chưa có giảng viên phụ trách</span>
+                )}
               </div>
             </div>
 
