@@ -7,7 +7,6 @@ import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
 import {
   FileText,
-  Plus,
   CircleDotDashed,
   Users,
   User,
@@ -19,7 +18,6 @@ import {
 } from 'lucide-react'
 import { getProjectStatusColor, getProjectStatusLabel, getTagColor } from '@/lib/utils'
 import { useNavigate } from '@tanstack/react-router'
-import { AddMemberModal } from '@/features/projects/components'
 import type { ProjectDetail } from '@/hooks/api/projects/types'
 import { toast } from 'sonner'
 import { projectKeys, useUpdateStatusHiring } from '@/hooks/api/projects'
@@ -32,7 +30,6 @@ interface ProjectOverviewTabProps {
 export const ProjectOverviewTab: React.FC<ProjectOverviewTabProps> = ({ projectData }) => {
   const navigate = useNavigate();
   const [isHiring, setIsHiring] = useState(projectData.isOpenForApplications);
-  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const updateStatusMutation = useUpdateStatusHiring();
   const queryClient = useQueryClient();
@@ -63,10 +60,6 @@ export const ProjectOverviewTab: React.FC<ProjectOverviewTabProps> = ({ projectD
         }
       }
     );
-  };
-
-  const handleAddMembers = (selectedUsers: Array<{ id: string; name: string }>) => {
-    console.log("Các thành viên được thêm:", selectedUsers);
   };
 
   const teamLeaders = projectData.mentors.filter(m => m.leader);
@@ -156,15 +149,6 @@ export const ProjectOverviewTab: React.FC<ProjectOverviewTabProps> = ({ projectD
                     <span className="font-medium text-sm text-gray-800">{member.name}</span>
                   </div>
                 ))}
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="text-gray-600 hover:text-gray-900 text-sm p-1 h-auto"
-                  onClick={() => setIsModalOpen(true)}
-                >
-                  <Plus className="h-4 w-4 mr-1" />
-                  Thêm mới
-                </Button>
               </div>
             </div>
 
@@ -182,15 +166,6 @@ export const ProjectOverviewTab: React.FC<ProjectOverviewTabProps> = ({ projectD
                     <span className="font-medium text-sm text-gray-800">{leader.name}</span>
                   </div>
                 ))}
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="text-gray-600 hover:text-gray-900 text-sm p-1 h-auto"
-                  onClick={() => setIsModalOpen(true)}
-                >
-                  <Plus className="h-4 w-4 mr-1" />
-                  Thêm mới
-                </Button>
               </div>
             </div>
 
@@ -236,11 +211,6 @@ export const ProjectOverviewTab: React.FC<ProjectOverviewTabProps> = ({ projectD
           </div>
         </CardContent>
       </Card>
-      <AddMemberModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        onAddMembers={handleAddMembers}
-      />
     </>
   )
 }

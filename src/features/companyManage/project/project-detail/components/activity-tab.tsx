@@ -10,7 +10,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Separator } from '@/components/ui/separator'
-import type { Note, Activity } from '../../data/project-mock-data'
+import type { Activity, Note } from '@/hooks/api/projects'
 
 interface ProjectActivityTabProps {
   notes: Note[];

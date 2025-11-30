@@ -58,7 +58,7 @@ const ProjectDetailPage: React.FC<any> = (
 
 
             <TabsContent value="files" className="mt-6">
-              <ProjectFilesTab projectId={initialData.id as string} files={initialData.files || []} projectImages={initialData.images || []} />
+              <ProjectFilesTab projectId={initialData.id as string} projectImages={initialData.images || []} />
             </TabsContent>
 
             <TabsContent value="activity" className="mt-6">
