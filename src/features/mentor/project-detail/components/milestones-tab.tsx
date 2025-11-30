@@ -5,7 +5,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Progress } from '@/components/ui/progress'
 import { Button } from '@/components/ui/button'
 import { CalendarDays, CheckCircle2, Circle, Clock, Plus, UserPlus, Users } from 'lucide-react'
-import { getStatusColor } from '@/lib/utils'
+import { getRoleBasePath, getStatusColor } from '@/lib/utils'
 import { getAvatarFallback } from '@/helpers/stringUtils'
 import { useNavigate } from '@tanstack/react-router'
 import type { Milestone } from '@/hooks/api/projects/types'
@@ -14,6 +14,7 @@ import { AddMemberModal } from '@/features/projects/components/add-member-modal'
 import { useAddTalentToMilestone } from '@/hooks/api/projects/mutation'
 import { useGetProjectMembers } from '@/hooks/api/projects/queries'
 import { toast } from 'sonner'
+import { useAuthStore } from '@/stores/auth-store.ts'
 
 interface MilestonesTabProps {
   milestones: Milestone[]
@@ -27,6 +28,7 @@ export const MilestonesTab: React.FC<MilestonesTabProps> = ({
                                                               onRefresh
                                                             }) => {
   const navigate = useNavigate()
+  const { user } = useAuthStore()
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
   const [isAddMemberModalOpen, setIsAddMemberModalOpen] = useState(false)
   const [selectedMilestoneId, setSelectedMilestoneId] = useState<string | null>(null)
@@ -86,8 +88,15 @@ export const MilestonesTab: React.FC<MilestonesTabProps> = ({
     ON_HOLD: 'Tạm dừng',
   }
 
+
+
   const handleNavigateToMilestone = async (milestoneId: string) => {
-    await navigate({ to: `/mentor/projects/$projectId/${milestoneId}/` })
+    const roleBasePath = user?.role ? getRoleBasePath(user.role) : '/talent'
+
+    await navigate({
+      to: `${roleBasePath}/projects/$projectId/${milestoneId}/`,
+      params: { projectId }
+    })
   }
 
   return (
