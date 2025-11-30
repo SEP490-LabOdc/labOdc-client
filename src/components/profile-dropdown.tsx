@@ -12,6 +12,8 @@ import {
 } from '@/components/ui/dropdown-menu.tsx'
 import { getAvatarFallback } from '@/helpers/stringUtils.ts'
 import { Palette, UserCog2, Wrench } from 'lucide-react'
+// Define helper function inside component
+
 import { getRoleBasePath } from '@/lib/utils.ts'
 
 export function ProfileDropdown() {

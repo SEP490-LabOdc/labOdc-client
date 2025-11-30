@@ -170,3 +170,57 @@ export function useGetProjectMilestoneDocuments(milestoneId: string) {
     enabled: !!milestoneId,
   })
 }
+
+export function useUpdateProjectStatus() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (payload: {
+      projectId: string
+      status: string
+      notes?: string
+    }) => {
+      const { data } = await apiRequest.patch(
+        `/api/v1/projects/${payload.projectId}/status`,
+        {
+          status: payload.status,
+          notes: payload.notes
+        }
+      )
+      return data
+    },
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: projectKeys.byId(variables.projectId),
+      });
+    }
+  })
+}
+
+export function useUpdateProject() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (payload: {
+      projectId: string;
+      title: string;
+      description: string;
+      budget: number;
+      skillIds: string[];
+    }) => {
+      const { projectId, ...body } = payload;
+
+      const { data } = await apiRequest.put(
+        `/api/v1/projects/${projectId}`,
+        body
+      );
+
+      return data;
+    },
+
+    onSuccess: (_, payload) => {
+      queryClient.invalidateQueries({
+        queryKey: projectKeys.byId(payload.projectId),
+      });
+    },
+  });
+}

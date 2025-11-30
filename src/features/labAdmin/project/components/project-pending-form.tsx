@@ -19,7 +19,7 @@ import { Loader2 } from 'lucide-react'
 import { useState } from 'react'
 import { useNavigate } from '@tanstack/react-router'
 import { toast } from 'sonner'
-import { useLabAdminApproveProject } from '@/hooks/api/projects'
+import { useLabAdminApproveProject, useUpdateProjectStatus } from '@/hooks/api/projects'
 import { AddMemberModal } from './add-member-modal'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { formatVND } from '@/helpers/customUtils'
@@ -56,6 +56,7 @@ export default function ProjectForm({
     })
 
     const navigate = useNavigate();
+    const updateProjectStatus = useUpdateProjectStatus();
 
     // === STATE CHO DIALOG PHÊ DUYỆT ===
     const [addMentorOpen, setAddMentorOpen] = useState(false);
@@ -66,15 +67,31 @@ export default function ProjectForm({
     const [loadingUpdate, setLoadingUpdate] = useState(false)
 
     // --- YÊU CẦU CẬP NHẬT ---
-    const handleSendUpdate = () => {
-        setLoadingUpdate(true)
-        setTimeout(() => {
-            console.log('📝 Gửi yêu cầu cập nhật:', requestNote)
-            setLoadingUpdate(false)
-            setUpdateDialogOpen(false)
-            setRequestNote('')
-        }, 1000)
-    }
+    const handleSendUpdate = async () => {
+        setLoadingUpdate(true);
+
+        const updatePromise = updateProjectStatus.mutateAsync({
+            projectId: initialData.id,
+            status: "UPDATE_REQUIRED",
+            notes: requestNote,
+        });
+
+        toast.promise(updatePromise, {
+            loading: "Đang gửi yêu cầu...",
+            success: "Đã gửi yêu cầu cập nhật!",
+            error: "Gửi yêu cầu thất bại!",
+        });
+
+        updatePromise
+            .then(() => {
+                setLoadingUpdate(false);
+                setUpdateDialogOpen(false);
+                setRequestNote('');
+            })
+            .catch(() => {
+                setLoadingUpdate(false);
+            });
+    };
 
     if (!initialData) return null
 

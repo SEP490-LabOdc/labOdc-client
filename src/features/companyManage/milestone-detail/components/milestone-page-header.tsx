@@ -25,7 +25,7 @@ export const MilestonePageHeader: React.FC<MilestonePageHeaderProps> = ({ milest
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => navigate({ to: `/lab-admin/projects/${milestone.projectId}` })}
+              onClick={() => navigate({ to: `/company-manage/projects/${milestone.projectId}` })}
               className="hover:bg-gray-100"
             >
               <ChevronLeft className="h-4 w-4 mr-2" />

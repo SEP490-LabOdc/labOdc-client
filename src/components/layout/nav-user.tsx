@@ -1,4 +1,4 @@
-import { Link } from '@tanstack/react-router'
+import { Link, useNavigate } from '@tanstack/react-router'
 import {
   ChevronsUpDown,
   LogOut,
@@ -22,17 +22,50 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from '@/components/ui/sidebar'
+import { toast } from 'sonner'
+import { useUser } from '@/context/UserContext'
+import { useAuthStore } from '@/stores/auth-store'
+import { Button } from '../ui/button'
 
-export function NavUser({
-  user,
-}: {
-  user: {
-    fullName: string
-    email: string
-    avatarUrl: string
+// Define helper function inside component
+const getRoleBasePath = (role: string): string => {
+  const rolePathMap: Record<string, string> = {
+    'SYSTEM_ADMIN': '/admin',
+    'LAB_ADMIN': '/lab-admin',
+    'MENTOR': '/mentor',
+    'COMPANY': '/company-manage',
+    'USER': '/talent'
   }
-}) {
+  return rolePathMap[role] || '/talent'
+}
+
+export function NavUser() {
+  const logout = useAuthStore(state => state.logout)
+  const navigate = useNavigate()
   const { isMobile } = useSidebar()
+
+  const { user } = useUser()
+
+  const handleLogout = async () => {
+    logout()
+    await navigate({ to: '/sign-in' })
+    toast.success('Đăng xuất thành công!')
+  }
+
+  const handleNavigation = (path: string) => {
+    window.location.href = path
+  }
+
+  if (!user) {
+    return (
+      <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+        <Avatar className="size-10">
+          <AvatarFallback>...</AvatarFallback>
+        </Avatar>
+      </Button>
+    )
+  }
+  const basePath = getRoleBasePath(user.role)
 
   return (
     <SidebarMenu>
@@ -74,28 +107,21 @@ export function NavUser({
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem asChild>
-                <Link to='/admin/settings'>
-                  <UserCog2 />
-                  Hồ sơ
-                </Link>
+              <DropdownMenuItem onClick={() => handleNavigation(`${basePath}/settings`)}>
+                <UserCog2 />
+                Hồ sơ
               </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link to='/admin/settings/account'>
-                  <Wrench />
-                  Tài khoản
-                </Link>
+              <DropdownMenuItem onClick={() => handleNavigation(`${basePath}/settings/account`)}>
+                <Wrench />
+                Tài khoản
               </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link to='/admin/settings/appearance'>
-                  <Palette />
-                  Giao diện
-                </Link>
+              <DropdownMenuItem onClick={() => handleNavigation(`${basePath}/settings/appearance`)}>
+                <Palette />
+                Giao diện
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <LogOut />
+            <DropdownMenuItem onClick={handleLogout}>
               Đăng xuất
             </DropdownMenuItem>
           </DropdownMenuContent>
