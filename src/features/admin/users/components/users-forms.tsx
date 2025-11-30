@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import type { JSX } from 'react'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
@@ -18,7 +18,7 @@ import { useNavigate } from '@tanstack/react-router'
 import { DatePicker } from '@/components/date-picker'
 import { toast } from 'sonner'
 import { USER_ROLE, USER_ROLE_OPTIONS, USER_STATUS } from '../data/schema'
-import { useCreateUser, useUpdateUserRole, useUpdateUserStatus } from '@/hooks/api/users/queries'
+import { useCreateUser, useUpdateUserStatus } from '@/hooks/api/users/queries'
 
 // ✅ Schema cập nhật
 const formSchema = z.object({

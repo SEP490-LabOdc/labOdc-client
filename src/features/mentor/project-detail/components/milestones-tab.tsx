@@ -88,8 +88,6 @@ export const MilestonesTab: React.FC<MilestonesTabProps> = ({
     ON_HOLD: 'Tạm dừng',
   }
 
-
-
   const handleNavigateToMilestone = async (milestoneId: string) => {
     const roleBasePath = user?.role ? getRoleBasePath(user.role) : '/talent'
 

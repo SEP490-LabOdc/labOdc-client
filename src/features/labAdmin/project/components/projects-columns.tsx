@@ -8,7 +8,6 @@ import { PROJECT_STATUS_LABEL, type Project } from '../data/schema'
 import { DataTableRowActions } from './data-table-row-actions'
 import { Link } from '@tanstack/react-router'
 import { callTypes } from '../data/data'
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@radix-ui/react-tooltip'
 
 // Helper format date
 const formatDate = (date: Date) => {

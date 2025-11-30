@@ -17,9 +17,7 @@ import {
   IconProgress,
   IconEdit,
   IconPencilCog,
-  IconUpload,
   IconCircleXFilled,
-  IconUsersGroup,         // For Lịch sử cập nhật
 } from '@tabler/icons-react'
 // import { AudioWaveform, Command, GalleryVerticalEnd } from 'lucide-react'
 import { type SidebarData } from '../types'

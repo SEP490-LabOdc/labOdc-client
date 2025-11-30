@@ -9,12 +9,9 @@ import {
 import { NavGroup } from '@/components/layout/nav-group'
 import { NavUser } from '@/components/layout/nav-user'
 import { TeamSwitcher } from '@/components/layout/team-switcher'
-import { useUser } from '@/context/UserContext'
 import { talentSidebarData } from './talent-sidebar-data.ts'
 
 export function TalentSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const { user } = useUser();
-
   return (
     <Sidebar collapsible='icon' variant='floating' {...props}>
       <SidebarHeader>
@@ -26,7 +23,7 @@ export function TalentSidebar({ ...props }: React.ComponentProps<typeof Sidebar>
         ))}
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={user} />
+        <NavUser />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>

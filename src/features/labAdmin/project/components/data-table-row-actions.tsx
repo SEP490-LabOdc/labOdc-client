@@ -38,12 +38,12 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
                         row.original.status == PROJECT_STATUS.PENDING || row.original.status == PROJECT_STATUS.APPROVED ? (
 
                             <DropdownMenuItem
-                                onClick={() => {
-                                    navigate({
-                                        to: '/admin/companies/approve',
-                                        search: { id: row.original.id },
-                                    })
-                                }}
+                                // onClick={() => {
+                                //     navigate({
+                                //         to: '/admin/companies/approve',
+                                //         search: { id: row.original.id },
+                                //     })
+                                // }}
                             >
                                 Vào phê duyệt
                                 <DropdownMenuShortcut>
@@ -54,12 +54,12 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
                         ) : (
 
                             <DropdownMenuItem
-                                onClick={() => {
-                                    navigate({
-                                        to: '/admin/companies/edit',
-                                        search: { id: row.original.id },
-                                    })
-                                }}
+                                // onClick={() => {
+                                //     navigate({
+                                //         to: '/admin/companies/edit',
+                                //         search: { id: row.original.id },
+                                //     })
+                                // }}
                             >
                                 Chỉnh sửa
                                 <DropdownMenuShortcut>

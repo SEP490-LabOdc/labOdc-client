@@ -1,7 +1,6 @@
-import { Link, useNavigate } from '@tanstack/react-router'
+import { useNavigate } from '@tanstack/react-router'
 import {
   ChevronsUpDown,
-  LogOut,
   Palette,
   UserCog2,
   Wrench,
