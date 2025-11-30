@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as VerifyOtpRouteRouteImport } from './routes/verify-otp/route'
 import { Route as CompanyRouteRouteImport } from './routes/company/route'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as publicRouteRouteImport } from './routes/(public)/route'
 import { Route as authRouteRouteImport } from './routes/(auth)/route'
 import { Route as CompanyIndexRouteImport } from './routes/company/index'
@@ -97,6 +98,10 @@ const CompanyRouteRoute = CompanyRouteRouteImport.update({
   path: '/company',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const publicRouteRoute = publicRouteRouteImport.update({
   id: '/(public)',
   getParentRoute: () => rootRouteImport,
@@ -164,38 +169,38 @@ const CompanyRegisterUpdateRouteRoute =
   } as any)
 const AuthenticatedTalentRouteRoute =
   AuthenticatedTalentRouteRouteImport.update({
-    id: '/_authenticated/talent',
+    id: '/talent',
     path: '/talent',
-    getParentRoute: () => rootRouteImport,
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedMentorRouteRoute =
   AuthenticatedMentorRouteRouteImport.update({
-    id: '/_authenticated/mentor',
+    id: '/mentor',
     path: '/mentor',
-    getParentRoute: () => rootRouteImport,
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedLabAdminRouteRoute =
   AuthenticatedLabAdminRouteRouteImport.update({
-    id: '/_authenticated/lab-admin',
+    id: '/lab-admin',
     path: '/lab-admin',
-    getParentRoute: () => rootRouteImport,
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedCompanyManageRouteRoute =
   AuthenticatedCompanyManageRouteRouteImport.update({
-    id: '/_authenticated/company-manage',
+    id: '/company-manage',
     path: '/company-manage',
-    getParentRoute: () => rootRouteImport,
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedCompanyAdminRouteRoute =
   AuthenticatedCompanyAdminRouteRouteImport.update({
-    id: '/_authenticated/company-admin',
+    id: '/company-admin',
     path: '/company-admin',
-    getParentRoute: () => rootRouteImport,
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedAdminRouteRoute = AuthenticatedAdminRouteRouteImport.update({
-  id: '/_authenticated/admin',
+  id: '/admin',
   path: '/admin',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const publicCompaniesRouteRoute = publicCompaniesRouteRouteImport.update({
   id: '/companies',
@@ -671,6 +676,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/(auth)': typeof authRouteRouteWithChildren
   '/(public)': typeof publicRouteRouteWithChildren
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/company': typeof CompanyRouteRouteWithChildren
   '/verify-otp': typeof VerifyOtpRouteRoute
   '/(public)/companies': typeof publicCompaniesRouteRouteWithChildren
@@ -895,6 +901,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/(auth)'
     | '/(public)'
+    | '/_authenticated'
     | '/company'
     | '/verify-otp'
     | '/(public)/companies'
@@ -975,14 +982,9 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   authRouteRoute: typeof authRouteRouteWithChildren
   publicRouteRoute: typeof publicRouteRouteWithChildren
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   CompanyRouteRoute: typeof CompanyRouteRouteWithChildren
   VerifyOtpRouteRoute: typeof VerifyOtpRouteRoute
-  AuthenticatedAdminRouteRoute: typeof AuthenticatedAdminRouteRouteWithChildren
-  AuthenticatedCompanyAdminRouteRoute: typeof AuthenticatedCompanyAdminRouteRouteWithChildren
-  AuthenticatedCompanyManageRouteRoute: typeof AuthenticatedCompanyManageRouteRouteWithChildren
-  AuthenticatedLabAdminRouteRoute: typeof AuthenticatedLabAdminRouteRouteWithChildren
-  AuthenticatedMentorRouteRoute: typeof AuthenticatedMentorRouteRouteWithChildren
-  AuthenticatedTalentRouteRoute: typeof AuthenticatedTalentRouteRouteWithChildren
   CompanyRegisterUpdateRouteRoute: typeof CompanyRegisterUpdateRouteRoute
   errors401Route: typeof errors401Route
   errors403Route: typeof errors403Route
@@ -1008,6 +1010,13 @@ declare module '@tanstack/react-router' {
       path: '/company'
       fullPath: '/company'
       preLoaderRoute: typeof CompanyRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/(public)': {
@@ -1106,42 +1115,42 @@ declare module '@tanstack/react-router' {
       path: '/talent'
       fullPath: '/talent'
       preLoaderRoute: typeof AuthenticatedTalentRouteRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/mentor': {
       id: '/_authenticated/mentor'
       path: '/mentor'
       fullPath: '/mentor'
       preLoaderRoute: typeof AuthenticatedMentorRouteRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/lab-admin': {
       id: '/_authenticated/lab-admin'
       path: '/lab-admin'
       fullPath: '/lab-admin'
       preLoaderRoute: typeof AuthenticatedLabAdminRouteRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/company-manage': {
       id: '/_authenticated/company-manage'
       path: '/company-manage'
       fullPath: '/company-manage'
       preLoaderRoute: typeof AuthenticatedCompanyManageRouteRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/company-admin': {
       id: '/_authenticated/company-admin'
       path: '/company-admin'
       fullPath: '/company-admin'
       preLoaderRoute: typeof AuthenticatedCompanyAdminRouteRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/admin': {
       id: '/_authenticated/admin'
       path: '/admin'
       fullPath: '/admin'
       preLoaderRoute: typeof AuthenticatedAdminRouteRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/(public)/companies': {
       id: '/(public)/companies'
@@ -1589,18 +1598,6 @@ const publicRouteRouteWithChildren = publicRouteRoute._addFileChildren(
   publicRouteRouteChildren,
 )
 
-interface CompanyRouteRouteChildren {
-  CompanyIndexRoute: typeof CompanyIndexRoute
-}
-
-const CompanyRouteRouteChildren: CompanyRouteRouteChildren = {
-  CompanyIndexRoute: CompanyIndexRoute,
-}
-
-const CompanyRouteRouteWithChildren = CompanyRouteRoute._addFileChildren(
-  CompanyRouteRouteChildren,
-)
-
 interface AuthenticatedAdminSettingsRouteRouteChildren {
   AuthenticatedAdminSettingsAccountRoute: typeof AuthenticatedAdminSettingsAccountRoute
   AuthenticatedAdminSettingsAppearanceRoute: typeof AuthenticatedAdminSettingsAppearanceRoute
@@ -1850,11 +1847,16 @@ const AuthenticatedTalentRouteRouteWithChildren =
     AuthenticatedTalentRouteRouteChildren,
   )
 
-const rootRouteChildren: RootRouteChildren = {
-  authRouteRoute: authRouteRouteWithChildren,
-  publicRouteRoute: publicRouteRouteWithChildren,
-  CompanyRouteRoute: CompanyRouteRouteWithChildren,
-  VerifyOtpRouteRoute: VerifyOtpRouteRoute,
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAdminRouteRoute: typeof AuthenticatedAdminRouteRouteWithChildren
+  AuthenticatedCompanyAdminRouteRoute: typeof AuthenticatedCompanyAdminRouteRouteWithChildren
+  AuthenticatedCompanyManageRouteRoute: typeof AuthenticatedCompanyManageRouteRouteWithChildren
+  AuthenticatedLabAdminRouteRoute: typeof AuthenticatedLabAdminRouteRouteWithChildren
+  AuthenticatedMentorRouteRoute: typeof AuthenticatedMentorRouteRouteWithChildren
+  AuthenticatedTalentRouteRoute: typeof AuthenticatedTalentRouteRouteWithChildren
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAdminRouteRoute: AuthenticatedAdminRouteRouteWithChildren,
   AuthenticatedCompanyAdminRouteRoute:
     AuthenticatedCompanyAdminRouteRouteWithChildren,
@@ -1863,6 +1865,29 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedLabAdminRouteRoute: AuthenticatedLabAdminRouteRouteWithChildren,
   AuthenticatedMentorRouteRoute: AuthenticatedMentorRouteRouteWithChildren,
   AuthenticatedTalentRouteRoute: AuthenticatedTalentRouteRouteWithChildren,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+
+interface CompanyRouteRouteChildren {
+  CompanyIndexRoute: typeof CompanyIndexRoute
+}
+
+const CompanyRouteRouteChildren: CompanyRouteRouteChildren = {
+  CompanyIndexRoute: CompanyIndexRoute,
+}
+
+const CompanyRouteRouteWithChildren = CompanyRouteRoute._addFileChildren(
+  CompanyRouteRouteChildren,
+)
+
+const rootRouteChildren: RootRouteChildren = {
+  authRouteRoute: authRouteRouteWithChildren,
+  publicRouteRoute: publicRouteRouteWithChildren,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  CompanyRouteRoute: CompanyRouteRouteWithChildren,
+  VerifyOtpRouteRoute: VerifyOtpRouteRoute,
   CompanyRegisterUpdateRouteRoute: CompanyRegisterUpdateRouteRoute,
   errors401Route: errors401Route,
   errors403Route: errors403Route,
