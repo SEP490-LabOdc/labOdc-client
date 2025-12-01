@@ -2,6 +2,7 @@ import type { NavItem } from "@/components/layout/types"
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 import { ProjectTypes } from '@/hooks/api/projects'
+import { ROLE } from '@/const.ts'
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -61,7 +62,7 @@ export function getPageNumbers(currentPage: number, totalPages: number) {
 }
 
 // Project status color mapping
-const projectStatusColorMap: Record<ProjectTypes, string> = {
+const StatusColorMap: Record<ProjectTypes, string> = {
   [ProjectTypes.PENDING]: 'bg-yellow-100 text-yellow-800 border-yellow-200',
   [ProjectTypes.UPDATE_REQUIRED]: 'bg-orange-100 text-orange-800 border-orange-200',
   [ProjectTypes.REJECTED]: 'bg-red-100 text-red-800 border-red-200',
@@ -73,7 +74,7 @@ const projectStatusColorMap: Record<ProjectTypes, string> = {
 }
 
 // Project status label mapping
-const projectStatusLabelMap: Record<ProjectTypes, string> = {
+const StatusLabelMap: Record<ProjectTypes, string> = {
   [ProjectTypes.PENDING]: 'Chờ duyệt',
   [ProjectTypes.UPDATE_REQUIRED]: 'Cần cập nhật',
   [ProjectTypes.REJECTED]: 'Từ chối',
@@ -84,28 +85,12 @@ const projectStatusLabelMap: Record<ProjectTypes, string> = {
   [ProjectTypes.PAUSED]: 'Tạm dừng',
 }
 
-export function getProjectStatusColor(status: string): string {
-  return projectStatusColorMap[status as ProjectTypes] || 'bg-gray-100 text-gray-800 border-gray-200'
+export function getStatusColor(status: string): string {
+  return StatusColorMap[status as ProjectTypes] || 'bg-gray-100 text-gray-800 border-gray-200'
 }
 
-export function getProjectStatusLabel(status: string): string {
-  return projectStatusLabelMap[status as ProjectTypes] || status
-}
-
-// Legacy status color (giữ lại cho các component cũ)
-const statusColorMap: Record<string, string> = {
-  Completed: 'bg-green-100 text-green-800',
-  InProgress: 'bg-purple-100 text-purple-800',
-  Pending: 'bg-orange-100 text-orange-800',
-  OnHold: 'bg-gray-100 text-gray-800',
-  High: 'bg-red-100 text-red-800',
-  Paid: 'bg-green-100 text-green-800',
-  Hold: 'bg-orange-100 text-orange-800',
-  Unpaid: 'bg-red-100 text-red-800',
-}
-
-export const getStatusColor = (status: string) => {
-  return statusColorMap[status] || 'bg-gray-100 text-gray-800'
+export function getStatusLabel(status: string): string {
+  return StatusLabelMap[status as ProjectTypes] || status
 }
 
 export const getTagColor = (tag: string) => {
@@ -142,11 +127,11 @@ export function getCandidateStatusLabel(status: string): string {
 // Define helper function inside component
 export const getRoleBasePath = (role: string): string => {
   const rolePathMap: Record<string, string> = {
-    'SYSTEM_ADMIN': '/admin',
-    'LAB_ADMIN': '/lab-admin',
-    'MENTOR': '/mentor',
-    'COMPANY': '/company-manage',
-    'USER': '/talent'
+    [ROLE.SYSTEM_ADMIN]: '/admin',
+    [ROLE.LAB_ADMIN]: '/lab-admin',
+    [ROLE.MENTOR]: '/mentor',
+    [ROLE.COMPANY]: '/company-manage',
+    [ROLE.USER]: '/talent'
   }
   return rolePathMap[role] || '/talent'
 }

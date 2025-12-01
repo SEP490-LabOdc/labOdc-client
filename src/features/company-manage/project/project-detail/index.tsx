@@ -4,7 +4,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useGetProjectMilestones } from '@/hooks/api/projects/queries'
 
 // 3. Import các component con đã chia nhỏ
-import { ProjectPageHeader, ProjectSidebar, ProjectActivityTab, ProjectFilesTab, ProjectInvoicesTab, ProjectOverviewTab, MilestonesTab } from './components'
+import { ProjectSidebar, ProjectActivityTab, ProjectFilesTab, ProjectInvoicesTab, ProjectOverviewTab, MilestonesTab } from './components'
+import { Button } from '@/components/ui/button.tsx'
+import { ChevronLeft } from 'lucide-react'
 
 // Component chính
 const ProjectDetailPage: React.FC<any> = (
@@ -13,11 +15,15 @@ const ProjectDetailPage: React.FC<any> = (
 
   const { data: milestonesData, isLoading: isLoadingMilestones, refetch: refetchMilestones } = useGetProjectMilestones(initialData.id)
 
-  console.log(initialData);
   return (
     <div className="min-h-screen bg-gray-50">
       {/* === HEADER === */}
-      <ProjectPageHeader />
+      <div className="bg-white px-6 py-4 border-b flex items-center justify-between">
+        <Button variant="ghost" className="flex items-center gap-2 text-gray-600">
+          <ChevronLeft className="h-4 w-4" />
+          Quay lại danh sách dự án
+        </Button>
+      </div>
 
       <div className="max-w-7xl mx-auto grid grid-cols-12 gap-6 p-6">
 
