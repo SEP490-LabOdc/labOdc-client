@@ -6,7 +6,6 @@ import { DataTableColumnHeader } from '@/components/data-table'
 import { LongText } from '@/components/long-text'
 import { callTypes } from '../data/data'
 import { COMPANY_STATUS_LABEL, type Company } from '../data/schema'
-import { DataTableRowActions } from './data-table-row-actions'
 import { Link } from '@tanstack/react-router'
 
 const formatDate = (date: Date) => {
@@ -170,9 +169,5 @@ export const companiesColumns: ColumnDef<Company>[] = [
 
             return <div className="min-w-[100px]">{formatDate(dateValue)}</div>
         },
-    },
-    {
-        id: 'actions',
-        cell: DataTableRowActions,
     },
 ]
