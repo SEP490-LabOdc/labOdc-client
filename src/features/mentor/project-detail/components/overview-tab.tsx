@@ -22,7 +22,7 @@ import type { ProjectDetail } from '@/hooks/api/projects/types'
 import { toast } from 'sonner'
 import { projectKeys, useUpdateStatusHiring } from '@/hooks/api/projects'
 import { useQueryClient } from '@tanstack/react-query'
-import { useUser } from '@/context/UserContext'
+import { useIsMentor } from '@/hooks/useIsMentor.ts'
 
 interface ProjectOverviewTabProps {
   projectData: ProjectDetail;
@@ -30,13 +30,12 @@ interface ProjectOverviewTabProps {
 
 export const ProjectOverviewTab: React.FC<ProjectOverviewTabProps> = ({ projectData }) => {
   const navigate = useNavigate()
-  const { user } = useUser()
   const [isHiring, setIsHiring] = useState(projectData.isOpenForApplications)
 
   const updateStatusMutation = useUpdateStatusHiring()
   const queryClient = useQueryClient()
 
-  const isMentor = user?.role === 'MENTOR'
+  const isMentor = useIsMentor()
 
   const handleToggleHiring = async (checked: boolean) => {
     updateStatusMutation.mutate(

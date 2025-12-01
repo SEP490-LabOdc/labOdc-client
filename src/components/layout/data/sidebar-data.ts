@@ -23,7 +23,7 @@ import {
 import { type SidebarData } from '../types'
 import { USER_ROLE, USER_ROLE_LABEL } from '@/features/admin/users/data/schema'
 import { Building2, FlaskConical, LockKeyhole, User } from 'lucide-react'
-import { PROJECT_STATUS } from '@/features/companyManage/project/data/schema'
+import { PROJECT_STATUS } from '@/features/company-manage/project/data/schema.ts'
 
 export const systemAmdminSidebarData: SidebarData = {
   navGroups: [
