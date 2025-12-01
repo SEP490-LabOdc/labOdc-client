@@ -6,7 +6,51 @@ import { MilestonePageHeader, MilestoneOverviewTab, MilestoneReportsTab, Milesto
 
 const MilestoneDetailPage: React.FC = () => {
   const { milestoneId } = useParams({ strict: false })
-  const { data: milestoneData, isLoading, error } = useGetMilestoneById(milestoneId as string)
+  const { data: milestoneData, isLoading, error, refetch } = useGetMilestoneById(milestoneId as string)
+
+  const handleApproveMilestone = async (id: string) => {
+    try {
+      const response = await fetch(`/api/milestones/${id}/approve`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to approve milestone')
+      }
+
+      // Refetch data to update UI
+      await refetch()
+
+      // Optional: Show success message
+      alert('Milestone đã được phê duyệt thành công!')
+    } catch (error) {
+      console.error('Error approving milestone:', error)
+      alert('Có lỗi xảy ra khi phê duyệt milestone')
+    }
+  }
+
+  const handleRequestUpdate = async (id: string) => {
+    try {
+      const response = await fetch(`/api/milestones/${id}/request-update`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to request update')
+      }
+
+      // Refetch data to update UI
+      await refetch()
+
+      // Optional: Show success message
+      alert('Đã gửi yêu cầu cập nhật milestone!')
+    } catch (error) {
+      console.error('Error requesting update:', error)
+      alert('Có lỗi xảy ra khi gửi yêu cầu cập nhật')
+    }
+  }
 
   if (isLoading) {
     return (
@@ -31,7 +75,11 @@ const MilestoneDetailPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <MilestonePageHeader milestone={milestone} />
+      <MilestonePageHeader
+        milestone={milestone}
+        onApproveMilestone={handleApproveMilestone}
+        onRequestUpdate={handleRequestUpdate}
+      />
 
       <div className="max-w-7xl mx-auto grid grid-cols-12 gap-6 p-6">
         <div className="col-span-12 lg:col-span-4 space-y-6">

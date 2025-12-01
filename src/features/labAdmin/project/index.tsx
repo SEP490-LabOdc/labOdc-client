@@ -2,11 +2,6 @@ import { ErrorView } from "@/components/admin/ErrorView"
 import { useGetProjects } from "@/hooks/api/projects/queries"
 import { getRouteApi } from "@tanstack/react-router"
 import { ProjectsProvider } from "./components/project-provider"
-import { Header } from "@/components/layout/header"
-import { Search } from "@/components/search"
-import { ThemeSwitch } from "@/components/theme-switch"
-import { ConfigDrawer } from "@/components/config-drawer"
-import { ProfileDropdown } from "@/components/profile-dropdown"
 import { Main } from "@/components/layout/main"
 import { ProjectsTable } from "./components/projects-table"
 
@@ -67,14 +62,6 @@ export default function Project() {
         <>
             <ProjectsProvider>
                 <>
-                    <Header fixed>
-                        <Search />
-                        <div className='ms-auto flex items-center space-x-4'>
-                            <ThemeSwitch />
-                            <ConfigDrawer />
-                            <ProfileDropdown />
-                        </div>
-                    </Header>
                     <Main>
                         <div className='mb-2 flex flex-wrap items-center justify-between space-y-2'>
                             <div>

@@ -4,8 +4,8 @@ import { Badge } from '@/components/ui/badge'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Progress } from '@/components/ui/progress'
 import { Button } from '@/components/ui/button'
-import { CalendarDays, CheckCircle2, Circle, Clock, Plus, UserPlus, Users } from 'lucide-react'
-import { getRoleBasePath, getStatusColor } from '@/lib/utils'
+import { CalendarDays, CheckCircle2, Circle, Clock, Plus, UserPlus, Users, Check, RefreshCw } from 'lucide-react'
+import { getRoleBasePath, getStatusColor, getStatusLabel } from '@/lib/utils'
 import { getAvatarFallback } from '@/helpers/stringUtils'
 import { useNavigate } from '@tanstack/react-router'
 import type { Milestone } from '@/hooks/api/projects/types'
@@ -21,12 +21,14 @@ interface MilestonesTabProps {
   milestones: Milestone[]
   projectId: string
   onRefresh?: () => void
+  showApprovalActions?: boolean
 }
 
 export const MilestonesTab: React.FC<MilestonesTabProps> = ({
                                                               milestones,
                                                               projectId,
-                                                              onRefresh
+                                                              onRefresh,
+                                                              showApprovalActions = false
                                                             }) => {
   const navigate = useNavigate()
   const { user } = useAuthStore()
@@ -39,6 +41,35 @@ export const MilestonesTab: React.FC<MilestonesTabProps> = ({
   const addTalentMutation = useAddTalentToMilestone()
 
   const projectMembers = projectMembersData?.data || []
+
+  // Approval handlers
+  const handleApproveMilestone = async (milestoneId: string) => {
+    try {
+      await fetch(`/api/milestones/${milestoneId}/approve`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+      })
+      toast.success('Milestone đã được phê duyệt!')
+      onRefresh?.()
+    } catch (error) {
+      console.error('Failed to approve milestone:', error)
+      toast.error('Phê duyệt milestone thất bại')
+    }
+  }
+
+  const handleRequestUpdate = async (milestoneId: string) => {
+    try {
+      await fetch(`/api/milestones/${milestoneId}/request-update`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+      })
+      toast.success('Đã gửi yêu cầu cập nhật!')
+      onRefresh?.()
+    } catch (error) {
+      console.error('Failed to request update:', error)
+      toast.error('Gửi yêu cầu cập nhật thất bại')
+    }
+  }
 
   const handleAddMembers = async (selectedUserIds: string[]) => {
     if (!selectedMilestoneId) return
@@ -74,20 +105,13 @@ export const MilestonesTab: React.FC<MilestonesTabProps> = ({
 
   const getStatusIcon = (status: string) => {
     switch (status.toUpperCase()) {
-      case 'COMPLETED':
+      case 'COMPLETE':
         return <CheckCircle2 className="h-4 w-4 text-green-600" />
-      case 'IN_PROGRESS':
+      case 'ON_GOING':
         return <Clock className="h-4 w-4 text-blue-600" />
       default:
         return <Circle className="h-4 w-4 text-gray-400" />
     }
-  }
-
-  const statusLabels: Record<string, string> = {
-    PLANNING: 'Đang lên kế hoạch',
-    IN_PROGRESS: 'Đang thực hiện',
-    COMPLETED: 'Hoàn thành',
-    ON_HOLD: 'Tạm dừng',
   }
 
   const handleNavigateToMilestone = async (milestoneId: string) => {
@@ -115,6 +139,7 @@ export const MilestonesTab: React.FC<MilestonesTabProps> = ({
         const talents = milestone.talents || []
         const mentors = milestone.mentors || []
         const progress = calculateProgress(milestone.startDate, milestone.endDate)
+        const showApprovalButtons = showApprovalActions && (milestone.status === 'PENDING' || milestone.status === 'UPDATE_REQUIRED')
 
         return (
           <Card key={milestone.id} className="hover:shadow-md transition-shadow">
@@ -136,7 +161,7 @@ export const MilestonesTab: React.FC<MilestonesTabProps> = ({
                       <p className="text-xs text-gray-600 mt-1 line-clamp-2">{milestone.description}</p>
                     </div>
                     <Badge className={`${getStatusColor(milestone.status)} rounded-full text-xs flex-shrink-0`}>
-                      {statusLabels[milestone.status] || milestone.status}
+                      {getStatusLabel(milestone.status)}
                     </Badge>
                   </div>
 
@@ -155,6 +180,7 @@ export const MilestonesTab: React.FC<MilestonesTabProps> = ({
 
                   <div className="flex items-center justify-between pt-2">
                     <div className="flex items-center gap-6">
+                      {/* Talents section */}
                       <div className="flex items-center gap-2">
                         <div className="flex items-center gap-1.5 text-xs text-gray-600">
                           <Users className="h-3.5 w-3.5" />
@@ -181,6 +207,7 @@ export const MilestonesTab: React.FC<MilestonesTabProps> = ({
                         </div>
                       </div>
 
+                      {/* Mentors section */}
                       <div className="flex items-center gap-2">
                         <div className="flex items-center gap-1.5 text-xs text-gray-600">
                           <Users className="h-3.5 w-3.5" />
@@ -208,18 +235,43 @@ export const MilestonesTab: React.FC<MilestonesTabProps> = ({
                       </div>
                     </div>
 
-                    {isMentor && (
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => openAddMemberModal(milestone.id)}
-                        disabled={isLoadingMembers}
-                        className="ml-4"
-                      >
-                        <UserPlus className="h-4 w-4 mr-1" />
-                        Thêm thành viên
-                      </Button>
-                    )}
+                    <div className="flex items-center gap-2">
+                      {/* Approval buttons */}
+                      {showApprovalButtons && (
+                        <>
+                          <Button
+                            size="sm"
+                            onClick={() => handleApproveMilestone(milestone.id)}
+                            className="bg-green-600 hover:bg-green-700 text-white"
+                          >
+                            <Check className="h-4 w-4 mr-1" />
+                            Phê duyệt
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => handleRequestUpdate(milestone.id)}
+                            className="text-orange-600 border-orange-600 hover:bg-orange-50"
+                          >
+                            <RefreshCw className="h-4 w-4 mr-1" />
+                            Yêu cầu cập nhật
+                          </Button>
+                        </>
+                      )}
+
+                      {/* Add member button */}
+                      {isMentor && (
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => openAddMemberModal(milestone.id)}
+                          disabled={isLoadingMembers}
+                        >
+                          <UserPlus className="h-4 w-4 mr-1" />
+                          Thêm thành viên
+                        </Button>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>

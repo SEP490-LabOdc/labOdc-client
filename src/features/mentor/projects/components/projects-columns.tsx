@@ -4,7 +4,8 @@ import { Badge } from '@/components/ui/badge'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Link } from '@tanstack/react-router'
 import type { Project } from '@/features/projects/data/schema.ts'
-import { getProjectStatusColor, getProjectStatusLabel } from '@/lib/utils.ts'
+import { getStatusColor, getStatusLabel } from '@/lib/utils.ts'
+import { LongText } from '@/components/long-text.tsx'
 
 export const projectsColumns: ColumnDef<Project>[] = [
   {
@@ -44,13 +45,15 @@ export const projectsColumns: ColumnDef<Project>[] = [
       const title = row.getValue('title') as string
       const projectId = row.original.id
       return (
-        <Link
-          to="/mentor/projects/$projectId"
-          params={{ projectId }}
-          className="font-medium hover:underline"
-        >
-          {title}
-        </Link>
+        <LongText className="max-w-36 ps-3">
+          <Link
+            to="/mentor/projects/$projectId"
+            params={{ projectId }}
+            className="font-medium hover:underline"
+          >
+            {title}
+          </Link>
+        </LongText>
       )
     },
   },
@@ -96,8 +99,8 @@ export const projectsColumns: ColumnDef<Project>[] = [
       const status = row.getValue('status') as string
 
       return (
-        <Badge className={`${getProjectStatusColor(status)} rounded-full`}>
-          {getProjectStatusLabel(status)}
+        <Badge className={`${getStatusColor(status)} rounded-full`}>
+          {getStatusLabel(status)}
         </Badge>
       )
     },

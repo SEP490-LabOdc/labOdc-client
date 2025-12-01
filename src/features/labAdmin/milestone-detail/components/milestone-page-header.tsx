@@ -31,14 +31,6 @@ export const MilestonePageHeader: React.FC<MilestonePageHeaderProps> = ({ milest
               <ChevronLeft className="h-4 w-4 mr-2" />
               Quay lại
             </Button>
-            <div className="flex-1">
-              <h1 className="text-2xl font-bold text-gray-900">{milestone.title}</h1>
-              <div className="flex items-center gap-2 text-sm text-gray-500 mt-1">
-                <span className="hover:underline cursor-pointer">{milestone.projectName}</span>
-                <span>/</span>
-                <span>{milestone.title}</span>
-              </div>
-            </div>
           </div>
 
           <div className="flex items-center gap-3">

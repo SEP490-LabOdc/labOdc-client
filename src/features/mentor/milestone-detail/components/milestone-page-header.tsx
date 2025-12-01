@@ -25,20 +25,12 @@ export const MilestonePageHeader: React.FC<MilestonePageHeaderProps> = ({ milest
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => navigate({ to: `/mentor/projects/${milestone.projectId}` })}
+              onClick={() => navigate({ to: `/talent/projects/${milestone.projectId}` })}
               className="hover:bg-gray-100"
             >
               <ChevronLeft className="h-4 w-4 mr-2" />
               Quay lại
             </Button>
-            <div className="flex-1">
-              <h1 className="text-2xl font-bold text-gray-900">{milestone.title}</h1>
-              <div className="flex items-center gap-2 text-sm text-gray-500 mt-1">
-                <span className="hover:underline cursor-pointer">{milestone.projectName}</span>
-                <span>/</span>
-                <span>{milestone.title}</span>
-              </div>
-            </div>
           </div>
 
           <div className="flex items-center gap-3">
