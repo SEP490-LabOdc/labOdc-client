@@ -141,3 +141,52 @@ export const useCreateUser = () => {
         },
     })
 }
+
+
+export const fetchMentorsByProjectId = async (projectId: string) => {
+    const response = await apiRequest.get(
+        `/api/v1/project-members/available-mentors/${projectId}`
+    );
+
+    return response.data;
+};
+
+export const useGetMentorByProjectId = (projectId: string | null) =>
+    useQuery({
+        queryKey: userKeys.availableMentors(projectId),
+        queryFn: async () => {
+            const res = await fetchMentorsByProjectId(projectId!);
+            return res.data;
+        },
+        enabled: !!projectId,
+    });
+
+export interface UpdatePasswordPayload {
+    id: string;
+    payload: {
+        currentPassword: string;
+        newPassword: string;
+        confirmPassword: string;
+        passwordMatch: true;
+    };
+}
+
+export const useUpdatePassword = () => {
+    return useMutation({
+        mutationFn: async ({ id, payload }: UpdatePasswordPayload) => {
+            const res = await apiRequest.put(`/api/v1/users/${id}/password`, payload);
+            return res.data;
+        },
+    });
+};
+
+export function useGetMySubmittedCv() {
+  return useQuery({
+    queryKey: userKeys.mySubmittedCv,
+    queryFn: async () => {
+      const { data } = await apiRequest.get(`/api/v1/project-applications/my-submitted-cvs`);
+      return data;
+    }
+  })
+}
+

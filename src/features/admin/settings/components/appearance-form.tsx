@@ -3,7 +3,6 @@ import { useForm } from 'react-hook-form'
 import { ChevronDownIcon } from '@radix-ui/react-icons'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { fonts } from '@/config/fonts'
-import { showSubmittedData } from '@/lib/show-submitted-data'
 import { cn } from '@/lib/utils'
 import { useFont } from '@/context/font-provider'
 import { useTheme } from '@/context/theme-provider'
@@ -18,6 +17,7 @@ import {
     FormMessage,
 } from '@/components/ui/form'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
+import { toast } from 'sonner'
 
 const appearanceFormSchema = z.object({
     theme: z.enum(['light', 'dark']),
@@ -44,7 +44,7 @@ export function AppearanceForm() {
         if (data.font != font) setFont(data.font)
         if (data.theme != theme) setTheme(data.theme)
 
-        showSubmittedData(data)
+        toast.success('Tùy chỉnh đã được lưu');
     }
 
     return (

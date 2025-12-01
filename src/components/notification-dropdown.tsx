@@ -22,8 +22,8 @@ import { useQueryClient } from '@tanstack/react-query'
 import { notificationsKeys, useGetUserNotifications, useGetUserNotificationsUnread } from '@/hooks/api/notifications'
 import { useNotificationSubscription } from '@/hooks/use-notifications'
 import { Link } from '@tanstack/react-router'
+import { useMarkNotificationAsRead } from '@/hooks/api/notifications/queries.ts'
 
-// === 1. ĐỊNH NGHĨA TYPE CHUẨN ===
 type Notification = {
   notificationRecipientId: string;
   type: string;
@@ -40,10 +40,8 @@ type Notification = {
   readStatus: boolean;
 };
 
-// Kiểu dữ liệu mà API trả về (bao gồm 'data' wrapper)
 type ApiResponse = {
   data: Notification[];
-  // ... có thể có các trường khác như total, page, etc.
 }
 
 export function NotificationDropdown() {
@@ -51,7 +49,6 @@ export function NotificationDropdown() {
   const queryClient = useQueryClient()
   const [activeTab, setActiveTab] = useState<'all' | 'unread'>('all');
 
-  // --- 2. Fetch Dữ Liệu ---
   const {
     data: allNotifications,
     isLoading: isLoadingAll,
@@ -64,7 +61,8 @@ export function NotificationDropdown() {
     isError: isErrorUnread
   } = useGetUserNotificationsUnread(userId);
 
-  // --- 3. TÍCH HỢP REAL-TIME ---
+  const markAsReadMutation = useMarkNotificationAsRead();
+
   const notificationTopic = `/user/queue/notifications`;
 
   const onNewNotification = useCallback((newNotification: Notification) => {
@@ -96,12 +94,10 @@ export function NotificationDropdown() {
     onNewNotification
   );
 
-  // --- 4. Tính toán số lượng chưa đọc ---
   const unreadCount = useMemo(() => {
     return unreadNotifications?.data?.length || 0;
   }, [unreadNotifications]);
 
-  // Helper format thời gian
   const formatNotificationTime = (sentAt: string) => {
     try {
       return formatDistanceToNow(new Date(sentAt), { addSuffix: true })
@@ -110,7 +106,15 @@ export function NotificationDropdown() {
     }
   }
 
-  // --- 5. Helper Render Danh Sách ---
+  const handleNotificationClick = (notification: Notification) => {
+    if (!notification.readStatus) {
+      markAsReadMutation.mutate({
+        userId,
+        notificationRecipientId: notification.notificationRecipientId
+      });
+    }
+  };
+
   const renderNotificationList = (
     list: Notification[] | undefined,
     isLoading: boolean,
@@ -152,6 +156,7 @@ export function NotificationDropdown() {
           'focus:bg-accent hover:bg-accent/50',
           !item.readStatus && 'bg-accent/30 border-l-2 border-l-primary'
         )}
+        onClick={() => handleNotificationClick(item)}
       >
         <Link to={item.deepLink} className='w-full'>
           <div className='flex items-start justify-between w-full'>
@@ -176,21 +181,16 @@ export function NotificationDropdown() {
     ));
   };
 
-  if (!userId) {
-    return null
-  }
-
   return (
     <DropdownMenu>
-      {/* Phần Trigger (Badge đã đúng) */}
       <DropdownMenuTrigger asChild>
         <div className="relative me-5">
           <Button
             variant='ghost'
             size='icon'
-            className={cn('rounded-full size-10')}
+            className={cn('rounded-full size-9')}
           >
-            <BellIcon className='hover:cursor-pointer size-7' />
+            <BellIcon className='hover:cursor-pointer size-4' />
           </Button>
           {unreadCount > 0 && (
             <span
@@ -203,7 +203,6 @@ export function NotificationDropdown() {
         </div>
       </DropdownMenuTrigger>
 
-      {/* Phần Content */}
       <DropdownMenuContent className='w-96' align='end' forceMount>
         <DropdownMenuLabel className='font-normal'>
           <div className='flex items-center justify-between'>

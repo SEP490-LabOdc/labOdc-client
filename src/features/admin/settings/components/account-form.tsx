@@ -1,8 +1,5 @@
-import { useEffect } from 'react'
-import { z } from 'zod'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { Button } from '@/components/ui/button'
+import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
 import {
     Form,
     FormControl,
@@ -10,196 +7,196 @@ import {
     FormField,
     FormItem,
     FormLabel,
-    FormMessage,
-} from '@/components/ui/form'
-import { Input } from '@/components/ui/input'
-import { DatePicker } from '@/components/date-picker'
-import { SelectDropdown } from '@/components/select-dropdown'
-import { useGetUserById, useUpdateProfile } from '@/hooks/api/users'
-import { toast } from 'sonner'
-
-// ✅ Schema khớp với API /api/v1/users/{id}/profile
-const profileSchema = z.object({
-    fullName: z.string().min(1, 'Họ và tên là bắt buộc.'),
-    phone: z.string().min(1, 'Số điện thoại là bắt buộc.'),
-    gender: z.enum(['MALE', 'FEMALE', 'OTHER']),
-    birthDate: z.date(),
-    address: z.string().min(1, 'Địa chỉ là bắt buộc.'),
-    avatarUrl: z.string().url('Avatar phải là URL hợp lệ.').optional(),
-})
-
-export type ProfileFormValues = z.infer<typeof profileSchema>
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { useGetUserById, useUpdatePassword } from "@/hooks/api/users";
+import { toast } from "sonner";
+import { useForm } from "react-hook-form";
+import { PasswordInput } from "@/components/password-input";
 
 export function AccountForm() {
-    const userId = typeof window !== 'undefined' ? localStorage.getItem('user_id') : null
+    const userId =
+        typeof window !== "undefined" ? localStorage.getItem("user_id") : null;
 
     const { data: userData, isLoading, refetch } = useGetUserById(userId);
+    const { mutateAsync: updatePassword } = useUpdatePassword();
 
-    const { mutateAsync: updateProfile } = useUpdateProfile()
+    const [showPasswordForm, setShowPasswordForm] = useState(false);
 
-    const form = useForm<ProfileFormValues>({
-        resolver: zodResolver(profileSchema),
-        defaultValues: {
-            fullName: '',
-            phone: '',
-            gender: 'OTHER',
-            birthDate: new Date(),
-            address: '',
-            avatarUrl: '',
-        },
-    })
+    const [passwordFields, setPasswordFields] = useState({
+        currentPassword: "",
+        newPassword: "",
+        confirmPassword: "",
+    });
 
     useEffect(() => {
-        if (userId) refetch()
-    }, [userId, refetch])
-
-    useEffect(() => {
-        if (userData) {
-            form.reset({
-                fullName: userData.data.fullName ?? '',
-                phone: userData.data.phone ?? '',
-                gender: userData.data.gender ?? 'OTHER',
-                birthDate: userData.data.birthDate ? new Date(userData.data.birthDate) : new Date(),
-                address: userData.data.address ?? '',
-                avatarUrl: userData.data.avatarUrl ?? '',
-            })
-        }
-    }, [userData, form])
-
-    // 🔹 Submit form để cập nhật profile
-    const onSubmit = async (values: ProfileFormValues) => {
-        if (!userId) return toast.error('Không tìm thấy ID người dùng!')
-
-        const promise = updateProfile({
-            id: userId,
-            payload: {
-                fullName: values.fullName,
-                phone: values.phone,
-                gender: values.gender,
-                birthDate: values.birthDate.toISOString().split('T')[0],
-                address: values.address,
-                avatarUrl: values.avatarUrl,
-            },
-        })
-
-        toast.promise(promise, {
-            loading: 'Đang cập nhật hồ sơ...',
-            success: 'Cập nhật hồ sơ thành công!',
-            error: 'Cập nhật thất bại, vui lòng thử lại!',
-        })
-
-        await promise
-    }
+        if (userId) refetch();
+    }, [userId, refetch]);
 
     if (isLoading) {
-        return <p className="text-center py-6">Đang tải dữ liệu người dùng...</p>
+        return <p className="text-center py-6">Đang tải dữ liệu người dùng...</p>;
     }
+
+    const form = useForm({
+        defaultValues: {},
+    });
+
 
     return (
         <div className="max-w-3xl mx-auto space-y-8">
             <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                {/* FORM KHÔNG SUBMIT GÌ CẢ */}
+                <form
+                    onSubmit={(e) => e.preventDefault()}
+                    className="space-y-8"
+                >
+                    {/* Email */}
                     <FormField
-                        control={form.control}
-                        name="fullName"
-                        render={({ field }) => (
+                        name="email"
+                        render={() => (
                             <FormItem>
-                                <FormLabel>Họ và tên</FormLabel>
+                                <FormLabel>Email</FormLabel>
                                 <FormControl>
-                                    <Input placeholder="VD: Hoàng Văn Nam" {...field} />
+                                    <Input
+                                        disabled
+                                        value={userData?.data.email ?? ""}
+                                    />
                                 </FormControl>
-                                <FormDescription>Tên hiển thị công khai của bạn.</FormDescription>
-                                <FormMessage />
+                                <FormDescription>Email không thể thay đổi.</FormDescription>
                             </FormItem>
                         )}
                     />
 
-                    <FormField
-                        control={form.control}
-                        name="phone"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Số điện thoại</FormLabel>
-                                <FormControl>
-                                    <Input placeholder="+84 908 899 008" {...field} />
-                                </FormControl>
-                                <FormDescription>Dùng để liên hệ và xác minh tài khoản.</FormDescription>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
+                    {/* Mật khẩu dạng ****** */}
+                    <div className="grid gap-2">
+                        <FormLabel>Mật khẩu</FormLabel>
+                        <Input value="********" disabled />
 
-                    <FormField
-                        control={form.control}
-                        name="gender"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Giới tính</FormLabel>
-                                <SelectDropdown
-                                    defaultValue={field.value}
-                                    onValueChange={field.onChange}
-                                    placeholder="Chọn giới tính"
-                                    items={[
-                                        { label: 'Nam', value: 'MALE' },
-                                        { label: 'Nữ', value: 'FEMALE' },
-                                        { label: 'Khác', value: 'OTHER' },
-                                    ]}
-                                    className="w-[200px]"
-                                />
-                                <FormDescription>Chọn giới tính phù hợp của bạn.</FormDescription>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-
-                    <FormField
-                        control={form.control}
-                        name="birthDate"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Ngày sinh</FormLabel>
-                                <DatePicker selected={field.value} onSelect={field.onChange} />
-                                <FormDescription>Ngày sinh của bạn.</FormDescription>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-
-                    <FormField
-                        control={form.control}
-                        name="address"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Địa chỉ</FormLabel>
-                                <FormControl>
-                                    <Input placeholder="VD: Hà Nội" {...field} />
-                                </FormControl>
-                                <FormDescription>Nơi bạn đang sinh sống.</FormDescription>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-
-                    <FormField
-                        control={form.control}
-                        name="avatarUrl"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Ảnh đại diện (URL)</FormLabel>
-                                <FormControl>
-                                    <Input placeholder="https://..." {...field} />
-                                </FormControl>
-                                <FormDescription>Dán liên kết ảnh đại diện của bạn.</FormDescription>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-
-                    <div className="flex justify-start pb-3">
-                        <Button type="submit">Cập nhật hồ sơ</Button>
+                        <Button
+                            type="button"
+                            variant="outline"
+                            className="mt-2 w-50"
+                            onClick={() => setShowPasswordForm(!showPasswordForm)}
+                        >
+                            {showPasswordForm ? "Hủy thay đổi" : "Thay đổi mật khẩu"}
+                        </Button>
                     </div>
+
+                    {/* Form thay đổi mật khẩu */}
+                    {showPasswordForm && (
+                        <div
+                            className="
+            rounded-xl shadow-sm p-6 space-y-5
+            bg-white dark:bg-neutral-900
+            border border-gray-200 dark:border-neutral-700
+        "
+                        >
+                            <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-200">
+                                Đổi mật khẩu
+                            </h3>
+
+                            {/* Mật khẩu hiện tại */}
+                            <div className="space-y-2">
+                                <FormLabel className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                                    Mật khẩu hiện tại
+                                </FormLabel>
+                                <PasswordInput
+                                    placeholder="********"
+                                    value={passwordFields.currentPassword}
+                                    onChange={(e) =>
+                                        setPasswordFields({
+                                            ...passwordFields,
+                                            currentPassword: e.target.value,
+                                        })
+                                    }
+                                />
+                            </div>
+
+                            {/* Mật khẩu mới */}
+                            <div className="space-y-2">
+                                <FormLabel className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                                    Mật khẩu mới
+                                </FormLabel>
+                                <PasswordInput
+                                    placeholder="********"
+                                    value={passwordFields.newPassword}
+                                    onChange={(e) =>
+                                        setPasswordFields({
+                                            ...passwordFields,
+                                            newPassword: e.target.value,
+                                        })
+                                    }
+                                />
+                            </div>
+
+                            {/* Xác nhận mật khẩu */}
+                            <div className="space-y-2">
+                                <FormLabel className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                                    Xác nhận mật khẩu mới
+                                </FormLabel>
+                                <PasswordInput
+                                    placeholder="********"
+                                    value={passwordFields.confirmPassword}
+                                    onChange={(e) =>
+                                        setPasswordFields({
+                                            ...passwordFields,
+                                            confirmPassword: e.target.value,
+                                        })
+                                    }
+                                />
+                            </div>
+
+                            <Button
+                                className="
+                w-full h-11 text-white
+                bg-[#264653] hover:bg-[#1f3a43]
+                dark:bg-[#1f363c] dark:hover:bg-[#172b30]
+            "
+                                type="button"
+                                onClick={async () => {
+                                    if (!userId) return toast.error("Không tìm thấy ID người dùng!");
+
+                                    if (passwordFields.newPassword !== passwordFields.confirmPassword)
+                                        return toast.error("Xác nhận mật khẩu không khớp!");
+
+                                    try {
+                                        const res = await updatePassword({
+                                            id: userId,
+                                            payload: {
+                                                currentPassword: passwordFields.currentPassword,
+                                                newPassword: passwordFields.newPassword,
+                                                confirmPassword: passwordFields.confirmPassword,
+                                                passwordMatch: true,
+                                            },
+                                        });
+
+                                        if (res?.success === false) {
+                                            return toast.error(res.message || "Đổi mật khẩu thất bại!");
+                                        }
+
+                                        toast.success("Đổi mật khẩu thành công!");
+
+                                        setShowPasswordForm(false);
+                                        setPasswordFields({
+                                            currentPassword: "",
+                                            newPassword: "",
+                                            confirmPassword: "",
+                                        });
+
+                                    } catch (err) {
+                                        toast.error("Đã xảy ra lỗi, vui lòng thử lại!");
+                                    }
+                                }}
+                            >
+                                Xác nhận đổi mật khẩu
+                            </Button>
+
+                        </div>
+                    )}
+
+
                 </form>
             </Form>
         </div>
-    )
+    );
 }

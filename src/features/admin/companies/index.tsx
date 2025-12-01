@@ -11,6 +11,7 @@ import { CompaniesTable } from './components/companies-table'
 import { CompaniesDialogs } from './components/companies-dialogs'
 import { useGetCompanies } from '@/hooks/api/companies'
 import { ErrorView } from '@/components/admin/ErrorView'
+import { NotificationDropdown } from '@/components/notification-dropdown.tsx'
 
 
 const route = getRouteApi('/_authenticated/admin/companies/')
@@ -75,6 +76,7 @@ export default function Companies() {
                     <div className='ms-auto flex items-center space-x-4'>
                         <ThemeSwitch />
                         <ConfigDrawer />
+                        <NotificationDropdown />
                         <ProfileDropdown />
                     </div>
                 </Header>
