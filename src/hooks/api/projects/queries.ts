@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { projectKeys } from './query-keys.ts'
 import apiRequest from '@/config/request';
+import { useAuthStore } from '@/stores/auth-store.ts'
 
 export const useGetProjectHiring = (page: number = 1, pageSize: number = 3) =>
   useQuery({
@@ -138,13 +139,15 @@ export function useGetProjectDocuments(projectId: string) {
 }
 
 export function useGetProjectApplicationStatus(projectId: string | undefined) {
+  const { isAuthenticated } = useAuthStore();
+
   return useQuery({
     queryKey: projectKeys.getProjectApplicationStatus(projectId),
     queryFn: async () => {
       const { data } = await apiRequest.get(`/api/v1/projects/${projectId}/application-status`);
       return data;
     },
-    enabled: !!projectId,
+    enabled: !!projectId && isAuthenticated(),
   })
 }
 

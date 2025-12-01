@@ -12,7 +12,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { PROJECT_STATUS, type Project } from '../data/schema'
 import { useProjects } from './project-provider'
-import { useNavigate } from '@tanstack/react-router'
+// import { useNavigate } from '@tanstack/react-router'
 
 type DataTableRowActionsProps = {
     row: Row<Project>
@@ -20,7 +20,7 @@ type DataTableRowActionsProps = {
 
 export function DataTableRowActions({ row }: DataTableRowActionsProps) {
     const { setOpen, setCurrentRow } = useProjects()
-    const navigate = useNavigate()
+    // const navigate = useNavigate()
     return (
         <>
             <DropdownMenu modal={false}>
@@ -35,15 +35,15 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align='end' className='w-[160px]'>
                     {
-                        row.original.status == PROJECT_STATUS.PENDING || row.original.status == PROJECT_STATUS.APPROVED ? (
+                        row.original.status == PROJECT_STATUS.PENDING ? (
 
                             <DropdownMenuItem
-                                onClick={() => {
-                                    navigate({
-                                        to: '/admin/companies/approve',
-                                        search: { id: row.original.id },
-                                    })
-                                }}
+                                // onClick={() => {
+                                //     navigate({
+                                //         to: '/admin/companies/approve',
+                                //         search: { id: row.original.id },
+                                //     })
+                                // }}
                             >
                                 Vào phê duyệt
                                 <DropdownMenuShortcut>
@@ -54,12 +54,12 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
                         ) : (
 
                             <DropdownMenuItem
-                                onClick={() => {
-                                    navigate({
-                                        to: '/admin/companies/edit',
-                                        search: { id: row.original.id },
-                                    })
-                                }}
+                                // onClick={() => {
+                                //     navigate({
+                                //         to: '/admin/companies/edit',
+                                //         search: { id: row.original.id },
+                                //     })
+                                // }}
                             >
                                 Chỉnh sửa
                                 <DropdownMenuShortcut>

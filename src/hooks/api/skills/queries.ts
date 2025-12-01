@@ -1,5 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-
+import { useQuery } from '@tanstack/react-query'
 import apiRequest from '@/config/request';
 import { skillKeys } from './query-keys';
 

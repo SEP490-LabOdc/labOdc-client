@@ -1,3 +1,5 @@
+import React from 'react'
+
 export enum ProjectTypes {
   PENDING = 'PENDING',
   UPDATE_REQUIRED = 'UPDATE_REQUIRED',
@@ -113,5 +115,29 @@ export interface MilestonesResponse {
   data: Milestone[]
   errorCode: string
   timestamp: string
+}
+
+export interface Note {
+  id: number;
+  title: string;
+  content: string;
+  date: string;
+  author: string;
+}
+
+export interface Activity {
+  id: number;
+  user: TeamMember;
+  action: string;
+  timestamp: string;
+  detail?: React.ReactNode;
+}
+
+export interface Invoice {
+  id: string;
+  name: string;
+  date: string;
+  amount: number;
+  status: string;
 }
 

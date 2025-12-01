@@ -1,4 +1,3 @@
-// typescript
 import { Badge } from "@/components/ui/badge.tsx";
 import { type Project } from '@/hooks/api/projects/types.ts';
 import { Clock, Users } from 'lucide-react';

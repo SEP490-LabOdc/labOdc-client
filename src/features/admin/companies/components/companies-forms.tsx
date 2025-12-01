@@ -1,4 +1,3 @@
-'use client'
 import { useEffect, useMemo } from 'react'
 import type { JSX } from 'react'
 import { z } from 'zod'
@@ -15,10 +14,10 @@ import {
 } from '@/components/ui/form'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Input } from '@/components/ui/input'
-import { SelectDropdown } from '@/components/select-dropdown'
+// import { SelectDropdown } from '@/components/select-dropdown'
 import { useNavigate } from '@tanstack/react-router'
 import type { Company } from '../data/schema'
-import { DOMAIN_OPTIONS, STATUS_OPTIONS } from '../data/data'
+// import { DOMAIN_OPTIONS } from '../data/data'
 
 
 // Helpers
@@ -35,7 +34,6 @@ const formSchema = z.object({
     address: z.string().min(1, 'Địa chỉ là bắt buộc.'),
     phoneNumber: z.string().min(1, 'Số điện thoại là bắt buộc.'),
     domain: z.string().min(1, 'Lĩnh vực là bắt buộc.'),
-    status: z.enum(['PENDING', 'UPDATE_REQUIRED', 'ACTIVE', 'DISABLED']),
     logo: z.string().url('Logo phải là URL hợp lệ.').min(1, 'Logo là bắt buộc.'),
     banner: z.string().url('Banner phải là URL hợp lệ.').min(1, 'Banner là bắt buộc.'),
     accountManager: z.string().min(1, 'Người quản lý tài khoản là bắt buộc.'),
@@ -78,7 +76,6 @@ export default function CompanyForm({
                     address: initialData.address ?? '',
                     phoneNumber: initialData.phone ?? '',
                     domain: initialData.domain ?? '',
-                    status: initialData.status ?? 'PENDING',
                     logo: initialData.logo ?? '',
                     banner: initialData.banner ?? '',
                     accountManager: initialData.contactPersonName ?? '',
@@ -92,7 +89,6 @@ export default function CompanyForm({
                     address: '',
                     phoneNumber: '',
                     domain: '',
-                    status: 'PENDING',
                     logo: '',
                     banner: '',
                     accountManager: '',
@@ -123,7 +119,6 @@ export default function CompanyForm({
             address: values.address,
             phoneNumber: values.phoneNumber,
             domain: values.domain,
-            status: values.status,
             logo: values.logo,
             banner: values.banner,
             accountManager: values.accountManager,
@@ -305,56 +300,31 @@ export default function CompanyForm({
                             )}
                         />
 
-                        <FormField
-                            control={form.control}
-                            name="domain"
-                            render={({ field }) => (
-                                <FormItem className="space-y-1">
-                                    <div className="flex items-center gap-3">
-                                        <FormLabel className="w-40 block text-end text-base font-medium">
-                                            Lĩnh vực
-                                        </FormLabel>
-                                        <div className="flex-1">
-                                            <SelectDropdown
-                                                defaultValue={field.value}
-                                                onValueChange={field.onChange}
-                                                placeholder=""
-                                                items={DOMAIN_OPTIONS}
-                                                showSearch
-                                                className="w-full"
-                                                disabled
-                                            />
-                                        </div>
-                                    </div>
-                                    <FormMessage className="ml-40" />
-                                </FormItem>
-                            )}
-                        />
-
-                        <FormField
-                            control={form.control}
-                            name="status"
-                            render={({ field }) => (
-                                <FormItem className="space-y-1">
-                                    <div className="flex items-center gap-3">
-                                        <FormLabel className="w-40 block text-end text-base font-medium">
-                                            Trạng thái
-                                        </FormLabel>
-                                        <div className="flex-1">
-                                            <SelectDropdown
-                                                defaultValue={field.value}
-                                                onValueChange={field.onChange}
-                                                placeholder=""
-                                                items={STATUS_OPTIONS}
-                                                className="w-full"
-                                                disabled
-                                            />
-                                        </div>
-                                    </div>
-                                    <FormMessage className="ml-40" />
-                                </FormItem>
-                            )}
-                        />
+                        {/*<FormField*/}
+                        {/*    control={form.control}*/}
+                        {/*    name="domain"*/}
+                        {/*    render={({ field }) => (*/}
+                        {/*        <FormItem className="space-y-1">*/}
+                        {/*            <div className="flex items-center gap-3">*/}
+                        {/*                <FormLabel className="w-40 block text-end text-base font-medium">*/}
+                        {/*                    Lĩnh vực*/}
+                        {/*                </FormLabel>*/}
+                        {/*                <div className="flex-1">*/}
+                        {/*                    <SelectDropdown*/}
+                        {/*                        defaultValue={field.value}*/}
+                        {/*                        onValueChange={field.onChange}*/}
+                        {/*                        placeholder=""*/}
+                        {/*                        items={DOMAIN_OPTIONS}*/}
+                        {/*                        showSearch*/}
+                        {/*                        className="w-full"*/}
+                        {/*                        disabled*/}
+                        {/*                    />*/}
+                        {/*                </div>*/}
+                        {/*            </div>*/}
+                        {/*            <FormMessage className="ml-40" />*/}
+                        {/*        </FormItem>*/}
+                        {/*    )}*/}
+                        {/*/>*/}
 
                         <FormField
                             control={form.control}

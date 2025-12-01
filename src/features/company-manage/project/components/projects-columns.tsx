@@ -56,7 +56,7 @@ export const projectsColumns: ColumnDef<Project>[] = [
         ),
         cell: ({ row }) => {
             const id = row.original.id
-            const linkTo = `/lab-admin/projects/${id}`
+            const linkTo = `/company-manage/projects/${id}`
 
             return (
                 <LongText className="max-w-40 ps-3">
@@ -161,22 +161,16 @@ export const projectsColumns: ColumnDef<Project>[] = [
         cell: ({ row }) => {
             const skills = row.original.skills || []
             return (
-                <div className="relative max-w-[260px] max-h-[3.2rem] overflow-hidden">
-                    <div className="flex flex-wrap gap-1">
-                        {skills.length > 0 ? (
-                            skills.map((skill) => (
-                                <Badge
-                                    key={skill.id}
-                                    variant="secondary"
-                                    className="text-xs px-2 py-0.5"
-                                >
-                                    {skill.name}
-                                </Badge>
-                            ))
-                        ) : (
-                            <span className="text-muted-foreground text-sm">Không có</span>
-                        )}
-                    </div>
+                <div className="flex flex-wrap gap-1">
+                    {skills.length > 0 ? (
+                        skills.map((skill) => (
+                            <Badge key={skill.id} variant="secondary">
+                                {skill.name}
+                            </Badge>
+                        ))
+                    ) : (
+                        <span className="text-muted-foreground text-sm">Không có</span>
+                    )}
                 </div>
             )
         },

@@ -5,7 +5,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Progress } from '@/components/ui/progress'
 import { Button } from '@/components/ui/button'
 import { CalendarDays, CheckCircle2, Circle, Clock, Plus, UserPlus, Users } from 'lucide-react'
-import { getStatusColor } from '@/lib/utils'
+import { getRoleBasePath, getStatusColor } from '@/lib/utils'
 import { getAvatarFallback } from '@/helpers/stringUtils'
 import { useNavigate } from '@tanstack/react-router'
 import type { Milestone } from '@/hooks/api/projects/types'
@@ -14,6 +14,8 @@ import { AddMemberModal } from '@/features/projects/components/add-member-modal'
 import { useAddTalentToMilestone } from '@/hooks/api/projects/mutation'
 import { useGetProjectMembers } from '@/hooks/api/projects/queries'
 import { toast } from 'sonner'
+import { useAuthStore } from '@/stores/auth-store.ts'
+import { useIsMentor } from '@/hooks/useIsMentor.ts'
 
 interface MilestonesTabProps {
   milestones: Milestone[]
@@ -27,6 +29,8 @@ export const MilestonesTab: React.FC<MilestonesTabProps> = ({
                                                               onRefresh
                                                             }) => {
   const navigate = useNavigate()
+  const { user } = useAuthStore()
+  const isMentor = useIsMentor()
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
   const [isAddMemberModalOpen, setIsAddMemberModalOpen] = useState(false)
   const [selectedMilestoneId, setSelectedMilestoneId] = useState<string | null>(null)
@@ -87,17 +91,24 @@ export const MilestonesTab: React.FC<MilestonesTabProps> = ({
   }
 
   const handleNavigateToMilestone = async (milestoneId: string) => {
-    await navigate({ to: `/mentor/projects/$projectId/${milestoneId}/` })
+    const roleBasePath = user?.role ? getRoleBasePath(user.role) : '/talent'
+
+    await navigate({
+      to: `${roleBasePath}/projects/$projectId/${milestoneId}/`,
+      params: { projectId }
+    })
   }
 
   return (
     <div className="space-y-3">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-lg font-semibold">Milestones</h2>
-        <Button onClick={() => setIsCreateModalOpen(true)} size="sm">
-          <Plus className="h-4 w-4 mr-2" />
-          Tạo Milestone
-        </Button>
+        {isMentor && (
+          <Button onClick={() => setIsCreateModalOpen(true)} size="sm">
+            <Plus className="h-4 w-4 mr-2" />
+            Tạo Milestone
+          </Button>
+        )}
       </div>
 
       {milestones.map((milestone) => {
@@ -197,16 +208,18 @@ export const MilestonesTab: React.FC<MilestonesTabProps> = ({
                       </div>
                     </div>
 
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() => openAddMemberModal(milestone.id)}
-                      disabled={isLoadingMembers}
-                      className="ml-4"
-                    >
-                      <UserPlus className="h-4 w-4 mr-1" />
-                      Thêm thành viên
-                    </Button>
+                    {isMentor && (
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => openAddMemberModal(milestone.id)}
+                        disabled={isLoadingMembers}
+                        className="ml-4"
+                      >
+                        <UserPlus className="h-4 w-4 mr-1" />
+                        Thêm thành viên
+                      </Button>
+                    )}
                   </div>
                 </div>
               </div>

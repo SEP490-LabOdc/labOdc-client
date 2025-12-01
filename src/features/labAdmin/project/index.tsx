@@ -1,5 +1,5 @@
 import { ErrorView } from "@/components/admin/ErrorView"
-import { useGetMyCompanyProjects, useGetProjects } from "@/hooks/api/projects/queries"
+import { useGetProjects } from "@/hooks/api/projects/queries"
 import { getRouteApi } from "@tanstack/react-router"
 import { ProjectsProvider } from "./components/project-provider"
 import { Header } from "@/components/layout/header"
@@ -9,8 +9,6 @@ import { ConfigDrawer } from "@/components/config-drawer"
 import { ProfileDropdown } from "@/components/profile-dropdown"
 import { Main } from "@/components/layout/main"
 import { ProjectsTable } from "./components/projects-table"
-
-
 
 const route = getRouteApi('/_authenticated/lab-admin/projects/')
 

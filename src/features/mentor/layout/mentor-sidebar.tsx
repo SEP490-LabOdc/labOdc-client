@@ -9,11 +9,9 @@ import {
 import { NavGroup } from '@/components/layout/nav-group'
 import { NavUser } from '@/components/layout/nav-user'
 import { TeamSwitcher } from '@/components/layout/team-switcher'
-import { useUser } from '@/context/UserContext'
 import { mentorSidebarData } from './mentor-sidebar-data.ts'
 
 export function MentorSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const { user } = useUser();
 
   return (
     <Sidebar collapsible='icon' variant='floating' {...props}>
@@ -26,7 +24,7 @@ export function MentorSidebar({ ...props }: React.ComponentProps<typeof Sidebar>
         ))}
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={user} />
+        <NavUser />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>

@@ -45,7 +45,7 @@ export const projectsColumns: ColumnDef<Project>[] = [
       const projectId = row.original.id
       return (
         <Link
-          to="/mentor/projects/$projectId"
+          to="/talent/projects/$projectId"
           params={{ projectId }}
           className="font-medium hover:underline"
         >
@@ -56,7 +56,7 @@ export const projectsColumns: ColumnDef<Project>[] = [
   },
   {
     accessorKey: 'mentors',
-    header: 'Trưởng nhóm',
+    header: 'Giảng viên',
     cell: ({ row }) => {
       const mentors = row.getValue('mentors') as Project['mentors']
       const leader = mentors.find(m => m.leader)

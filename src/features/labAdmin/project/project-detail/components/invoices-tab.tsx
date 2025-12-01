@@ -10,7 +10,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { getStatusColor } from '@/lib/utils'
-import type { Invoice } from '../../data/project-mock-data'
+import type { Invoice } from '@/hooks/api/projects'
 
 interface ProjectInvoicesTabProps {
   invoices: Invoice[];

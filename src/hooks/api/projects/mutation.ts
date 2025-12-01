@@ -1,18 +1,18 @@
 import apiRequest from '@/config/request.ts'
 import { useMutation } from '@tanstack/react-query'
 
-export function useCreateProject() {
-  return useMutation({
-    mutationFn: async (payload: {
-      title: string
-      description: string
-      skillIds: string[]
-    }) => {
-      const res = await apiRequest.post('/api/v1/projects', payload)
-      return res.data
-    },
-  })
-}
+// export function useCreateProject() {
+//   return useMutation({
+//     mutationFn: async (payload: {
+//       title: string
+//       description: string
+//       skillIds: string[]
+//     }) => {
+//       const res = await apiRequest.post('/api/v1/projects', payload)
+//       return res.data
+//     },
+//   })
+// }
 
 export function useUpdateStatusHiring() {
   return useMutation({

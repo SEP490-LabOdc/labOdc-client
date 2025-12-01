@@ -18,7 +18,6 @@ export function MultiSelectDropdown({
     items,
     value,
     onChange,
-    placeholder = 'Chọn...',
     disabled,
 }: MultiSelectDropdownProps) {
     const [open, setOpen] = useState(false)
