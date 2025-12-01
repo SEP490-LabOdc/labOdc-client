@@ -1,10 +1,5 @@
 import { getRouteApi } from '@tanstack/react-router'
-import { ConfigDrawer } from '@/components/config-drawer'
-import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
-import { ProfileDropdown } from '@/components/profile-dropdown'
-import { Search } from '@/components/search'
-import { ThemeSwitch } from '@/components/theme-switch'
 import { CompaniesProvider } from './components/companies-provider'
 import { CompaniesTable } from './components/companies-table'
 //import { companies } from './data/companies'
@@ -66,18 +61,9 @@ export default function Companies() {
     // Giả định API response có cấu trúc { data: Company[], ... }
     const companies = data?.data || [];
 
-
     return (
         <CompaniesProvider>
             <>
-                <Header fixed>
-                    <Search />
-                    <div className='ms-auto flex items-center space-x-4'>
-                        <ThemeSwitch />
-                        <ConfigDrawer />
-                        <ProfileDropdown />
-                    </div>
-                </Header>
                 <Main>
                     <div className='mb-2 flex flex-wrap items-center justify-between space-y-2'>
                         <div>

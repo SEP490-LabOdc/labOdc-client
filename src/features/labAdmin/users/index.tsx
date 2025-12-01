@@ -1,10 +1,5 @@
 import { getRouteApi } from '@tanstack/react-router'
-import { ConfigDrawer } from '@/components/config-drawer'
-import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
-import { ProfileDropdown } from '@/components/profile-dropdown'
-import { Search } from '@/components/search'
-import { ThemeSwitch } from '@/components/theme-switch'
 import { UsersDialogs } from './components/users-dialogs'
 import { UsersProvider } from './components/users-provider'
 import { UsersTable } from './components/users-table'
@@ -15,7 +10,6 @@ const route = getRouteApi('/_authenticated/lab-admin/users/')
 export default function Users() {
     const search = route.useSearch()
     const navigate = route.useNavigate()
-
 
     // 1. Lấy trạng thái truy vấn từ hook
     const { data, isLoading, isError, error } = useGetUsers();
@@ -41,15 +35,6 @@ export default function Users() {
     return (
         <UsersProvider>
             <>
-                <Header fixed>
-                    <Search />
-                    <div className='ms-auto flex items-center space-x-4'>
-                        <ThemeSwitch />
-                        <ConfigDrawer />
-                        <ProfileDropdown />
-                    </div>
-                </Header>
-
                 <Main>
                     <div className='mb-2 flex flex-wrap items-center justify-between space-y-2'>
                         <div>

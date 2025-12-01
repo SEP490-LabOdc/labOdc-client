@@ -16,7 +16,7 @@ import {
   Circle,
   ArrowRight,
 } from 'lucide-react'
-import { getProjectStatusColor, getProjectStatusLabel, getTagColor } from '@/lib/utils'
+import { getStatusColor, getStatusLabel, getTagColor } from '@/lib/utils'
 import { useNavigate } from '@tanstack/react-router'
 import type { ProjectDetail } from '@/hooks/api/projects/types'
 import { toast } from 'sonner'
@@ -83,8 +83,8 @@ export const ProjectOverviewTab: React.FC<ProjectOverviewTabProps> = ({ projectD
                 <span>Trạng thái</span>
               </div>
               <div className="flex-1">
-                <Badge className={`${getProjectStatusColor(projectData.status)} px-3 py-1 rounded text-xs font-medium`}>
-                  {getProjectStatusLabel(projectData.status)}
+                <Badge className={`${getStatusColor(projectData.status)} px-3 py-1 rounded text-xs font-medium`}>
+                  {getStatusLabel(projectData.status)}
                 </Badge>
               </div>
             </div>

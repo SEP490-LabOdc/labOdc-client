@@ -6,46 +6,80 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { ChevronLeft, Edit, MoreHorizontal } from 'lucide-react'
-import { useNavigate } from '@tanstack/react-router'
+import { Edit, MoreHorizontal, Check, RefreshCw } from 'lucide-react'
 import type { MilestoneDetail } from '@/hooks/api/milestones/types'
 
 interface MilestonePageHeaderProps {
   milestone: MilestoneDetail
+  onApproveMilestone?: (milestoneId: string) => Promise<void>
+  onRequestUpdate?: (milestoneId: string) => Promise<void>
 }
 
-export const MilestonePageHeader: React.FC<MilestonePageHeaderProps> = ({ milestone }) => {
-  const navigate = useNavigate()
+export const MilestonePageHeader: React.FC<MilestonePageHeaderProps> = ({
+                                                                          milestone,
+                                                                          onApproveMilestone,
+                                                                          onRequestUpdate
+                                                                        }) => {
+
+  const handleApprove = async () => {
+    if (onApproveMilestone) {
+      try {
+        await onApproveMilestone(milestone.id)
+      } catch (error) {
+        console.error('Failed to approve milestone:', error)
+      }
+    }
+  }
+
+  const handleRequestUpdate = async () => {
+    if (onRequestUpdate) {
+      try {
+        await onRequestUpdate(milestone.id)
+      } catch (error) {
+        console.error('Failed to request update:', error)
+      }
+    }
+  }
+
+  // Check if milestone is pending approval or needs admin actions
+  const showApprovalActions = milestone.status === 'PENDING'
+  const showUpdateRequest = milestone.status === 'IN_PROGRESS' || milestone.status === 'PENDING'
 
   return (
     <div className="bg-white border-b">
       <div className="max-w-7xl mx-auto px-6 py-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => navigate({ to: `/company-manage/projects/${milestone.projectId}` })}
-              className="hover:bg-gray-100"
-            >
-              <ChevronLeft className="h-4 w-4 mr-2" />
-              Quay lại
-            </Button>
-            <div className="flex-1">
-              <h1 className="text-2xl font-bold text-gray-900">{milestone.title}</h1>
-              <div className="flex items-center gap-2 text-sm text-gray-500 mt-1">
-                <span className="hover:underline cursor-pointer">{milestone.projectName}</span>
-                <span>/</span>
-                <span>{milestone.title}</span>
-              </div>
-            </div>
-          </div>
-
+        <div className="flex items-center justify-end">
           <div className="flex items-center gap-3">
-            <Button variant="outline" className="text-orange-600 border-orange-600 hover:bg-orange-50">
+            {/* Approve Milestone Button */}
+            {showApprovalActions && (
+              <Button
+                onClick={handleApprove}
+                className="bg-green-600 hover:bg-green-700 text-white"
+              >
+                <Check className="h-4 w-4 mr-2" />
+                Phê duyệt
+              </Button>
+            )}
+
+            {/* Request Update Button */}
+            {showUpdateRequest && (
+              <Button
+                variant="outline"
+                onClick={handleRequestUpdate}
+                className="text-orange-600 border-orange-600 hover:bg-orange-50"
+              >
+                <RefreshCw className="h-4 w-4 mr-2" />
+                Yêu cầu cập nhật
+              </Button>
+            )}
+
+            {/* Edit Button */}
+            <Button variant="outline" className="text-blue-600 border-blue-600 hover:bg-blue-50">
               <Edit className="h-4 w-4 mr-2" />
               Sửa Milestone
             </Button>
+
+            {/* More Actions Dropdown */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="icon">
@@ -54,6 +88,7 @@ export const MilestonePageHeader: React.FC<MilestonePageHeaderProps> = ({ milest
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <DropdownMenuItem>Đánh dấu Hoàn thành</DropdownMenuItem>
+                <DropdownMenuItem>Gửi thông báo</DropdownMenuItem>
                 <DropdownMenuItem className="text-red-600">Xóa Milestone</DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

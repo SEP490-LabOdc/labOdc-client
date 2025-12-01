@@ -5,7 +5,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Progress } from '@/components/ui/progress'
 import { Button } from '@/components/ui/button'
 import { CalendarDays, CheckCircle2, Circle, Clock, Plus, UserPlus, Users } from 'lucide-react'
-import { getStatusColor } from '@/lib/utils'
+import { getStatusColor, getStatusLabel } from '@/lib/utils'
 import { getAvatarFallback } from '@/helpers/stringUtils'
 import { useNavigate } from '@tanstack/react-router'
 import type { Milestone } from '@/hooks/api/projects/types'
@@ -79,18 +79,9 @@ export const MilestonesTab: React.FC<MilestonesTabProps> = ({
     }
   }
 
-  const statusLabels: Record<string, string> = {
-    PLANNING: 'Đang lên kế hoạch',
-    IN_PROGRESS: 'Đang thực hiện',
-    COMPLETED: 'Hoàn thành',
-    ON_HOLD: 'Tạm dừng',
-  }
-
   const handleNavigateToMilestone = async (milestoneId: string) => {
     await navigate({ to: `/lab-admin/projects/$projectId/${milestoneId}/` })
   }
-
-  console.log('id' + projectId)
 
   return (
     <div className="space-y-3">
@@ -127,7 +118,7 @@ export const MilestonesTab: React.FC<MilestonesTabProps> = ({
                       <p className="text-xs text-gray-600 mt-1 line-clamp-2">{milestone.description}</p>
                     </div>
                     <Badge className={`${getStatusColor(milestone.status)} rounded-full text-xs flex-shrink-0`}>
-                      {statusLabels[milestone.status] || milestone.status}
+                      {getStatusLabel(milestone.status)}
                     </Badge>
                   </div>
 

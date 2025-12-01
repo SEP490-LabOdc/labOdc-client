@@ -6,6 +6,12 @@ import { SearchProvider } from '@/context/search-provider'
 import { SidebarProvider } from '@/components/ui/sidebar'
 import { AppSidebar } from '@/components/layout/app-sidebar'
 import SkipToMain from '@/components/skip-to-main'
+import { Search } from '@/components/search.tsx'
+import { ThemeSwitch } from '@/components/theme-switch.tsx'
+import { ConfigDrawer } from '@/components/config-drawer.tsx'
+import { NotificationDropdown } from '@/components/notification-dropdown.tsx'
+import { ProfileDropdown } from '@/components/profile-dropdown.tsx'
+import { Header } from '@/components/layout/header.tsx'
 
 interface Props {
   children?: React.ReactNode
@@ -31,7 +37,18 @@ export function AuthenticatedLayout({ children }: Props) {
               'has-[main.fixed-main]:group-data-[scroll-locked=1]/body:h-svh'
             )}
           >
-            {children ? children : <Outlet />}
+            <Header fixed>
+              <Search />
+              <div className='ms-auto flex items-center space-x-4'>
+                <ThemeSwitch />
+                <ConfigDrawer />
+                <NotificationDropdown />
+                <ProfileDropdown />
+              </div>
+            </Header>
+            <div className="mt-14">
+              {children ? children : <Outlet />}
+            </div>
           </div>
         </SidebarProvider>
       </LayoutProvider>
