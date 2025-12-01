@@ -5,6 +5,7 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Link } from '@tanstack/react-router'
 import type { Project } from '@/features/projects/data/schema.ts'
 import { getStatusColor, getStatusLabel } from '@/lib/utils.ts'
+import { LongText } from '@/components/long-text.tsx'
 
 export const projectsColumns: ColumnDef<Project>[] = [
   {
@@ -44,13 +45,15 @@ export const projectsColumns: ColumnDef<Project>[] = [
       const title = row.getValue('title') as string
       const projectId = row.original.id
       return (
-        <Link
-          to="/mentor/projects/$projectId"
-          params={{ projectId }}
-          className="font-medium hover:underline"
-        >
-          {title}
-        </Link>
+        <LongText className="max-w-36 ps-3">
+          <Link
+            to="/mentor/projects/$projectId"
+            params={{ projectId }}
+            className="font-medium hover:underline"
+          >
+            {title}
+          </Link>
+        </LongText>
       )
     },
   },

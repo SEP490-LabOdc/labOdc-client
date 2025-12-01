@@ -2,7 +2,7 @@ import React from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { CalendarDays, Users, Link } from 'lucide-react'
+import { CalendarDays, Users } from 'lucide-react'
 import { getStatusColor, getStatusLabel } from '@/lib/utils'
 import { getAvatarFallback } from '@/helpers/stringUtils'
 import type { MilestoneDetail } from '@/hooks/api/milestones/types'
@@ -63,16 +63,6 @@ export const MilestoneSidebar: React.FC<MilestoneSidebarProps> = ({ milestone })
                 {calculateDaysRemaining(milestone.endDate)}
               </Badge>
             </div>
-          </div>
-
-          <div className="flex justify-between items-center">
-            <span className="text-gray-600 flex items-center gap-2">
-              <Link className="h-4 w-4" />
-              Dự án:
-            </span>
-            <span className="font-medium text-gray-800 hover:underline cursor-pointer">
-              {milestone.projectName}
-            </span>
           </div>
         </div>
 
