@@ -1,16 +1,11 @@
 import { getRouteApi } from '@tanstack/react-router'
-import { ConfigDrawer } from '@/components/config-drawer'
-import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
-import { ProfileDropdown } from '@/components/profile-dropdown'
-import { Search } from '@/components/search'
-import { ThemeSwitch } from '@/components/theme-switch'
 import { ErrorView } from '@/components/admin/ErrorView'
 import ProjectForm from '../components/project-form'
 import { useGetProjectById } from '@/hooks/api/projects'
 import { PROJECT_STATUS } from '../data/schema'
 import { StatusAlert } from '@/components/admin/StatusAlert'
-import ProjectDetailPage from '../project-detail'
+import ProjectDetailPage from '@/features/mentor/project-detail'
 
 const route = getRouteApi('/_authenticated/company-manage/projects/$projectId/')
 
@@ -46,15 +41,6 @@ export default function ViewProject() {
 
     return (
         <>
-            <Header fixed>
-                <Search />
-                <div className="ms-auto flex items-center space-x-4">
-                    <ThemeSwitch />
-                    <ConfigDrawer />
-                    <ProfileDropdown />
-                </div>
-            </Header>
-
             <Main className='pt-0'>
                 <div className="mb-2 flex flex-wrap items-center justify-between space-y-2">
                     <div>
@@ -110,7 +96,7 @@ export default function ViewProject() {
                 }
                 {
                     (project.status == PROJECT_STATUS.PLANNING) && (
-                        <ProjectDetailPage initialData={project} />
+                        <ProjectDetailPage />
                     )
                 }
             </Main>
