@@ -1,5 +1,6 @@
 import apiRequest from '@/config/request.ts'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { milestoneKeys } from '@/hooks/api/milestones'
 
 // export function useCreateProject() {
 //   return useMutation({
@@ -126,6 +127,8 @@ export function useAddProjectDocuments() {
 }
 
 export function useApproveMilestone() {
+  const queryClient = useQueryClient()
+
   return useMutation({
     mutationFn: async (milestoneId: string) => {
       const { data } = await apiRequest.patch(
@@ -133,21 +136,43 @@ export function useApproveMilestone() {
       )
       return data
     },
+    onSuccess: async (_, milestoneId) => {
+      await queryClient.invalidateQueries({
+        queryKey: milestoneKeys.detail(milestoneId)
+      })
+    }
   })
 }
 
 export function useRejectMilestone() {
+  const queryClient = useQueryClient()
+
   return useMutation({
-    mutationFn: async (milestoneId: string) => {
+    mutationFn: async (payload: {
+      milestoneId: string
+      feedbackContent: string
+      attachmentUrls: string[]
+    }) => {
       const { data } = await apiRequest.patch(
-        `/api/v1/project-milestones/${milestoneId}/reject`
+        `/api/v1/project-milestones/${payload.milestoneId}/reject`,
+        {
+          feedbackContent: payload.feedbackContent,
+          attachmentUrls: payload.attachmentUrls
+        }
       )
       return data
     },
+    onSuccess: async (_, variables) => {
+      await queryClient.invalidateQueries({
+        queryKey: milestoneKeys.detail(variables.milestoneId)
+      })
+    }
   })
 }
 
 export function useStartMilestone() {
+  const queryClient = useQueryClient()
+
   return useMutation({
     mutationFn: async (milestoneId: string) => {
       const { data } = await apiRequest.patch(
@@ -155,6 +180,11 @@ export function useStartMilestone() {
       )
       return data
     },
+    onSuccess: async (_, milestoneId) => {
+      await queryClient.invalidateQueries({
+        queryKey: milestoneKeys.detail(milestoneId)
+      })
+    }
   })
 }
 
