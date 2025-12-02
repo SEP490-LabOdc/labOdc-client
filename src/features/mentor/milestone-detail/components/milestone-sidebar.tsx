@@ -2,13 +2,13 @@ import React from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { CalendarDays, Users } from 'lucide-react'
+import { CalendarDays, Users, DollarSign } from 'lucide-react'
 import { getStatusColor, getStatusLabel } from '@/lib/utils'
 import { getAvatarFallback } from '@/helpers/stringUtils'
-import type { MilestoneDetail } from '@/hooks/api/milestones/types'
+import type { Milestone } from '@/hooks/api/projects'
 
 interface MilestoneSidebarProps {
-  milestone: MilestoneDetail
+  milestone: Milestone
 }
 
 export const MilestoneSidebar: React.FC<MilestoneSidebarProps> = ({ milestone }) => {
@@ -38,6 +38,16 @@ export const MilestoneSidebar: React.FC<MilestoneSidebarProps> = ({ milestone })
             <Badge className={`${getStatusColor(milestone.status)} rounded-full`}>
               {getStatusLabel(milestone.status)}
             </Badge>
+          </div>
+
+          <div className="flex justify-between items-center">
+            <span className="text-gray-600 flex items-center gap-2">
+              <DollarSign className="h-4 w-4" />
+              Ngân sách:
+            </span>
+            <span className="font-medium text-gray-800">
+              {(milestone.budget ?? 0).toLocaleString('vi-VN')} VNĐ
+            </span>
           </div>
 
           <div className="flex justify-between items-center">

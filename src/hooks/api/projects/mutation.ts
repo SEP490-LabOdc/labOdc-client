@@ -74,8 +74,14 @@ export function useCreateMilestone() {
       projectId: string
       title: string
       description: string
+      percentage: number
       startDate: string
       endDate: string
+      attachmentUrls?: Array<{
+        name: string
+        fileName: string
+        url: string
+      }>
     }) => {
       const { data } = await apiRequest.post(
         `/api/v1/project-milestones`,
@@ -85,6 +91,7 @@ export function useCreateMilestone() {
     }
   })
 }
+
 
 export function useAddTalentToMilestone() {
   return useMutation({
@@ -117,4 +124,39 @@ export function useAddProjectDocuments() {
     }
   })
 }
+
+export function useApproveMilestone() {
+  return useMutation({
+    mutationFn: async (milestoneId: string) => {
+      const { data } = await apiRequest.patch(
+        `/api/v1/project-milestones/${milestoneId}/approve`
+      )
+      return data
+    },
+  })
+}
+
+export function useRejectMilestone() {
+  return useMutation({
+    mutationFn: async (milestoneId: string) => {
+      const { data } = await apiRequest.patch(
+        `/api/v1/project-milestones/${milestoneId}/reject`
+      )
+      return data
+    },
+  })
+}
+
+export function useStartMilestone() {
+  return useMutation({
+    mutationFn: async (milestoneId: string) => {
+      const { data } = await apiRequest.patch(
+        `/api/v1/project-milestones/${milestoneId}/start`
+      )
+      return data
+    },
+  })
+}
+
+
 

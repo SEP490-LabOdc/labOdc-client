@@ -3,6 +3,7 @@ import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 import { ProjectTypes } from '@/hooks/api/projects'
 import { ROLE } from '@/const.ts'
+import { getLastNameForAvatar } from '@/helpers/stringUtils.ts'
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -71,6 +72,7 @@ const StatusColorMap: Record<ProjectTypes, string> = {
   [ProjectTypes.CLOSED]: 'bg-gray-100 text-gray-800 border-gray-200',
   [ProjectTypes.COMPLETE]: 'bg-purple-100 text-purple-800 border-purple-200',
   [ProjectTypes.PAUSED]: 'bg-amber-100 text-amber-800 border-amber-200',
+  [ProjectTypes.PENDING_START]: 'bg-cyan-100 text-cyan-800 border-cyan-200',
 }
 
 // Project status label mapping
@@ -83,6 +85,7 @@ const StatusLabelMap: Record<ProjectTypes, string> = {
   [ProjectTypes.CLOSED]: 'Đã đóng',
   [ProjectTypes.COMPLETE]: 'Hoàn thành',
   [ProjectTypes.PAUSED]: 'Tạm dừng',
+  [ProjectTypes.PENDING_START]: 'Chờ bắt đầu',
 }
 
 export function getStatusColor(status: string): string {
@@ -135,6 +138,12 @@ export const getRoleBasePath = (role: string): string => {
   }
   return rolePathMap[role] || '/talent'
 }
+
+export const getAvatarUrl = (fullName: string) => {
+  const lastName = getLastNameForAvatar(fullName)
+  return `https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(lastName)}`
+}
+
 
 
 
