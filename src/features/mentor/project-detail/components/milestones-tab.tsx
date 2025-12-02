@@ -37,7 +37,10 @@ export const MilestonesTab: React.FC<MilestonesTabProps> = ({
   const [isAddMemberModalOpen, setIsAddMemberModalOpen] = useState(false)
   const [selectedMilestoneId, setSelectedMilestoneId] = useState<string | null>(null)
 
-  const { data: projectMembersData, isLoading: isLoadingMembers } = useGetProjectMembers(projectId)
+  const { data: projectMembersData, isLoading: isLoadingMembers, refetch: refetchMembers } = useGetProjectMembers(
+    projectId,
+    selectedMilestoneId || undefined
+  )
   const addTalentMutation = useAddTalentToMilestone()
 
   const projectMembers = projectMembersData?.data || []
@@ -72,6 +75,7 @@ export const MilestonesTab: React.FC<MilestonesTabProps> = ({
 
   const handleAddMembers = async (selectedUserIds: string[]) => {
     if (!selectedMilestoneId) return
+    await refetchMembers()
 
     try {
       await addTalentMutation.mutateAsync({
