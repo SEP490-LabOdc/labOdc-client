@@ -7,15 +7,50 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { ChevronLeft, Edit, MoreHorizontal } from 'lucide-react'
-import { useNavigate } from '@tanstack/react-router'
 import type { MilestoneDetail } from '@/hooks/api/milestones/types'
+import { useApproveMilestone, useRejectMilestone, useStartMilestone } from '@/hooks/api/projects/mutation'
+import { toast } from 'sonner'
+import { usePermission } from '@/hooks/usePermission'
 
 interface MilestonePageHeaderProps {
   milestone: MilestoneDetail
 }
 
 export const MilestonePageHeader: React.FC<MilestonePageHeaderProps> = ({ milestone }) => {
-  const navigate = useNavigate()
+  const { isCompany, isMentor } = usePermission()
+  const approveMutation = useApproveMilestone()
+  const rejectMutation = useRejectMilestone()
+  const startMutation = useStartMilestone()
+
+  const handleApprove = async () => {
+    try {
+      await approveMutation.mutateAsync(milestone.id)
+      toast.success('Milestone đã được phê duyệt')
+    } catch (error) {
+      console.log(error)
+      toast.error('Không thể phê duyệt milestone')
+    }
+  }
+
+  const handleReject = async () => {
+    try {
+      await rejectMutation.mutateAsync(milestone.id)
+      toast.success('Milestone đã bị từ chối')
+    } catch (error) {
+      console.log(error)
+      toast.error('Không thể từ chối milestone')
+    }
+  }
+
+  const handleStart = async () => {
+    try {
+      await startMutation.mutateAsync(milestone.id)
+      toast.success('Milestone đã được bắt đầu')
+    } catch (error) {
+      console.log(error)
+      toast.error('Không thể bắt đầu milestone')
+    }
+  }
 
   return (
     <div className="bg-white border-b">
@@ -25,7 +60,7 @@ export const MilestonePageHeader: React.FC<MilestonePageHeaderProps> = ({ milest
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => navigate({ to: `/talent/projects/${milestone.projectId}` })}
+              onClick={() => window.history.back()}
               className="hover:bg-gray-100"
             >
               <ChevronLeft className="h-4 w-4 mr-2" />
@@ -34,10 +69,42 @@ export const MilestonePageHeader: React.FC<MilestonePageHeaderProps> = ({ milest
           </div>
 
           <div className="flex items-center gap-3">
-            <Button variant="outline" className="text-orange-600 border-orange-600 hover:bg-orange-50">
-              <Edit className="h-4 w-4 mr-2" />
-              Sửa Milestone
-            </Button>
+            {isCompany && (
+              <>
+                <Button
+                  variant="outline"
+                  className="text-green-600 border-green-600 hover:bg-green-50"
+                  onClick={handleApprove}
+                  disabled={approveMutation.isPending}
+                >
+                  Phê duyệt
+                </Button>
+                <Button
+                  variant="outline"
+                  className="text-red-600 border-red-600 hover:bg-red-50"
+                  onClick={handleReject}
+                  disabled={rejectMutation.isPending}
+                >
+                  Từ chối
+                </Button>
+              </>
+            )}
+            {isMentor && (
+              <>
+                <Button
+                  variant="outline"
+                  className="text-blue-600 border-blue-600 hover:bg-blue-50"
+                  onClick={handleStart}
+                  disabled={startMutation.isPending}
+                >
+                  Bắt đầu
+                </Button>
+                <Button variant="outline" className="text-orange-600 border-orange-600 hover:bg-orange-50">
+                  <Edit className="h-4 w-4 mr-2" />
+                  Sửa Milestone
+                </Button>
+              </>
+            )}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="icon">

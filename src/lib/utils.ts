@@ -72,6 +72,7 @@ const StatusColorMap: Record<ProjectTypes, string> = {
   [ProjectTypes.CLOSED]: 'bg-gray-100 text-gray-800 border-gray-200',
   [ProjectTypes.COMPLETE]: 'bg-purple-100 text-purple-800 border-purple-200',
   [ProjectTypes.PAUSED]: 'bg-amber-100 text-amber-800 border-amber-200',
+  [ProjectTypes.PENDING_START]: 'bg-cyan-100 text-cyan-800 border-cyan-200',
 }
 
 // Project status label mapping
@@ -84,6 +85,7 @@ const StatusLabelMap: Record<ProjectTypes, string> = {
   [ProjectTypes.CLOSED]: 'Đã đóng',
   [ProjectTypes.COMPLETE]: 'Hoàn thành',
   [ProjectTypes.PAUSED]: 'Tạm dừng',
+  [ProjectTypes.PENDING_START]: 'Chờ bắt đầu',
 }
 
 export function getStatusColor(status: string): string {

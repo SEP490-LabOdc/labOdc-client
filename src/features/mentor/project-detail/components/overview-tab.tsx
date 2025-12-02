@@ -22,7 +22,7 @@ import type { ProjectDetail } from '@/hooks/api/projects/types'
 import { toast } from 'sonner'
 import { projectKeys, useUpdateStatusHiring } from '@/hooks/api/projects'
 import { useQueryClient } from '@tanstack/react-query'
-import { useIsMentor } from '@/hooks/useIsMentor.ts'
+import { usePermission } from '@/hooks/usePermission'
 
 interface ProjectOverviewTabProps {
   projectData: ProjectDetail;
@@ -31,11 +31,10 @@ interface ProjectOverviewTabProps {
 export const ProjectOverviewTab: React.FC<ProjectOverviewTabProps> = ({ projectData }) => {
   const navigate = useNavigate()
   const [isHiring, setIsHiring] = useState(projectData.isOpenForApplications)
+  const { isMentor } = usePermission()
 
   const updateStatusMutation = useUpdateStatusHiring()
   const queryClient = useQueryClient()
-
-  const isMentor = useIsMentor()
 
   const handleToggleHiring = async (checked: boolean) => {
     updateStatusMutation.mutate(
@@ -89,7 +88,6 @@ export const ProjectOverviewTab: React.FC<ProjectOverviewTabProps> = ({ projectD
               </div>
             </div>
 
-            {/* Show hiring status for everyone, but only allow mentors to change it */}
             <div className="flex items-start">
               <div className="w-40 flex-shrink-0 flex items-center gap-3 text-sm text-gray-600">
                 <Briefcase className="h-4 w-4" />
@@ -133,7 +131,6 @@ export const ProjectOverviewTab: React.FC<ProjectOverviewTabProps> = ({ projectD
               </div>
             </div>
 
-            {/* Only show candidate button for mentors when hiring */}
             {isMentor && isHiring && (
               <div className="flex items-start">
                 <div className="w-40 flex-shrink-0" />

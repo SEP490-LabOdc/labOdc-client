@@ -14,8 +14,7 @@ import { AddMemberModal } from '@/features/projects/components/add-member-modal'
 import { useAddTalentToMilestone } from '@/hooks/api/projects/mutation'
 import { useGetProjectMembers } from '@/hooks/api/projects/queries'
 import { toast } from 'sonner'
-import { useAuthStore } from '@/stores/auth-store.ts'
-import { useIsMentor } from '@/hooks/useIsMentor.ts'
+import { usePermission } from '@/hooks/usePermission'
 
 interface MilestonesTabProps {
   milestones: Milestone[]
@@ -31,8 +30,7 @@ export const MilestonesTab: React.FC<MilestonesTabProps> = ({
                                                               showApprovalActions = false
                                                             }) => {
   const navigate = useNavigate()
-  const { user } = useAuthStore()
-  const isMentor = useIsMentor()
+  const { user, isMentor } = usePermission()
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
   const [isAddMemberModalOpen, setIsAddMemberModalOpen] = useState(false)
   const [selectedMilestoneId, setSelectedMilestoneId] = useState<string | null>(null)
@@ -42,7 +40,6 @@ export const MilestonesTab: React.FC<MilestonesTabProps> = ({
 
   const projectMembers = projectMembersData?.data || []
 
-  // Approval handlers
   const handleApproveMilestone = async (milestoneId: string) => {
     try {
       await fetch(`/api/milestones/${milestoneId}/approve`, {
@@ -180,7 +177,6 @@ export const MilestonesTab: React.FC<MilestonesTabProps> = ({
 
                   <div className="flex items-center justify-between pt-2">
                     <div className="flex items-center gap-6">
-                      {/* Talents section */}
                       <div className="flex items-center gap-2">
                         <div className="flex items-center gap-1.5 text-xs text-gray-600">
                           <Users className="h-3.5 w-3.5" />
@@ -207,7 +203,6 @@ export const MilestonesTab: React.FC<MilestonesTabProps> = ({
                         </div>
                       </div>
 
-                      {/* Mentors section */}
                       <div className="flex items-center gap-2">
                         <div className="flex items-center gap-1.5 text-xs text-gray-600">
                           <Users className="h-3.5 w-3.5" />
@@ -236,7 +231,6 @@ export const MilestonesTab: React.FC<MilestonesTabProps> = ({
                     </div>
 
                     <div className="flex items-center gap-2">
-                      {/* Approval buttons */}
                       {showApprovalButtons && (
                         <>
                           <Button
@@ -259,7 +253,6 @@ export const MilestonesTab: React.FC<MilestonesTabProps> = ({
                         </>
                       )}
 
-                      {/* Add member button */}
                       {isMentor && (
                         <Button
                           size="sm"
