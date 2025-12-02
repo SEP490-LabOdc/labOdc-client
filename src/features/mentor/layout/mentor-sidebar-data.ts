@@ -41,7 +41,7 @@ export const mentorSidebarData: SidebarData = {
             },
             {
               title: 'Đã hoàn thành',
-              url: `/mentor/projects?status=${ProjectTypes.COMPLETE}`,
+              url: `/mentor/projects?status=${ProjectTypes.COMPLETED}`,
               icon: IconCircleCheckFilled,
             },
             {

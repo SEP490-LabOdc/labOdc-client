@@ -152,11 +152,15 @@ export function useGetProjectApplicationStatus(projectId: string | undefined) {
 }
 
 
-export function useGetProjectMembers(projectId: string) {
+export function useGetProjectMembers(projectId: string, milestoneId?: string) {
   return useQuery({
-    queryKey: projectKeys.getProjectMembers(projectId),
+    queryKey: projectKeys.getProjectMembers(projectId, milestoneId),
     queryFn: async () => {
-      const { data } = await apiRequest.get(`/api/v1/projects/${projectId}/project-members`);
+      const params = milestoneId ? { milestoneId } : {};
+      const { data } = await apiRequest.get(
+        `/api/v1/projects/${projectId}/project-members`,
+        { params }
+      );
       return data;
     },
     enabled: !!projectId,
