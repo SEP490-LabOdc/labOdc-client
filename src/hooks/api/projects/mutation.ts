@@ -74,8 +74,14 @@ export function useCreateMilestone() {
       projectId: string
       title: string
       description: string
+      percentage: number
       startDate: string
       endDate: string
+      attachmentUrls?: Array<{
+        name: string
+        fileName: string
+        url: string
+      }>
     }) => {
       const { data } = await apiRequest.post(
         `/api/v1/project-milestones`,
@@ -85,6 +91,7 @@ export function useCreateMilestone() {
     }
   })
 }
+
 
 export function useAddTalentToMilestone() {
   return useMutation({

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
@@ -23,12 +23,21 @@ import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
 import { useCreateMilestone } from '@/hooks/api/projects/mutation'
 import { toast } from 'sonner'
+import { FileUpload } from '@/components/file/FileUpload'
+import { X } from 'lucide-react'
+import type { ProjectDetail } from '@/hooks/api/projects/types'
 
 const createMilestoneSchema = z.object({
   title: z.string().min(1, 'Tiêu đề không được để trống'),
   description: z.string().min(1, 'Mô tả không được để trống'),
+  percentage: z.number().min(0, 'Phần trăm phải lớn hơn 0').max(100, 'Phần trăm không được vượt quá 100'),
   startDate: z.string().min(1, 'Ngày bắt đầu không được để trống'),
   endDate: z.string().min(1, 'Ngày kết thúc không được để trống'),
+  attachmentUrls: z.array(z.object({
+    name: z.string(),
+    fileName: z.string(),
+    url: z.string(),
+  })).optional(),
 }).refine(data => new Date(data.startDate) < new Date(data.endDate), {
   message: 'Ngày kết thúc phải sau ngày bắt đầu',
   path: ['endDate'],
@@ -40,6 +49,7 @@ interface CreateMilestoneModalProps {
   open: boolean
   onOpenChange: (open: boolean) => void
   projectId: string
+  projectData?: ProjectDetail
   onSuccess?: () => void
 }
 
@@ -47,6 +57,7 @@ export const CreateMilestoneModal: React.FC<CreateMilestoneModalProps> = ({
                                                                             open,
                                                                             onOpenChange,
                                                                             projectId,
+                                                                            projectData,
                                                                             onSuccess,
                                                                           }) => {
   const form = useForm<CreateMilestoneFormData>({
@@ -54,21 +65,62 @@ export const CreateMilestoneModal: React.FC<CreateMilestoneModalProps> = ({
     defaultValues: {
       title: '',
       description: '',
+      percentage: 0,
       startDate: '',
       endDate: '',
+      attachmentUrls: [],
     },
   })
 
   const createMilestone = useCreateMilestone()
+  const [attachments, setAttachments] = React.useState<Array<{ name: string; fileName: string; url: string }>>([])
+
+  const percentage = form.watch('percentage')
+
+  const budgetInfo = useMemo(() => {
+    const projectBudget = projectData?.budget || 0
+    const remainingBudget = projectData?.remainingBudget ?? projectBudget
+    const currentPercentage = percentage || 0
+    const allocatedBudget = (remainingBudget * currentPercentage) / 100
+    const budgetAfterAllocation = remainingBudget - allocatedBudget
+
+    return {
+      projectBudget,
+      remainingBudget,
+      allocatedBudget,
+      budgetAfterAllocation: Math.max(0, budgetAfterAllocation),
+      isValid: budgetAfterAllocation >= 0,
+    }
+  }, [percentage, projectData])
+
+  const handleFileUploaded = (url: string, fileName: string) => {
+    const newAttachment = {
+      name: fileName,
+      fileName: fileName,
+      url: url,
+    }
+    setAttachments(prev => [...prev, newAttachment])
+  }
+
+  const handleRemoveAttachment = (index: number) => {
+    setAttachments(prev => prev.filter((_, i) => i !== index))
+  }
 
   const onSubmit = async (data: CreateMilestoneFormData) => {
+    if (!budgetInfo.isValid) {
+      toast.error('Ngân sách phân bổ vượt quá ngân sách còn lại')
+      return
+    }
+
     try {
       await createMilestone.mutateAsync({
         projectId,
         ...data,
+        attachmentUrls: attachments,
       })
       toast.success('Tạo milestone thành công')
       form.reset()
+      setAttachments([])
       onOpenChange(false)
       onSuccess?.()
     } catch (error) {
@@ -79,7 +131,7 @@ export const CreateMilestoneModal: React.FC<CreateMilestoneModalProps> = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[525px]">
+      <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Tạo Milestone Mới</DialogTitle>
           <DialogDescription>
@@ -119,6 +171,52 @@ export const CreateMilestoneModal: React.FC<CreateMilestoneModalProps> = ({
                 </FormItem>
               )}
             />
+            <FormField
+              control={form.control}
+              name="percentage"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Phần trăm ngân sách (%)</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="number"
+                      min="0"
+                      max="100"
+                      placeholder="Nhập phần trăm ngân sách"
+                      {...field}
+                      onChange={(e) => field.onChange(Number(e.target.value))}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                  <div className="mt-2 space-y-1 text-sm">
+                    <div className="flex justify-between text-gray-600">
+                      <span>Ngân sách dự án:</span>
+                      <span className="font-medium">
+                        {budgetInfo.projectBudget.toLocaleString('vi-VN')} VND
+                      </span>
+                    </div>
+                    <div className="flex justify-between text-gray-600">
+                      <span>Ngân sách còn lại:</span>
+                      <span className="font-medium text-gray-700">
+                        {budgetInfo.remainingBudget.toLocaleString('vi-VN')} VND
+                      </span>
+                    </div>
+                    <div className="flex justify-between text-gray-600">
+                      <span>Ngân sách phân bổ:</span>
+                      <span className="font-medium text-blue-600">
+                        {budgetInfo.allocatedBudget.toLocaleString('vi-VN')} VND
+                      </span>
+                    </div>
+                    <div className="flex justify-between text-gray-600 pt-1 border-t">
+                      <span>Còn lại sau phân bổ:</span>
+                      <span className={`font-bold ${budgetInfo.isValid ? 'text-green-600' : 'text-red-600'}`}>
+                        {budgetInfo.budgetAfterAllocation.toLocaleString('vi-VN')} VND
+                      </span>
+                    </div>
+                  </div>
+                </FormItem>
+              )}
+            />
             <div className="grid grid-cols-2 gap-4">
               <FormField
                 control={form.control}
@@ -147,6 +245,45 @@ export const CreateMilestoneModal: React.FC<CreateMilestoneModalProps> = ({
                 )}
               />
             </div>
+
+            <div className="space-y-2">
+              <FormLabel>Tệp đính kèm</FormLabel>
+              <FileUpload
+                value={null}
+                onChange={(url) => {
+                  if (url) {
+                    // File will be handled in onFileUploaded callback
+                  }
+                }}
+                onFileUploaded={(fileName) => {
+                  const url = form.getValues('attachmentUrls')?.[attachments.length]?.url
+                  if (url) {
+                    handleFileUploaded(url, fileName)
+                  }
+                }}
+                placeholder="Chọn file để tải lên"
+              />
+              {attachments.length > 0 && (
+                <div className="space-y-2 mt-3">
+                  <p className="text-sm font-medium text-gray-700">Tệp đã tải lên:</p>
+                  {attachments.map((attachment, index) => (
+                    <div key={index} className="flex items-center justify-between bg-gray-50 p-2 rounded">
+                      <span className="text-sm text-gray-700 truncate flex-1">{attachment.fileName}</span>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleRemoveAttachment(index)}
+                        className="h-6 w-6 p-0 hover:bg-red-50 hover:text-red-600"
+                      >
+                        <X className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
             <DialogFooter>
               <Button
                 type="button"
@@ -155,7 +292,10 @@ export const CreateMilestoneModal: React.FC<CreateMilestoneModalProps> = ({
               >
                 Hủy
               </Button>
-              <Button type="submit" disabled={createMilestone.isPending}>
+              <Button
+                type="submit"
+                disabled={createMilestone.isPending || !budgetInfo.isValid}
+              >
                 {createMilestone.isPending ? 'Đang tạo...' : 'Tạo Milestone'}
               </Button>
             </DialogFooter>

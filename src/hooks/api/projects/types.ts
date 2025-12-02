@@ -32,30 +32,6 @@ export interface TeamMember {
   roleName: string
 }
 
-export interface ProjectDetail {
-  id: string
-  companyId: string
-  mentorId: string
-  title: string
-  description: string
-  status: string
-  isOpenForApplications: boolean
-  startDate: string
-  endDate: string
-  budget: number
-  skills: Skill[]
-  mentors: ProjectMentor[]
-  talents?: TeamMember[]
-  createdAt: string
-  updatedAt: string
-  createdBy: string
-  createdByName: string
-  createdByAvatar: string
-  currentMilestoneId: string
-  currentMilestoneName: string
-  companyName: string
-}
-
 export interface ProjectListItem {
   id: string
   title: string
@@ -97,19 +73,6 @@ export interface MilestoneUser {
   phone: string
 }
 
-export interface Milestone {
-  id: string
-  projectId: string
-  projectName: string
-  title: string
-  description: string
-  startDate: string
-  endDate: string
-  status: string
-  talents: MilestoneUser[]
-  mentors: MilestoneUser[]
-}
-
 export interface MilestonesResponse {
   success: boolean
   message: string
@@ -140,5 +103,52 @@ export interface Invoice {
   date: string;
   amount: number;
   status: string;
+}
+
+export interface ProjectDetail {
+  id: string
+  companyId: string
+  mentorId: string
+  title: string
+  description: string
+  status: string
+  isOpenForApplications: boolean
+  startDate: string
+  endDate: string
+  budget: number
+  remainingBudget?: number
+  skills: Skill[]
+  mentors: ProjectMentor[]
+  talents?: TeamMember[]
+  createdAt: string
+  updatedAt: string
+  createdBy: string
+  createdByName: string
+  createdByAvatar: string
+  currentMilestoneId: string
+  currentMilestoneName: string
+  companyName: string
+}
+
+export interface MilestoneAttachment {
+  id: string
+  name: string
+  fileName: string
+  url: string
+}
+
+export interface Milestone {
+  id: string
+  projectId: string
+  projectName: string
+  title: string
+  budget: number
+  description: string
+  startDate: string
+  endDate: string
+  status: string
+  talents: MilestoneUser[]
+  mentors: MilestoneUser[]
+  attachments?: MilestoneAttachment[]
 }
 

@@ -8,7 +8,7 @@ import { CalendarDays, CheckCircle2, Circle, Clock, Plus, UserPlus, Users, Check
 import { getRoleBasePath, getStatusColor, getStatusLabel } from '@/lib/utils'
 import { getAvatarFallback } from '@/helpers/stringUtils'
 import { useNavigate } from '@tanstack/react-router'
-import type { Milestone } from '@/hooks/api/projects/types'
+import type { Milestone, ProjectDetail } from '@/hooks/api/projects/types'
 import { CreateMilestoneModal } from './create-milestone-modal'
 import { AddMemberModal } from '@/features/projects/components/add-member-modal'
 import { useAddTalentToMilestone } from '@/hooks/api/projects/mutation'
@@ -19,6 +19,7 @@ import { usePermission } from '@/hooks/usePermission'
 interface MilestonesTabProps {
   milestones: Milestone[]
   projectId: string
+  projectData?: ProjectDetail
   onRefresh?: () => void
   showApprovalActions?: boolean
 }
@@ -26,6 +27,7 @@ interface MilestonesTabProps {
 export const MilestonesTab: React.FC<MilestonesTabProps> = ({
                                                               milestones,
                                                               projectId,
+                                                              projectData,
                                                               onRefresh,
                                                               showApprovalActions = false
                                                             }) => {
@@ -288,6 +290,7 @@ export const MilestonesTab: React.FC<MilestonesTabProps> = ({
         open={isCreateModalOpen}
         onOpenChange={setIsCreateModalOpen}
         projectId={projectId}
+        projectData={projectData}
         onSuccess={onRefresh}
       />
 
