@@ -24,7 +24,6 @@ import { Button } from '@/components/ui/button'
 import { useCreateMilestone } from '@/hooks/api/projects/mutation'
 import { toast } from 'sonner'
 import { FileUpload } from '@/components/file/FileUpload'
-import { X } from 'lucide-react'
 import type { ProjectDetail } from '@/hooks/api/projects/types'
 
 const createMilestoneSchema = z.object({
@@ -100,10 +99,6 @@ export const CreateMilestoneModal: React.FC<CreateMilestoneModalProps> = ({
       url: url,
     }
     setAttachments(prev => [...prev, newAttachment])
-  }
-
-  const handleRemoveAttachment = (index: number) => {
-    setAttachments(prev => prev.filter((_, i) => i !== index))
   }
 
   const onSubmit = async (data: CreateMilestoneFormData) => {
@@ -252,36 +247,14 @@ export const CreateMilestoneModal: React.FC<CreateMilestoneModalProps> = ({
                 value={null}
                 onChange={(url) => {
                   if (url) {
-                    // File will be handled in onFileUploaded callback
-                  }
-                }}
-                onFileUploaded={(fileName) => {
-                  const url = form.getValues('attachmentUrls')?.[attachments.length]?.url
-                  if (url) {
+                    // Get the last uploaded file name from the FileUpload component's internal state
+                    const fileName = url.split('/').pop() || 'attachment'
                     handleFileUploaded(url, fileName)
                   }
                 }}
                 placeholder="Chọn file để tải lên"
+                accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png"
               />
-              {attachments.length > 0 && (
-                <div className="space-y-2 mt-3">
-                  <p className="text-sm font-medium text-gray-700">Tệp đã tải lên:</p>
-                  {attachments.map((attachment, index) => (
-                    <div key={index} className="flex items-center justify-between bg-gray-50 p-2 rounded">
-                      <span className="text-sm text-gray-700 truncate flex-1">{attachment.fileName}</span>
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => handleRemoveAttachment(index)}
-                        className="h-6 w-6 p-0 hover:bg-red-50 hover:text-red-600"
-                      >
-                        <X className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  ))}
-                </div>
-              )}
             </div>
 
             <DialogFooter>
