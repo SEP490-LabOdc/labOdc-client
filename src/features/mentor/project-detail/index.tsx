@@ -65,6 +65,7 @@ const ProjectDetailPage: React.FC = () => {
                 <MilestonesTab
                   milestones={milestonesData.data}
                   projectId={projectId as string}
+                  projectData={projectData.data}
                   onRefresh={() => refetchMilestones()}
                 />
               )}

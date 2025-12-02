@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
-import MilestoneView from '@/features/labAdmin/milestone-detail/index'
+import MilestoneDetailPage from '@/features/mentor/milestone-detail'
 
 export const Route = createFileRoute('/_authenticated/lab-admin/projects/$projectId/$milestoneId/')({
-    component: MilestoneView,
+    component: MilestoneDetailPage,
 })

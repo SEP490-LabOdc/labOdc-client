@@ -1,4 +1,3 @@
-// src/routes/_authenticated/company/projects/index.tsx
 import { createFileRoute } from '@tanstack/react-router'
 import ProjectList from '@/features/labAdmin/project/index'
 
