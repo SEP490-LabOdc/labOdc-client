@@ -22,8 +22,8 @@ export const ProjectSidebar: React.FC<ProjectSidebarProps> = ({ projectData }) =
         <div className="space-y-3 text-sm">
           {[
             { label: 'Khách hàng', value: projectData.companyName },
-            { label: 'Tổng chi phí dự án', value: `$${projectData.budget}` },
-            { label: 'Số dư ngân sách', value: `$${(projectData.remainingBudget ?? 0).toLocaleString()}` },
+            { label: 'Tổng chi phí dự án', value: `${projectData.budget.toLocaleString('vi-VN')} VNĐ` },
+            { label: 'Số dư ngân sách', value: `${(projectData.remainingBudget ?? 0).toLocaleString('vi-VN')} VNĐ` },
             { label: 'Ngày tạo', value: new Date(projectData.createdAt).toLocaleDateString('vi-VN') },
             { label: 'Ngày bắt đầu', value: new Date(projectData.startDate).toLocaleDateString('vi-VN') },
           ].map((item, index) => (

@@ -175,7 +175,9 @@ export const MilestonesTab: React.FC<MilestonesTabProps> = ({
 
                     <div className="flex items-center gap-1.5">
                       <span className="text-gray-600">Ngân sách:</span>
-                      <span className="font-medium text-gray-800">${milestone.budget ?? 0}</span>
+                      <span className="font-medium text-gray-800">
+                        {(milestone.budget ?? 0).toLocaleString('vi-VN')} VNĐ
+                      </span>
                     </div>
 
                     <span className="font-medium text-gray-800">{progress}%</span>

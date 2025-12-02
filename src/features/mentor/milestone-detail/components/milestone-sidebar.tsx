@@ -46,7 +46,7 @@ export const MilestoneSidebar: React.FC<MilestoneSidebarProps> = ({ milestone })
               Ngân sách:
             </span>
             <span className="font-medium text-gray-800">
-              ${(milestone.budget ?? 0).toLocaleString()}
+              {(milestone.budget ?? 0).toLocaleString('vi-VN')} VNĐ
             </span>
           </div>
 

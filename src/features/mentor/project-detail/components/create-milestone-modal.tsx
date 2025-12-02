@@ -124,7 +124,7 @@ export const CreateMilestoneModal: React.FC<CreateMilestoneModalProps> = ({
       onOpenChange(false)
       onSuccess?.()
     } catch (error) {
-      console.log(error)
+      console.error(error)
       toast.error('Tạo milestone thất bại')
     }
   }
