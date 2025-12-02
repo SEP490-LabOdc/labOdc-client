@@ -16,7 +16,7 @@ import {
   Circle,
   ArrowRight,
 } from 'lucide-react'
-import { getStatusColor, getStatusLabel, getTagColor } from '@/lib/utils'
+import { getAvatarUrl, getStatusColor, getStatusLabel, getTagColor } from '@/lib/utils'
 import { useNavigate } from '@tanstack/react-router'
 import type { ProjectDetail } from '@/hooks/api/projects/types'
 import { toast } from 'sonner'
@@ -156,11 +156,13 @@ export const ProjectOverviewTab: React.FC<ProjectOverviewTabProps> = ({ projectD
                 <span>Đội ngũ</span>
               </div>
               <div className="flex-1 flex flex-wrap items-center gap-2">
-                {projectData.team ? projectData.team.map((member) => (
+                {projectData.talents ? projectData.talents.map((member) => (
                   <div key={member.id} className="inline-flex items-center gap-2 bg-gray-100 rounded-full px-2 py-1">
                     <Avatar className="h-6 w-6">
                       <AvatarImage src={member.avatar} />
-                      <AvatarFallback>{member.name[0]}</AvatarFallback>
+                      <AvatarFallback>
+                        <img src={getAvatarUrl(member.name)} alt={member.name} />
+                      </AvatarFallback>
                     </Avatar>
                     <span className="font-medium text-sm text-gray-800">{member.name}</span>
                   </div>

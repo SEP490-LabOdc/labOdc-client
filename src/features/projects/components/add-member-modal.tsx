@@ -16,7 +16,7 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import { Badge } from '@/components/ui/badge'
 import { Search, X, Users } from 'lucide-react'
 import { Label } from '@/components/ui/label'
-import { getLastNameForAvatar } from '@/helpers/stringUtils'
+import { getAvatarUrl } from '@/lib/utils.ts'
 
 interface SystemUser {
   projectMemberId: string
@@ -69,11 +69,6 @@ export function AddMemberModal({
     onClose()
     setSelectedUsers([])
     setSearchQuery('')
-  }
-
-  const getAvatarUrl = (fullName: string) => {
-    const lastName = getLastNameForAvatar(fullName)
-    return `https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(lastName)}`
   }
 
   return (

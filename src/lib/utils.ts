@@ -3,6 +3,7 @@ import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 import { ProjectTypes } from '@/hooks/api/projects'
 import { ROLE } from '@/const.ts'
+import { getLastNameForAvatar } from '@/helpers/stringUtils.ts'
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -135,6 +136,12 @@ export const getRoleBasePath = (role: string): string => {
   }
   return rolePathMap[role] || '/talent'
 }
+
+export const getAvatarUrl = (fullName: string) => {
+  const lastName = getLastNameForAvatar(fullName)
+  return `https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(lastName)}`
+}
+
 
 
 

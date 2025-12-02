@@ -44,7 +44,7 @@ export interface ProjectDetail {
   budget: number
   skills: Skill[]
   mentors: ProjectMentor[]
-  team?: TeamMember[]
+  talents?: TeamMember[]
   createdAt: string
   updatedAt: string
   createdBy: string
