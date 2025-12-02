@@ -172,6 +172,12 @@ export const MilestonesTab: React.FC<MilestonesTabProps> = ({
                         {new Date(milestone.endDate).toLocaleDateString('vi-VN')}
                       </span>
                     </div>
+
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-gray-600">Ngân sách:</span>
+                      <span className="font-medium text-gray-800">${milestone.budget ?? 0}</span>
+                    </div>
+
                     <span className="font-medium text-gray-800">{progress}%</span>
                   </div>
 
