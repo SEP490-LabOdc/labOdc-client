@@ -11,6 +11,7 @@ import type { MilestoneDetail } from '@/hooks/api/milestones/types'
 import { useApproveMilestone, useRejectMilestone, useStartMilestone } from '@/hooks/api/projects/mutation'
 import { toast } from 'sonner'
 import { usePermission } from '@/hooks/usePermission'
+import { ProjectTypes } from '@/hooks/api/projects'
 
 interface MilestonePageHeaderProps {
   milestone: MilestoneDetail
@@ -69,7 +70,7 @@ export const MilestonePageHeader: React.FC<MilestonePageHeaderProps> = ({ milest
           </div>
 
           <div className="flex items-center gap-3">
-            {isCompany && (
+            {isCompany && milestone.status === ProjectTypes.PENDING && (
               <>
                 <Button
                   variant="outline"
@@ -89,7 +90,7 @@ export const MilestonePageHeader: React.FC<MilestonePageHeaderProps> = ({ milest
                 </Button>
               </>
             )}
-            {isMentor && (
+            {isMentor && milestone.status === ProjectTypes.PLANNING && (
               <>
                 <Button
                   variant="outline"
