@@ -70,7 +70,7 @@ const StatusColorMap: Record<ProjectTypes, string> = {
   [ProjectTypes.PLANNING]: 'bg-blue-100 text-blue-800 border-blue-200',
   [ProjectTypes.ON_GOING]: 'bg-green-100 text-green-800 border-green-200',
   [ProjectTypes.CLOSED]: 'bg-gray-100 text-gray-800 border-gray-200',
-  [ProjectTypes.COMPLETE]: 'bg-purple-100 text-purple-800 border-purple-200',
+  [ProjectTypes.COMPLETED]: 'bg-purple-100 text-purple-800 border-purple-200',
   [ProjectTypes.PAUSED]: 'bg-amber-100 text-amber-800 border-amber-200',
   [ProjectTypes.PENDING_START]: 'bg-cyan-100 text-cyan-800 border-cyan-200',
 }
@@ -83,7 +83,7 @@ const StatusLabelMap: Record<ProjectTypes, string> = {
   [ProjectTypes.PLANNING]: 'Lên kế hoạch',
   [ProjectTypes.ON_GOING]: 'Đang thực hiện',
   [ProjectTypes.CLOSED]: 'Đã đóng',
-  [ProjectTypes.COMPLETE]: 'Hoàn thành',
+  [ProjectTypes.COMPLETED]: 'Hoàn thành',
   [ProjectTypes.PAUSED]: 'Tạm dừng',
   [ProjectTypes.PENDING_START]: 'Chờ bắt đầu',
 }
