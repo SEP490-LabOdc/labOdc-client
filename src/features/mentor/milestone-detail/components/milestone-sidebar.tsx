@@ -1,17 +1,49 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { CalendarDays, Users, DollarSign } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import {
+  CalendarDays,
+  Users,
+  DollarSign,
+  AlertCircle,
+  CheckCircle,
+  Wallet,
+  Info,
+  Unlock
+} from 'lucide-react'
 import { getStatusColor, getStatusLabel } from '@/lib/utils'
 import { getAvatarFallback } from '@/helpers/stringUtils'
+import { usePermission } from '@/hooks/usePermission'
 import type { Milestone } from '@/hooks/api/projects'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
 
 interface MilestoneSidebarProps {
   milestone: Milestone
+  paymentStatus?: 'PENDING_DEPOSIT' | 'DEPOSITED' | 'RELEASED'
+  escrowBalance?: number
 }
 
-export const MilestoneSidebar: React.FC<MilestoneSidebarProps> = ({ milestone }) => {
+const formatVND = (v: number) => new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(v)
+
+export const MilestoneSidebar: React.FC<MilestoneSidebarProps> = ({
+  milestone,
+  paymentStatus = 'PENDING_DEPOSIT',
+  escrowBalance = 0
+}) => {
+  const { isCompany, user } = usePermission()
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false)
+
   const calculateDaysRemaining = (endDate: string): string => {
     const end = new Date(endDate)
     const today = new Date()
@@ -25,6 +57,19 @@ export const MilestoneSidebar: React.FC<MilestoneSidebarProps> = ({ milestone })
 
   const talents = milestone.talents || []
   const mentors = milestone.mentors || []
+
+  const amount = milestone.budget || 0
+  const systemFee = amount * 0.1
+  const mentorShare = amount * 0.2
+  const teamShare = amount * 0.7
+  const hasEnoughBalance = escrowBalance >= amount
+  const canRelease = isCompany && paymentStatus === 'DEPOSITED' && hasEnoughBalance
+
+  const handleReleaseFunds = () => {
+    // TODO: Integrate with API
+    console.log('Releasing funds for milestone:', milestone.id)
+    setIsConfirmOpen(false)
+  }
 
   return (
     <Card>
@@ -127,7 +172,158 @@ export const MilestoneSidebar: React.FC<MilestoneSidebarProps> = ({ milestone })
             </div>
           </div>
         </div>
+
+        {/* Action Section - Giải ngân */}
+        {isCompany && (
+          <div className="border-t pt-4 space-y-3">
+            <div className="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-2">
+              <Unlock className="h-4 w-4 text-[#2a9d8f]" />
+              <span>Hành động giải ngân</span>
+            </div>
+
+            {paymentStatus === 'PENDING_DEPOSIT' && (
+              <div className="space-y-2">
+                <div className="p-3 bg-orange-50 border border-orange-200 rounded-lg">
+                  <div className="flex items-start gap-2">
+                    <AlertCircle className="w-4 h-4 text-orange-500 flex-shrink-0 mt-0.5" />
+                    <div>
+                      <p className="text-xs font-semibold text-orange-800">Chưa ký quỹ</p>
+                      <p className="text-xs text-orange-700 mt-0.5">
+                        Vui lòng nạp tiền vào Escrow
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <Button size="sm" className="w-full bg-orange-600 hover:bg-orange-700 text-xs">
+                  <Wallet className="w-3 h-3 mr-1.5" />
+                  Nạp vào Escrow
+                </Button>
+              </div>
+            )}
+
+            {paymentStatus === 'DEPOSITED' && (
+              <div className="space-y-2">
+                {!hasEnoughBalance && (
+                  <div className="p-3 bg-orange-50 border border-orange-200 rounded-lg">
+                    <div className="flex items-start gap-2">
+                      <AlertCircle className="w-4 h-4 text-orange-500 flex-shrink-0 mt-0.5" />
+                      <div>
+                        <p className="text-xs font-semibold text-orange-800">Số dư không đủ</p>
+                        <p className="text-xs text-orange-700 mt-0.5">
+                          Hiện tại: {formatVND(escrowBalance)}
+                        </p>
+                        <p className="text-xs text-orange-700">
+                          Cần: {formatVND(amount)}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+                  <div className="flex items-start gap-2">
+                    <Info className="w-4 h-4 text-yellow-600 flex-shrink-0 mt-0.5" />
+                    <div className="text-xs text-yellow-800 space-y-1">
+                      <p className="font-semibold">Xác nhận trước khi giải ngân:</p>
+                      <p className="text-yellow-700">✓ Đã phê duyệt báo cáo</p>
+                      <p className="text-yellow-700">✓ Công việc hoàn thành</p>
+                      <p className="text-yellow-700">✓ Không thể hoàn tác</p>
+                    </div>
+                  </div>
+                </div>
+
+                <Button
+                  size="sm"
+                  className="w-full bg-green-600 hover:bg-green-700 text-white text-xs font-semibold"
+                  disabled={!canRelease}
+                  onClick={() => setIsConfirmOpen(true)}
+                >
+                  <CheckCircle className="w-3 h-3 mr-1.5" />
+                  Giải ngân {formatVND(amount)}
+                </Button>
+              </div>
+            )}
+
+            {paymentStatus === 'RELEASED' && (
+              <div className="p-3 bg-green-50 border border-green-200 rounded-lg">
+                <div className="flex items-start gap-2">
+                  <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0 mt-0.5" />
+                  <div>
+                    <p className="text-xs font-semibold text-green-800">Đã giải ngân</p>
+                    <p className="text-xs text-green-700 mt-0.5">
+                      Tiền đã chuyển về ví các bên
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* View Only for Mentor/Talent */}
+        {!isCompany && (
+          <div className="border-t pt-4">
+            <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
+              <div className="flex items-start gap-2">
+                <Info className="w-4 h-4 text-blue-500 flex-shrink-0 mt-0.5" />
+                <div>
+                  <p className="text-xs font-semibold text-blue-800">
+                    {paymentStatus === 'RELEASED'
+                      ? '✅ Đã nhận tiền'
+                      : paymentStatus === 'DEPOSITED'
+                        ? '⏳ Đang chờ duyệt'
+                        : '⏳ Đang chờ ký quỹ'}
+                  </p>
+                  <p className="text-xs text-blue-700 mt-0.5">
+                    {paymentStatus === 'RELEASED'
+                      ? `Bạn đã nhận ${user?.role === 'MENTOR' ? formatVND(mentorShare) : 'phần của mình'}.`
+                      : paymentStatus === 'DEPOSITED'
+                        ? 'Doanh nghiệp đang xem xét.'
+                        : 'Chờ doanh nghiệp nạp tiền.'}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </CardContent>
+
+      {/* Confirm Dialog */}
+      <AlertDialog open={isConfirmOpen} onOpenChange={setIsConfirmOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle className="flex items-center gap-2 text-green-700">
+              <CheckCircle className="w-5 h-5" />
+              Xác nhận Giải ngân
+            </AlertDialogTitle>
+            <AlertDialogDescription className="space-y-3 pt-2">
+              <p className="font-semibold text-gray-900">
+                Bạn có chắc chắn muốn giải ngân <span className="text-green-600">{formatVND(amount)}</span>?
+              </p>
+              <div className="bg-gray-50 p-3 rounded text-sm space-y-1">
+                <p>Số tiền sẽ được phân chia:</p>
+                <ul className="space-y-1 ml-4 text-xs">
+                  <li>• Hệ thống (10%): <strong>{formatVND(systemFee)}</strong></li>
+                  <li>• Mentor (20%): <strong>{formatVND(mentorShare)}</strong></li>
+                  <li>• Team (70%): <strong>{formatVND(teamShare)}</strong></li>
+                </ul>
+              </div>
+              <p className="text-red-600 text-sm font-semibold">
+                ⚠️ Hành động này không thể hoàn tác!
+              </p>
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Hủy</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleReleaseFunds}
+              className="bg-green-600 hover:bg-green-700"
+            >
+              Xác nhận Giải ngân
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </Card>
   )
 }
