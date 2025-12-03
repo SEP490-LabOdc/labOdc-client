@@ -3,6 +3,7 @@ import { useParams } from '@tanstack/react-router'
 import { useGetMilestoneById } from '@/hooks/api/milestones/queries'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { ShieldCheck, DollarSign } from 'lucide-react'
+import { usePermission } from '@/hooks/usePermission'
 import {
   MilestonePageHeader,
   MilestoneOverviewTab,
@@ -15,9 +16,10 @@ import {
 const MilestoneDetailPage: React.FC = () => {
   const { milestoneId } = useParams({ strict: false })
   const { data: milestoneData, isLoading, error } = useGetMilestoneById(milestoneId as string)
+  const { user } = usePermission()
 
-  // Giả lập role (Lấy từ context thực tế)
-  const userRole = 'COMPANY' // 'MENTOR' | 'COMPANY'
+  // Get user role for display (used by MilestoneFinancialsTab)
+  const userRole = user?.role || 'USER'
 
   if (isLoading) return <div className="min-h-screen bg-gray-50 flex items-center justify-center">Đang tải...</div>
   if (error || !milestoneData?.data) return <div className="min-h-screen bg-gray-50 flex items-center justify-center">Lỗi tải dữ liệu</div>
@@ -65,7 +67,7 @@ const MilestoneDetailPage: React.FC = () => {
 
             <TabsContent value="reports" className="mt-6">
               {/* Tab này cần chứa nút Action cho Mentor (Gửi duyệt) và Doanh nghiệp (Phê duyệt) */}
-              <MilestoneReportsTab milestone={milestone} userRole={userRole} />
+              <MilestoneReportsTab milestone={milestone} />
             </TabsContent>
 
             <TabsContent value="documents" className="mt-6">
