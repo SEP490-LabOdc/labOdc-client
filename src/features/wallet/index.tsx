@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import { Wallet } from 'lucide-react'
-import { useNavigate } from '@tanstack/react-router'
 import { usePermission } from '@/hooks/usePermission'
 import {
     WalletBalanceCard,
@@ -9,6 +8,7 @@ import {
     BankAccountDialog,
     type Transaction
 } from './components'
+import { useUser } from '@/context/UserContext'
 
 // Mock Data
 const MOCK_TRANSACTIONS: Transaction[] = [
@@ -65,8 +65,8 @@ const MOCK_BANK_ACCOUNT = {
 }
 
 export const MyWalletPage: React.FC = () => {
-    const navigate = useNavigate()
     const { user } = usePermission()
+    const { user: userProfile } = useUser()
 
     const [isWithdrawOpen, setIsWithdrawOpen] = useState(false)
     const [isBankAccountOpen, setIsBankAccountOpen] = useState(false)
@@ -118,7 +118,7 @@ export const MyWalletPage: React.FC = () => {
                 <div className="flex items-center gap-2 text-sm text-gray-600">
                     <span className="font-medium">Người dùng:</span>
                     <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full font-semibold">
-                        {user?.name || 'User'}
+                        {userProfile?.fullName || 'User'}
                     </span>
                     <span className="text-gray-400">•</span>
                     <span className="text-gray-500">
