@@ -25,7 +25,7 @@ export const fetchCompanies = (): Company[] => {
             location: "Ha Noi, VN",
             rating: 4.6,
             reviews: 67,
-            bio: "Revolutionary fintech platform providing seamless payment solutions and financial services.",
+            bio: "Revolutionary fintech platform providing seamless payment solutions and financials services.",
             openProjects: 8,
             collaboratedTalents: 45,
             isFollowed: true,
