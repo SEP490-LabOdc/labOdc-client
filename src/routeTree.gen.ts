@@ -51,6 +51,7 @@ import { Route as AuthenticatedMentorProjectsRouteRouteImport } from './routes/_
 import { Route as AuthenticatedLabAdminSettingsRouteRouteImport } from './routes/_authenticated/lab-admin/settings/route'
 import { Route as AuthenticatedCompanyManageSettingsRouteRouteImport } from './routes/_authenticated/company-manage/settings/route'
 import { Route as AuthenticatedAdminSettingsRouteRouteImport } from './routes/_authenticated/admin/settings/route'
+import { Route as AuthenticatedTalentWalletIndexRouteImport } from './routes/_authenticated/talent/wallet/index'
 import { Route as AuthenticatedTalentTeamFundDistributionIndexRouteImport } from './routes/_authenticated/talent/team-fund-distribution/index'
 import { Route as AuthenticatedTalentSettingsIndexRouteImport } from './routes/_authenticated/talent/settings/index'
 import { Route as AuthenticatedTalentProjectsIndexRouteImport } from './routes/_authenticated/talent/projects/index'
@@ -320,6 +321,12 @@ const AuthenticatedAdminSettingsRouteRoute =
     id: '/settings',
     path: '/settings',
     getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
+const AuthenticatedTalentWalletIndexRoute =
+  AuthenticatedTalentWalletIndexRouteImport.update({
+    id: '/wallet/',
+    path: '/wallet/',
+    getParentRoute: () => AuthenticatedTalentRouteRoute,
   } as any)
 const AuthenticatedTalentTeamFundDistributionIndexRoute =
   AuthenticatedTalentTeamFundDistributionIndexRouteImport.update({
@@ -659,6 +666,7 @@ export interface FileRoutesByFullPath {
   '/talent/projects': typeof AuthenticatedTalentProjectsIndexRoute
   '/talent/settings/': typeof AuthenticatedTalentSettingsIndexRoute
   '/talent/team-fund-distribution': typeof AuthenticatedTalentTeamFundDistributionIndexRoute
+  '/talent/wallet': typeof AuthenticatedTalentWalletIndexRoute
   '/admin/companies/$companyId': typeof AuthenticatedAdminCompaniesCompanyIdIndexRoute
   '/admin/users/create': typeof AuthenticatedAdminUsersCreateIndexRoute
   '/admin/users/info': typeof AuthenticatedAdminUsersInfoIndexRoute
@@ -732,6 +740,7 @@ export interface FileRoutesByTo {
   '/talent/projects': typeof AuthenticatedTalentProjectsIndexRoute
   '/talent/settings': typeof AuthenticatedTalentSettingsIndexRoute
   '/talent/team-fund-distribution': typeof AuthenticatedTalentTeamFundDistributionIndexRoute
+  '/talent/wallet': typeof AuthenticatedTalentWalletIndexRoute
   '/admin/companies/$companyId': typeof AuthenticatedAdminCompaniesCompanyIdIndexRoute
   '/admin/users/create': typeof AuthenticatedAdminUsersCreateIndexRoute
   '/admin/users/info': typeof AuthenticatedAdminUsersInfoIndexRoute
@@ -822,6 +831,7 @@ export interface FileRoutesById {
   '/_authenticated/talent/projects/': typeof AuthenticatedTalentProjectsIndexRoute
   '/_authenticated/talent/settings/': typeof AuthenticatedTalentSettingsIndexRoute
   '/_authenticated/talent/team-fund-distribution/': typeof AuthenticatedTalentTeamFundDistributionIndexRoute
+  '/_authenticated/talent/wallet/': typeof AuthenticatedTalentWalletIndexRoute
   '/_authenticated/admin/companies/$companyId/': typeof AuthenticatedAdminCompaniesCompanyIdIndexRoute
   '/_authenticated/admin/users/create/': typeof AuthenticatedAdminUsersCreateIndexRoute
   '/_authenticated/admin/users/info/': typeof AuthenticatedAdminUsersInfoIndexRoute
@@ -910,6 +920,7 @@ export interface FileRouteTypes {
     | '/talent/projects'
     | '/talent/settings/'
     | '/talent/team-fund-distribution'
+    | '/talent/wallet'
     | '/admin/companies/$companyId'
     | '/admin/users/create'
     | '/admin/users/info'
@@ -983,6 +994,7 @@ export interface FileRouteTypes {
     | '/talent/projects'
     | '/talent/settings'
     | '/talent/team-fund-distribution'
+    | '/talent/wallet'
     | '/admin/companies/$companyId'
     | '/admin/users/create'
     | '/admin/users/info'
@@ -1072,6 +1084,7 @@ export interface FileRouteTypes {
     | '/_authenticated/talent/projects/'
     | '/_authenticated/talent/settings/'
     | '/_authenticated/talent/team-fund-distribution/'
+    | '/_authenticated/talent/wallet/'
     | '/_authenticated/admin/companies/$companyId/'
     | '/_authenticated/admin/users/create/'
     | '/_authenticated/admin/users/info/'
@@ -1406,6 +1419,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/settings'
       preLoaderRoute: typeof AuthenticatedAdminSettingsRouteRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
+    '/_authenticated/talent/wallet/': {
+      id: '/_authenticated/talent/wallet/'
+      path: '/wallet'
+      fullPath: '/talent/wallet'
+      preLoaderRoute: typeof AuthenticatedTalentWalletIndexRouteImport
+      parentRoute: typeof AuthenticatedTalentRouteRoute
     }
     '/_authenticated/talent/team-fund-distribution/': {
       id: '/_authenticated/talent/team-fund-distribution/'
@@ -2040,6 +2060,7 @@ interface AuthenticatedTalentRouteRouteChildren {
   AuthenticatedTalentIndexRoute: typeof AuthenticatedTalentIndexRoute
   AuthenticatedTalentProjectsIndexRoute: typeof AuthenticatedTalentProjectsIndexRoute
   AuthenticatedTalentTeamFundDistributionIndexRoute: typeof AuthenticatedTalentTeamFundDistributionIndexRoute
+  AuthenticatedTalentWalletIndexRoute: typeof AuthenticatedTalentWalletIndexRoute
   AuthenticatedTalentProjectsProjectIdIndexRoute: typeof AuthenticatedTalentProjectsProjectIdIndexRoute
   AuthenticatedTalentProjectsProjectIdMilestoneIdIndexRoute: typeof AuthenticatedTalentProjectsProjectIdMilestoneIdIndexRoute
   AuthenticatedTalentProjectsProjectIdCandidatesIndexRoute: typeof AuthenticatedTalentProjectsProjectIdCandidatesIndexRoute
@@ -2054,6 +2075,7 @@ const AuthenticatedTalentRouteRouteChildren: AuthenticatedTalentRouteRouteChildr
       AuthenticatedTalentProjectsIndexRoute,
     AuthenticatedTalentTeamFundDistributionIndexRoute:
       AuthenticatedTalentTeamFundDistributionIndexRoute,
+    AuthenticatedTalentWalletIndexRoute: AuthenticatedTalentWalletIndexRoute,
     AuthenticatedTalentProjectsProjectIdIndexRoute:
       AuthenticatedTalentProjectsProjectIdIndexRoute,
     AuthenticatedTalentProjectsProjectIdMilestoneIdIndexRoute:
