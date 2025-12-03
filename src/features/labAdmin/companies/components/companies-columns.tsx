@@ -53,13 +53,9 @@ export const companiesColumns: ColumnDef<Company>[] = [
         cell: ({ row }) => (
             <LongText className="max-w-36 ps-3">
                 {(() => {
-                    const status = row.getValue('status');
                     const id = row.original.id;
 
-                    const linkTo =
-                        status === COMPANY_STATUS.PENDING || status === COMPANY_STATUS.UPDATE_REQUIRED
-                            ? `/lab-admin/companies/approve?id=${id}`
-                            : `/lab-admin/companies/edit?id=${id}`;
+                    const linkTo = `/lab-admin/companies/${id}`;
 
                     return (
                         <Link to={linkTo} className="hover:underline">

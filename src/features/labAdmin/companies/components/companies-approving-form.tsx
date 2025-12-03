@@ -127,7 +127,7 @@ export default function CompanyApprovingForm({
             } else {
                 await patchPendingCompany.mutateAsync(payload)
                 toast.success('✅ Đã phê duyệt yêu cầu thành công!');
-                navigate({ to: '/lab-admin/companies/edit?id=' + initialData.id });
+                navigate({ to: '/lab-admin/companies/' + initialData.id });
             }
 
             console.log('✅ Gửi yêu cầu thành công!')
