@@ -9,32 +9,57 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import { UploadCloud } from 'lucide-react'
+import { FileUpload } from '@/components/file/FileUpload'
+import { useCreateReport } from '@/hooks/api/projects/mutation'
+import { toast } from 'sonner'
 
 interface SubmitReportModalProps {
   isOpen: boolean
   onClose: () => void
-  onSubmit: (content: string, files: any[]) => void
+  onSuccess: () => void
   versionNumber: number
   lastFeedback?: string
+  projectId: string
+  milestoneId: string
 }
 
 export const SubmitReportModal: React.FC<SubmitReportModalProps> = ({
                                                                       isOpen,
                                                                       onClose,
-                                                                      onSubmit,
+                                                                      onSuccess,
                                                                       versionNumber,
-                                                                      lastFeedback
+                                                                      lastFeedback,
+                                                                      projectId,
+                                                                      milestoneId
                                                                     }) => {
   const [content, setContent] = useState('')
-  // Giả lập state cho files, thực tế sẽ phức tạp hơn
-  const [files, setFiles] = useState<any[]>([])
+  const [attachmentUrl, setAttachmentUrl] = useState<string | null>(null)
 
-  const handleSubmit = () => {
-    if (content.trim()) {
-      onSubmit(content, files)
+  const { mutateAsync: createReport, isPending } = useCreateReport()
+
+  const handleSubmit = async () => {
+    if (!content.trim()) {
+      toast.error('Vui lòng nhập nội dung báo cáo')
+      return
+    }
+
+    try {
+      await createReport({
+        projectId,
+        milestoneId,
+        reportType: 'MILESTONE',
+        content: content.trim(),
+        attachmentsUrl: attachmentUrl ? [attachmentUrl] : []
+      })
+
+      toast.success('Nộp báo cáo thành công')
       setContent('')
-      setFiles([])
+      setAttachmentUrl(null)
+      onSuccess()
+      onClose()
+    } catch (error) {
+      toast.error('Nộp báo cáo thất bại')
+      console.error(error)
     }
   }
 
@@ -49,7 +74,6 @@ export const SubmitReportModal: React.FC<SubmitReportModalProps> = ({
         </DialogHeader>
 
         <div className="py-4 space-y-4">
-          {/* Hiển thị feedback gần nhất nếu có */}
           {lastFeedback && (
             <div className="bg-orange-50 p-4 rounded-md border border-orange-200 text-sm">
               <strong>Feedback cần khắc phục:</strong> "{lastFeedback}"
@@ -63,26 +87,33 @@ export const SubmitReportModal: React.FC<SubmitReportModalProps> = ({
               onChange={(e) => setContent(e.target.value)}
               placeholder="Mô tả các công việc đã hoàn thành, các thay đổi so với phiên bản trước..."
               className="min-h-[120px]"
+              disabled={isPending}
             />
           </div>
 
-          <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:bg-gray-50 transition cursor-pointer">
-            <UploadCloud className="w-10 h-10 text-gray-400 mx-auto mb-2" />
-            <p className="text-sm text-gray-600">
-              Kéo thả file báo cáo (PDF, Docx, Zip) hoặc <span className="text-indigo-600 font-semibold">Click để tải lên</span>
-            </p>
-            <p className="text-xs text-gray-400 mt-1">Hỗ trợ tối đa 50MB</p>
+          <div className="space-y-2">
+            <label className="text-sm font-medium">Tài liệu đính kèm</label>
+            <FileUpload
+              value={attachmentUrl}
+              onChange={setAttachmentUrl}
+              accept=".pdf,.doc,.docx,.zip"
+              maxSize={50}
+              placeholder="Tải lên tài liệu báo cáo"
+              disabled={isPending}
+            />
           </div>
         </div>
 
         <DialogFooter>
-          <Button variant="ghost" onClick={onClose}>Hủy bỏ</Button>
+          <Button variant="ghost" onClick={onClose} disabled={isPending}>
+            Hủy bỏ
+          </Button>
           <Button
             className="bg-indigo-600 hover:bg-indigo-700"
             onClick={handleSubmit}
-            disabled={!content.trim()}
+            disabled={!content.trim() || isPending}
           >
-            Nộp Báo cáo
+            {isPending ? 'Đang nộp...' : 'Nộp Báo cáo'}
           </Button>
         </DialogFooter>
       </DialogContent>

@@ -9,18 +9,11 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import {
-  FileText,
-  CheckCircle,
-  XCircle,
-  AlertTriangle,
-  DollarSign,
-  Download,
-} from 'lucide-react'
+import { FileText, CheckCircle, XCircle, AlertTriangle, DollarSign, Download, Loader2 } from 'lucide-react'
+import { useReviewReport } from '@/hooks/api/projects/mutation'
+import { toast } from 'sonner'
 
-// Định nghĩa lại các type cần thiết hoặc import từ file types chung
 type ReportStatus = 'SUBMITTED' | 'CHANGES_REQUESTED' | 'APPROVED';
-type UserRole = 'COMPANY' | 'MENTOR' | 'TALENT_LEADER' | 'TALENT_MEMBER';
 
 interface ReportVersion {
   id: string;
@@ -37,8 +30,8 @@ interface ReportDetailModalProps {
   isOpen: boolean
   onClose: () => void
   report: ReportVersion | null
-  userRole: UserRole
-  isLatest: boolean // Để biết có phải bản mới nhất không (cho phép duyệt)
+  isCompany: boolean
+  isLatest: boolean
   onApprove: () => void
   onRequestChanges: () => void
 }
@@ -56,11 +49,29 @@ export const ReportDetailModal: React.FC<ReportDetailModalProps> = ({
                                                                       isOpen,
                                                                       onClose,
                                                                       report,
-                                                                      userRole,
+                                                                      isCompany,
                                                                       isLatest,
                                                                       onApprove,
                                                                       onRequestChanges
                                                                     }) => {
+  const { mutateAsync: reviewReport, isPending } = useReviewReport()
+
+  const handleApprove = async () => {
+    if (!report) return
+
+    try {
+      await reviewReport({
+        reportId: report.id,
+        status: 'APPROVED'
+      })
+      toast.success('Phê duyệt báo cáo thành công')
+      onApprove()
+    } catch (error) {
+      toast.error('Phê duyệt báo cáo thất bại')
+      console.error(error)
+    }
+  }
+
   if (!report) return null
 
   return (
@@ -79,7 +90,6 @@ export const ReportDetailModal: React.FC<ReportDetailModalProps> = ({
         </DialogHeader>
 
         <div className="space-y-6 py-4">
-          {/* Nội dung */}
           <div>
             <h4 className="text-sm font-semibold text-gray-900 mb-2">Mô tả công việc:</h4>
             <div className="bg-gray-50 p-4 rounded-md text-sm text-gray-700 whitespace-pre-wrap border">
@@ -87,7 +97,6 @@ export const ReportDetailModal: React.FC<ReportDetailModalProps> = ({
             </div>
           </div>
 
-          {/* Files */}
           <div>
             <h4 className="text-sm font-semibold text-gray-900 mb-2">Tài liệu đính kèm:</h4>
             <div className="space-y-2">
@@ -106,7 +115,6 @@ export const ReportDetailModal: React.FC<ReportDetailModalProps> = ({
             </div>
           </div>
 
-          {/* Feedback nếu có */}
           {report.feedback && (
             <div className="bg-orange-50 border border-orange-200 p-4 rounded-lg">
               <h4 className="text-sm font-bold text-orange-800 mb-1 flex items-center gap-2">
@@ -118,8 +126,7 @@ export const ReportDetailModal: React.FC<ReportDetailModalProps> = ({
         </div>
 
         <DialogFooter className="flex-col sm:flex-row gap-2">
-          {/* ACTIONS CHO DOANH NGHIỆP: Chỉ hiện nếu là bản mới nhất & đang chờ duyệt */}
-          {userRole === 'COMPANY' && report.status === 'SUBMITTED' && isLatest ? (
+          {isCompany && report.status === 'SUBMITTED' && isLatest ? (
             <div className="w-full space-y-4">
               <div className="bg-yellow-50 p-3 rounded text-xs text-yellow-800 border border-yellow-200 flex items-start gap-2">
                 <DollarSign className="w-4 h-4 mt-0.5" />
@@ -128,18 +135,24 @@ export const ReportDetailModal: React.FC<ReportDetailModalProps> = ({
                 </div>
               </div>
               <div className="flex justify-end gap-2 w-full">
-                <Button variant="outline" onClick={onClose}>Đóng</Button>
+                <Button variant="outline" onClick={onClose} disabled={isPending}>Đóng</Button>
                 <Button
                   variant="destructive"
                   onClick={onRequestChanges}
+                  disabled={isPending}
                 >
                   <XCircle className="w-4 h-4 mr-2" /> Yêu cầu sửa
                 </Button>
                 <Button
                   className="bg-green-600 hover:bg-green-700 text-white"
-                  onClick={onApprove}
+                  onClick={handleApprove}
+                  disabled={isPending}
                 >
-                  <CheckCircle className="w-4 h-4 mr-2" /> Phê duyệt & Trả tiền
+                  {isPending ? (
+                    <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Đang xử lý...</>
+                  ) : (
+                    <><CheckCircle className="w-4 h-4 mr-2" /> Phê duyệt & Trả tiền</>
+                  )}
                 </Button>
               </div>
             </div>

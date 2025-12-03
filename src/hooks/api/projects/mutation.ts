@@ -188,5 +188,57 @@ export function useStartMilestone() {
   })
 }
 
+export function useCreateReport() {
+  // const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: async (payload: {
+      projectId: string
+      reportType: string
+      content: string
+      attachmentsUrl: string[]
+      milestoneId: string
+    }) => {
+      const { data } = await apiRequest.post(
+        `/api/v1/reports`,
+        payload
+      )
+      return data
+    },
+    // onSuccess: async () => {
+    //   await queryClient.invalidateQueries({
+    //     queryKey: ['reports']
+    //   })
+    // }
+  })
+}
+
+export function useReviewReport() {
+  // const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: async (payload: {
+      reportId: string
+      status: 'APPROVED' | 'REJECTED'
+      feedback?: string
+    }) => {
+      const { data } = await apiRequest.patch(
+        `/api/v1/reports/${payload.reportId}/review`,
+        {
+          status: payload.status,
+          ...(payload.feedback && { feedback: payload.feedback })
+        }
+      )
+      return data
+    },
+    // onSuccess: async () => {
+    //   await queryClient.invalidateQueries({
+    //     queryKey: ['reports']
+    //   })
+    // }
+  })
+}
+
+
 
 

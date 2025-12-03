@@ -76,7 +76,7 @@ const MilestoneDetailPage: React.FC = () => {
             <TabsContent value="financials" className="mt-6">
               <MilestoneFinancialsTab
                 amount={milestone.amount}
-                status={milestone.paymentStatus} // 'ESCROWED' | 'RELEASED' | 'PENDING'
+                status={milestone.paymentStatus}
                 userRole={userRole}
               />
             </TabsContent>

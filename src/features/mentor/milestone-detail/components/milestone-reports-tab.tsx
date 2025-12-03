@@ -2,18 +2,15 @@ import React, { useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import {
-  History,
-  Eye,
-  Plus,
-} from 'lucide-react'
+import { History, Eye, Plus } from 'lucide-react'
 import { ReportDetailModal } from '@/features/mentor/milestone-detail/components/report-detail-modal.tsx'
 import { RejectReportModal } from '@/features/mentor/milestone-detail/components/reject-report-modal.tsx'
 import { SubmitReportModal } from '@/features/mentor/milestone-detail/components/submit-report-modal.tsx'
+import { usePermission } from '@/hooks/usePermission'
+import { ROLE } from '@/const.ts'
 
 // --- Types ---
 export type ReportStatus = 'SUBMITTED' | 'CHANGES_REQUESTED' | 'APPROVED';
-export type UserRole = 'COMPANY' | 'MENTOR' | 'TALENT_LEADER' | 'TALENT_MEMBER';
 
 export interface ReportVersion {
   id: string;
@@ -27,8 +24,10 @@ export interface ReportVersion {
 }
 
 interface Props {
-  milestone: any;
-  userRole: UserRole;
+  milestone: {
+    id: string;
+    projectId: string;
+  };
 }
 
 // Mock Data
@@ -63,19 +62,20 @@ const getStatusBadge = (status: ReportStatus) => {
   }
 }
 
-export const MilestoneReportsTab: React.FC<Props> = ({ milestone, userRole }) => {
+export const MilestoneReportsTab: React.FC<Props> = ({ milestone }) => {
+  const { hasRole, isCompany } = usePermission();
   const [reports, setReports] = useState<ReportVersion[]>(MOCK_REPORTS);
 
   // States quản lý hiển thị Modal
   const [isDetailOpen, setIsDetailOpen] = useState(false);
   const [isRejectOpen, setIsRejectOpen] = useState(false);
-  const [isSubmitOpen, setIsSubmitOpen] = useState(false); // State cho modal nộp bài
+  const [isSubmitOpen, setIsSubmitOpen] = useState(false);
   const [selectedReport, setSelectedReport] = useState<ReportVersion | null>(null);
 
   // Checks logic
-  // Cho phép nộp bài nếu chưa có report nào HOẶC report mới nhất bị từ chối
-  const canSubmitReport = reports.length === 0 || reports[0].status === 'CHANGES_REQUESTED';
+  // const canSubmitReport = reports.length === 0 || reports[0].status === 'CHANGES_REQUESTED';
   const isLatestRejected = reports.length > 0 && reports[0].status === 'CHANGES_REQUESTED';
+  const isMentorOrTalent = hasRole(ROLE.MENTOR, ROLE.USER);
 
   // --- HANDLERS ---
   const handleOpenDetail = (report: ReportVersion) => {
@@ -115,22 +115,6 @@ export const MilestoneReportsTab: React.FC<Props> = ({ milestone, userRole }) =>
     console.log("Approved! Triggering payment release...");
   };
 
-  const handleSubmitNewVersion = (content: string, files: any[]) => {
-    const newReport: ReportVersion = {
-      id: `r${reports.length + 1}`,
-      version: reports.length + 1,
-      submittedAt: new Date().toLocaleString(),
-      submittedBy: 'Nguyễn Văn A', // Lấy từ context
-      content: content,
-      files: [{ name: 'New_Report.zip', size: '10MB' }], // Mock file upload
-      status: 'SUBMITTED'
-    };
-
-    setReports([newReport, ...reports]); // Thêm report mới lên đầu
-    setIsSubmitOpen(false);
-  };
-
-  // --- GIAO DIỆN CHÍNH ---
   return (
     <>
       <Card>
@@ -140,8 +124,7 @@ export const MilestoneReportsTab: React.FC<Props> = ({ milestone, userRole }) =>
             <CardDescription>Theo dõi các phiên bản báo cáo đã nộp cho milestone này.</CardDescription>
           </div>
 
-          {/* Nút Tạo Báo Cáo (Chỉ hiện cho Mentor khi đủ điều kiện) */}
-          {userRole === 'MENTOR' && canSubmitReport && (
+          {isMentorOrTalent && (
             <Button onClick={() => setIsSubmitOpen(true)} className="bg-indigo-600 hover:bg-indigo-700">
               <Plus className="w-4 h-4 mr-2" />
               {isLatestRejected ? 'Nộp Phiên bản Mới' : 'Tạo Báo cáo'}
@@ -152,7 +135,7 @@ export const MilestoneReportsTab: React.FC<Props> = ({ milestone, userRole }) =>
           {reports.length === 0 ? (
             <div className="text-center py-12 text-gray-500 bg-gray-50 rounded-lg border border-dashed">
               <p>Chưa có báo cáo nào được nộp.</p>
-              {userRole === 'MENTOR' && (
+              {isMentorOrTalent && (
                 <Button variant="link" onClick={() => setIsSubmitOpen(true)}>Nộp báo cáo đầu tiên</Button>
               )}
             </div>
@@ -186,33 +169,33 @@ export const MilestoneReportsTab: React.FC<Props> = ({ milestone, userRole }) =>
         </CardContent>
       </Card>
 
-      {/* --- CÁC MODAL --- */}
-
-      {/* 1. Xem chi tiết */}
       <ReportDetailModal
         isOpen={isDetailOpen}
         onClose={() => setIsDetailOpen(false)}
         report={selectedReport}
-        userRole={userRole}
+        isCompany={isCompany}
         isLatest={selectedReport?.id === reports[0].id}
         onApprove={handleApprove}
         onRequestChanges={handleOpenReject}
       />
 
-      {/* 2. Từ chối / Yêu cầu sửa */}
       <RejectReportModal
         isOpen={isRejectOpen}
         onClose={() => setIsRejectOpen(false)}
         onConfirm={handleConfirmReject}
+        reportId={selectedReport?.id || ''}
       />
 
-      {/* 3. Nộp báo cáo mới */}
       <SubmitReportModal
         isOpen={isSubmitOpen}
         onClose={() => setIsSubmitOpen(false)}
-        onSubmit={handleSubmitNewVersion}
+        onSuccess={() => {
+          // Refresh reports list
+        }}
         versionNumber={reports.length + 1}
         lastFeedback={isLatestRejected ? reports[0].feedback : undefined}
+        projectId={milestone.projectId}
+        milestoneId={milestone.id}
       />
     </>
   )
