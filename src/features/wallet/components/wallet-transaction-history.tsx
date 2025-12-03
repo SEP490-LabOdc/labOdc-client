@@ -4,7 +4,6 @@ import { Badge } from '@/components/ui/badge'
 import {
     ArrowDownLeft,
     ArrowUpRight,
-    DollarSign,
     Clock,
     CheckCircle,
     XCircle,
