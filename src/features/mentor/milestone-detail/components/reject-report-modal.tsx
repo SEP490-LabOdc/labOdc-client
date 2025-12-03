@@ -21,11 +21,11 @@ interface RejectReportModalProps {
 }
 
 export const RejectReportModal: React.FC<RejectReportModalProps> = ({
-                                                                      isOpen,
-                                                                      onClose,
-                                                                      onConfirm,
-                                                                      reportId
-                                                                    }) => {
+  isOpen,
+  onClose,
+  onConfirm,
+  reportId
+}) => {
   const [feedbackInput, setFeedbackInput] = useState('')
   const { mutateAsync: reviewReport, isPending } = useReviewReport()
 

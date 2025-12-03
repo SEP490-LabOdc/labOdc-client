@@ -46,14 +46,14 @@ const getStatusBadge = (status: ReportStatus) => {
 }
 
 export const ReportDetailModal: React.FC<ReportDetailModalProps> = ({
-                                                                      isOpen,
-                                                                      onClose,
-                                                                      report,
-                                                                      isCompany,
-                                                                      isLatest,
-                                                                      onApprove,
-                                                                      onRequestChanges
-                                                                    }) => {
+  isOpen,
+  onClose,
+  report,
+  isCompany,
+  isLatest,
+  onApprove,
+  onRequestChanges
+}) => {
   const { mutateAsync: reviewReport, isPending } = useReviewReport()
 
   const handleApprove = async () => {

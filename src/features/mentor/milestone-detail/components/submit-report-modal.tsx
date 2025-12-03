@@ -24,14 +24,14 @@ interface SubmitReportModalProps {
 }
 
 export const SubmitReportModal: React.FC<SubmitReportModalProps> = ({
-                                                                      isOpen,
-                                                                      onClose,
-                                                                      onSuccess,
-                                                                      versionNumber,
-                                                                      lastFeedback,
-                                                                      projectId,
-                                                                      milestoneId
-                                                                    }) => {
+  isOpen,
+  onClose,
+  onSuccess,
+  versionNumber,
+  lastFeedback,
+  projectId,
+  milestoneId
+}) => {
   const [content, setContent] = useState('')
   const [attachmentUrl, setAttachmentUrl] = useState<string | null>(null)
 
