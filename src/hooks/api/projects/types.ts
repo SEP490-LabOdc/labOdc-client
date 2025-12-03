@@ -30,6 +30,17 @@ export interface TeamMember {
   name: string
   avatar?: string
   roleName: string
+  leader?: boolean
+}
+
+export interface ProjectMember {
+  projectMemberId: string
+  userId: string
+  fullName: string
+  email: string
+  avatarUrl?: string
+  roleName: 'MENTOR' | 'TALENT'
+  isLeader?: boolean
 }
 
 export interface ProjectListItem {

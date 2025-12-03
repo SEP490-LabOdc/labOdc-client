@@ -59,7 +59,7 @@ export function useApproveProjectApplication() {
 
 export function useRejectProjectApplication() {
   return useMutation({
-    mutationFn: async (payload: {projectApplicationId: string, reviewNotes: string}) => {
+    mutationFn: async (payload: { projectApplicationId: string, reviewNotes: string }) => {
       const { data } = await apiRequest.post(
         `/api/v1/project-applications/${payload.projectApplicationId}/reject`,
         { reviewNotes: payload.reviewNotes }
@@ -239,6 +239,40 @@ export function useReviewReport() {
   })
 }
 
+/**
+ * Make a talent become leader in a project
+ */
+export function useUpdateTalentLeader() {
+  return useMutation({
+    mutationFn: async (payload: {
+      projectId: string
+      talentId: string
+      isLeader: boolean
+    }) => {
+      const { data } = await apiRequest.patch(
+        `/api/v1/projects/${payload.projectId}/talents/${payload.talentId}/leader`,
+        { isLeader: payload.isLeader }
+      )
+      return data
+    }
+  })
+}
 
-
-
+/**
+ * Make a mentor become leader in a project
+ */
+export function useUpdateMentorLeader() {
+  return useMutation({
+    mutationFn: async (payload: {
+      projectId: string
+      mentorId: string
+      isLeader: boolean
+    }) => {
+      const { data } = await apiRequest.patch(
+        `/api/v1/projects/${payload.projectId}/mentors/${payload.mentorId}/leader`,
+        { isLeader: payload.isLeader }
+      )
+      return data
+    }
+  })
+}
