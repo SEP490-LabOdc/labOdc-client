@@ -14,24 +14,34 @@ import { useReviewReport } from '@/hooks/api/projects/mutation'
 import { toast } from 'sonner'
 
 type ReportStatus = 'SUBMITTED' | 'CHANGES_REQUESTED' | 'APPROVED';
+type ReportType = 'DAILY_REPORT' | 'WEEKLY_REPORT' | 'MILESTONE_REPORT' | 'DELIVERY_REPORT';
 
 interface ReportVersion {
   id: string;
-  version: number;
   submittedAt: string;
   submittedBy: string;
   content: string;
   files: { name: string; size: string }[];
   status: ReportStatus;
+  reportType: ReportType;
   feedback?: string;
 }
+
+const getReportTypeLabel = (reportType: ReportType): string => {
+  const labels: Record<ReportType, string> = {
+    'DAILY_REPORT': 'Báo cáo Hàng ngày',
+    'WEEKLY_REPORT': 'Báo cáo Tuần',
+    'MILESTONE_REPORT': 'Báo cáo Milestone',
+    'DELIVERY_REPORT': 'Báo cáo Giao hàng',
+  };
+  return labels[reportType];
+};
 
 interface ReportDetailModalProps {
   isOpen: boolean
   onClose: () => void
   report: ReportVersion | null
   isCompany: boolean
-  isLatest: boolean
   onApprove: () => void
   onRequestChanges: () => void
 }
@@ -50,7 +60,6 @@ export const ReportDetailModal: React.FC<ReportDetailModalProps> = ({
   onClose,
   report,
   isCompany,
-  isLatest,
   onApprove,
   onRequestChanges
 }) => {
@@ -80,9 +89,9 @@ export const ReportDetailModal: React.FC<ReportDetailModalProps> = ({
         <DialogHeader>
           <div className="flex justify-between items-start pr-6">
             <div>
-              <DialogTitle>Chi tiết Phiên bản {report.version}</DialogTitle>
+              <DialogTitle>Chi tiết Báo cáo</DialogTitle>
               <DialogDescription className="mt-1">
-                Người nộp: {report.submittedBy} • {report.submittedAt}
+                <span className="font-medium">{getReportTypeLabel(report.reportType)}</span> • Người nộp: {report.submittedBy} • {report.submittedAt}
               </DialogDescription>
             </div>
             {getStatusBadge(report.status)}
@@ -126,7 +135,7 @@ export const ReportDetailModal: React.FC<ReportDetailModalProps> = ({
         </div>
 
         <DialogFooter className="flex-col sm:flex-row gap-2">
-          {isCompany && report.status === 'SUBMITTED' && isLatest ? (
+          {isCompany && report.status === 'SUBMITTED' ? (
             <div className="w-full space-y-4">
               <div className="bg-yellow-50 p-3 rounded text-xs text-yellow-800 border border-yellow-200 flex items-start gap-2">
                 <DollarSign className="w-4 h-4 mt-0.5" />

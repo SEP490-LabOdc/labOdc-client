@@ -2,6 +2,13 @@ import React, { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import {
   Dialog,
   DialogContent,
   DialogDescription,
@@ -13,11 +20,22 @@ import { FileUpload } from '@/components/file/FileUpload'
 import { useCreateReport } from '@/hooks/api/projects/mutation'
 import { toast } from 'sonner'
 
+type ReportType = 'DAILY_REPORT' | 'WEEKLY_REPORT' | 'MILESTONE_REPORT' | 'DELIVERY_REPORT';
+
+const getReportTypeLabel = (reportType: ReportType): string => {
+  const labels: Record<ReportType, string> = {
+    'DAILY_REPORT': 'Báo cáo Hàng ngày',
+    'WEEKLY_REPORT': 'Báo cáo Tuần',
+    'MILESTONE_REPORT': 'Báo cáo Milestone',
+    'DELIVERY_REPORT': 'Báo cáo Giao hàng',
+  };
+  return labels[reportType];
+};
+
 interface SubmitReportModalProps {
   isOpen: boolean
   onClose: () => void
   onSuccess: () => void
-  versionNumber: number
   lastFeedback?: string
   projectId: string
   milestoneId: string
@@ -27,11 +45,11 @@ export const SubmitReportModal: React.FC<SubmitReportModalProps> = ({
   isOpen,
   onClose,
   onSuccess,
-  versionNumber,
   lastFeedback,
   projectId,
   milestoneId
 }) => {
+  const [reportType, setReportType] = useState<ReportType>('MILESTONE_REPORT')
   const [content, setContent] = useState('')
   const [attachmentUrl, setAttachmentUrl] = useState<string | null>(null)
 
@@ -43,11 +61,16 @@ export const SubmitReportModal: React.FC<SubmitReportModalProps> = ({
       return
     }
 
+    if (!reportType) {
+      toast.error('Vui lòng chọn loại báo cáo')
+      return
+    }
+
     try {
       await createReport({
         projectId,
         milestoneId,
-        reportType: 'MILESTONE',
+        reportType,
         content: content.trim(),
         attachmentsUrl: attachmentUrl ? [attachmentUrl] : []
       })
@@ -55,6 +78,7 @@ export const SubmitReportModal: React.FC<SubmitReportModalProps> = ({
       toast.success('Nộp báo cáo thành công')
       setContent('')
       setAttachmentUrl(null)
+      setReportType('MILESTONE_REPORT')
       onSuccess()
       onClose()
     } catch (error) {
@@ -67,7 +91,7 @@ export const SubmitReportModal: React.FC<SubmitReportModalProps> = ({
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DialogContent className="sm:max-w-[600px]">
         <DialogHeader>
-          <DialogTitle>Nộp Báo cáo Mới (Phiên bản {versionNumber})</DialogTitle>
+          <DialogTitle>Nộp Báo cáo Mới</DialogTitle>
           <DialogDescription>
             Vui lòng điền thông tin chi tiết và tải lên các tài liệu cần thiết để nghiệm thu.
           </DialogDescription>
@@ -81,11 +105,26 @@ export const SubmitReportModal: React.FC<SubmitReportModalProps> = ({
           )}
 
           <div className="space-y-2">
+            <label className="text-sm font-medium">Loại báo cáo <span className="text-red-500">*</span></label>
+            <Select value={reportType} onValueChange={(value) => setReportType(value as ReportType)} disabled={isPending}>
+              <SelectTrigger className='w-full'>
+                <SelectValue placeholder="Chọn loại báo cáo" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="DAILY_REPORT">{getReportTypeLabel('DAILY_REPORT')}</SelectItem>
+                <SelectItem value="WEEKLY_REPORT">{getReportTypeLabel('WEEKLY_REPORT')}</SelectItem>
+                <SelectItem value="MILESTONE_REPORT">{getReportTypeLabel('MILESTONE_REPORT')}</SelectItem>
+                <SelectItem value="DELIVERY_REPORT">{getReportTypeLabel('DELIVERY_REPORT')}</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-2">
             <label className="text-sm font-medium">Nội dung báo cáo / Cập nhật</label>
             <Textarea
               value={content}
               onChange={(e) => setContent(e.target.value)}
-              placeholder="Mô tả các công việc đã hoàn thành, các thay đổi so với phiên bản trước..."
+              placeholder="Mô tả các công việc đã hoàn thành..."
               className="min-h-[120px]"
               disabled={isPending}
             />
