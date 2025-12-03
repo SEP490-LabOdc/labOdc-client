@@ -59,7 +59,7 @@ export function useApproveProjectApplication() {
 
 export function useRejectProjectApplication() {
   return useMutation({
-    mutationFn: async (payload: {projectApplicationId: string, reviewNotes: string}) => {
+    mutationFn: async (payload: { projectApplicationId: string, reviewNotes: string }) => {
       const { data } = await apiRequest.post(
         `/api/v1/project-applications/${payload.projectApplicationId}/reject`,
         { reviewNotes: payload.reviewNotes }
@@ -188,5 +188,91 @@ export function useStartMilestone() {
   })
 }
 
+export function useCreateReport() {
+  // const queryClient = useQueryClient()
 
+  return useMutation({
+    mutationFn: async (payload: {
+      projectId: string
+      reportType: string
+      content: string
+      attachmentsUrl: string[]
+      milestoneId: string
+    }) => {
+      const { data } = await apiRequest.post(
+        `/api/v1/reports`,
+        payload
+      )
+      return data
+    },
+    // onSuccess: async () => {
+    //   await queryClient.invalidateQueries({
+    //     queryKey: ['reports']
+    //   })
+    // }
+  })
+}
 
+export function useReviewReport() {
+  // const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: async (payload: {
+      reportId: string
+      status: 'APPROVED' | 'REJECTED'
+      feedback?: string
+    }) => {
+      const { data } = await apiRequest.patch(
+        `/api/v1/reports/${payload.reportId}/review`,
+        {
+          status: payload.status,
+          ...(payload.feedback && { feedback: payload.feedback })
+        }
+      )
+      return data
+    },
+    // onSuccess: async () => {
+    //   await queryClient.invalidateQueries({
+    //     queryKey: ['reports']
+    //   })
+    // }
+  })
+}
+
+/**
+ * Make a talent become leader in a project
+ */
+export function useUpdateTalentLeader() {
+  return useMutation({
+    mutationFn: async (payload: {
+      projectId: string
+      talentId: string
+      isLeader: boolean
+    }) => {
+      const { data } = await apiRequest.patch(
+        `/api/v1/projects/${payload.projectId}/talents/${payload.talentId}/leader`,
+        { isLeader: payload.isLeader }
+      )
+      return data
+    }
+  })
+}
+
+/**
+ * Make a mentor become leader in a project
+ */
+export function useUpdateMentorLeader() {
+  return useMutation({
+    mutationFn: async (payload: {
+      projectId: string
+      mentorId: string
+      isLeader: boolean
+    }) => {
+      const { data } = await apiRequest.patch(
+        `/api/v1/projects/${payload.projectId}/mentors/${payload.mentorId}/leader`,
+        { isLeader: payload.isLeader }
+      )
+      return data
+    }
+  })
+}

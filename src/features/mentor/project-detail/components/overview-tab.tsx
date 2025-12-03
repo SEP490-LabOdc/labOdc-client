@@ -147,25 +147,64 @@ export const ProjectOverviewTab: React.FC<ProjectOverviewTabProps> = ({ projectD
               </div>
             )}
 
+            {/* Section Đội ngũ - đã tối ưu với button luôn hiển thị */}
             <div className="flex items-start">
               <div className="w-40 flex-shrink-0 flex items-center gap-3 text-sm text-gray-600">
                 <Users className="h-4 w-4" />
                 <span>Đội ngũ</span>
               </div>
-              <div className="flex-1 flex flex-wrap items-center gap-2">
-                {projectData.talents ? projectData.talents.map((member) => (
-                  <div key={member.id} className="inline-flex items-center gap-2 bg-gray-100 rounded-full px-2 py-1">
-                    <Avatar className="h-6 w-6">
-                      <AvatarImage src={member.avatar} />
-                      <AvatarFallback>
-                        <img src={getAvatarUrl(member.name)} alt={member.name} />
-                      </AvatarFallback>
-                    </Avatar>
-                    <span className="font-medium text-sm text-gray-800">{member.name}</span>
+              <div className="flex-1 space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium text-gray-600">
+                    {projectData.talents?.length || 0} thành viên
+                  </span>
+                </div>
+
+                <div className="flex flex-wrap items-center gap-2">
+                  {projectData.talents && projectData.talents.length > 0 ? (
+                    <>
+                      {projectData.talents.slice(0, 5).map((member) => (
+                        <div key={member.id} className="inline-flex items-center gap-2 bg-gray-100 rounded-full px-2 py-1">
+                          <Avatar className="h-6 w-6">
+                            <AvatarImage src={member.avatar} />
+                            <AvatarFallback>
+                              <img src={getAvatarUrl(member.name)} alt={member.name} />
+                            </AvatarFallback>
+                          </Avatar>
+                          <span className="font-medium text-sm text-gray-800">{member.name}</span>
+                        </div>
+                      ))}
+                      {projectData.talents.length > 5 && (
+                        <Badge variant="secondary" className="rounded-full">
+                          +{projectData.talents.length - 5} thành viên khác
+                        </Badge>
+                      )}
+                    </>
+                  ) : (
+                    <span className="text-sm text-gray-500">Chưa có thành viên trong đội ngũ</span>
+                  )}
+                </div>
+
+                {/* Button luôn hiển thị - thiết kế đẹp và rõ ràng */}
+                <div
+                  onClick={() => navigate({ to: `/mentor/projects/${projectData.id}/members` })}
+                  className="flex items-center justify-between p-3 rounded-lg border-2 border-[#2a9d8f]/20 hover:border-[#2a9d8f] hover:bg-[#e9f5f3]/50 cursor-pointer transition-all duration-200 group"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 rounded-full bg-[#2a9d8f]/10 group-hover:bg-[#2a9d8f]/20 transition-colors duration-200">
+                      <Users className="h-4 w-4 text-[#2a9d8f]" />
+                    </div>
+                    <div className="flex flex-col">
+                      <span className="text-sm font-semibold text-[#2a9d8f]">
+                        Quản lý thành viên
+                      </span>
+                      <span className="text-xs text-gray-500">
+                        Xem, thêm, xóa và chỉnh sửa thành viên dự án
+                      </span>
+                    </div>
                   </div>
-                )) : (
-                  <span className="text-sm text-gray-500">Chưa có thành viên trong đội ngũ</span>
-                )}
+                  <ArrowRight className="h-5 w-5 text-[#2a9d8f] transition-transform duration-200 group-hover:translate-x-1" />
+                </div>
               </div>
             </div>
 

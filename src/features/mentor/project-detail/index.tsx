@@ -1,13 +1,19 @@
 import React from 'react'
-import { useParams } from '@tanstack/react-router'
+import { useNavigate, useParams } from '@tanstack/react-router'
 import { useGetProjectById, useGetProjectMilestones } from '@/hooks/api/projects/queries'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import {
-  ProjectPageHeader, ProjectSidebar, ProjectActivityTab, ProjectFilesTab, ProjectInvoicesTab, ProjectOverviewTab,
+  ProjectPageHeader, ProjectSidebar, ProjectActivityTab, ProjectFilesTab, ProjectOverviewTab,
   MilestonesTab,
 } from './components'
+import { ArrowRight, Wallet } from 'lucide-react'
+import { Button } from '@/components/ui/button.tsx'
+import { getRoleBasePath } from '@/lib/utils.ts'
+import { useUser } from '@/context/UserContext'
 
 const ProjectDetailPage: React.FC = () => {
+  const { user } = useUser()
+  const navigate = useNavigate()
   const { projectId } = useParams({ strict: false })
   const { data: projectData, isLoading: isLoadingProject, error: projectError } = useGetProjectById(projectId as string)
   const { data: milestonesData, isLoading: isLoadingMilestones, refetch: refetchMilestones } = useGetProjectMilestones(projectId as string)
@@ -38,17 +44,32 @@ const ProjectDetailPage: React.FC = () => {
       <ProjectPageHeader />
       <div className="max-w-7xl mx-auto grid grid-cols-12 gap-6 p-6">
         <div className="col-span-12 lg:col-span-4 space-y-6">
+          <div className="bg-white p-4 rounded-xl shadow-sm border border-indigo-100">
+            <h3 className="font-semibold text-gray-800 mb-2 flex items-center gap-2">
+              <Wallet className="w-4 h-4 text-indigo-600" />
+              Quản lý Tài chính
+            </h3>
+            <p className="text-xs text-gray-500 mb-4">
+              Theo dõi ngân sách, ví Escrow, và phân bổ quỹ 10/20/70.
+            </p>
+            <Button
+              className="w-full bg-indigo-600 hover:bg-indigo-700 text-white shadow-md transition-all group"
+              onClick={() => navigate({ to: `${getRoleBasePath(user?.role)}/projects/${projectId}/financials` })}
+            >
+              Truy cập Dashboard Tài chính
+              <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+            </Button>
+          </div>
           <ProjectSidebar projectData={projectData.data} />
         </div>
 
         <div className="col-span-12 lg:col-span-8">
           <Tabs defaultValue="overview" className="w-full">
-            <TabsList className="grid w-full grid-cols-5 h-auto bg-gray-100 p-1 rounded-lg">
+            <TabsList className="grid w-full grid-cols-4 h-auto bg-gray-100 p-1 rounded-lg">
               <TabsTrigger value="overview" className="data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-md py-2">Tổng quan</TabsTrigger>
               <TabsTrigger value="milestones" className="data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-md py-2">Cột mốc</TabsTrigger>
               <TabsTrigger value="files" className="data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-md py-2">Tệp tin & Hình ảnh</TabsTrigger>
               <TabsTrigger value="activity" className="data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-md py-2">Hoạt động & Ghi chú</TabsTrigger>
-              <TabsTrigger value="invoices" className="data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-md py-2">Hóa đơn</TabsTrigger>
             </TabsList>
 
             <TabsContent value="overview" className="mt-6">
@@ -77,10 +98,6 @@ const ProjectDetailPage: React.FC = () => {
 
             <TabsContent value="activity" className="mt-6">
               <ProjectActivityTab activities={projectData.activities || []} notes={projectData.notes || []} />
-            </TabsContent>
-
-            <TabsContent value="invoices" className="mt-6">
-              <ProjectInvoicesTab invoices={projectData.invoices || []} />
             </TabsContent>
           </Tabs>
         </div>

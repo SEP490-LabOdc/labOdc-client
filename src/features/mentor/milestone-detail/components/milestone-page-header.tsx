@@ -92,7 +92,7 @@ export const MilestonePageHeader: React.FC<MilestonePageHeaderProps> = ({ milest
                   </Button>
                 </>
               )}
-              {isMentor && milestone.status === ProjectTypes.PLANNING && (
+              {isMentor && milestone.status === ProjectTypes.PENDING_START && (
                 <>
                   <Button
                     variant="outline"
@@ -102,12 +102,12 @@ export const MilestonePageHeader: React.FC<MilestonePageHeaderProps> = ({ milest
                   >
                     Bắt đầu
                   </Button>
-                  <Button variant="outline" className="text-orange-600 border-orange-600 hover:bg-orange-50">
-                    <Edit className="h-4 w-4 mr-2" />
-                    Sửa Milestone
-                  </Button>
                 </>
               )}
+              <Button variant="outline" className="text-orange-600 border-orange-600 hover:bg-orange-50">
+                <Edit className="h-4 w-4 mr-2" />
+                Sửa Milestone
+              </Button>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" size="icon">
