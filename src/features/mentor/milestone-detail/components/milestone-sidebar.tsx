@@ -17,16 +17,7 @@ import { getStatusColor, getStatusLabel } from '@/lib/utils'
 import { getAvatarFallback } from '@/helpers/stringUtils'
 import { usePermission } from '@/hooks/usePermission'
 import type { Milestone } from '@/hooks/api/projects'
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from '@/components/ui/alert-dialog'
+import { ConfirmReleaseDialog } from './confirm-release-dialog'
 
 interface MilestoneSidebarProps {
   milestone: Milestone
@@ -288,42 +279,16 @@ export const MilestoneSidebar: React.FC<MilestoneSidebarProps> = ({
         )}
       </CardContent>
 
-      {/* Confirm Dialog */}
-      <AlertDialog open={isConfirmOpen} onOpenChange={setIsConfirmOpen}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle className="flex items-center gap-2 text-green-700">
-              <CheckCircle className="w-5 h-5" />
-              Xác nhận Giải ngân
-            </AlertDialogTitle>
-            <AlertDialogDescription className="space-y-3 pt-2">
-              <p className="font-semibold text-gray-900">
-                Bạn có chắc chắn muốn giải ngân <span className="text-green-600">{formatVND(amount)}</span>?
-              </p>
-              <div className="bg-gray-50 p-3 rounded text-sm space-y-1">
-                <p>Số tiền sẽ được phân chia:</p>
-                <ul className="space-y-1 ml-4 text-xs">
-                  <li>• Hệ thống (10%): <strong>{formatVND(systemFee)}</strong></li>
-                  <li>• Mentor (20%): <strong>{formatVND(mentorShare)}</strong></li>
-                  <li>• Team (70%): <strong>{formatVND(teamShare)}</strong></li>
-                </ul>
-              </div>
-              <p className="text-red-600 text-sm font-semibold">
-                ⚠️ Hành động này không thể hoàn tác!
-              </p>
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Hủy</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={handleReleaseFunds}
-              className="bg-green-600 hover:bg-green-700"
-            >
-              Xác nhận Giải ngân
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      {/* Confirm Release Dialog */}
+      <ConfirmReleaseDialog
+        isOpen={isConfirmOpen}
+        onClose={() => setIsConfirmOpen(false)}
+        onConfirm={handleReleaseFunds}
+        amount={amount}
+        systemFee={systemFee}
+        mentorShare={mentorShare}
+        teamShare={teamShare}
+      />
     </Card>
   )
 }
