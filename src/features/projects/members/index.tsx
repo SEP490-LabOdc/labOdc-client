@@ -1,4 +1,3 @@
-import React from 'react'
 import { useNavigate, useParams } from '@tanstack/react-router'
 import { useGetProjectMembers } from '@/hooks/api/projects/queries'
 import { useUpdateTalentLeader, useUpdateMentorLeader, projectKeys, type ProjectMember } from '@/hooks/api/projects'
@@ -10,11 +9,13 @@ import { Badge } from '@/components/ui/badge'
 import { getAvatarUrl } from '@/lib/utils'
 import { toast } from 'sonner'
 import { useQueryClient } from '@tanstack/react-query'
+import { usePermission } from '@/hooks/usePermission'
 
 export default function ProjectMembersPage() {
   const { projectId } = useParams({ strict: false })
   const navigate = useNavigate()
   const queryClient = useQueryClient()
+  const { isLabAdmin, isMentor } = usePermission()
 
   const { data: projectMembersData, isLoading } = useGetProjectMembers(projectId as string)
   const projectMembers = projectMembersData?.data || []
@@ -117,11 +118,6 @@ export default function ProjectMembersPage() {
                 Quản lý và xem danh sách thành viên tham gia dự án
               </p>
             </div>
-
-            <Button className="bg-[#2a9d8f] hover:bg-[#264653]">
-              <UserPlus className="h-4 w-4 mr-2" />
-              Thêm thành viên
-            </Button>
           </div>
         </div>
 
@@ -165,33 +161,35 @@ export default function ProjectMembersPage() {
                         <div className="text-sm text-gray-500 truncate">{mentor.email}</div>
                       </div>
                     </div>
-                    <Button
-                      size="sm"
-                      variant={mentor.isLeader ? "default" : "outline"}
-                      className={`w-full mt-3 ${mentor.isLeader
-                        ? 'bg-yellow-500 hover:bg-yellow-600 text-white'
-                        : 'border-yellow-500 text-yellow-600 hover:bg-yellow-50'
-                        }`}
-                      disabled={updateMentorLeaderMutation.isPending}
-                      onClick={() => handleToggleMentorLeader(mentor.userId, mentor.isLeader || false)}
-                    >
-                      {updateMentorLeaderMutation.isPending ? (
-                        <>
-                          <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                          Đang xử lý...
-                        </>
-                      ) : mentor.isLeader ? (
-                        <>
-                          <Crown className="h-4 w-4 mr-2" />
-                          Gỡ trưởng nhóm
-                        </>
-                      ) : (
-                        <>
-                          <Crown className="h-4 w-4 mr-2" />
-                          Đặt làm trưởng nhóm
-                        </>
-                      )}
-                    </Button>
+                    {isLabAdmin && (
+                      <Button
+                        size="sm"
+                        variant={mentor.isLeader ? "default" : "outline"}
+                        className={`w-full mt-3 ${mentor.isLeader
+                          ? 'bg-yellow-500 hover:bg-yellow-600 text-white'
+                          : 'border-yellow-500 text-yellow-600 hover:bg-yellow-50'
+                          }`}
+                        disabled={updateMentorLeaderMutation.isPending}
+                        onClick={() => handleToggleMentorLeader(mentor.userId, mentor.isLeader || false)}
+                      >
+                        {updateMentorLeaderMutation.isPending ? (
+                          <>
+                            <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                            Đang xử lý...
+                          </>
+                        ) : mentor.isLeader ? (
+                          <>
+                            <Crown className="h-4 w-4 mr-2" />
+                            Gỡ trưởng nhóm
+                          </>
+                        ) : (
+                          <>
+                            <Crown className="h-4 w-4 mr-2" />
+                            Đặt làm trưởng nhóm
+                          </>
+                        )}
+                      </Button>
+                    )}
                   </div>
                 ))}
               </div>
@@ -240,33 +238,35 @@ export default function ProjectMembersPage() {
                         <div className="text-sm text-gray-500 truncate">{talent.email}</div>
                       </div>
                     </div>
-                    <Button
-                      size="sm"
-                      variant={talent.isLeader ? "default" : "outline"}
-                      className={`w-full mt-3 ${talent.isLeader
-                        ? 'bg-yellow-500 hover:bg-yellow-600 text-white'
-                        : 'border-yellow-500 text-yellow-600 hover:bg-yellow-50'
-                        }`}
-                      disabled={updateTalentLeaderMutation.isPending}
-                      onClick={() => handleToggleTalentLeader(talent.userId, talent.isLeader || false)}
-                    >
-                      {updateTalentLeaderMutation.isPending ? (
-                        <>
-                          <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                          Đang xử lý...
-                        </>
-                      ) : talent.isLeader ? (
-                        <>
-                          <Crown className="h-4 w-4 mr-2" />
-                          Gỡ leader
-                        </>
-                      ) : (
-                        <>
-                          <Crown className="h-4 w-4 mr-2" />
-                          Đặt làm leader
-                        </>
-                      )}
-                    </Button>
+                    {isMentor && (
+                      <Button
+                        size="sm"
+                        variant={talent.isLeader ? "default" : "outline"}
+                        className={`w-full mt-3 ${talent.isLeader
+                          ? 'bg-yellow-500 hover:bg-yellow-600 text-white'
+                          : 'border-yellow-500 text-yellow-600 hover:bg-yellow-50'
+                          }`}
+                        disabled={updateTalentLeaderMutation.isPending}
+                        onClick={() => handleToggleTalentLeader(talent.userId, talent.isLeader || false)}
+                      >
+                        {updateTalentLeaderMutation.isPending ? (
+                          <>
+                            <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                            Đang xử lý...
+                          </>
+                        ) : talent.isLeader ? (
+                          <>
+                            <Crown className="h-4 w-4 mr-2" />
+                            Gỡ leader
+                          </>
+                        ) : (
+                          <>
+                            <Crown className="h-4 w-4 mr-2" />
+                            Đặt làm leader
+                          </>
+                        )}
+                      </Button>
+                    )}
                   </div>
                 ))}
               </div>
