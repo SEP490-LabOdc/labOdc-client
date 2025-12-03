@@ -12,6 +12,7 @@ import { NotificationDropdown } from '@/components/notification-dropdown.tsx'
 import { ProfileDropdown } from '@/components/profile-dropdown.tsx'
 import { Header } from '@/components/layout/header.tsx'
 import { TalentSidebar } from '@/features/talent/layout/talent-sidebar.tsx'
+import { Main } from '@/components/layout/main'
 
 interface Props {
   children?: React.ReactNode
@@ -46,9 +47,9 @@ export function TalentLayout({ children }: Props) {
                 <ProfileDropdown />
               </div>
             </Header>
-            <div className="mt-14">
+            <Main>
               {children ? children : <Outlet />}
-            </div>
+            </Main>
           </div>
         </SidebarProvider>
       </LayoutProvider>

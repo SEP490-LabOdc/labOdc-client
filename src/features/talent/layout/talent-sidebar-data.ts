@@ -5,6 +5,7 @@ import {
   IconCircleX,
   IconClipboardList,
   IconList,
+  IconWallet,
 } from '@tabler/icons-react'
 import type { SidebarData } from '@/components/layout/types.ts'
 import { ProjectTypes } from '@/hooks/api/projects'
@@ -54,6 +55,16 @@ export const talentSidebarData: SidebarData = {
               icon: IconCircleX,
             },
           ]
+        },
+        {
+          title: 'Quỹ nhóm',
+          url: '/talent/team-fund-distribution',
+          icon: IconWallet,
+        },
+        {
+          title: 'Ví',
+          url: '/talent/wallet',
+          icon: IconWallet,
         },
       ]
     },
