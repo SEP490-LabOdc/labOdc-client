@@ -122,17 +122,17 @@ export default function CompanyApprovingForm({
             if (status === 'UPDATE_REQUIRED') {
                 await patchPendingCompany.mutateAsync(payload)
                 setRequestDialogOpen(false);
-                toast.info('📝 Yêu cầu cập nhật đã được gửi thành công!')
+                toast.info('Yêu cầu cập nhật đã được gửi thành công!')
 
             } else {
                 await patchPendingCompany.mutateAsync(payload)
-                toast.success('✅ Đã phê duyệt yêu cầu thành công!');
+                toast.success('Đã phê duyệt yêu cầu thành công!');
                 navigate({ to: '/lab-admin/companies/' + initialData.id });
             }
 
-            console.log('✅ Gửi yêu cầu thành công!')
+            console.log('Gửi yêu cầu thành công!')
         } catch (error: any) {
-            console.error('❌ PATCH company failed:', error)
+            console.error('PATCH company failed:', error)
             toast.error(error?.message ? 'Gửi yêu cầu thất bại, ' + error?.message : 'Gửi yêu cầu thất bại, vui lòng thử lại!')
         }
         finally {
@@ -184,7 +184,7 @@ export default function CompanyApprovingForm({
                                     <span className="w-40 block text-end text-base font-medium">
                                         {label}
                                     </span>
-                                    <Input value={value} disabled className="flex-1 bg-muted/40" />
+                                    <Input value={value} disabled className="flex-1 bg-muted/20 text-foreground disabled:opacity-100 disabled:cursor-not-allowed" />
                                 </div>
                             ))}
                         </div>
@@ -193,7 +193,7 @@ export default function CompanyApprovingForm({
                     </div>
 
                     {/* Thông tin người liên hệ */}
-                    <div className="p-3">
+                    <div className="p-3 mb-0">
                         <h3 className="mb-4 flex items-center gap-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
                             <span className="h-4 w-1.5 rounded bg-primary" />
                             Thông tin người liên hệ
@@ -204,7 +204,7 @@ export default function CompanyApprovingForm({
                                     <span className="w-40 block text-end text-base font-medium">
                                         {label}
                                     </span>
-                                    <Input value={value} disabled className="flex-1 bg-muted/40" />
+                                    <Input value={value} disabled className="flex-1 bg-muted/20 text-foreground disabled:opacity-100 disabled:cursor-not-allowed" />
                                 </div>
                             ))}
                         </div>
@@ -273,7 +273,7 @@ export default function CompanyApprovingForm({
                                                     className="flex items-start gap-3 border-b pb-2 border-muted/30"
                                                 >
                                                     <Checkbox
-                                                        className='mt-1 border'
+                                                        className='mt-1 border border-foreground/40'
                                                         checked={verification[item.id]}
                                                         disabled={isUpdateLocked}
                                                         onCheckedChange={(checked) =>
@@ -281,7 +281,7 @@ export default function CompanyApprovingForm({
                                                         }
                                                     />
                                                     <span
-                                                        className={'text-muted-foreground'}
+                                                    // className={ }
                                                     >
                                                         {item.content}
                                                         {item.required && (
