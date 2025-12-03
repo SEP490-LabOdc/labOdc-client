@@ -1,6 +1,6 @@
 import { DotsHorizontalIcon } from '@radix-ui/react-icons'
 import { type Row } from '@tanstack/react-table'
-import { Trash2, UserPen } from 'lucide-react'
+import { UserPen } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
     DropdownMenu,
@@ -11,7 +11,7 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { COMPANY_STATUS, type Company } from '../data/schema'
-import { useCompanies } from './companies-provider'
+// import { useCompanies } from './companies-provider'
 import { useNavigate } from '@tanstack/react-router'
 
 type DataTableRowActionsProps = {
@@ -19,7 +19,7 @@ type DataTableRowActionsProps = {
 }
 
 export function DataTableRowActions({ row }: DataTableRowActionsProps) {
-    const { setOpen, setCurrentRow } = useCompanies()
+    // const { setOpen, setCurrentRow } = useCompanies()
     const navigate = useNavigate()
     return (
         <>
@@ -40,8 +40,7 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
                             <DropdownMenuItem
                                 onClick={() => {
                                     navigate({
-                                        to: '/lab-admin/companies/approve',
-                                        search: { id: row.original.id },
+                                        to: '/lab-admin/companies/' + row.original.id,
                                     })
                                 }}
                             >
@@ -56,8 +55,7 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
                             <DropdownMenuItem
                                 onClick={() => {
                                     navigate({
-                                        to: '/lab-admin/companies/edit',
-                                        search: { id: row.original.id },
+                                        to: '/lab-admin/companies/' + row.original.id,
                                     })
                                 }}
                             >
@@ -70,7 +68,7 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
                     }
 
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem
+                    {/* <DropdownMenuItem
                         onClick={() => {
                             setCurrentRow(row.original)
                             setOpen('delete')
@@ -81,7 +79,7 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
                         <DropdownMenuShortcut>
                             <Trash2 size={16} />
                         </DropdownMenuShortcut>
-                    </DropdownMenuItem>
+                    </DropdownMenuItem> */}
                 </DropdownMenuContent>
             </DropdownMenu>
         </>
