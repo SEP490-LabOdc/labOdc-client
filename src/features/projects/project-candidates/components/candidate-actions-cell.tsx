@@ -85,26 +85,27 @@ export function CandidateActionsCell({ candidate }: CandidateActionsCellProps) {
             <Eye className="mr-2 h-4 w-4" />
             Xem CV
           </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          {status !== 'APPROVED' && (
-            <DropdownMenuItem
-              onClick={handleApprove}
-              className="text-green-600"
-              disabled={approveMutation.isPending}
-            >
-              <Check className="mr-2 h-4 w-4" />
-              Duyệt ứng viên
-            </DropdownMenuItem>
-          )}
-          {status !== 'REJECTED' && (
-            <DropdownMenuItem
-              onClick={() => setIsRejectModalOpen(true)}
-              className="text-red-600"
-              disabled={rejectMutation.isPending}
-            >
-              <X className="mr-2 h-4 w-4" />
-              Từ chối ứng viên
-            </DropdownMenuItem>
+
+          {status == 'PENDING' && (
+            <>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                onClick={handleApprove}
+                className="text-green-600"
+                disabled={approveMutation.isPending}
+              >
+                <Check className="mr-2 h-4 w-4" />
+                Duyệt ứng viên
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => setIsRejectModalOpen(true)}
+                className="text-red-600"
+                disabled={rejectMutation.isPending}
+              >
+                <X className="mr-2 h-4 w-4" />
+                Từ chối ứng viên
+              </DropdownMenuItem>
+            </>
           )}
         </DropdownMenuContent>
       </DropdownMenu>

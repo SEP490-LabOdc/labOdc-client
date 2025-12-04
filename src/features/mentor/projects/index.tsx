@@ -6,14 +6,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb"
 import { ProjectsTable } from "./components"
 import { useUser } from '@/context/UserContext'
 import { useGetMyProjects } from '@/hooks/api/projects'
@@ -26,7 +18,7 @@ export default function MentorProjectPage() {
   const status = search.status || ''
 
   const { data: projects, isLoading, error } = useGetMyProjects(status)
-  const mockNavigate = () => {}
+  const mockNavigate = () => { }
 
   if (!user) {
     return (
@@ -64,17 +56,6 @@ export default function MentorProjectPage() {
       <div className="container mx-auto px-8 py-6">
         <div className="flex items-center justify-between mb-6">
           <div>
-            <Breadcrumb>
-              <BreadcrumbList>
-                <BreadcrumbItem>
-                  <BreadcrumbLink href="/mentor">Mentor</BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator />
-                <BreadcrumbItem>
-                  <BreadcrumbPage>Dự án</BreadcrumbPage>
-                </BreadcrumbItem>
-              </BreadcrumbList>
-            </Breadcrumb>
             <h1 className="text-2xl font-bold text-gray-900 mt-2">Dự án của tôi</h1>
           </div>
 
@@ -93,7 +74,7 @@ export default function MentorProjectPage() {
               </DropdownMenuContent>
             </DropdownMenu>
 
-            <Button className="bg-orange-500 hover:bg-orange-600">
+            <Button>
               <Plus className="h-4 w-4 mr-2" />
               Tham gia dự án
             </Button>

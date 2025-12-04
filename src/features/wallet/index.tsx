@@ -6,9 +6,11 @@ import {
     WalletTransactionHistory,
     WithdrawDialog,
     BankAccountDialog,
+    DepositDialog,
     type Transaction
 } from './components'
 import { useUser } from '@/context/UserContext'
+import { useGetMyWallet } from '@/hooks/api/wallet'
 
 // Mock Data
 const MOCK_TRANSACTIONS: Transaction[] = [
@@ -65,15 +67,21 @@ const MOCK_BANK_ACCOUNT = {
 }
 
 export const MyWalletPage: React.FC = () => {
-    const { user } = usePermission()
+    const { user, isCompany } = usePermission()
     const { user: userProfile } = useUser()
 
     const [isWithdrawOpen, setIsWithdrawOpen] = useState(false)
     const [isBankAccountOpen, setIsBankAccountOpen] = useState(false)
+    const [isDepositOpen, setIsDepositOpen] = useState(false)
 
-    // Mock data - Trong thực tế sẽ fetch từ API
-    const [availableBalance] = useState(3500000)
-    const [pendingBalance] = useState(2000000)
+    // Fetch wallet data from API
+    const { data: walletResponse } = useGetMyWallet()
+
+    // Use API data if available, otherwise fallback to mock data
+    const availableBalance = walletResponse?.data?.balance ?? 3500000
+    const pendingBalance = walletResponse?.data?.heldBalance ?? 2000000
+
+    // Mock data for fields not yet available from API
     const [transactions] = useState<Transaction[]>(MOCK_TRANSACTIONS)
     const [bankAccount, setBankAccount] = useState(MOCK_BANK_ACCOUNT)
 
@@ -190,6 +198,8 @@ export const MyWalletPage: React.FC = () => {
                             pendingBalance={pendingBalance}
                             onWithdraw={() => setIsWithdrawOpen(true)}
                             onBankAccount={() => setIsBankAccountOpen(true)}
+                            onDeposit={() => setIsDepositOpen(true)}
+                            isCompany={isCompany}
                         />
                     </div>
 
@@ -216,6 +226,15 @@ export const MyWalletPage: React.FC = () => {
                 currentAccount={bankAccount}
                 onSave={handleSaveBankAccount}
             />
+
+            {/* Deposit Dialog - Only for Company */}
+            {isCompany && user?.userId && (
+                <DepositDialog
+                    isOpen={isDepositOpen}
+                    onClose={() => setIsDepositOpen(false)}
+                    companyId={user.userId}
+                />
+            )}
         </>
     )
 }

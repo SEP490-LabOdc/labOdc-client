@@ -16,7 +16,7 @@ export const ProjectSidebar: React.FC<ProjectSidebarProps> = ({ projectData }) =
   return (
     <Card className="w-full">
       <CardHeader>
-        <CardTitle className="text-lg font-semibold">Thông tin dự án</CardTitle>
+        <CardTitle className="text-lg font-semibold text-center">Thông tin dự án</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="space-y-3 text-sm">

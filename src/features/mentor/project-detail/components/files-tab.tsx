@@ -27,9 +27,9 @@ interface ProjectFilesTabProps {
 }
 
 export const ProjectFilesTab: React.FC<ProjectFilesTabProps> = ({
-                                                                  projectImages,
-                                                                  projectId,
-                                                                }) => {
+  projectImages,
+  projectId,
+}) => {
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false)
 
   // Sử dụng hook đã có để fetch documents
@@ -69,7 +69,7 @@ export const ProjectFilesTab: React.FC<ProjectFilesTabProps> = ({
         <div>
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-semibold">Images</h3>
-            <Button size="sm" className="bg-orange-600 hover:bg-orange-700">
+            <Button size="sm">
               <Plus className="h-4 w-4 mr-2" />
               Add New
             </Button>
@@ -96,7 +96,6 @@ export const ProjectFilesTab: React.FC<ProjectFilesTabProps> = ({
             <h3 className="text-lg font-semibold">Files</h3>
             <Button
               size="sm"
-              className="bg-orange-600 hover:bg-orange-700"
               onClick={() => setIsUploadModalOpen(true)}
             >
               <Plus className="h-4 w-4 mr-2" />

@@ -10,7 +10,7 @@ const projectSearchSchema = z.object({
     'PLANNING',
     'ON_GOING',
     'CLOSED',
-    'COMPLETE',
+    'COMPLETED',
     'PAUSED',
   ]).optional(),
 })
