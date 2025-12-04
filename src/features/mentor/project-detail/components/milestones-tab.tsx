@@ -109,7 +109,6 @@ export const MilestonesTab: React.FC<MilestonesTabProps> = ({
 
       {milestones.map((milestone) => {
         const talents = milestone.talents || []
-        const mentors = milestone.mentors || []
         const progress = calculateProgress(milestone.startDate, milestone.endDate)
 
         return (
@@ -172,24 +171,10 @@ export const MilestonesTab: React.FC<MilestonesTabProps> = ({
                           )}
                         </div>
                       </div>
-
-                      <div className="flex items-center gap-2">
-                        <div className="flex items-center gap-1.5 text-xs text-gray-600">
-                          <Users className="h-3.5 w-3.5" />
-                          <span>Mentors</span>
-                        </div>
-                        <div className="flex -space-x-2">
-                          {mentors.length > 0 ? (
-                            <span className="text-xs text-gray-400">{mentors.length}</span>
-                          ) : (
-                            <span className="text-xs text-gray-400">Chưa có</span>
-                          )}
-                        </div>
-                      </div>
                     </div>
 
                     <div className="flex items-center gap-2">
-                      {isMentor && (
+                      {isMentor && milestone.status === 'ON_GOING' && (
                         <Button
                           size="sm"
                           variant="outline"

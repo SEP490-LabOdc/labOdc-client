@@ -47,7 +47,6 @@ export const MilestoneSidebar: React.FC<MilestoneSidebarProps> = ({
   }
 
   const talents = milestone.talents || []
-  const mentors = milestone.mentors || []
 
   const amount = milestone.budget || 0
   const systemFee = amount * 0.1
@@ -134,31 +133,6 @@ export const MilestoneSidebar: React.FC<MilestoneSidebarProps> = ({
                 ))
               ) : (
                 <p className="text-sm text-gray-400 text-center py-2">Chưa có thành viên</p>
-              )}
-            </div>
-          </div>
-
-          <div>
-            <div className="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-3">
-              <Users className="h-4 w-4" />
-              <span>Mentors ({mentors.length})</span>
-            </div>
-            <div className="space-y-2">
-              {mentors.length > 0 ? (
-                mentors.map((mentor) => (
-                  <div key={mentor.userId} className="flex items-center gap-2 p-2 hover:bg-gray-50 rounded">
-                    <Avatar className="h-8 w-8">
-                      <AvatarImage src={mentor.avatar} />
-                      <AvatarFallback className="text-xs">{getAvatarFallback(mentor.name)}</AvatarFallback>
-                    </Avatar>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-gray-900 truncate">{mentor.name}</p>
-                      <p className="text-xs text-gray-500 truncate">{mentor.email}</p>
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <p className="text-sm text-gray-400 text-center py-2">Chưa có mentor</p>
               )}
             </div>
           </div>
