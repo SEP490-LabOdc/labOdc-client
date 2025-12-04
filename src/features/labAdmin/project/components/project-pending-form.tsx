@@ -22,7 +22,7 @@ import { toast } from 'sonner'
 import { useLabAdminApproveProject, useUpdateProjectStatus } from '@/hooks/api/projects'
 import { AddMemberModal } from './add-member-modal'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
-import { formatVND } from '@/helpers/customUtils'
+import { MoneyInput } from '@/components/admin/MoneyInput'
 
 /* -------------------- SCHEMA -------------------- */
 const projectSchema = z.object({
@@ -118,7 +118,7 @@ export default function ProjectForm({
                                             Tên dự án
                                         </FormLabel>
                                         <FormControl>
-                                            <Input {...field} disabled />
+                                            <Input {...field} disabled className='bg-muted/20 text-foreground disabled:opacity-100' />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -135,10 +135,11 @@ export default function ProjectForm({
                                             Ngân sách (VNĐ)
                                         </FormLabel>
                                         <FormControl>
-                                            <Input
+                                            <MoneyInput
                                                 {...field}
                                                 disabled
-                                                value={formatVND(initialData.budget)}
+                                                value={Number(field.value)}
+                                                className='bg-muted/20 text-foreground disabled:opacity-100'
                                             />
                                         </FormControl>
                                         <FormMessage />
@@ -156,7 +157,7 @@ export default function ProjectForm({
                                             Trạng thái
                                         </FormLabel>
                                         <FormControl>
-                                            <Input value={statusLabel} disabled />
+                                            <Input value={statusLabel} disabled className='bg-muted/20 text-foreground disabled:opacity-100' />
                                         </FormControl>
                                     </FormItem>
                                 )}
@@ -213,7 +214,7 @@ export default function ProjectForm({
                                                 rows={10}
                                                 {...field}
                                                 disabled
-                                                className="resize-none"
+                                                className='bg-muted/20 text-foreground disabled:opacity-100 resize-none'
                                             />
                                         </FormControl>
                                         <FormMessage />
