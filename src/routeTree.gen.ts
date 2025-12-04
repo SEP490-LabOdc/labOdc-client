@@ -55,6 +55,7 @@ import { Route as AuthenticatedTalentWalletIndexRouteImport } from './routes/_au
 import { Route as AuthenticatedTalentTeamFundDistributionIndexRouteImport } from './routes/_authenticated/talent/team-fund-distribution/index'
 import { Route as AuthenticatedTalentSettingsIndexRouteImport } from './routes/_authenticated/talent/settings/index'
 import { Route as AuthenticatedTalentProjectsIndexRouteImport } from './routes/_authenticated/talent/projects/index'
+import { Route as AuthenticatedTalentMyApplicationsIndexRouteImport } from './routes/_authenticated/talent/my-applications/index'
 import { Route as AuthenticatedMentorWalletIndexRouteImport } from './routes/_authenticated/mentor/wallet/index'
 import { Route as AuthenticatedMentorTeamFundDistributionIndexRouteImport } from './routes/_authenticated/mentor/team-fund-distribution/index'
 import { Route as AuthenticatedMentorSettingsIndexRouteImport } from './routes/_authenticated/mentor/settings/index'
@@ -351,6 +352,12 @@ const AuthenticatedTalentProjectsIndexRoute =
   AuthenticatedTalentProjectsIndexRouteImport.update({
     id: '/projects/',
     path: '/projects/',
+    getParentRoute: () => AuthenticatedTalentRouteRoute,
+  } as any)
+const AuthenticatedTalentMyApplicationsIndexRoute =
+  AuthenticatedTalentMyApplicationsIndexRouteImport.update({
+    id: '/my-applications/',
+    path: '/my-applications/',
     getParentRoute: () => AuthenticatedTalentRouteRoute,
   } as any)
 const AuthenticatedMentorWalletIndexRoute =
@@ -715,6 +722,7 @@ export interface FileRoutesByFullPath {
   '/mentor/settings/': typeof AuthenticatedMentorSettingsIndexRoute
   '/mentor/team-fund-distribution': typeof AuthenticatedMentorTeamFundDistributionIndexRoute
   '/mentor/wallet': typeof AuthenticatedMentorWalletIndexRoute
+  '/talent/my-applications': typeof AuthenticatedTalentMyApplicationsIndexRoute
   '/talent/projects': typeof AuthenticatedTalentProjectsIndexRoute
   '/talent/settings/': typeof AuthenticatedTalentSettingsIndexRoute
   '/talent/team-fund-distribution': typeof AuthenticatedTalentTeamFundDistributionIndexRoute
@@ -796,6 +804,7 @@ export interface FileRoutesByTo {
   '/mentor/settings': typeof AuthenticatedMentorSettingsIndexRoute
   '/mentor/team-fund-distribution': typeof AuthenticatedMentorTeamFundDistributionIndexRoute
   '/mentor/wallet': typeof AuthenticatedMentorWalletIndexRoute
+  '/talent/my-applications': typeof AuthenticatedTalentMyApplicationsIndexRoute
   '/talent/projects': typeof AuthenticatedTalentProjectsIndexRoute
   '/talent/settings': typeof AuthenticatedTalentSettingsIndexRoute
   '/talent/team-fund-distribution': typeof AuthenticatedTalentTeamFundDistributionIndexRoute
@@ -894,6 +903,7 @@ export interface FileRoutesById {
   '/_authenticated/mentor/settings/': typeof AuthenticatedMentorSettingsIndexRoute
   '/_authenticated/mentor/team-fund-distribution/': typeof AuthenticatedMentorTeamFundDistributionIndexRoute
   '/_authenticated/mentor/wallet/': typeof AuthenticatedMentorWalletIndexRoute
+  '/_authenticated/talent/my-applications/': typeof AuthenticatedTalentMyApplicationsIndexRoute
   '/_authenticated/talent/projects/': typeof AuthenticatedTalentProjectsIndexRoute
   '/_authenticated/talent/settings/': typeof AuthenticatedTalentSettingsIndexRoute
   '/_authenticated/talent/team-fund-distribution/': typeof AuthenticatedTalentTeamFundDistributionIndexRoute
@@ -990,6 +1000,7 @@ export interface FileRouteTypes {
     | '/mentor/settings/'
     | '/mentor/team-fund-distribution'
     | '/mentor/wallet'
+    | '/talent/my-applications'
     | '/talent/projects'
     | '/talent/settings/'
     | '/talent/team-fund-distribution'
@@ -1071,6 +1082,7 @@ export interface FileRouteTypes {
     | '/mentor/settings'
     | '/mentor/team-fund-distribution'
     | '/mentor/wallet'
+    | '/talent/my-applications'
     | '/talent/projects'
     | '/talent/settings'
     | '/talent/team-fund-distribution'
@@ -1168,6 +1180,7 @@ export interface FileRouteTypes {
     | '/_authenticated/mentor/settings/'
     | '/_authenticated/mentor/team-fund-distribution/'
     | '/_authenticated/mentor/wallet/'
+    | '/_authenticated/talent/my-applications/'
     | '/_authenticated/talent/projects/'
     | '/_authenticated/talent/settings/'
     | '/_authenticated/talent/team-fund-distribution/'
@@ -1537,6 +1550,13 @@ declare module '@tanstack/react-router' {
       path: '/projects'
       fullPath: '/talent/projects'
       preLoaderRoute: typeof AuthenticatedTalentProjectsIndexRouteImport
+      parentRoute: typeof AuthenticatedTalentRouteRoute
+    }
+    '/_authenticated/talent/my-applications/': {
+      id: '/_authenticated/talent/my-applications/'
+      path: '/my-applications'
+      fullPath: '/talent/my-applications'
+      preLoaderRoute: typeof AuthenticatedTalentMyApplicationsIndexRouteImport
       parentRoute: typeof AuthenticatedTalentRouteRoute
     }
     '/_authenticated/mentor/wallet/': {
@@ -2215,6 +2235,7 @@ const AuthenticatedTalentSettingsRouteRouteWithChildren =
 interface AuthenticatedTalentRouteRouteChildren {
   AuthenticatedTalentSettingsRouteRoute: typeof AuthenticatedTalentSettingsRouteRouteWithChildren
   AuthenticatedTalentIndexRoute: typeof AuthenticatedTalentIndexRoute
+  AuthenticatedTalentMyApplicationsIndexRoute: typeof AuthenticatedTalentMyApplicationsIndexRoute
   AuthenticatedTalentProjectsIndexRoute: typeof AuthenticatedTalentProjectsIndexRoute
   AuthenticatedTalentTeamFundDistributionIndexRoute: typeof AuthenticatedTalentTeamFundDistributionIndexRoute
   AuthenticatedTalentWalletIndexRoute: typeof AuthenticatedTalentWalletIndexRoute
@@ -2229,6 +2250,8 @@ const AuthenticatedTalentRouteRouteChildren: AuthenticatedTalentRouteRouteChildr
     AuthenticatedTalentSettingsRouteRoute:
       AuthenticatedTalentSettingsRouteRouteWithChildren,
     AuthenticatedTalentIndexRoute: AuthenticatedTalentIndexRoute,
+    AuthenticatedTalentMyApplicationsIndexRoute:
+      AuthenticatedTalentMyApplicationsIndexRoute,
     AuthenticatedTalentProjectsIndexRoute:
       AuthenticatedTalentProjectsIndexRoute,
     AuthenticatedTalentTeamFundDistributionIndexRoute:

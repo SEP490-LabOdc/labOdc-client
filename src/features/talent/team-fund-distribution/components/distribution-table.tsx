@@ -19,6 +19,7 @@ interface DistributionTableProps {
     allocations: Record<string, number>
     onAllocationChange: (memberId: string, amount: number) => void
     currentUserId?: string
+    isLoading?: boolean
 }
 
 /**
@@ -30,7 +31,8 @@ export const DistributionTable: React.FC<DistributionTableProps> = ({
     totalFund,
     allocations,
     onAllocationChange,
-    currentUserId
+    currentUserId,
+    isLoading = false
 }) => {
     // Calculate total allocated
     const totalAllocated = useMemo(() => {
@@ -187,134 +189,154 @@ export const DistributionTable: React.FC<DistributionTableProps> = ({
 
                         {/* Table Body */}
                         <tbody className="divide-y divide-gray-200">
-                            {members.map((member) => {
-                                const allocation = allocations[member.id] || 0
-                                const percentage = getPercentage(allocation)
-                                const isCurrentUser = member.id === currentUserId
-                                const isInactive = member.status === 'INACTIVE'
+                            {isLoading ? (
+                                <tr>
+                                    <td colSpan={3} className="px-4 py-8 text-center text-gray-500">
+                                        <div className="flex flex-col items-center gap-2">
+                                            <div className="animate-spin rounded-full h-6 w-6 border-2 border-gray-300 border-t-gray-600"></div>
+                                            <p>Đang tải danh sách thành viên...</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            ) : members.length === 0 ? (
+                                <tr>
+                                    <td colSpan={3} className="px-4 py-8 text-center text-gray-500">
+                                        <div className="flex flex-col items-center gap-2">
+                                            <User className="h-8 w-8 text-gray-400" />
+                                            <p>Chưa có thành viên nào trong milestone này</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            ) : (
+                                members.map((member) => {
+                                    const allocation = allocations[member.id] || 0
+                                    const percentage = getPercentage(allocation)
+                                    const isCurrentUser = member.id === currentUserId
+                                    const isInactive = member.status === 'INACTIVE'
 
-                                return (
-                                    <tr
-                                        key={member.id}
-                                        className={cn(
-                                            "transition-colors hover:bg-gray-50",
-                                            isCurrentUser && "bg-indigo-50/50 hover:bg-indigo-50",
-                                            isInactive && "opacity-60"
-                                        )}
-                                    >
-                                        {/* Member Info */}
-                                        <td className="px-4 py-4">
-                                            <div className="flex items-center gap-3">
-                                                <Avatar className={cn(
-                                                    "h-10 w-10",
-                                                    isInactive && "grayscale"
-                                                )}>
-                                                    <AvatarImage src={member.avatar} alt={member.name} />
-                                                    <AvatarFallback>
-                                                        <User className="h-5 w-5" />
-                                                    </AvatarFallback>
-                                                </Avatar>
-                                                <div className="flex-1 min-w-0">
-                                                    <div className="flex items-center gap-2">
-                                                        <p className={cn(
-                                                            "font-semibold text-gray-900 truncate",
-                                                            isInactive && "text-gray-500"
-                                                        )}>
-                                                            {member.name}
+                                    return (
+                                        <tr
+                                            key={member.id}
+                                            className={cn(
+                                                "transition-colors hover:bg-gray-50",
+                                                isCurrentUser && "bg-indigo-50/50 hover:bg-indigo-50",
+                                                isInactive && "opacity-60"
+                                            )}
+                                        >
+                                            {/* Member Info */}
+                                            <td className="px-4 py-4">
+                                                <div className="flex items-center gap-3">
+                                                    <Avatar className={cn(
+                                                        "h-10 w-10",
+                                                        isInactive && "grayscale"
+                                                    )}>
+                                                        <AvatarImage src={member.avatar} alt={member.name} />
+                                                        <AvatarFallback>
+                                                            <User className="h-5 w-5" />
+                                                        </AvatarFallback>
+                                                    </Avatar>
+                                                    <div className="flex-1 min-w-0">
+                                                        <div className="flex items-center gap-2">
+                                                            <p className={cn(
+                                                                "font-semibold text-gray-900 truncate",
+                                                                isInactive && "text-gray-500"
+                                                            )}>
+                                                                {member.name}
+                                                            </p>
+                                                            {member.role === 'LEADER' && (
+                                                                <Badge
+                                                                    variant="outline"
+                                                                    className="bg-yellow-50 text-yellow-700 border-yellow-300 flex items-center gap-1"
+                                                                >
+                                                                    <Crown className="h-3 w-3" />
+                                                                    Leader
+                                                                </Badge>
+                                                            )}
+                                                            {isInactive && (
+                                                                <Badge
+                                                                    variant="outline"
+                                                                    className="bg-gray-100 text-gray-600 border-gray-300"
+                                                                >
+                                                                    Inactive
+                                                                </Badge>
+                                                            )}
+                                                        </div>
+                                                        <p className="text-xs text-gray-500 truncate">
+                                                            {member.email}
                                                         </p>
-                                                        {member.role === 'LEADER' && (
-                                                            <Badge
-                                                                variant="outline"
-                                                                className="bg-yellow-50 text-yellow-700 border-yellow-300 flex items-center gap-1"
-                                                            >
-                                                                <Crown className="h-3 w-3" />
-                                                                Leader
-                                                            </Badge>
-                                                        )}
-                                                        {isInactive && (
-                                                            <Badge
-                                                                variant="outline"
-                                                                className="bg-gray-100 text-gray-600 border-gray-300"
-                                                            >
-                                                                Inactive
-                                                            </Badge>
-                                                        )}
                                                     </div>
-                                                    <p className="text-xs text-gray-500 truncate">
-                                                        {member.email}
+                                                </div>
+                                            </td>
+
+                                            {/* Input Amount */}
+                                            <td className="px-4 py-4">
+                                                <div className="flex items-center gap-2 max-w-xs">
+                                                    <div className="relative flex-1">
+                                                        <Input
+                                                            type="text"
+                                                            inputMode="numeric"
+                                                            pattern="[0-9]*"
+                                                            value={allocation === 0 ? '' : allocation.toString()}
+                                                            onChange={(e) => handleInputChange(member.id, e.target.value)}
+                                                            placeholder="0"
+                                                            className={cn(
+                                                                "pr-16 text-right font-mono",
+                                                                "focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500",
+                                                                isCurrentUser && "border-indigo-300",
+                                                                allocation > 0 && "border-green-300 bg-green-50/30"
+                                                            )}
+                                                        />
+                                                        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-medium text-gray-500">
+                                                            VNĐ
+                                                        </span>
+                                                    </div>
+
+                                                    {/* Percentage Badge */}
+                                                    {allocation > 0 && (
+                                                        <Badge
+                                                            variant="outline"
+                                                            className={cn(
+                                                                "font-semibold border-2 min-w-[60px] justify-center",
+                                                                percentage < 15 && "bg-red-50 text-red-700 border-red-300",
+                                                                percentage >= 15 && percentage < 25 && "bg-orange-50 text-orange-700 border-orange-300",
+                                                                percentage >= 25 && percentage < 40 && "bg-yellow-50 text-yellow-700 border-yellow-300",
+                                                                percentage >= 40 && "bg-green-50 text-green-700 border-green-300"
+                                                            )}
+                                                        >
+                                                            {percentage}%
+                                                        </Badge>
+                                                    )}
+                                                </div>
+
+                                                {/* Helper Text */}
+                                                {allocation > 0 && (
+                                                    <p className="text-xs text-gray-500 mt-1">
+                                                        {formatVND(allocation)}
+                                                    </p>
+                                                )}
+                                            </td>
+
+                                            {/* Percentage Bar */}
+                                            <td className="px-4 py-4">
+                                                <div className="space-y-1">
+                                                    <div className="w-full bg-gray-200 rounded-full h-2.5 overflow-hidden">
+                                                        <div
+                                                            className={cn(
+                                                                "h-full rounded-full transition-all duration-300",
+                                                                getPercentageColor(percentage)
+                                                            )}
+                                                            style={{ width: getBarWidth(percentage) }}
+                                                        />
+                                                    </div>
+                                                    <p className="text-xs text-gray-600">
+                                                        {percentage > 0 ? `${percentage}% của tổng quỹ` : 'Chưa phân bổ'}
                                                     </p>
                                                 </div>
-                                            </div>
-                                        </td>
-
-                                        {/* Input Amount */}
-                                        <td className="px-4 py-4">
-                                            <div className="flex items-center gap-2 max-w-xs">
-                                                <div className="relative flex-1">
-                                                    <Input
-                                                        type="text"
-                                                        inputMode="numeric"
-                                                        pattern="[0-9]*"
-                                                        value={allocation === 0 ? '' : allocation.toString()}
-                                                        onChange={(e) => handleInputChange(member.id, e.target.value)}
-                                                        placeholder="0"
-                                                        className={cn(
-                                                            "pr-16 text-right font-mono",
-                                                            "focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500",
-                                                            isCurrentUser && "border-indigo-300",
-                                                            allocation > 0 && "border-green-300 bg-green-50/30"
-                                                        )}
-                                                    />
-                                                    <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-medium text-gray-500">
-                                                        VNĐ
-                                                    </span>
-                                                </div>
-
-                                                {/* Percentage Badge */}
-                                                {allocation > 0 && (
-                                                    <Badge
-                                                        variant="outline"
-                                                        className={cn(
-                                                            "font-semibold border-2 min-w-[60px] justify-center",
-                                                            percentage < 15 && "bg-red-50 text-red-700 border-red-300",
-                                                            percentage >= 15 && percentage < 25 && "bg-orange-50 text-orange-700 border-orange-300",
-                                                            percentage >= 25 && percentage < 40 && "bg-yellow-50 text-yellow-700 border-yellow-300",
-                                                            percentage >= 40 && "bg-green-50 text-green-700 border-green-300"
-                                                        )}
-                                                    >
-                                                        {percentage}%
-                                                    </Badge>
-                                                )}
-                                            </div>
-
-                                            {/* Helper Text */}
-                                            {allocation > 0 && (
-                                                <p className="text-xs text-gray-500 mt-1">
-                                                    {formatVND(allocation)}
-                                                </p>
-                                            )}
-                                        </td>
-
-                                        {/* Percentage Bar */}
-                                        <td className="px-4 py-4">
-                                            <div className="space-y-1">
-                                                <div className="w-full bg-gray-200 rounded-full h-2.5 overflow-hidden">
-                                                    <div
-                                                        className={cn(
-                                                            "h-full rounded-full transition-all duration-300",
-                                                            getPercentageColor(percentage)
-                                                        )}
-                                                        style={{ width: getBarWidth(percentage) }}
-                                                    />
-                                                </div>
-                                                <p className="text-xs text-gray-600">
-                                                    {percentage > 0 ? `${percentage}% của tổng quỹ` : 'Chưa phân bổ'}
-                                                </p>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                )
-                            })}
+                                            </td>
+                                        </tr>
+                                    )
+                                })
+                            )}
                         </tbody>
 
                         {/* Table Footer */}
