@@ -24,8 +24,8 @@ import { Badge } from '@/components/ui/badge'
 import { MoneyInput } from '@/components/admin/MoneyInput'
 
 const formSchema = z.object({
-    title: z.string().min(2, 'Tên dự án là bắt buộc.'),
-    description: z.string().min(5, 'Mô tả phải có ít nhất 5 ký tự.'),
+    title: z.string().min(3, 'Tên dự án là bắt buộc và ít nhất 3 kí tự.').max(50, 'Tên dự án phải nhỏ hơn 50 kí tự'),
+    description: z.string().min(5, 'Mô tả phải có ít nhất 5 ký tự.').max(4000, 'Mô tả phải ít hơn 4000 ký tự'),
     budget: z.coerce.number<number>().min(0, "Ngân sách phải lớn hơn 0").refine((v) => v > 0, "Ngân sách phải lớn hơn 0").max(10000000000, "Ngân sách không được lớn hơn 10 tỷ"),
     skillIds: z.array(z.string()).min(1, 'Phải chọn ít nhất một kỹ năng.'),
 })
@@ -48,6 +48,7 @@ export default function ProjectsForm({
 
     const form = useForm<ProjectForm>({
         resolver: zodResolver(formSchema),
+        mode: "onChange",
         defaultValues: {
             title: initialData?.title ?? '',
             description: initialData?.description ?? '',

@@ -17,6 +17,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import { Button } from "@/components/ui/button"
 import { toast } from "sonner"
 import { useUpdateProject } from "@/hooks/api/projects"
+import { MoneyInput } from "@/components/admin/MoneyInput"
 
 const projectSchema = z.object({
     id: z.string(),
@@ -113,11 +114,10 @@ export default function ProjectForm({ initialData }: { initialData: ProjectFormD
                                         Ngân sách (VNĐ)
                                     </FormLabel>
                                     <FormControl>
-                                        <Input
+                                        <MoneyInput
                                             {...field}
-                                            type="number"
                                             disabled={!isUpdateMode}
-                                            onChange={(e) => field.onChange(Number(e.target.value))}
+                                            value={field.value}
                                         />
                                     </FormControl>
                                     <FormMessage />
