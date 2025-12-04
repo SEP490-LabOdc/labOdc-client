@@ -7,5 +7,6 @@ export const milestoneKeys = {
     detail: (id: string) =>
         [...milestoneKeys.all, 'detail', id] as const,
 
-
+    milestoneMembers: (milestoneId: string) =>
+        [...milestoneKeys.all, 'milestone-members', milestoneId] as const,
 }

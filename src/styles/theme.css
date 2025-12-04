@@ -13,6 +13,13 @@
   --color-brand-warm-yellow: #e9c46a;
   --color-brand-orange: #f4a261;
   --color-brand-light-cream: #f1faee;
+  
+  /* Template type colors - using brand palette */
+  --color-template-weekly: #2a9d8f;
+  --color-template-milestone: #264653;
+  --color-template-delivery: #2a9d8f;
+  --color-template-task: #f4a261;
+  --color-template-planning: #264653;
 
   /* Updated primary colors to use brand palette */
   --background: oklch(1 0 0);

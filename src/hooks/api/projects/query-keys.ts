@@ -16,5 +16,6 @@ export const projectKeys = {
   getProjectDocuments: (projectId: string) => ['project-documents', { projectId }] as const,
   getProjectMilestoneDocuments: (milestoneId: string) => ['project-milestone-documents', { milestoneId }] as const,
   getProjectMilestoneReports: (milestoneId: string) => ['project-milestone-reports', { milestoneId }] as const,
+  getMyApplications: () => ['my-applications'] as const,
 };
 

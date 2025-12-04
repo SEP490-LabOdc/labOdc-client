@@ -11,10 +11,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { History, Eye, Plus, AlertCircle, Filter } from 'lucide-react'
+import { History, Eye, Plus, AlertCircle, Filter, FileText } from 'lucide-react'
 import { ReportDetailModal } from '@/features/mentor/milestone-detail/components/report-detail-modal.tsx'
 import { RejectReportModal } from '@/features/mentor/milestone-detail/components/reject-report-modal.tsx'
 import { SubmitReportModal } from '@/features/mentor/milestone-detail/components/submit-report-modal.tsx'
+import { ReportTemplateModal } from '@/features/mentor/milestone-detail/components/report-template-modal.tsx'
 import { usePermission } from '@/hooks/usePermission'
 import { useGetProjectMilestoneReports } from '@/hooks/api/projects'
 import { ROLE } from '@/const.ts'
@@ -164,7 +165,9 @@ export const MilestoneReportsTab: React.FC<Props> = ({ milestone }) => {
   const [isDetailOpen, setIsDetailOpen] = useState(false);
   const [isRejectOpen, setIsRejectOpen] = useState(false);
   const [isSubmitOpen, setIsSubmitOpen] = useState(false);
+  const [isTemplateOpen, setIsTemplateOpen] = useState(false);
   const [selectedReport, setSelectedReport] = useState<ReportVersion | null>(null);
+  const [selectedTemplateType, setSelectedTemplateType] = useState<ReportType | undefined>(undefined);
 
   // Checks logic
   const isLatestRejected = reports.length > 0 && reports[0].status === 'CHANGES_REQUESTED';
@@ -255,10 +258,23 @@ export const MilestoneReportsTab: React.FC<Props> = ({ milestone }) => {
           </div>
 
           {isMentorOrTalent && (
-            <Button onClick={() => setIsSubmitOpen(true)} className="bg-indigo-600 hover:bg-indigo-700">
-              <Plus className="w-4 h-4 mr-2" />
-              {isLatestRejected ? 'Nộp Phiên bản Mới' : 'Tạo Báo cáo'}
-            </Button>
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setSelectedTemplateType(selectedReportType !== 'ALL' ? (selectedReportType as ReportType) : 'MILESTONE_REPORT')
+                  setIsTemplateOpen(true)
+                }}
+                className="border-[#2a9d8f]/30 text-[#2a9d8f] hover:bg-[#2a9d8f]/10"
+              >
+                <FileText className="w-4 h-4 mr-2" />
+                Mẫu báo cáo
+              </Button>
+              <Button onClick={() => setIsSubmitOpen(true)} className="bg-[#264653] hover:bg-[#264653]/90">
+                <Plus className="w-4 h-4 mr-2" />
+                {isLatestRejected ? 'Nộp Phiên bản Mới' : 'Tạo Báo cáo'}
+              </Button>
+            </div>
           )}
         </CardHeader>
         <CardContent>
@@ -351,6 +367,12 @@ export const MilestoneReportsTab: React.FC<Props> = ({ milestone }) => {
         lastFeedback={isLatestRejected ? reports[0]?.feedback : undefined}
         projectId={milestone.projectId}
         milestoneId={milestone.id}
+      />
+
+      <ReportTemplateModal
+        isOpen={isTemplateOpen}
+        onClose={() => setIsTemplateOpen(false)}
+        reportType={selectedTemplateType}
       />
     </>
   )

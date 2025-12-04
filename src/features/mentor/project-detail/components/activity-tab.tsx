@@ -25,7 +25,7 @@ export const ProjectActivityTab: React.FC<ProjectActivityTabProps> = ({ notes, a
         <div>
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-semibold">Notes</h3>
-            <Button size="sm" className="bg-orange-600 hover:bg-orange-700">
+            <Button size="sm">
               <Plus className="h-4 w-4 mr-2" />
               Add New
             </Button>

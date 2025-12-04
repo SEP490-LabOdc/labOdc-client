@@ -16,14 +16,14 @@ export function useGetMilestonesByProjectId(projectId: string) {
 }
 
 export function useGetMilestoneById(milestoneId: string) {
-  return useQuery({
-    queryKey: milestoneKeys.detail(milestoneId),
-    queryFn: async () => {
-      const res = await apiRequest.get(`/api/v1/project-milestones/${milestoneId}`)
-      return res.data
-    },
-    enabled: !!milestoneId,
-  })
+    return useQuery({
+        queryKey: milestoneKeys.detail(milestoneId),
+        queryFn: async () => {
+            const res = await apiRequest.get(`/api/v1/project-milestones/${milestoneId}`)
+            return res.data
+        },
+        enabled: !!milestoneId,
+    })
 }
 
 export function useGetMilestonesById(milestoneId: string) {
@@ -34,6 +34,20 @@ export function useGetMilestonesById(milestoneId: string) {
                 `/api/v1/project-milestones/${milestoneId}`
             );
             return res.data.data;
+        },
+        enabled: !!milestoneId,
+    });
+}
+
+
+export function useGetMilestonesMembers(milestoneId: string) {
+    return useQuery({
+        queryKey: milestoneKeys.milestoneMembers(milestoneId),
+        queryFn: async () => {
+            const { data } = await apiRequest.get(
+                `/api/v1/project-milestones/${milestoneId}/milestone-members`
+            );
+            return data;
         },
         enabled: !!milestoneId,
     });

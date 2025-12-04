@@ -104,7 +104,7 @@ export const MilestonePageHeader: React.FC<MilestonePageHeaderProps> = ({ milest
                   </Button>
                 </>
               )}
-              <Button variant="outline" className="text-orange-600 border-orange-600 hover:bg-orange-50">
+              <Button variant="outline">
                 <Edit className="h-4 w-4 mr-2" />
                 Sửa Milestone
               </Button>

@@ -56,12 +56,12 @@ interface CreateMilestoneModalProps {
 }
 
 export const CreateMilestoneModal: React.FC<CreateMilestoneModalProps> = ({
-                                                                            open,
-                                                                            onOpenChange,
-                                                                            projectId,
-                                                                            projectData,
-                                                                            onSuccess,
-                                                                          }) => {
+  open,
+  onOpenChange,
+  projectId,
+  projectData,
+  onSuccess,
+}) => {
   const form = useForm<CreateMilestoneFormData>({
     resolver: zodResolver(createMilestoneSchema),
     mode: 'onChange',
@@ -203,7 +203,7 @@ export const CreateMilestoneModal: React.FC<CreateMilestoneModalProps> = ({
                     </div>
                     <div className="flex justify-between text-gray-600">
                       <span>Ngân sách phân bổ:</span>
-                      <span className="font-medium text-blue-600">
+                      <span className="font-medium text-[#2a9d8f]">
                         {budgetInfo.allocatedBudget.toLocaleString('vi-VN')} VND
                       </span>
                     </div>

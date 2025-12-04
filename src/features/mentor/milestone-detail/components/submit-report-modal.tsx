@@ -148,7 +148,6 @@ export const SubmitReportModal: React.FC<SubmitReportModalProps> = ({
             Hủy bỏ
           </Button>
           <Button
-            className="bg-indigo-600 hover:bg-indigo-700"
             onClick={handleSubmit}
             disabled={!content.trim() || isPending}
           >

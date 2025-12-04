@@ -18,6 +18,7 @@ import {
   IconEdit,
   IconPencilCog,
   IconCircleXFilled,
+  IconWallet,
 } from '@tabler/icons-react'
 // import { AudioWaveform, Command, GalleryVerticalEnd } from 'lucide-react'
 import { type SidebarData } from '../types'
@@ -341,7 +342,12 @@ export const companySidebarData: SidebarData = {
             { title: 'Đang thực hiện', url: '/company-manage/projects?status=["' + PROJECT_STATUS.ON_GOING + '"]', icon: IconProgress },
             { title: 'Hoàn thành', url: '/company-manage/projects?status=["' + PROJECT_STATUS.COMPLETE + '"]', icon: IconCircleCheckFilled },
           ],
-        }
+        },
+        {
+          title: 'Ví',
+          url: '/company-manage/wallet',
+          icon: IconWallet,
+        },
       ]
     },
   ],
