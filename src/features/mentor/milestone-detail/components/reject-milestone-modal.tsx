@@ -38,11 +38,11 @@ interface RejectMilestoneModalProps {
 }
 
 export function RejectMilestoneModal({
-                                       open,
-                                       onOpenChange,
-                                       milestoneId,
-                                       onSuccess
-                                     }: RejectMilestoneModalProps) {
+  open,
+  onOpenChange,
+  milestoneId,
+  onSuccess
+}: RejectMilestoneModalProps) {
   const [attachmentUrls, setAttachmentUrls] = useState<string[]>([])
 
   const form = useForm<RejectMilestoneFormData>({

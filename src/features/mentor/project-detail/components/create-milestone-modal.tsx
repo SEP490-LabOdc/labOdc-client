@@ -37,7 +37,10 @@ const createMilestoneSchema = z.object({
     fileName: z.string(),
     url: z.string(),
   })).optional(),
-}).refine(data => new Date(data.startDate) < new Date(data.endDate), {
+}).refine((data) => {
+  if (!data.startDate || !data.endDate) return true
+  return new Date(data.startDate) < new Date(data.endDate)
+}, {
   message: 'Ngày kết thúc phải sau ngày bắt đầu',
   path: ['endDate'],
 })
@@ -61,6 +64,7 @@ export const CreateMilestoneModal: React.FC<CreateMilestoneModalProps> = ({
                                                                           }) => {
   const form = useForm<CreateMilestoneFormData>({
     resolver: zodResolver(createMilestoneSchema),
+    mode: 'onChange',
     defaultValues: {
       title: '',
       description: '',
@@ -175,11 +179,12 @@ export const CreateMilestoneModal: React.FC<CreateMilestoneModalProps> = ({
                   <FormControl>
                     <Input
                       type="number"
-                      min="0"
-                      max="100"
                       placeholder="Nhập phần trăm ngân sách"
                       {...field}
-                      onChange={(e) => field.onChange(Number(e.target.value))}
+                      onChange={(e) => {
+                        const value = Number(e.target.value)
+                        field.onChange(value)
+                      }}
                     />
                   </FormControl>
                   <FormMessage />
@@ -267,7 +272,7 @@ export const CreateMilestoneModal: React.FC<CreateMilestoneModalProps> = ({
               </Button>
               <Button
                 type="submit"
-                disabled={createMilestone.isPending || !budgetInfo.isValid}
+                disabled={createMilestone.isPending}
               >
                 {createMilestone.isPending ? 'Đang tạo...' : 'Tạo Milestone'}
               </Button>

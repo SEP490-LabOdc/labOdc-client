@@ -4,6 +4,7 @@ import { getRouteApi } from "@tanstack/react-router";
 import { COMPANY_STATUS } from "../data/schema";
 import ApproveCompany from "../approve";
 import EditCompany from "../edit";
+import { Main } from "@/components/layout/main";
 
 const route = getRouteApi('/_authenticated/admin/companies/$companyId/')
 
@@ -39,13 +40,20 @@ export default function ViewCompany() {
 
     return (
         <>
-            {
-                company.status === COMPANY_STATUS.PENDING || company.status === COMPANY_STATUS.UPDATE_REQUIRED ? (
-                    <ApproveCompany company={company} />
-                ) : (
-                    <EditCompany company={company} />
-                )
-            }
+            <Main>
+                <div className="-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-y-0 lg:space-x-12">
+                    {
+                        (company.status == COMPANY_STATUS.PENDING || company.status == COMPANY_STATUS.UPDATE_REQUIRED) && (
+                            <ApproveCompany company={company} />
+                        )
+                    }
+                    {
+                        (company.status == COMPANY_STATUS.ACTIVE || company.status == COMPANY_STATUS.DISABLED) && (
+                            <EditCompany company={company} />
+                        )
+                    }
+                </div>
+            </Main>
         </>
     )
 }

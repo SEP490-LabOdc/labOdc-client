@@ -5,7 +5,7 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { DataTableColumnHeader } from '@/components/data-table'
 import { LongText } from '@/components/long-text'
 import { callTypes } from '../data/data'
-import { COMPANY_STATUS, COMPANY_STATUS_LABEL, type Company } from '../data/schema'
+import { COMPANY_STATUS_LABEL, type Company } from '../data/schema'
 import { DataTableRowActions } from './data-table-row-actions'
 import { Link } from '@tanstack/react-router'
 
@@ -53,13 +53,9 @@ export const companiesColumns: ColumnDef<Company>[] = [
         cell: ({ row }) => (
             <LongText className="max-w-36 ps-3">
                 {(() => {
-                    const status = row.getValue('status');
                     const id = row.original.id;
 
-                    const linkTo =
-                        status === COMPANY_STATUS.PENDING || status === COMPANY_STATUS.UPDATE_REQUIRED
-                            ? `/lab-admin/companies/approve?id=${id}`
-                            : `/lab-admin/companies/edit?id=${id}`;
+                    const linkTo = `/lab-admin/companies/${id}`;
 
                     return (
                         <Link to={linkTo} className="hover:underline">
