@@ -244,5 +244,15 @@ export function useUpdateProject() {
   });
 }
 
+export function useGetMyApplications() {
+  return useQuery({
+    queryKey: projectKeys.getMyApplications(),
+    queryFn: async () => {
+      const { data } = await apiRequest.get('/api/v1/projects/my-applications');
+      return data;
+    }
+  })
+}
+
 
 
