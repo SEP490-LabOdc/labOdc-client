@@ -80,7 +80,7 @@ export const MilestonesTab: React.FC<MilestonesTabProps> = ({
       case 'COMPLETE':
         return <CheckCircle2 className="h-4 w-4 text-green-600" />
       case 'ON_GOING':
-        return <Clock className="h-4 w-4 text-blue-600" />
+        return <Clock className="h-4 w-4 text-[#2a9d8f]" />
       default:
         return <Circle className="h-4 w-4 text-gray-400" />
     }
@@ -124,7 +124,7 @@ export const MilestonesTab: React.FC<MilestonesTabProps> = ({
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex-1 min-w-0">
                       <h3
-                        className="font-semibold text-sm truncate hover:text-blue-600 cursor-pointer"
+                        className="font-semibold text-sm truncate hover:text-[#2a9d8f] cursor-pointer"
                         onClick={() => handleNavigateToMilestone(milestone.id)}
                       >
                         {milestone.title}

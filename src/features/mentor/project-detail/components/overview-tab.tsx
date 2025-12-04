@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Button } from '@/components/ui/button'
 import { Switch } from '@/components/ui/switch'
 import { Label } from '@/components/ui/label'
 import {
@@ -20,9 +19,10 @@ import { getAvatarUrl, getStatusColor, getStatusLabel, getTagColor } from '@/lib
 import { useNavigate } from '@tanstack/react-router'
 import type { ProjectDetail } from '@/hooks/api/projects/types'
 import { toast } from 'sonner'
-import { projectKeys, useUpdateStatusHiring } from '@/hooks/api/projects'
+import { projectKeys, useUpdateStatusHiring, useGetProjectApplicants } from '@/hooks/api/projects'
 import { useQueryClient } from '@tanstack/react-query'
 import { usePermission } from '@/hooks/usePermission'
+import { Plus } from 'lucide-react'
 
 interface ProjectOverviewTabProps {
   projectData: ProjectDetail;
@@ -35,6 +35,10 @@ export const ProjectOverviewTab: React.FC<ProjectOverviewTabProps> = ({ projectD
 
   const updateStatusMutation = useUpdateStatusHiring()
   const queryClient = useQueryClient()
+
+  // Get applicants count
+  const { data: applicantsData } = useGetProjectApplicants(projectData.id)
+  const applicantsCount = applicantsData?.data?.length || 0
 
   const handleToggleHiring = async (checked: boolean) => {
     updateStatusMutation.mutate(
@@ -68,7 +72,7 @@ export const ProjectOverviewTab: React.FC<ProjectOverviewTabProps> = ({ projectD
       <Card>
         <CardContent className="p-6 space-y-6">
           <div className="flex items-start gap-4">
-            <CircleDotDashed className="h-10 w-10 text-purple-600 flex-shrink-0" />
+            <CircleDotDashed className="h-10 w-10 text-[#2a9d8f] flex-shrink-0" />
             <div>
               <h2 className="text-2xl font-bold">{projectData.title}</h2>
               <p className="text-sm text-gray-500">Mã dự án: {projectData.id.slice(0, 8)}</p>
@@ -93,7 +97,7 @@ export const ProjectOverviewTab: React.FC<ProjectOverviewTabProps> = ({ projectD
                 <Briefcase className="h-4 w-4" />
                 <span>Tuyển dụng</span>
               </div>
-              <div className="flex-1 flex items-center gap-3">
+              <div className="flex-1 flex items-center gap-3 flex-wrap">
                 {isMentor ? (
                   <>
                     <Switch
@@ -128,82 +132,65 @@ export const ProjectOverviewTab: React.FC<ProjectOverviewTabProps> = ({ projectD
                 >
                   {isHiring ? 'Dự án đang tuyển' : 'Dự án đã đóng tuyển'}
                 </Label>
+
+                {isMentor && isHiring && (
+                  <>
+                    <span className="text-gray-300 mx-1">•</span>
+                    <button
+                      onClick={() => navigate({ to: `/mentor/projects/${projectData.id}/candidates` })}
+                      className="text-sm text-[#2a9d8f] hover:text-[#238d7f] hover:underline transition-colors flex items-center gap-1"
+                    >
+                      Xem {applicantsCount} Ứng viên
+                      <ArrowRight className="h-3 w-3" />
+                    </button>
+                  </>
+                )}
               </div>
             </div>
 
-            {isMentor && isHiring && (
-              <div className="flex items-start">
-                <div className="w-40 flex-shrink-0" />
-                <div className="flex-1">
-                  <Button
-                    size="sm"
-                    className="bg-blue-600 hover:bg-blue-700 text-white"
-                    onClick={() => navigate({ to: `/mentor/projects/${projectData.id}/candidates` })}
-                  >
-                    Xem danh sách ứng viên
-                    <ArrowRight className="h-4 w-4 ml-2" />
-                  </Button>
-                </div>
-              </div>
-            )}
-
-            {/* Section Đội ngũ - đã tối ưu với button luôn hiển thị */}
+            {/* Section Đội ngũ */}
             <div className="flex items-start">
               <div className="w-40 flex-shrink-0 flex items-center gap-3 text-sm text-gray-600">
                 <Users className="h-4 w-4" />
                 <span>Đội ngũ</span>
               </div>
-              <div className="flex-1 space-y-3">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm font-medium text-gray-600">
-                    {projectData.talents?.length || 0} thành viên
-                  </span>
-                </div>
-
+              <div className="flex-1">
                 <div className="flex flex-wrap items-center gap-2">
                   {projectData.talents && projectData.talents.length > 0 ? (
                     <>
-                      {projectData.talents.slice(0, 5).map((member) => (
-                        <div key={member.id} className="inline-flex items-center gap-2 bg-gray-100 rounded-full px-2 py-1">
-                          <Avatar className="h-6 w-6">
-                            <AvatarImage src={member.avatar} />
-                            <AvatarFallback>
-                              <img src={getAvatarUrl(member.name)} alt={member.name} />
-                            </AvatarFallback>
-                          </Avatar>
-                          <span className="font-medium text-sm text-gray-800">{member.name}</span>
-                        </div>
+                      {projectData.talents.slice(0, 8).map((member) => (
+                        <Avatar key={member.id} className="h-8 w-8 border-2 border-white shadow-sm hover:scale-110 transition-transform cursor-pointer">
+                          <AvatarImage src={member.avatar} />
+                          <AvatarFallback>
+                            <img src={getAvatarUrl(member.name)} alt={member.name} />
+                          </AvatarFallback>
+                        </Avatar>
                       ))}
-                      {projectData.talents.length > 5 && (
-                        <Badge variant="secondary" className="rounded-full">
-                          +{projectData.talents.length - 5} thành viên khác
-                        </Badge>
+                      {projectData.talents.length > 8 && (
+                        <div className="h-8 w-8 rounded-full bg-gray-100 border-2 border-white shadow-sm flex items-center justify-center text-xs font-semibold text-gray-600">
+                          +{projectData.talents.length - 8}
+                        </div>
                       )}
+                      <button
+                        onClick={() => navigate({ to: `/mentor/projects/${projectData.id}/members` })}
+                        className="h-8 px-3 rounded-full bg-[#2a9d8f]/10 hover:bg-[#2a9d8f]/20 text-[#2a9d8f] text-xs font-medium flex items-center gap-1 transition-colors border border-[#2a9d8f]/30"
+                      >
+                        <Plus className="h-3 w-3" />
+                        Thêm/Sửa
+                      </button>
                     </>
                   ) : (
-                    <span className="text-sm text-gray-500">Chưa có thành viên trong đội ngũ</span>
+                    <>
+                      <span className="text-sm text-gray-500">Chưa có thành viên trong đội ngũ</span>
+                      <button
+                        onClick={() => navigate({ to: `/mentor/projects/${projectData.id}/members` })}
+                        className="h-8 px-3 rounded-full bg-[#2a9d8f]/10 hover:bg-[#2a9d8f]/20 text-[#2a9d8f] text-xs font-medium flex items-center gap-1 transition-colors border border-[#2a9d8f]/30"
+                      >
+                        <Plus className="h-3 w-3" />
+                        Thêm/Sửa
+                      </button>
+                    </>
                   )}
-                </div>
-
-                {/* Button luôn hiển thị - thiết kế đẹp và rõ ràng */}
-                <div
-                  onClick={() => navigate({ to: `/mentor/projects/${projectData.id}/members` })}
-                  className="flex items-center justify-between p-3 rounded-lg border-2 border-[#2a9d8f]/20 hover:border-[#2a9d8f] hover:bg-[#e9f5f3]/50 cursor-pointer transition-all duration-200 group"
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 rounded-full bg-[#2a9d8f]/10 group-hover:bg-[#2a9d8f]/20 transition-colors duration-200">
-                      <Users className="h-4 w-4 text-[#2a9d8f]" />
-                    </div>
-                    <div className="flex flex-col">
-                      <span className="text-sm font-semibold text-[#2a9d8f]">
-                        Quản lý thành viên
-                      </span>
-                      <span className="text-xs text-gray-500">
-                        Xem, thêm, xóa và chỉnh sửa thành viên dự án
-                      </span>
-                    </div>
-                  </div>
-                  <ArrowRight className="h-5 w-5 text-[#2a9d8f] transition-transform duration-200 group-hover:translate-x-1" />
                 </div>
               </div>
             </div>
