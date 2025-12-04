@@ -190,67 +190,6 @@ export const CandidateDetailModal: React.FC<CandidateDetailModalProps> = ({
                                     Phân tích AI
                                 </h2>
                             </div>
-                            {/* Match Score with Circular Progress */}
-                            <div className="flex flex-col sm:flex-row items-center gap-6 p-6 bg-white rounded-lg border border-slate-200">
-                                <div className="flex-shrink-0">
-                                    <CircularProgress
-                                        value={aiScanResult.matchScore}
-                                        size={120}
-                                    />
-                                </div>
-                                <div className="flex-1 text-center sm:text-left">
-                                    <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                                        Điểm Khớp
-                                    </h3>
-                                    <p className="text-sm text-gray-600 mb-4">
-                                        Mức độ phù hợp của ứng viên với yêu cầu dự án
-                                    </p>
-                                    {/* Linear Progress Bar as additional visual */}
-                                    <div className="space-y-2">
-                                        <Progress
-                                            value={aiScanResult.matchScore}
-                                            className="h-2"
-                                        />
-                                        <p className="text-xs text-gray-500">
-                                            {aiScanResult.matchScore >= 80 && 'Rất phù hợp'}
-                                            {aiScanResult.matchScore >= 60 &&
-                                                aiScanResult.matchScore < 80 &&
-                                                'Khá phù hợp'}
-                                            {aiScanResult.matchScore < 60 && 'Cần xem xét thêm'}
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Is CV Check */}
-                            <div className="flex items-start gap-3 p-4 rounded-lg bg-white border border-slate-200">
-                                <div
-                                    className={`p-2 rounded-full ${aiScanResult.isCv ? 'bg-green-100' : 'bg-red-100'
-                                        }`}
-                                >
-                                    {aiScanResult.isCv ? (
-                                        <CheckCircle2 className="h-5 w-5 text-green-600" />
-                                    ) : (
-                                        <XCircle className="h-5 w-5 text-red-600" />
-                                    )}
-                                </div>
-                                <div className="flex-1">
-                                    <label className="text-sm font-medium text-gray-700 block mb-1">
-                                        Xác nhận CV
-                                    </label>
-                                    <p className="text-sm text-gray-600">
-                                        {aiScanResult.isCv
-                                            ? 'Đây là một CV hợp lệ'
-                                            : 'Không phải CV hợp lệ'}
-                                    </p>
-                                    {aiScanResult.reason && (
-                                        <p className="text-xs text-gray-500 mt-1 italic">
-                                            {aiScanResult.reason}
-                                        </p>
-                                    )}
-                                </div>
-                            </div>
-
                             {/* Summary */}
                             {aiScanResult.summary && (
                                 <div>
@@ -312,6 +251,67 @@ export const CandidateDetailModal: React.FC<CandidateDetailModalProps> = ({
                                         </div>
                                     </div>
                                 )}
+                            </div>
+
+                            {/* Match Score with Circular Progress */}
+                            <div className="flex flex-col sm:flex-row items-center gap-6 p-6 bg-white rounded-lg border border-slate-200">
+                                <div className="flex-shrink-0">
+                                    <CircularProgress
+                                        value={aiScanResult.matchScore}
+                                        size={120}
+                                    />
+                                </div>
+                                <div className="flex-1 text-center sm:text-left">
+                                    <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                                        Điểm Khớp
+                                    </h3>
+                                    <p className="text-sm text-gray-600 mb-4">
+                                        Mức độ phù hợp của ứng viên với yêu cầu dự án
+                                    </p>
+                                    {/* Linear Progress Bar as additional visual */}
+                                    <div className="space-y-2">
+                                        <Progress
+                                            value={aiScanResult.matchScore}
+                                            className="h-2"
+                                        />
+                                        <p className="text-xs text-gray-500">
+                                            {aiScanResult.matchScore >= 80 && 'Rất phù hợp'}
+                                            {aiScanResult.matchScore >= 60 &&
+                                                aiScanResult.matchScore < 80 &&
+                                                'Khá phù hợp'}
+                                            {aiScanResult.matchScore < 60 && 'Cần xem xét thêm'}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Is CV Check */}
+                            <div className="flex items-start gap-3 p-4 rounded-lg bg-white border border-slate-200">
+                                <div
+                                    className={`p-2 rounded-full ${aiScanResult.isCv ? 'bg-green-100' : 'bg-red-100'
+                                        }`}
+                                >
+                                    {aiScanResult.isCv ? (
+                                        <CheckCircle2 className="h-5 w-5 text-green-600" />
+                                    ) : (
+                                        <XCircle className="h-5 w-5 text-red-600" />
+                                    )}
+                                </div>
+                                <div className="flex-1">
+                                    <label className="text-sm font-medium text-gray-700 block mb-1">
+                                        Xác nhận CV
+                                    </label>
+                                    <p className="text-sm text-gray-600">
+                                        {aiScanResult.isCv
+                                            ? 'Đây là một CV hợp lệ'
+                                            : 'Không phải CV hợp lệ'}
+                                    </p>
+                                    {aiScanResult.reason && (
+                                        <p className="text-xs text-gray-500 mt-1 italic">
+                                            {aiScanResult.reason}
+                                        </p>
+                                    )}
+                                </div>
                             </div>
                         </div>
                     ) : (

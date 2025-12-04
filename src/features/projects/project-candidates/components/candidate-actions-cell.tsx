@@ -77,7 +77,7 @@ export function CandidateActionsCell({ candidate }: CandidateActionsCellProps) {
             onClick={() => setIsDetailModalOpen(true)}
           >
             <FileText className="mr-2 h-4 w-4" />
-            Xem chi tiết
+            AI Đánh giá
           </DropdownMenuItem>
           <DropdownMenuItem
             onClick={() => window.open(candidate.cvUrl, '_blank')}
