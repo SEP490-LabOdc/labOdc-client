@@ -6,7 +6,7 @@ import {
   ProjectPageHeader, ProjectSidebar, ProjectActivityTab, ProjectFilesTab, ProjectOverviewTab,
   MilestonesTab,
 } from './components'
-import { ArrowRight, Wallet } from 'lucide-react'
+import { ArrowRight, Wallet, FileText } from 'lucide-react'
 import { Button } from '@/components/ui/button.tsx'
 import { getRoleBasePath } from '@/lib/utils.ts'
 import { useUser } from '@/context/UserContext'
@@ -60,6 +60,32 @@ const ProjectDetailPage: React.FC = () => {
               <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
             </Button>
           </div>
+
+          {/* Biểu mẫu Card - Nổi bật và dễ nhận biết */}
+          <div className="bg-gradient-to-br from-purple-50 to-indigo-50 p-5 rounded-xl shadow-md border-2 border-purple-200 hover:border-purple-300 transition-all hover:shadow-lg">
+            <div className="flex items-start gap-3 mb-3">
+              <div className="p-2 bg-white rounded-lg shadow-sm">
+                <FileText className="w-6 h-6 text-purple-600" />
+              </div>
+              <div className="flex-1">
+                <h3 className="font-bold text-gray-900 text-base mb-1">
+                  Biểu mẫu Dự án
+                </h3>
+                <p className="text-xs text-gray-600">
+                  Tải xuống các template báo cáo, tài liệu và biểu mẫu cần thiết
+                </p>
+              </div>
+            </div>
+            <Button
+              className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-semibold shadow-md transition-all group"
+              onClick={() => navigate({ to: `${getRoleBasePath(user?.role)}/projects/${projectId}/templates` })}
+            >
+              <FileText className="w-4 h-4 mr-2" />
+              Xem Biểu mẫu
+              <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+            </Button>
+          </div>
+
           <ProjectSidebar projectData={projectData.data} />
         </div>
 
