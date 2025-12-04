@@ -10,7 +10,7 @@ import {
     DialogHeader,
     DialogTitle,
 } from '@/components/ui/dialog'
-import { Plus, AlertTriangle, Wallet } from 'lucide-react'
+import { Plus, Wallet } from 'lucide-react'
 import { toast } from 'sonner'
 import { useCreatePaymentLink } from '@/hooks/api/payment'
 
@@ -31,7 +31,7 @@ export const DepositDialog: React.FC<DepositDialogProps> = ({
     const [milestoneId, setMilestoneId] = useState<string>('')
     const [projectId, setProjectId] = useState<string>('')
     const [milestoneTitle, setMilestoneTitle] = useState<string>('')
-    
+
     const createPaymentLink = useCreatePaymentLink()
 
     const amountNum = parseFloat(amount) || 0
