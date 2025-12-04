@@ -9,6 +9,7 @@ import {
     type Transaction
 } from './components'
 import { useUser } from '@/context/UserContext'
+import { useGetMyWallet } from '@/hooks/api/wallet'
 
 // Mock Data
 const MOCK_TRANSACTIONS: Transaction[] = [
@@ -71,9 +72,14 @@ export const MyWalletPage: React.FC = () => {
     const [isWithdrawOpen, setIsWithdrawOpen] = useState(false)
     const [isBankAccountOpen, setIsBankAccountOpen] = useState(false)
 
-    // Mock data - Trong thực tế sẽ fetch từ API
-    const [availableBalance] = useState(3500000)
-    const [pendingBalance] = useState(2000000)
+    // Fetch wallet data from API
+    const { data: walletResponse } = useGetMyWallet()
+
+    // Use API data if available, otherwise fallback to mock data
+    const availableBalance = walletResponse?.data?.balance ?? 3500000
+    const pendingBalance = walletResponse?.data?.heldBalance ?? 2000000
+
+    // Mock data for fields not yet available from API
     const [transactions] = useState<Transaction[]>(MOCK_TRANSACTIONS)
     const [bankAccount, setBankAccount] = useState(MOCK_BANK_ACCOUNT)
 

@@ -63,6 +63,7 @@ import { Route as AuthenticatedLabAdminUsersIndexRouteImport } from './routes/_a
 import { Route as AuthenticatedLabAdminSettingsIndexRouteImport } from './routes/_authenticated/lab-admin/settings/index'
 import { Route as AuthenticatedLabAdminProjectsIndexRouteImport } from './routes/_authenticated/lab-admin/projects/index'
 import { Route as AuthenticatedLabAdminCompaniesIndexRouteImport } from './routes/_authenticated/lab-admin/companies/index'
+import { Route as AuthenticatedCompanyManageWalletIndexRouteImport } from './routes/_authenticated/company-manage/wallet/index'
 import { Route as AuthenticatedCompanyManageSettingsIndexRouteImport } from './routes/_authenticated/company-manage/settings/index'
 import { Route as AuthenticatedCompanyManageProjectsIndexRouteImport } from './routes/_authenticated/company-manage/projects/index'
 import { Route as AuthenticatedAdminUsersIndexRouteImport } from './routes/_authenticated/admin/users/index'
@@ -400,6 +401,12 @@ const AuthenticatedLabAdminCompaniesIndexRoute =
     path: '/companies/',
     getParentRoute: () => AuthenticatedLabAdminRouteRoute,
   } as any)
+const AuthenticatedCompanyManageWalletIndexRoute =
+  AuthenticatedCompanyManageWalletIndexRouteImport.update({
+    id: '/wallet/',
+    path: '/wallet/',
+    getParentRoute: () => AuthenticatedCompanyManageRouteRoute,
+  } as any)
 const AuthenticatedCompanyManageSettingsIndexRoute =
   AuthenticatedCompanyManageSettingsIndexRouteImport.update({
     id: '/',
@@ -699,6 +706,7 @@ export interface FileRoutesByFullPath {
   '/admin/users': typeof AuthenticatedAdminUsersIndexRoute
   '/company-manage/projects': typeof AuthenticatedCompanyManageProjectsIndexRoute
   '/company-manage/settings/': typeof AuthenticatedCompanyManageSettingsIndexRoute
+  '/company-manage/wallet': typeof AuthenticatedCompanyManageWalletIndexRoute
   '/lab-admin/companies': typeof AuthenticatedLabAdminCompaniesIndexRoute
   '/lab-admin/projects': typeof AuthenticatedLabAdminProjectsIndexRoute
   '/lab-admin/settings/': typeof AuthenticatedLabAdminSettingsIndexRoute
@@ -779,6 +787,7 @@ export interface FileRoutesByTo {
   '/admin/users': typeof AuthenticatedAdminUsersIndexRoute
   '/company-manage/projects': typeof AuthenticatedCompanyManageProjectsIndexRoute
   '/company-manage/settings': typeof AuthenticatedCompanyManageSettingsIndexRoute
+  '/company-manage/wallet': typeof AuthenticatedCompanyManageWalletIndexRoute
   '/lab-admin/companies': typeof AuthenticatedLabAdminCompaniesIndexRoute
   '/lab-admin/projects': typeof AuthenticatedLabAdminProjectsIndexRoute
   '/lab-admin/settings': typeof AuthenticatedLabAdminSettingsIndexRoute
@@ -876,6 +885,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/users/': typeof AuthenticatedAdminUsersIndexRoute
   '/_authenticated/company-manage/projects/': typeof AuthenticatedCompanyManageProjectsIndexRoute
   '/_authenticated/company-manage/settings/': typeof AuthenticatedCompanyManageSettingsIndexRoute
+  '/_authenticated/company-manage/wallet/': typeof AuthenticatedCompanyManageWalletIndexRoute
   '/_authenticated/lab-admin/companies/': typeof AuthenticatedLabAdminCompaniesIndexRoute
   '/_authenticated/lab-admin/projects/': typeof AuthenticatedLabAdminProjectsIndexRoute
   '/_authenticated/lab-admin/settings/': typeof AuthenticatedLabAdminSettingsIndexRoute
@@ -971,6 +981,7 @@ export interface FileRouteTypes {
     | '/admin/users'
     | '/company-manage/projects'
     | '/company-manage/settings/'
+    | '/company-manage/wallet'
     | '/lab-admin/companies'
     | '/lab-admin/projects'
     | '/lab-admin/settings/'
@@ -1051,6 +1062,7 @@ export interface FileRouteTypes {
     | '/admin/users'
     | '/company-manage/projects'
     | '/company-manage/settings'
+    | '/company-manage/wallet'
     | '/lab-admin/companies'
     | '/lab-admin/projects'
     | '/lab-admin/settings'
@@ -1147,6 +1159,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/users/'
     | '/_authenticated/company-manage/projects/'
     | '/_authenticated/company-manage/settings/'
+    | '/_authenticated/company-manage/wallet/'
     | '/_authenticated/lab-admin/companies/'
     | '/_authenticated/lab-admin/projects/'
     | '/_authenticated/lab-admin/settings/'
@@ -1582,6 +1595,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedLabAdminCompaniesIndexRouteImport
       parentRoute: typeof AuthenticatedLabAdminRouteRoute
     }
+    '/_authenticated/company-manage/wallet/': {
+      id: '/_authenticated/company-manage/wallet/'
+      path: '/wallet'
+      fullPath: '/company-manage/wallet'
+      preLoaderRoute: typeof AuthenticatedCompanyManageWalletIndexRouteImport
+      parentRoute: typeof AuthenticatedCompanyManageRouteRoute
+    }
     '/_authenticated/company-manage/settings/': {
       id: '/_authenticated/company-manage/settings/'
       path: '/'
@@ -1994,6 +2014,7 @@ interface AuthenticatedCompanyManageRouteRouteChildren {
   AuthenticatedCompanyManageSettingsRouteRoute: typeof AuthenticatedCompanyManageSettingsRouteRouteWithChildren
   AuthenticatedCompanyManageIndexRoute: typeof AuthenticatedCompanyManageIndexRoute
   AuthenticatedCompanyManageProjectsIndexRoute: typeof AuthenticatedCompanyManageProjectsIndexRoute
+  AuthenticatedCompanyManageWalletIndexRoute: typeof AuthenticatedCompanyManageWalletIndexRoute
   AuthenticatedCompanyManageProjectsProjectIdIndexRoute: typeof AuthenticatedCompanyManageProjectsProjectIdIndexRoute
   AuthenticatedCompanyManageProjectsCreateIndexRoute: typeof AuthenticatedCompanyManageProjectsCreateIndexRoute
   AuthenticatedCompanyManageProjectsProjectIdMilestoneIdIndexRoute: typeof AuthenticatedCompanyManageProjectsProjectIdMilestoneIdIndexRoute
@@ -2009,6 +2030,8 @@ const AuthenticatedCompanyManageRouteRouteChildren: AuthenticatedCompanyManageRo
     AuthenticatedCompanyManageIndexRoute: AuthenticatedCompanyManageIndexRoute,
     AuthenticatedCompanyManageProjectsIndexRoute:
       AuthenticatedCompanyManageProjectsIndexRoute,
+    AuthenticatedCompanyManageWalletIndexRoute:
+      AuthenticatedCompanyManageWalletIndexRoute,
     AuthenticatedCompanyManageProjectsProjectIdIndexRoute:
       AuthenticatedCompanyManageProjectsProjectIdIndexRoute,
     AuthenticatedCompanyManageProjectsCreateIndexRoute:
