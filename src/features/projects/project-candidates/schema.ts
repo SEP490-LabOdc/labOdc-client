@@ -1,3 +1,12 @@
+export type AiScanResult = {
+  isCv: boolean
+  reason: string
+  matchScore: number
+  summary: string
+  pros: string[]
+  cons: string[]
+}
+
 export type Candidate = {
   id: string
   userId: string
@@ -5,6 +14,7 @@ export type Candidate = {
   cvUrl: string
   status: string
   appliedAt: string
+  aiScanResult?: AiScanResult
 }
 
 export const CANDIDATE_STATUS_OPTIONS = [

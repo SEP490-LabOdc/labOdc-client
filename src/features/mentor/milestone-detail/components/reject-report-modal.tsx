@@ -49,7 +49,7 @@ export const RejectReportModal: React.FC<RejectReportModalProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent>
+      <DialogContent className='max-w-2xl max-h-[90vh]'>
         <DialogHeader>
           <DialogTitle className="text-red-600 flex items-center gap-2">
             <AlertTriangle className="w-5 h-5" /> Yêu cầu Chỉnh sửa
