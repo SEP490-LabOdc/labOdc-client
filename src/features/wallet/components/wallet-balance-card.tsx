@@ -2,13 +2,15 @@ import React from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { Wallet, DollarSign, Clock, TrendingUp, CreditCard } from 'lucide-react'
+import { Wallet, DollarSign, Clock, TrendingUp, CreditCard, Plus } from 'lucide-react'
 
 interface WalletBalanceCardProps {
     availableBalance: number
     pendingBalance: number
     onWithdraw: () => void
     onBankAccount: () => void
+    onDeposit?: () => void
+    isCompany?: boolean
 }
 
 const formatVND = (v: number) => new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(v)
@@ -17,7 +19,9 @@ export const WalletBalanceCard: React.FC<WalletBalanceCardProps> = ({
     availableBalance,
     pendingBalance,
     onWithdraw,
-    onBankAccount
+    onBankAccount,
+    onDeposit,
+    isCompany = false
 }) => {
     const totalBalance = availableBalance + pendingBalance
 
@@ -76,23 +80,34 @@ export const WalletBalanceCard: React.FC<WalletBalanceCardProps> = ({
                 </div>
 
                 {/* Action Buttons */}
-                <div className="flex gap-3">
-                    <Button
-                        className="flex-1 bg-[#2a9d8f] hover:bg-[#21867a]"
-                        disabled={availableBalance <= 0}
-                        onClick={onWithdraw}
-                    >
-                        <Wallet className="h-4 w-4 mr-2" />
-                        Rút tiền
-                    </Button>
-                    <Button
-                        variant="outline"
-                        className="flex-1 border-[#2a9d8f] text-[#2a9d8f] hover:bg-[#2a9d8f]/10"
-                        onClick={onBankAccount}
-                    >
-                        <CreditCard className="h-4 w-4 mr-2" />
-                        Tài khoản NH
-                    </Button>
+                <div className="flex flex-col gap-3">
+                    {isCompany && onDeposit && (
+                        <Button
+                            className="w-full bg-[#264653] hover:bg-[#264653]/90 text-white"
+                            onClick={onDeposit}
+                        >
+                            <Plus className="h-4 w-4 mr-2" />
+                            Nạp tiền
+                        </Button>
+                    )}
+                    <div className="flex gap-3">
+                        <Button
+                            className="flex-1 bg-[#2a9d8f] hover:bg-[#21867a]"
+                            disabled={availableBalance <= 0}
+                            onClick={onWithdraw}
+                        >
+                            <Wallet className="h-4 w-4 mr-2" />
+                            Rút tiền
+                        </Button>
+                        <Button
+                            variant="outline"
+                            className="flex-1 border-[#2a9d8f] text-[#2a9d8f] hover:bg-[#2a9d8f]/10"
+                            onClick={onBankAccount}
+                        >
+                            <CreditCard className="h-4 w-4 mr-2" />
+                            Tài khoản NH
+                        </Button>
+                    </div>
                 </div>
 
                 {/* Info Note */}

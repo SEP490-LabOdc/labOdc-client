@@ -6,6 +6,7 @@ import {
     WalletTransactionHistory,
     WithdrawDialog,
     BankAccountDialog,
+    DepositDialog,
     type Transaction
 } from './components'
 import { useUser } from '@/context/UserContext'
@@ -66,11 +67,12 @@ const MOCK_BANK_ACCOUNT = {
 }
 
 export const MyWalletPage: React.FC = () => {
-    const { user } = usePermission()
+    const { user, isCompany } = usePermission()
     const { user: userProfile } = useUser()
 
     const [isWithdrawOpen, setIsWithdrawOpen] = useState(false)
     const [isBankAccountOpen, setIsBankAccountOpen] = useState(false)
+    const [isDepositOpen, setIsDepositOpen] = useState(false)
 
     // Fetch wallet data from API
     const { data: walletResponse } = useGetMyWallet()
@@ -196,6 +198,8 @@ export const MyWalletPage: React.FC = () => {
                             pendingBalance={pendingBalance}
                             onWithdraw={() => setIsWithdrawOpen(true)}
                             onBankAccount={() => setIsBankAccountOpen(true)}
+                            onDeposit={() => setIsDepositOpen(true)}
+                            isCompany={isCompany}
                         />
                     </div>
 
@@ -222,6 +226,15 @@ export const MyWalletPage: React.FC = () => {
                 currentAccount={bankAccount}
                 onSave={handleSaveBankAccount}
             />
+
+            {/* Deposit Dialog - Only for Company */}
+            {isCompany && user?.userId && (
+                <DepositDialog
+                    isOpen={isDepositOpen}
+                    onClose={() => setIsDepositOpen(false)}
+                    companyId={user.userId}
+                />
+            )}
         </>
     )
 }
