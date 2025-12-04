@@ -60,7 +60,14 @@ export const ReportTemplateModal: React.FC<ReportTemplateModalProps> = ({
 
     const handleDownload = () => {
         if (template?.fileUrl) {
-            window.open(template.fileUrl, '_blank')
+            // Create a temporary anchor element to trigger download
+            const link = document.createElement('a')
+            link.href = template.fileUrl
+            link.download = template.fileName || 'template'
+            link.target = '_blank'
+            document.body.appendChild(link)
+            link.click()
+            document.body.removeChild(link)
         }
     }
 
@@ -77,7 +84,7 @@ export const ReportTemplateModal: React.FC<ReportTemplateModalProps> = ({
             <DialogContent className="max-w-2xl max-h-[90vh]">
                 <DialogHeader>
                     <DialogTitle className="flex items-center gap-2 text-xl">
-                        <FileText className="w-5 h-5 text-indigo-600" />
+                        <FileText className="w-5 h-5 text-[#2a9d8f]" />
                         Mẫu Báo cáo
                     </DialogTitle>
                     <DialogDescription>
@@ -111,7 +118,7 @@ export const ReportTemplateModal: React.FC<ReportTemplateModalProps> = ({
                             </CardContent>
                         </Card>
                     ) : (
-                        <Card className="border-indigo-200 shadow-sm">
+                        <Card className="border-[#2a9d8f]/20 shadow-sm">
                             <CardHeader>
                                 <div className="flex items-start justify-between gap-3">
                                     <div className="flex-1">
@@ -123,7 +130,7 @@ export const ReportTemplateModal: React.FC<ReportTemplateModalProps> = ({
                                         </div>
                                         <Badge
                                             variant="outline"
-                                            className="bg-indigo-100 text-indigo-700 border-indigo-200"
+                                            className="bg-[#2a9d8f]/10 text-[#2a9d8f] border-[#2a9d8f]/20"
                                         >
                                             {TEMPLATE_TYPE_LABELS[template.type] || template.type}
                                         </Badge>
@@ -154,7 +161,7 @@ export const ReportTemplateModal: React.FC<ReportTemplateModalProps> = ({
                                 <div className="pt-4 border-t border-gray-100">
                                     <Button
                                         onClick={handleDownload}
-                                        className="w-full bg-indigo-600 hover:bg-indigo-700 text-white"
+                                        className="w-full bg-[#264653] hover:bg-[#264653]/90 text-white"
                                         disabled={!template.fileUrl}
                                     >
                                         <Download className="w-4 h-4 mr-2" />

@@ -265,12 +265,12 @@ export const MilestoneReportsTab: React.FC<Props> = ({ milestone }) => {
                   setSelectedTemplateType(selectedReportType !== 'ALL' ? (selectedReportType as ReportType) : 'MILESTONE_REPORT')
                   setIsTemplateOpen(true)
                 }}
-                className="border-indigo-300 text-indigo-700 hover:bg-indigo-50"
+                className="border-[#2a9d8f]/30 text-[#2a9d8f] hover:bg-[#2a9d8f]/10"
               >
                 <FileText className="w-4 h-4 mr-2" />
                 Mẫu báo cáo
               </Button>
-              <Button onClick={() => setIsSubmitOpen(true)} className="bg-indigo-600 hover:bg-indigo-700">
+              <Button onClick={() => setIsSubmitOpen(true)} className="bg-[#264653] hover:bg-[#264653]/90">
                 <Plus className="w-4 h-4 mr-2" />
                 {isLatestRejected ? 'Nộp Phiên bản Mới' : 'Tạo Báo cáo'}
               </Button>
