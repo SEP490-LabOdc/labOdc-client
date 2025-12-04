@@ -8,9 +8,10 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu.tsx'
-import { MoreHorizontal, Check, X, Eye } from 'lucide-react'
+import { MoreHorizontal, Check, X, Eye, FileText } from 'lucide-react'
 import { type Candidate } from '../schema'
 import { RejectCandidateModal } from './reject-candidate-modal'
+import { CandidateDetailModal } from './candidate-detail-modal'
 import { useApproveProjectApplication, useRejectProjectApplication } from '@/hooks/api/projects/mutation'
 import { toast } from 'sonner'
 import { useQueryClient } from '@tanstack/react-query'
@@ -23,6 +24,7 @@ interface CandidateActionsCellProps {
 
 export function CandidateActionsCell({ candidate }: CandidateActionsCellProps) {
   const [isRejectModalOpen, setIsRejectModalOpen] = useState(false)
+  const [isDetailModalOpen, setIsDetailModalOpen] = useState(false)
   const queryClient = useQueryClient()
   const { projectId } = useParams({ strict: false })
   const status = candidate.status
@@ -72,6 +74,12 @@ export function CandidateActionsCell({ candidate }: CandidateActionsCellProps) {
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Hành động</DropdownMenuLabel>
           <DropdownMenuItem
+            onClick={() => setIsDetailModalOpen(true)}
+          >
+            <FileText className="mr-2 h-4 w-4" />
+            AI Đánh giá
+          </DropdownMenuItem>
+          <DropdownMenuItem
             onClick={() => window.open(candidate.cvUrl, '_blank')}
           >
             <Eye className="mr-2 h-4 w-4" />
@@ -106,6 +114,12 @@ export function CandidateActionsCell({ candidate }: CandidateActionsCellProps) {
         onClose={() => setIsRejectModalOpen(false)}
         onConfirm={handleReject}
         candidateName={candidate.name}
+      />
+
+      <CandidateDetailModal
+        isOpen={isDetailModalOpen}
+        onClose={() => setIsDetailModalOpen(false)}
+        candidate={candidate}
       />
     </>
   )

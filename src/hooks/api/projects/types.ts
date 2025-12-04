@@ -10,6 +10,7 @@ export enum ProjectTypes {
   COMPLETED = 'COMPLETED',
   PAUSED = 'PAUSED',
   PENDING_START = 'PENDING_START',
+  PAID = 'PAID',
 }
 
 export interface Skill {

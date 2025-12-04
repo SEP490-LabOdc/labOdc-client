@@ -178,6 +178,17 @@ export function useGetProjectMilestoneDocuments(milestoneId: string) {
   })
 }
 
+export function useGetProjectMilestoneReports(milestoneId: string) {
+  return useQuery({
+    queryKey: projectKeys.getProjectMilestoneReports(milestoneId),
+    queryFn: async () => {
+      const { data } = await apiRequest.get(`/api/v1/reports/milestone/${milestoneId}`);
+      return data;
+    },
+    enabled: !!milestoneId,
+  })
+}
+
 export function useUpdateProjectStatus() {
   const queryClient = useQueryClient();
   return useMutation({
@@ -231,3 +242,6 @@ export function useUpdateProject() {
     },
   });
 }
+
+
+

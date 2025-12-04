@@ -15,5 +15,6 @@ export const projectKeys = {
     ['project-members', { projectId, ...(milestoneId && { milestoneId }) }] as const,
   getProjectDocuments: (projectId: string) => ['project-documents', { projectId }] as const,
   getProjectMilestoneDocuments: (milestoneId: string) => ['project-milestone-documents', { milestoneId }] as const,
+  getProjectMilestoneReports: (milestoneId: string) => ['project-milestone-reports', { milestoneId }] as const,
 };
 

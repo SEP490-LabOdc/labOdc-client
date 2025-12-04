@@ -1,12 +1,10 @@
 import React, { useState } from 'react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Progress } from '@/components/ui/progress'
 import { Button } from '@/components/ui/button'
-import { CalendarDays, CheckCircle2, Circle, Clock, Plus, UserPlus, Users, Check, RefreshCw } from 'lucide-react'
+import { CalendarDays, CheckCircle2, Circle, Clock, Plus, UserPlus, Users } from 'lucide-react'
 import { getRoleBasePath, getStatusColor, getStatusLabel } from '@/lib/utils'
-import { getAvatarFallback } from '@/helpers/stringUtils'
 import { useNavigate } from '@tanstack/react-router'
 import type { Milestone, ProjectDetail } from '@/hooks/api/projects/types'
 import { CreateMilestoneModal } from './create-milestone-modal'
@@ -25,12 +23,11 @@ interface MilestonesTabProps {
 }
 
 export const MilestonesTab: React.FC<MilestonesTabProps> = ({
-                                                              milestones,
-                                                              projectId,
-                                                              projectData,
-                                                              onRefresh,
-                                                              showApprovalActions = false
-                                                            }) => {
+  milestones,
+  projectId,
+  projectData,
+  onRefresh,
+}) => {
   const navigate = useNavigate()
   const { user, isMentor } = usePermission()
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
@@ -44,34 +41,6 @@ export const MilestonesTab: React.FC<MilestonesTabProps> = ({
   const addTalentMutation = useAddTalentToMilestone()
 
   const projectMembers = projectMembersData?.data || []
-
-  const handleApproveMilestone = async (milestoneId: string) => {
-    try {
-      await fetch(`/api/milestones/${milestoneId}/approve`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-      })
-      toast.success('Milestone đã được phê duyệt!')
-      onRefresh?.()
-    } catch (error) {
-      console.error('Failed to approve milestone:', error)
-      toast.error('Phê duyệt milestone thất bại')
-    }
-  }
-
-  const handleRequestUpdate = async (milestoneId: string) => {
-    try {
-      await fetch(`/api/milestones/${milestoneId}/request-update`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-      })
-      toast.success('Đã gửi yêu cầu cập nhật!')
-      onRefresh?.()
-    } catch (error) {
-      console.error('Failed to request update:', error)
-      toast.error('Gửi yêu cầu cập nhật thất bại')
-    }
-  }
 
   const handleAddMembers = async (selectedUserIds: string[]) => {
     if (!selectedMilestoneId) return
@@ -142,7 +111,6 @@ export const MilestonesTab: React.FC<MilestonesTabProps> = ({
         const talents = milestone.talents || []
         const mentors = milestone.mentors || []
         const progress = calculateProgress(milestone.startDate, milestone.endDate)
-        const showApprovalButtons = showApprovalActions && (milestone.status === 'PENDING' || milestone.status === 'UPDATE_REQUIRED')
 
         return (
           <Card key={milestone.id} className="hover:shadow-md transition-shadow">
@@ -198,21 +166,9 @@ export const MilestonesTab: React.FC<MilestonesTabProps> = ({
                         </div>
                         <div className="flex -space-x-2">
                           {talents.length > 0 ? (
-                            talents.slice(0, 3).map((talent) => (
-                              <Avatar key={talent.userId} className="h-6 w-6 border-2 border-white">
-                                <AvatarImage src={talent.avatar} alt={talent.name} />
-                                <AvatarFallback className="text-xs">
-                                  {getAvatarFallback(talent.name)}
-                                </AvatarFallback>
-                              </Avatar>
-                            ))
+                            <span className="text-xs text-gray-400">{talents.length}</span>
                           ) : (
                             <span className="text-xs text-gray-400">Chưa có</span>
-                          )}
-                          {talents.length > 3 && (
-                            <div className="h-6 w-6 rounded-full bg-gray-200 border-2 border-white flex items-center justify-center">
-                              <span className="text-xs font-medium text-gray-600">+{talents.length - 3}</span>
-                            </div>
                           )}
                         </div>
                       </div>
@@ -224,49 +180,15 @@ export const MilestonesTab: React.FC<MilestonesTabProps> = ({
                         </div>
                         <div className="flex -space-x-2">
                           {mentors.length > 0 ? (
-                            mentors.slice(0, 3).map((mentor) => (
-                              <Avatar key={mentor.userId} className="h-6 w-6 border-2 border-white">
-                                <AvatarImage src={mentor.avatar} alt={mentor.name} />
-                                <AvatarFallback className="text-xs">
-                                  {getAvatarFallback(mentor.name)}
-                                </AvatarFallback>
-                              </Avatar>
-                            ))
+                            <span className="text-xs text-gray-400">{mentors.length}</span>
                           ) : (
                             <span className="text-xs text-gray-400">Chưa có</span>
-                          )}
-                          {mentors.length > 3 && (
-                            <div className="h-6 w-6 rounded-full bg-gray-200 border-2 border-white flex items-center justify-center">
-                              <span className="text-xs font-medium text-gray-600">+{mentors.length - 3}</span>
-                            </div>
                           )}
                         </div>
                       </div>
                     </div>
 
                     <div className="flex items-center gap-2">
-                      {showApprovalButtons && (
-                        <>
-                          <Button
-                            size="sm"
-                            onClick={() => handleApproveMilestone(milestone.id)}
-                            className="bg-green-600 hover:bg-green-700 text-white"
-                          >
-                            <Check className="h-4 w-4 mr-1" />
-                            Phê duyệt
-                          </Button>
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={() => handleRequestUpdate(milestone.id)}
-                            className="text-orange-600 border-orange-600 hover:bg-orange-50"
-                          >
-                            <RefreshCw className="h-4 w-4 mr-1" />
-                            Yêu cầu cập nhật
-                          </Button>
-                        </>
-                      )}
-
                       {isMentor && (
                         <Button
                           size="sm"
