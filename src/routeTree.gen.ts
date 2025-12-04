@@ -55,6 +55,8 @@ import { Route as AuthenticatedTalentWalletIndexRouteImport } from './routes/_au
 import { Route as AuthenticatedTalentTeamFundDistributionIndexRouteImport } from './routes/_authenticated/talent/team-fund-distribution/index'
 import { Route as AuthenticatedTalentSettingsIndexRouteImport } from './routes/_authenticated/talent/settings/index'
 import { Route as AuthenticatedTalentProjectsIndexRouteImport } from './routes/_authenticated/talent/projects/index'
+import { Route as AuthenticatedMentorWalletIndexRouteImport } from './routes/_authenticated/mentor/wallet/index'
+import { Route as AuthenticatedMentorTeamFundDistributionIndexRouteImport } from './routes/_authenticated/mentor/team-fund-distribution/index'
 import { Route as AuthenticatedMentorSettingsIndexRouteImport } from './routes/_authenticated/mentor/settings/index'
 import { Route as AuthenticatedMentorProjectsIndexRouteImport } from './routes/_authenticated/mentor/projects/index'
 import { Route as AuthenticatedLabAdminUsersIndexRouteImport } from './routes/_authenticated/lab-admin/users/index'
@@ -344,6 +346,18 @@ const AuthenticatedTalentProjectsIndexRoute =
     id: '/projects/',
     path: '/projects/',
     getParentRoute: () => AuthenticatedTalentRouteRoute,
+  } as any)
+const AuthenticatedMentorWalletIndexRoute =
+  AuthenticatedMentorWalletIndexRouteImport.update({
+    id: '/wallet/',
+    path: '/wallet/',
+    getParentRoute: () => AuthenticatedMentorRouteRoute,
+  } as any)
+const AuthenticatedMentorTeamFundDistributionIndexRoute =
+  AuthenticatedMentorTeamFundDistributionIndexRouteImport.update({
+    id: '/team-fund-distribution/',
+    path: '/team-fund-distribution/',
+    getParentRoute: () => AuthenticatedMentorRouteRoute,
   } as any)
 const AuthenticatedMentorSettingsIndexRoute =
   AuthenticatedMentorSettingsIndexRouteImport.update({
@@ -656,6 +670,8 @@ export interface FileRoutesByFullPath {
   '/lab-admin/users': typeof AuthenticatedLabAdminUsersIndexRoute
   '/mentor/projects/': typeof AuthenticatedMentorProjectsIndexRoute
   '/mentor/settings/': typeof AuthenticatedMentorSettingsIndexRoute
+  '/mentor/team-fund-distribution': typeof AuthenticatedMentorTeamFundDistributionIndexRoute
+  '/mentor/wallet': typeof AuthenticatedMentorWalletIndexRoute
   '/talent/projects': typeof AuthenticatedTalentProjectsIndexRoute
   '/talent/settings/': typeof AuthenticatedTalentSettingsIndexRoute
   '/talent/team-fund-distribution': typeof AuthenticatedTalentTeamFundDistributionIndexRoute
@@ -729,6 +745,8 @@ export interface FileRoutesByTo {
   '/lab-admin/users': typeof AuthenticatedLabAdminUsersIndexRoute
   '/mentor/projects': typeof AuthenticatedMentorProjectsIndexRoute
   '/mentor/settings': typeof AuthenticatedMentorSettingsIndexRoute
+  '/mentor/team-fund-distribution': typeof AuthenticatedMentorTeamFundDistributionIndexRoute
+  '/mentor/wallet': typeof AuthenticatedMentorWalletIndexRoute
   '/talent/projects': typeof AuthenticatedTalentProjectsIndexRoute
   '/talent/settings': typeof AuthenticatedTalentSettingsIndexRoute
   '/talent/team-fund-distribution': typeof AuthenticatedTalentTeamFundDistributionIndexRoute
@@ -819,6 +837,8 @@ export interface FileRoutesById {
   '/_authenticated/lab-admin/users/': typeof AuthenticatedLabAdminUsersIndexRoute
   '/_authenticated/mentor/projects/': typeof AuthenticatedMentorProjectsIndexRoute
   '/_authenticated/mentor/settings/': typeof AuthenticatedMentorSettingsIndexRoute
+  '/_authenticated/mentor/team-fund-distribution/': typeof AuthenticatedMentorTeamFundDistributionIndexRoute
+  '/_authenticated/mentor/wallet/': typeof AuthenticatedMentorWalletIndexRoute
   '/_authenticated/talent/projects/': typeof AuthenticatedTalentProjectsIndexRoute
   '/_authenticated/talent/settings/': typeof AuthenticatedTalentSettingsIndexRoute
   '/_authenticated/talent/team-fund-distribution/': typeof AuthenticatedTalentTeamFundDistributionIndexRoute
@@ -907,6 +927,8 @@ export interface FileRouteTypes {
     | '/lab-admin/users'
     | '/mentor/projects/'
     | '/mentor/settings/'
+    | '/mentor/team-fund-distribution'
+    | '/mentor/wallet'
     | '/talent/projects'
     | '/talent/settings/'
     | '/talent/team-fund-distribution'
@@ -980,6 +1002,8 @@ export interface FileRouteTypes {
     | '/lab-admin/users'
     | '/mentor/projects'
     | '/mentor/settings'
+    | '/mentor/team-fund-distribution'
+    | '/mentor/wallet'
     | '/talent/projects'
     | '/talent/settings'
     | '/talent/team-fund-distribution'
@@ -1069,6 +1093,8 @@ export interface FileRouteTypes {
     | '/_authenticated/lab-admin/users/'
     | '/_authenticated/mentor/projects/'
     | '/_authenticated/mentor/settings/'
+    | '/_authenticated/mentor/team-fund-distribution/'
+    | '/_authenticated/mentor/wallet/'
     | '/_authenticated/talent/projects/'
     | '/_authenticated/talent/settings/'
     | '/_authenticated/talent/team-fund-distribution/'
@@ -1434,6 +1460,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/talent/projects'
       preLoaderRoute: typeof AuthenticatedTalentProjectsIndexRouteImport
       parentRoute: typeof AuthenticatedTalentRouteRoute
+    }
+    '/_authenticated/mentor/wallet/': {
+      id: '/_authenticated/mentor/wallet/'
+      path: '/wallet'
+      fullPath: '/mentor/wallet'
+      preLoaderRoute: typeof AuthenticatedMentorWalletIndexRouteImport
+      parentRoute: typeof AuthenticatedMentorRouteRoute
+    }
+    '/_authenticated/mentor/team-fund-distribution/': {
+      id: '/_authenticated/mentor/team-fund-distribution/'
+      path: '/team-fund-distribution'
+      fullPath: '/mentor/team-fund-distribution'
+      preLoaderRoute: typeof AuthenticatedMentorTeamFundDistributionIndexRouteImport
+      parentRoute: typeof AuthenticatedMentorRouteRoute
     }
     '/_authenticated/mentor/settings/': {
       id: '/_authenticated/mentor/settings/'
@@ -1995,6 +2035,8 @@ interface AuthenticatedMentorRouteRouteChildren {
   AuthenticatedMentorProjectsRouteRoute: typeof AuthenticatedMentorProjectsRouteRouteWithChildren
   AuthenticatedMentorSettingsRouteRoute: typeof AuthenticatedMentorSettingsRouteRouteWithChildren
   AuthenticatedMentorIndexRoute: typeof AuthenticatedMentorIndexRoute
+  AuthenticatedMentorTeamFundDistributionIndexRoute: typeof AuthenticatedMentorTeamFundDistributionIndexRoute
+  AuthenticatedMentorWalletIndexRoute: typeof AuthenticatedMentorWalletIndexRoute
 }
 
 const AuthenticatedMentorRouteRouteChildren: AuthenticatedMentorRouteRouteChildren =
@@ -2004,6 +2046,9 @@ const AuthenticatedMentorRouteRouteChildren: AuthenticatedMentorRouteRouteChildr
     AuthenticatedMentorSettingsRouteRoute:
       AuthenticatedMentorSettingsRouteRouteWithChildren,
     AuthenticatedMentorIndexRoute: AuthenticatedMentorIndexRoute,
+    AuthenticatedMentorTeamFundDistributionIndexRoute:
+      AuthenticatedMentorTeamFundDistributionIndexRoute,
+    AuthenticatedMentorWalletIndexRoute: AuthenticatedMentorWalletIndexRoute,
   }
 
 const AuthenticatedMentorRouteRouteWithChildren =
