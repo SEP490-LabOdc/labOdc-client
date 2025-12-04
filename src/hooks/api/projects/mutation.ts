@@ -281,9 +281,13 @@ export function useCreateMilestoneDocument() {
   return useMutation({
     mutationFn: async (payload: {
       milestoneId: string
-      attachmentsUrl: string[]
+      attachmentsUrl: Array<{
+        name: string
+        fileName: string
+        url: string
+      }>
     }) => {
-      const { data } = await apiRequest.patch(
+      const { data } = await apiRequest.post(
         `/api/v1/project-milestones/${payload.milestoneId}/milestone-attachments`,
         { attachments: payload.attachmentsUrl }
       )
