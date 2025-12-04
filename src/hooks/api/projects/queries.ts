@@ -103,7 +103,8 @@ export function useGetProjectMilestones(projectId: string) {
     queryFn: async () => {
       const { data } = await apiRequest.get(`/api/v1/projects/${projectId}/milestones`);
       return data;
-    }
+    },
+    enabled: !!projectId,
   })
 }
 
