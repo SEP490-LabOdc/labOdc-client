@@ -48,15 +48,6 @@ export default function EditUser() {
 
     return (
         <>
-            <Header fixed>
-                <Search />
-                <div className='ms-auto flex items-center space-x-4'>
-                    <ThemeSwitch />
-                    <ConfigDrawer />
-                    <ProfileDropdown />
-                </div>
-            </Header>
-
             <Main>
                 <div className='mb-2 flex flex-wrap items-center justify-between space-y-2'>
                     <div>
