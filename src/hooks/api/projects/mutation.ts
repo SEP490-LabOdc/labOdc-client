@@ -276,3 +276,18 @@ export function useUpdateMentorLeader() {
     }
   })
 }
+
+export function useCreateMilestoneDocument() {
+  return useMutation({
+    mutationFn: async (payload: {
+      milestoneId: string
+      attachmentsUrl: string[]
+    }) => {
+      const { data } = await apiRequest.patch(
+        `/api/v1/project-milestones/${payload.milestoneId}/milestone-attachments`,
+        { attachments: payload.attachmentsUrl }
+      )
+      return data
+    }
+  })
+}
