@@ -15,7 +15,7 @@ import {
   Circle,
   ArrowRight,
 } from 'lucide-react'
-import { getAvatarUrl, getStatusColor, getStatusLabel, getTagColor } from '@/lib/utils'
+import { getAvatarUrl, getRoleBasePath, getStatusColor, getStatusLabel, getTagColor } from '@/lib/utils'
 import { useNavigate } from '@tanstack/react-router'
 import type { ProjectDetail } from '@/hooks/api/projects/types'
 import { toast } from 'sonner'
@@ -23,6 +23,7 @@ import { projectKeys, useUpdateStatusHiring, useGetProjectApplicants } from '@/h
 import { useQueryClient } from '@tanstack/react-query'
 import { usePermission } from '@/hooks/usePermission'
 import { Plus } from 'lucide-react'
+import { useUser } from '@/context/UserContext'
 
 interface ProjectOverviewTabProps {
   projectData: ProjectDetail;
@@ -32,6 +33,7 @@ export const ProjectOverviewTab: React.FC<ProjectOverviewTabProps> = ({ projectD
   const navigate = useNavigate()
   const [isHiring, setIsHiring] = useState(projectData.isOpenForApplications)
   const { isMentor } = usePermission()
+  const { user } = useUser()
 
   const updateStatusMutation = useUpdateStatusHiring()
   const queryClient = useQueryClient()
@@ -133,11 +135,11 @@ export const ProjectOverviewTab: React.FC<ProjectOverviewTabProps> = ({ projectD
                   {isHiring ? 'Dự án đang tuyển' : 'Dự án đã đóng tuyển'}
                 </Label>
 
-                {isMentor && isHiring && (
+                {isMentor && (
                   <>
                     <span className="text-gray-300 mx-1">•</span>
                     <button
-                      onClick={() => navigate({ to: `/mentor/projects/${projectData.id}/candidates` })}
+                      onClick={() => navigate({ to: `${getRoleBasePath(user.role)}/projects/${projectData.id}/candidates` })}
                       className="text-sm text-[#2a9d8f] hover:text-[#238d7f] hover:underline transition-colors flex items-center gap-1"
                     >
                       Xem {applicantsCount} Ứng viên
@@ -172,7 +174,7 @@ export const ProjectOverviewTab: React.FC<ProjectOverviewTabProps> = ({ projectD
                         </div>
                       )}
                       <button
-                        onClick={() => navigate({ to: `/mentor/projects/${projectData.id}/members` })}
+                        onClick={() => navigate({ to: `${getRoleBasePath(user.role)}/projects/${projectData.id}/members` })}
                         className="h-8 px-3 rounded-full bg-[#2a9d8f]/10 hover:bg-[#2a9d8f]/20 text-[#2a9d8f] text-xs font-medium flex items-center gap-1 transition-colors border border-[#2a9d8f]/30"
                       >
                         <Plus className="h-3 w-3" />
@@ -182,13 +184,6 @@ export const ProjectOverviewTab: React.FC<ProjectOverviewTabProps> = ({ projectD
                   ) : (
                     <>
                       <span className="text-sm text-gray-500">Chưa có thành viên trong đội ngũ</span>
-                      <button
-                        onClick={() => navigate({ to: `/mentor/projects/${projectData.id}/members` })}
-                        className="h-8 px-3 rounded-full bg-[#2a9d8f]/10 hover:bg-[#2a9d8f]/20 text-[#2a9d8f] text-xs font-medium flex items-center gap-1 transition-colors border border-[#2a9d8f]/30"
-                      >
-                        <Plus className="h-3 w-3" />
-                        Thêm/Sửa
-                      </button>
                     </>
                   )}
                 </div>
