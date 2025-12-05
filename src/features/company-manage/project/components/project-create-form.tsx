@@ -22,12 +22,42 @@ import { useCreateProject } from '@/hooks/api/projects/queries'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { Badge } from '@/components/ui/badge'
 import { MoneyInput } from '@/components/admin/MoneyInput'
+import { DatePicker } from '@/components/date-picker'
 
 const formSchema = z.object({
     title: z.string().min(3, 'Tên dự án là bắt buộc và ít nhất 3 kí tự.').max(50, 'Tên dự án phải nhỏ hơn 50 kí tự'),
     description: z.string().min(5, 'Mô tả phải có ít nhất 5 ký tự.').max(4000, 'Mô tả phải ít hơn 4000 ký tự'),
     budget: z.coerce.number<number>().min(0, "Ngân sách phải lớn hơn 0").refine((v) => v > 0, "Ngân sách phải lớn hơn 0").max(10000000000, "Ngân sách không được lớn hơn 10 tỷ"),
     skillIds: z.array(z.string()).min(1, 'Phải chọn ít nhất một kỹ năng.'),
+    startDate: z.date({
+        message: 'Ngày bắt đầu là bắt buộc.',
+    }).refine((date) => {
+        if (!date) return false
+        const today = new Date()
+        today.setHours(0, 0, 0, 0)
+        const minDate = new Date(today)
+        minDate.setDate(minDate.getDate() + 5)
+        const selectedDate = new Date(date)
+        selectedDate.setHours(0, 0, 0, 0)
+        return selectedDate >= minDate
+    }, {
+        message: 'Ngày bắt đầu phải sau 5 ngày so với ngày hiện tại.',
+    }),
+    endDate: z.date({
+        message: 'Ngày kết thúc là bắt buộc.',
+    }),
+}).refine((data) => {
+    if (data.startDate && data.endDate) {
+        const start = new Date(data.startDate)
+        start.setHours(0, 0, 0, 0)
+        const end = new Date(data.endDate)
+        end.setHours(0, 0, 0, 0)
+        return end > start
+    }
+    return true
+}, {
+    message: 'Ngày kết thúc phải sau ngày bắt đầu.',
+    path: ['endDate'],
 })
 
 export type ProjectForm = z.infer<typeof formSchema>
@@ -54,6 +84,8 @@ export default function ProjectsForm({
             description: initialData?.description ?? '',
             budget: initialData?.budget ?? 0,
             skillIds: initialData?.skillIds ?? [],
+            startDate: initialData?.startDate ? new Date(initialData.startDate) : undefined,
+            endDate: initialData?.endDate ? new Date(initialData.endDate) : undefined,
         },
     })
 
@@ -127,8 +159,78 @@ export default function ProjectsForm({
                                 </FormItem>
                             )}
                         />
+                    </div>
 
+                    {/* GRID 2 COLUMNS - DATES */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+                        {/* --- NGÀY BẮT ĐẦU --- */}
+                        <FormField
+                            control={form.control}
+                            name="startDate"
+                            render={({ field }) => {
+                                // Tính minDate: sau 5 ngày từ hôm nay
+                                const today = new Date()
+                                today.setHours(0, 0, 0, 0)
+                                const minStartDate = new Date(today)
+                                minStartDate.setDate(minStartDate.getDate() + 5)
 
+                                return (
+                                    <FormItem>
+                                        <FormLabel className="text-base font-medium">Ngày bắt đầu</FormLabel>
+                                        <FormControl>
+                                            <DatePicker
+                                                selected={field.value}
+                                                onSelect={field.onChange}
+                                                placeholder="Chọn ngày bắt đầu"
+                                                disabled={isEdit}
+                                                minDate={minStartDate}
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                        <p className="text-xs text-gray-500 mt-1">
+                                            Ngày bắt đầu phải sau 5 ngày so với ngày hiện tại
+                                        </p>
+                                    </FormItem>
+                                )
+                            }}
+                        />
+
+                        {/* --- NGÀY KẾT THÚC --- */}
+                        <FormField
+                            control={form.control}
+                            name="endDate"
+                            render={({ field }) => {
+                                // Tính minDate: sau ngày bắt đầu
+                                const startDate = form.watch('startDate')
+                                const minEndDate = startDate ? (() => {
+                                    const min = new Date(startDate)
+                                    min.setDate(min.getDate() + 1) // Phải sau ngày bắt đầu
+                                    min.setHours(0, 0, 0, 0)
+                                    return min
+                                })() : undefined
+
+                                return (
+                                    <FormItem>
+                                        <FormLabel className="text-base font-medium">Ngày kết thúc</FormLabel>
+                                        <FormControl>
+                                            <DatePicker
+                                                selected={field.value}
+                                                onSelect={field.onChange}
+                                                placeholder="Chọn ngày kết thúc"
+                                                disabled={isEdit || !startDate}
+                                                minDate={minEndDate}
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                        <p className="text-xs text-gray-500 mt-1">
+                                            {startDate
+                                                ? 'Ngày kết thúc phải sau ngày bắt đầu'
+                                                : 'Vui lòng chọn ngày bắt đầu trước'}
+                                        </p>
+                                    </FormItem>
+                                )
+                            }}
+                        />
                     </div>
 
                     {/* Kỹ năng yêu cầu */}
