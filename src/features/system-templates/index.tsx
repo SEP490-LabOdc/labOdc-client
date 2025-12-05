@@ -19,7 +19,7 @@ import { Input } from '@/components/ui/input'
 import { cn } from '@/lib/utils'
 import { getRoleBasePath } from '@/lib/utils'
 import { useUser } from '@/context/UserContext'
-import { useSystemTemplates } from '@/hooks/api/system-templates/queries'
+import { useSystemTemplates } from '@/hooks/api/system-templates'
 
 export const TEMPLATE_TYPES = {
     REPORT_WEEKLY: 'REPORT_WEEKLY',
