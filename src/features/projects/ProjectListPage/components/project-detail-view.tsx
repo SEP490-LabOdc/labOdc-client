@@ -1,9 +1,10 @@
 import { Badge } from "@/components/ui/badge.tsx";
 import { type Project } from '@/hooks/api/projects/types.ts';
-import { Clock, Users } from 'lucide-react';
+import { Clock, Users, CheckCircle2, XCircle, AlertCircle } from 'lucide-react';
 import { Button } from "@/components/ui/button.tsx";
 import { useGetProjectApplicationStatus } from '@/hooks/api/projects/queries.ts';
 import { format } from 'date-fns';
+import { getCandidateStatusLabel, getCandidateStatusColor } from '@/lib/utils';
 
 interface ProjectDetailViewProps {
   project: Project | null
@@ -25,10 +26,24 @@ export function ProjectDetailView({ project, onApply }: ProjectDetailViewProps) 
 
   const canApply = applicationStatus?.data?.canApply ?? true;
   const applicationInfo = applicationStatus?.data ?? null;
+  const hasApplied = applicationInfo && !canApply;
 
   const projectDuration = Math.ceil(
     (new Date(project.endDate).getTime() - new Date(project.startDate).getTime()) / (1000 * 60 * 60 * 24 * 30)
   );
+
+  const getStatusIcon = (status: string) => {
+    switch (status?.toUpperCase()) {
+      case 'PENDING':
+        return <AlertCircle className="h-4 w-4" />
+      case 'APPROVED':
+        return <CheckCircle2 className="h-4 w-4" />
+      case 'REJECTED':
+        return <XCircle className="h-4 w-4" />
+      default:
+        return <AlertCircle className="h-4 w-4" />
+    }
+  }
 
   return (
     <div className="bg-white p-6 rounded-lg shadow-md sticky top-6 overflow-y-auto h-[calc(100vh-80px)]">
@@ -41,20 +56,43 @@ export function ProjectDetailView({ project, onApply }: ProjectDetailViewProps) 
           onClick={() => onApply(project)}
           disabled={!canApply || isAppLoading}
         >
-          {isAppLoading ? 'Đang kiểm tra...' : (!canApply ?  'Đã ứng tuyển' : 'Ứng Tuyển Dự Án Này')}
+          {isAppLoading ? 'Đang kiểm tra...' : (!canApply ? 'Đã ứng tuyển' : 'Ứng Tuyển Dự Án Này')}
         </Button>
 
-        {applicationInfo && (
-          <div className="mt-3 text-sm text-gray-700">
-            <div>Trạng thái: <span className="font-medium">{applicationInfo.status ?? 'Đã nộp'}</span></div>
-            {applicationInfo.submittedAt && (
-              <div>Thời gian nộp: <span className="font-medium">{format(new Date(applicationInfo.submittedAt), 'dd/MM/yyyy HH:mm')}</span></div>
-            )}
-            {applicationInfo.fileLink && (
-              <div>
-                Tệp đính kèm: <a className="text-blue-600 underline" href={applicationInfo.fileLink} target="_blank" rel="noreferrer">{applicationInfo.fileName ?? 'Tải xuống'}</a>
+        {/* Chỉ hiển thị khi đã apply */}
+        {hasApplied && applicationInfo?.status && (
+          <div className={`mt-3 rounded-lg border-2 p-4 ${getCandidateStatusColor(applicationInfo.status)}`}>
+            <div className="flex items-start gap-3">
+              <div className="flex-shrink-0 mt-0.5">
+                {getStatusIcon(applicationInfo.status)}
               </div>
-            )}
+              <div className="flex-1 min-w-0">
+                <div className="font-semibold text-sm mb-2">
+                  Trạng thái đơn ứng tuyển: {getCandidateStatusLabel(applicationInfo.status)}
+                </div>
+                <div className="space-y-1.5 text-xs">
+                  {applicationInfo.submittedAt && (
+                    <div className="text-gray-700">
+                      <span className="font-medium">Thời gian nộp:</span>{' '}
+                      {format(new Date(applicationInfo.submittedAt), 'dd/MM/yyyy HH:mm')}
+                    </div>
+                  )}
+                  {applicationInfo.fileLink && (
+                    <div className="text-gray-700">
+                      <span className="font-medium">Tệp đính kèm:</span>{' '}
+                      <a
+                        className="text-blue-600 underline hover:text-blue-800 break-all"
+                        href={applicationInfo.fileLink}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        {applicationInfo.fileName ?? 'Tải xuống'}
+                      </a>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
           </div>
         )}
       </div>
@@ -108,11 +146,11 @@ export function ProjectDetailView({ project, onApply }: ProjectDetailViewProps) 
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
                 <span className="text-gray-600">Ngày bắt đầu:</span>
-                <span className="font-medium">{new Date(project.startDate).toLocaleDateString('vi-VN')}</span>
+                <span className="font-medium">{project.startDate ? new Date(project.startDate).toLocaleDateString('vi-VN') : 'Không xác định'}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-600">Ngày kết thúc:</span>
-                <span className="font-medium">{new Date(project.endDate).toLocaleDateString('vi-VN')}</span>
+                <span className="font-medium">{project.endDate ? new Date(project.endDate).toLocaleDateString('vi-VN') : 'Không xác định'}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-600">Thời gian thực hiện:</span>

@@ -13,6 +13,7 @@ type DatePickerProps = {
   onSelect: (date: Date | undefined) => void
   placeholder?: string,
   disabled?: boolean
+  minDate?: Date
 }
 
 export function DatePicker({
@@ -20,6 +21,7 @@ export function DatePicker({
   onSelect,
   placeholder = 'Chọn ngày',
   disabled,
+  minDate,
 }: DatePickerProps) {
   return (
     <Popover>
@@ -29,7 +31,6 @@ export function DatePicker({
           data-empty={!selected}
           className='data-[empty=true]:text-muted-foreground w-full max-w-[300px] justify-start text-start font-normal'
           disabled={disabled}
-        //
         >
           {selected ? (
             format(selected, 'MMM d, yyyy')
@@ -45,10 +46,17 @@ export function DatePicker({
           captionLayout='dropdown'
           selected={selected}
           onSelect={onSelect}
-          // disabled={(date: Date) =>
-          //   date > new Date() || date < new Date('1900-01-01')
-          // }
-          disabled={disabled}
+          disabled={(date: Date) => {
+            if (disabled) return true
+            if (minDate) {
+              const min = new Date(minDate)
+              min.setHours(0, 0, 0, 0)
+              const checkDate = new Date(date)
+              checkDate.setHours(0, 0, 0, 0)
+              return checkDate < min
+            }
+            return false
+          }}
         />
       </PopoverContent>
     </Popover>
