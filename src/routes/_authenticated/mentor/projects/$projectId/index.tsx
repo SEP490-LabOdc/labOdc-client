@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
-import ProjectDetailPage from '@/features/mentor/project-detail'
+import ProjectDetailPage from '@/features/projects/project-detail'
 import { getProjectByIdQueryOptions } from '@/hooks/api/projects'
 import { queryClient } from '@/hooks/api/reactQuery.tsx'
 

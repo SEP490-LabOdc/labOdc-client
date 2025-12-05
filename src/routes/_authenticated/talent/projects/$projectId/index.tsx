@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
-import ProjectDetailPage from '@/features/mentor/project-detail'
+import ProjectDetailPage from '@/features/projects/project-detail'
 
 export const Route = createFileRoute('/_authenticated/talent/projects/$projectId/')({
   component: ProjectDetailPage,

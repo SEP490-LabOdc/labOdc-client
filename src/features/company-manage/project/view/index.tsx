@@ -5,7 +5,7 @@ import ProjectForm from '../components/project-form'
 import { useGetProjectById } from '@/hooks/api/projects'
 import { PROJECT_STATUS } from '../data/schema'
 import { StatusAlert } from '@/components/admin/StatusAlert'
-import ProjectDetailPage from '@/features/mentor/project-detail'
+import ProjectDetailPage from '@/features/projects/project-detail'
 
 const route = getRouteApi('/_authenticated/company-manage/projects/$projectId/')
 
