@@ -1,3 +1,5 @@
+import type { ApiResponse } from '@/hooks/api/types'
+
 export interface WalletData {
     id: string
     ownerId: string
@@ -8,11 +10,5 @@ export interface WalletData {
     status: string
 }
 
-export interface WalletResponse {
-    success: boolean
-    message: string
-    data: WalletData
-    errorCode?: string
-    timestamp: string
-}
+export type WalletResponse = ApiResponse<WalletData>
 
