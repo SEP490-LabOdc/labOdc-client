@@ -65,11 +65,11 @@ export function ProjectCard({ project, onSelect, isSelected }: ProjectCardProps)
         <div className="space-y-2">
           <div className="flex items-center text-sm text-gray-600">
             <Clock className="h-4 w-4 mr-1" />
-            <span>Bắt đầu: {new Date(project.startDate).toLocaleDateString('vi-VN')}</span>
+            <span>Bắt đầu: {project.startDate ? new Date(project.startDate).toLocaleDateString('vi-VN') : 'Không xác định'}</span>
           </div>
           <div className="flex items-center text-sm text-gray-600">
             <Clock className="h-4 w-4 mr-1" />
-            <span>Kết thúc: {new Date(project.endDate).toLocaleDateString('vi-VN')}</span>
+            <span>Kết thúc: {project.endDate ? new Date(project.endDate).toLocaleDateString('vi-VN') : 'Không xác định'}</span>
           </div>
         </div>
       </CardContent>

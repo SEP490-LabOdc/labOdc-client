@@ -19,6 +19,7 @@ import {
   IconPencilCog,
   IconCircleXFilled,
   IconWallet,
+  IconFileText,
 } from '@tabler/icons-react'
 // import { AudioWaveform, Command, GalleryVerticalEnd } from 'lucide-react'
 import { type SidebarData } from '../types'
@@ -247,6 +248,11 @@ export const labAdminSidebarData: SidebarData = {
               icon: User,
             },
           ]
+        },
+        {
+          title: 'Quản lý Template',
+          url: '/lab-admin/templates',
+          icon: IconFileText,
         },
       ]
     },
