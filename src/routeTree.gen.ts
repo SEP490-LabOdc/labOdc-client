@@ -109,6 +109,7 @@ import { Route as AuthenticatedCompanyManageProjectsProjectIdMembersIndexRouteIm
 import { Route as AuthenticatedCompanyManageProjectsProjectIdFinancialsIndexRouteImport } from './routes/_authenticated/company-manage/projects/$projectId/financials/index'
 import { Route as AuthenticatedCompanyManageProjectsProjectIdEditIndexRouteImport } from './routes/_authenticated/company-manage/projects/$projectId/edit/index'
 import { Route as AuthenticatedCompanyManageProjectsProjectIdMilestoneIdIndexRouteImport } from './routes/_authenticated/company-manage/projects/$projectId/$milestoneId/index'
+import { Route as AuthenticatedMentorProjectsProjectIdMilestoneIdMembersIndexRouteImport } from './routes/_authenticated/mentor/projects/$projectId/$milestoneId/members/index'
 
 const VerifyOtpRouteRoute = VerifyOtpRouteRouteImport.update({
   id: '/verify-otp',
@@ -684,6 +685,14 @@ const AuthenticatedCompanyManageProjectsProjectIdMilestoneIdIndexRoute =
       getParentRoute: () => AuthenticatedCompanyManageRouteRoute,
     } as any,
   )
+const AuthenticatedMentorProjectsProjectIdMilestoneIdMembersIndexRoute =
+  AuthenticatedMentorProjectsProjectIdMilestoneIdMembersIndexRouteImport.update(
+    {
+      id: '/$projectId/$milestoneId/members/',
+      path: '/$projectId/$milestoneId/members/',
+      getParentRoute: () => AuthenticatedMentorProjectsRouteRoute,
+    } as any,
+  )
 
 export interface FileRoutesByFullPath {
   '/company': typeof CompanyRouteRouteWithChildren
@@ -783,6 +792,7 @@ export interface FileRoutesByFullPath {
   '/talent/projects/$projectId/candidates': typeof AuthenticatedTalentProjectsProjectIdCandidatesIndexRoute
   '/talent/projects/$projectId/members': typeof AuthenticatedTalentProjectsProjectIdMembersIndexRoute
   '/talent/projects/$projectId/templates': typeof AuthenticatedTalentProjectsProjectIdTemplatesIndexRoute
+  '/mentor/projects/$projectId/$milestoneId/members': typeof AuthenticatedMentorProjectsProjectIdMilestoneIdMembersIndexRoute
 }
 export interface FileRoutesByTo {
   '/verify-otp': typeof VerifyOtpRouteRoute
@@ -869,6 +879,7 @@ export interface FileRoutesByTo {
   '/talent/projects/$projectId/candidates': typeof AuthenticatedTalentProjectsProjectIdCandidatesIndexRoute
   '/talent/projects/$projectId/members': typeof AuthenticatedTalentProjectsProjectIdMembersIndexRoute
   '/talent/projects/$projectId/templates': typeof AuthenticatedTalentProjectsProjectIdTemplatesIndexRoute
+  '/mentor/projects/$projectId/$milestoneId/members': typeof AuthenticatedMentorProjectsProjectIdMilestoneIdMembersIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -972,6 +983,7 @@ export interface FileRoutesById {
   '/_authenticated/talent/projects/$projectId/candidates/': typeof AuthenticatedTalentProjectsProjectIdCandidatesIndexRoute
   '/_authenticated/talent/projects/$projectId/members/': typeof AuthenticatedTalentProjectsProjectIdMembersIndexRoute
   '/_authenticated/talent/projects/$projectId/templates/': typeof AuthenticatedTalentProjectsProjectIdTemplatesIndexRoute
+  '/_authenticated/mentor/projects/$projectId/$milestoneId/members/': typeof AuthenticatedMentorProjectsProjectIdMilestoneIdMembersIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -1073,6 +1085,7 @@ export interface FileRouteTypes {
     | '/talent/projects/$projectId/candidates'
     | '/talent/projects/$projectId/members'
     | '/talent/projects/$projectId/templates'
+    | '/mentor/projects/$projectId/$milestoneId/members'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/verify-otp'
@@ -1159,6 +1172,7 @@ export interface FileRouteTypes {
     | '/talent/projects/$projectId/candidates'
     | '/talent/projects/$projectId/members'
     | '/talent/projects/$projectId/templates'
+    | '/mentor/projects/$projectId/$milestoneId/members'
   id:
     | '__root__'
     | '/(auth)'
@@ -1261,6 +1275,7 @@ export interface FileRouteTypes {
     | '/_authenticated/talent/projects/$projectId/candidates/'
     | '/_authenticated/talent/projects/$projectId/members/'
     | '/_authenticated/talent/projects/$projectId/templates/'
+    | '/_authenticated/mentor/projects/$projectId/$milestoneId/members/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -1982,6 +1997,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedCompanyManageProjectsProjectIdMilestoneIdIndexRouteImport
       parentRoute: typeof AuthenticatedCompanyManageRouteRoute
     }
+    '/_authenticated/mentor/projects/$projectId/$milestoneId/members/': {
+      id: '/_authenticated/mentor/projects/$projectId/$milestoneId/members/'
+      path: '/$projectId/$milestoneId/members'
+      fullPath: '/mentor/projects/$projectId/$milestoneId/members'
+      preLoaderRoute: typeof AuthenticatedMentorProjectsProjectIdMilestoneIdMembersIndexRouteImport
+      parentRoute: typeof AuthenticatedMentorProjectsRouteRoute
+    }
   }
 }
 
@@ -2229,6 +2251,7 @@ interface AuthenticatedMentorProjectsRouteRouteChildren {
   AuthenticatedMentorProjectsProjectIdFinancialsIndexRoute: typeof AuthenticatedMentorProjectsProjectIdFinancialsIndexRoute
   AuthenticatedMentorProjectsProjectIdMembersIndexRoute: typeof AuthenticatedMentorProjectsProjectIdMembersIndexRoute
   AuthenticatedMentorProjectsProjectIdTemplatesIndexRoute: typeof AuthenticatedMentorProjectsProjectIdTemplatesIndexRoute
+  AuthenticatedMentorProjectsProjectIdMilestoneIdMembersIndexRoute: typeof AuthenticatedMentorProjectsProjectIdMilestoneIdMembersIndexRoute
 }
 
 const AuthenticatedMentorProjectsRouteRouteChildren: AuthenticatedMentorProjectsRouteRouteChildren =
@@ -2247,6 +2270,8 @@ const AuthenticatedMentorProjectsRouteRouteChildren: AuthenticatedMentorProjects
       AuthenticatedMentorProjectsProjectIdMembersIndexRoute,
     AuthenticatedMentorProjectsProjectIdTemplatesIndexRoute:
       AuthenticatedMentorProjectsProjectIdTemplatesIndexRoute,
+    AuthenticatedMentorProjectsProjectIdMilestoneIdMembersIndexRoute:
+      AuthenticatedMentorProjectsProjectIdMilestoneIdMembersIndexRoute,
   }
 
 const AuthenticatedMentorProjectsRouteRouteWithChildren =
