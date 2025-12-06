@@ -2,14 +2,11 @@ import { useNavigate, useParams } from '@tanstack/react-router'
 import { useGetProjectMembers } from '@/hooks/api/projects/queries'
 import { useUpdateTalentLeader, useUpdateMentorLeader, projectKeys, type ProjectMember } from '@/hooks/api/projects'
 import { Button } from '@/components/ui/button'
-import { ChevronLeft, Users, Crown, Loader2 } from 'lucide-react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Badge } from '@/components/ui/badge'
-import { getAvatarUrl } from '@/lib/utils'
+import { ChevronLeft, Users } from 'lucide-react'
 import { toast } from 'sonner'
 import { useQueryClient } from '@tanstack/react-query'
 import { usePermission } from '@/hooks/usePermission'
+import { MembersList } from './components'
 
 export default function ProjectMembersPage() {
   const { projectId } = useParams({ strict: false })
@@ -122,161 +119,34 @@ export default function ProjectMembersPage() {
         </div>
 
         {/* Mentors Section */}
-        <Card className="mb-6">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Users className="h-5 w-5 text-[#2a9d8f]" />
-              Mentors ({mentors.length})
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            {mentors.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {mentors.map((mentor: ProjectMember) => (
-                  <div
-                    key={mentor.projectMemberId}
-                    className="p-4 border rounded-lg hover:shadow-md transition-shadow bg-white relative"
-                  >
-                    <div className="absolute top-3 right-3 flex items-center gap-2">
-                      {mentor.isLeader && (
-                        <Badge className="bg-yellow-100 text-yellow-800">
-                          Trưởng nhóm
-                        </Badge>
-                      )}
-                    </div>
-                    <div className="flex items-center gap-3 mb-3 pr-24">
-                      <Avatar className="h-12 w-12">
-                        <AvatarImage src={mentor.avatarUrl} />
-                        <AvatarFallback>
-                          <img src={getAvatarUrl(mentor.fullName)} alt={mentor.fullName} />
-                        </AvatarFallback>
-                      </Avatar>
-                      <div className="flex-1 min-w-0">
-                        <div className="font-semibold text-gray-900 flex items-center gap-2">
-                          {mentor.fullName}
-                          {mentor.isLeader && (
-                            <Crown className="h-4 w-4 text-yellow-500 fill-yellow-500" />
-                          )}
-                        </div>
-                        <div className="text-sm text-gray-500 truncate">{mentor.email}</div>
-                      </div>
-                    </div>
-                    {isLabAdmin && (
-                      <Button
-                        size="sm"
-                        variant={mentor.isLeader ? "default" : "outline"}
-                        className={`w-full mt-3 ${mentor.isLeader
-                          ? 'bg-yellow-500 hover:bg-yellow-600 text-white'
-                          : 'border-yellow-500 text-yellow-600 hover:bg-yellow-50'
-                          }`}
-                        disabled={updateMentorLeaderMutation.isPending}
-                        onClick={() => handleToggleMentorLeader(mentor.userId, mentor.isLeader || false)}
-                      >
-                        {updateMentorLeaderMutation.isPending ? (
-                          <>
-                            <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                            Đang xử lý...
-                          </>
-                        ) : mentor.isLeader ? (
-                          <>
-                            <Crown className="h-4 w-4 mr-2" />
-                            Gỡ trưởng nhóm
-                          </>
-                        ) : (
-                          <>
-                            <Crown className="h-4 w-4 mr-2" />
-                            Đặt làm trưởng nhóm
-                          </>
-                        )}
-                      </Button>
-                    )}
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <p className="text-sm text-gray-500 text-center py-4">
-                Chưa có mentor nào trong dự án
-              </p>
-            )}
-          </CardContent>
-        </Card>
+        <MembersList
+          members={mentors}
+          role="MENTOR"
+          title="Mentors"
+          emptyMessage="Chưa có mentor nào trong dự án"
+          iconColor="#2a9d8f"
+          showActionButton={isLabAdmin}
+          isActionLoading={updateMentorLeaderMutation.isPending}
+          onToggleLeader={handleToggleMentorLeader}
+          leaderLabel="Đặt làm trưởng nhóm"
+          removeLeaderLabel="Gỡ trưởng nhóm"
+          badgeLabel="Trưởng nhóm"
+        />
 
         {/* Talents Section */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Users className="h-5 w-5 text-[#e76f51]" />
-              Talents ({talents.length})
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            {talents.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {talents.map((talent: ProjectMember) => (
-                  <div
-                    key={talent.projectMemberId}
-                    className="p-4 border rounded-lg hover:shadow-md transition-shadow bg-white relative"
-                  >
-                    <div className="absolute top-3 right-3 flex items-center gap-2">
-                      {talent.isLeader && (
-                        <Badge className="bg-yellow-100 text-yellow-800">
-                          Leader
-                        </Badge>
-                      )}
-                    </div>
-                    <div className="flex items-center gap-3 mb-3 pr-24">
-                      <Avatar className="h-12 w-12">
-                        <AvatarImage src={talent.avatarUrl} />
-                        <AvatarFallback>
-                          <img src={getAvatarUrl(talent.fullName)} alt={talent.fullName} />
-                        </AvatarFallback>
-                      </Avatar>
-                      <div className="flex-1 min-w-0">
-                        <div className="font-semibold text-gray-900 flex items-center gap-2">
-                          <span className="truncate">{talent.fullName}</span>
-                        </div>
-                        <div className="text-sm text-gray-500 truncate">{talent.email}</div>
-                      </div>
-                    </div>
-                    {isMentor && (
-                      <Button
-                        size="sm"
-                        variant={talent.isLeader ? "default" : "outline"}
-                        className={`w-full mt-3 ${talent.isLeader
-                          ? 'bg-yellow-500 hover:bg-yellow-600 text-white'
-                          : 'border-yellow-500 text-yellow-600 hover:bg-yellow-50'
-                          }`}
-                        disabled={updateTalentLeaderMutation.isPending}
-                        onClick={() => handleToggleTalentLeader(talent.userId, talent.isLeader || false)}
-                      >
-                        {updateTalentLeaderMutation.isPending ? (
-                          <>
-                            <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                            Đang xử lý...
-                          </>
-                        ) : talent.isLeader ? (
-                          <>
-                            <Crown className="h-4 w-4 mr-2" />
-                            Gỡ leader
-                          </>
-                        ) : (
-                          <>
-                            <Crown className="h-4 w-4 mr-2" />
-                            Đặt làm leader
-                          </>
-                        )}
-                      </Button>
-                    )}
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <p className="text-sm text-gray-500 text-center py-4">
-                Chưa có talent nào trong dự án
-              </p>
-            )}
-          </CardContent>
-        </Card>
+        <MembersList
+          members={talents}
+          role="TALENT"
+          title="Talents"
+          emptyMessage="Chưa có talent nào trong dự án"
+          iconColor="#e76f51"
+          showActionButton={isMentor}
+          isActionLoading={updateTalentLeaderMutation.isPending}
+          onToggleLeader={handleToggleTalentLeader}
+          leaderLabel="Đặt làm leader"
+          removeLeaderLabel="Gỡ leader"
+          badgeLabel="Leader"
+        />
       </div>
     </div>
   )

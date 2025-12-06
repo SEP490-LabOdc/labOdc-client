@@ -1,4 +1,4 @@
-export { ProjectPageHeader } from './project-header';
+export { ProjectPageHeader } from './project-header.tsx';
 export { ProjectOverviewTab } from './overview-tab.tsx';
 export { MilestonesTab } from './milestones-tab.tsx';
 export { ProjectFilesTab } from './files-tab.tsx';

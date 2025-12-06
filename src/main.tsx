@@ -1,7 +1,6 @@
 import { StrictMode } from 'react'
 import ReactDOM from 'react-dom/client'
 import {
-  QueryClient,
   QueryClientProvider,
 } from '@tanstack/react-query'
 import { RouterProvider, createRouter } from '@tanstack/react-router'
@@ -24,22 +23,11 @@ import './styles/index.css'
 import "nprogress/nprogress.css";
 import { GeneralError } from './features/errors/general-error.tsx';
 import { useAuthStore } from '@/stores/auth-store.ts'
+import { queryClient } from '@/hooks/api/reactQuery.tsx'
 
 
 // Create a new router instance
 NProgress.configure({ showSpinner: false });
-
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      refetchOnWindowFocus: false,
-      retry: 1,
-    },
-    mutations: {
-      retry: 1,
-    }
-  },
-})
 
 // Create a new router instance
 const router = createRouter({

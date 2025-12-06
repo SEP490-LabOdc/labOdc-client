@@ -1,4 +1,5 @@
 import React from 'react'
+import type { ApiResponse } from '@/hooks/api/types'
 
 export enum ProjectTypes {
   PENDING = 'PENDING',
@@ -57,14 +58,6 @@ export interface ProjectListItem {
   companyName?: string
 }
 
-export interface ApiResponse<T> {
-  success: boolean
-  message: string
-  data: T
-  errorCode: string
-  timestamp: string
-}
-
 export interface Project {
   projectId: string
   projectName: string
@@ -85,13 +78,7 @@ export interface MilestoneUser {
   phone: string
 }
 
-export interface MilestonesResponse {
-  success: boolean
-  message: string
-  data: Milestone[]
-  errorCode: string
-  timestamp: string
-}
+export type MilestonesResponse = ApiResponse<Milestone[]>
 
 export interface Note {
   id: number;

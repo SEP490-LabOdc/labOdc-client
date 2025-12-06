@@ -19,10 +19,6 @@ export interface MilestoneDetail {
   mentors: MilestoneUser[]
 }
 
-export interface MilestoneDetailResponse {
-  success: boolean
-  message: string
-  data: MilestoneDetail
-  errorCode: string
-  timestamp: string
-}
+import type { ApiResponse } from '@/hooks/api/types'
+
+export type MilestoneDetailResponse = ApiResponse<MilestoneDetail>

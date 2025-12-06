@@ -2,7 +2,7 @@ import React from 'react'
 import { useParams, useNavigate } from '@tanstack/react-router'
 import { ArrowLeft, Download, Filter, Calendar } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { ProjectFinancialsTab } from './components'
+import { ProjectFinancialsTab } from './components/index.tsx'
 import type { FinancialSummary, Transaction } from './components/financials-tab.tsx'
 
 
@@ -19,9 +19,9 @@ const summary: FinancialSummary = {
 }
 
 const transactions: Transaction[] = [
-    { id: '1', refId: 'TX-MS-01', description: 'Giải ngân Milestone 1: Thiết kế Database', amount: 10000000, type: 'MILESTONE_RELEASE', date: '2025-10-15', status: 'COMPLETED' },
-    { id: '2', refId: 'TX-DEP-01', description: 'Doanh nghiệp nạp tiền Escrow', amount: 50000000, type: 'DEPOSIT', date: '2025-10-01', status: 'COMPLETED' },
-    { id: '3', refId: 'TX-INT-01', description: 'Phân bổ cho Nguyễn Văn A', amount: 5000000, type: 'INTERNAL_DISTRIBUTION', date: '2025-10-16', status: 'COMPLETED' },
+  { id: '1', refId: 'TX-MS-01', description: 'Giải ngân Milestone 1: Thiết kế Database', amount: 10000000, type: 'MILESTONE_RELEASE', date: '2025-10-15', status: 'COMPLETED' },
+  { id: '2', refId: 'TX-DEP-01', description: 'Doanh nghiệp nạp tiền Escrow', amount: 50000000, type: 'DEPOSIT', date: '2025-10-01', status: 'COMPLETED' },
+  { id: '3', refId: 'TX-INT-01', description: 'Phân bổ cho Nguyễn Văn A', amount: 5000000, type: 'INTERNAL_DISTRIBUTION', date: '2025-10-16', status: 'COMPLETED' },
 ]
 
 
