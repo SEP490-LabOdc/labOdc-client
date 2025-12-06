@@ -25,6 +25,8 @@ const projectSchema = z.object({
     description: z.string(),
     status: z.string(),
     budget: z.coerce.number<number>().min(1, "Ngân sách không được nhỏ hơn 0").refine((v) => v >= 0, "Ngân sách không được nhỏ hơn 0"),
+    startDate: z.string().optional(),
+    endDate: z.string().optional(),
     skills: z.array(
         z.object({
             id: z.string(),
@@ -137,6 +139,65 @@ export default function ProjectForm({ initialData }: { initialData: ProjectFormD
                                     <FormControl>
                                         <Input value={statusLabel} disabled />
                                     </FormControl>
+                                </FormItem>
+                            )}
+                        />
+                    </div>
+
+                    {/* ===== Ngày bắt đầu và kết thúc ===== */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+                        {/* Ngày bắt đầu */}
+                        <FormField
+                            control={form.control}
+                            name="startDate"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel className="text-base font-medium">
+                                        Ngày bắt đầu
+                                    </FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            value={
+                                                field.value
+                                                    ? new Date(field.value).toLocaleDateString('vi-VN', {
+                                                        year: 'numeric',
+                                                        month: 'long',
+                                                        day: 'numeric',
+                                                    })
+                                                    : 'Chưa có'
+                                            }
+                                            disabled
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+
+                        {/* Ngày kết thúc */}
+                        <FormField
+                            control={form.control}
+                            name="endDate"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel className="text-base font-medium">
+                                        Ngày kết thúc
+                                    </FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            value={
+                                                field.value
+                                                    ? new Date(field.value).toLocaleDateString('vi-VN', {
+                                                        year: 'numeric',
+                                                        month: 'long',
+                                                        day: 'numeric',
+                                                    })
+                                                    : 'Chưa có'
+                                            }
+                                            disabled
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
                                 </FormItem>
                             )}
                         />
