@@ -6,10 +6,13 @@ import { MembersList } from '@/features/projects/members/components'
 import type { ProjectMember } from '@/hooks/api/projects'
 import { useMemo } from 'react'
 import { ROLE } from '@/const'
+import { getRoleBasePath } from '@/lib/utils'
+import { useUser } from '@/context/UserContext'
 
 export default function MilestoneMembersPage() {
     const { projectId, milestoneId } = useParams({ strict: false })
     const navigate = useNavigate()
+    const { user } = useUser()
 
     const { data: milestoneData, isLoading: isLoadingMilestone } = useGetMilestonesById(milestoneId as string)
     const { data: membersResponse, isLoading: isLoadingMembers } = useGetMilestonesMembers(milestoneId as string)
@@ -63,7 +66,10 @@ export default function MilestoneMembersPage() {
                     <Button
                         variant="ghost"
                         size="sm"
-                        onClick={() => navigate({ to: `/mentor/projects/${projectId}/${milestoneId}` })}
+                        onClick={() => {
+                            const basePath = getRoleBasePath(user?.role || '')
+                            navigate({ to: `${basePath}/projects/${projectId}/${milestoneId}` })
+                        }}
                         className="mb-4 hover:bg-gray-100"
                     >
                         <ChevronLeft className="h-4 w-4 mr-2" />

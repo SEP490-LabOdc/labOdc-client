@@ -7,12 +7,15 @@ import { toast } from 'sonner'
 import { useQueryClient } from '@tanstack/react-query'
 import { usePermission } from '@/hooks/usePermission'
 import { MembersList } from './components'
+import { getRoleBasePath } from '@/lib/utils'
+import { useUser } from '@/context/UserContext'
 
 export default function ProjectMembersPage() {
   const { projectId } = useParams({ strict: false })
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const { isLabAdmin, isMentor } = usePermission()
+  const { user } = useUser()
 
   const { data: projectMembersData, isLoading } = useGetProjectMembers(projectId as string)
   const projectMembers = projectMembersData?.data || []
@@ -98,7 +101,10 @@ export default function ProjectMembersPage() {
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => navigate({ to: `/mentor/projects/${projectId}` })}
+            onClick={() => {
+              const basePath = getRoleBasePath(user?.role || '')
+              navigate({ to: `${basePath}/projects/${projectId}` })
+            }}
             className="mb-4 hover:bg-gray-100"
           >
             <ChevronLeft className="h-4 w-4 mr-2" />

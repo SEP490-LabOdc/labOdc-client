@@ -16,7 +16,7 @@ export default function SignIn() {
       signInGoogle.mutate({ idToken }, {
         onSuccess: async (response) => {
           toast.success(response.message);
-          await navigate({ to: redirect });
+          await navigate({ to: '/' });
         },
       });
     }
