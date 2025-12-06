@@ -23,6 +23,7 @@ export interface Skill {
 export interface ProjectMentor {
   id: string
   name: string
+  avatar: string
   roleName: string
   leader: boolean
 }

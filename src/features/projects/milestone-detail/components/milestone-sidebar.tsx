@@ -1,7 +1,6 @@
-import React, { useState } from 'react'
+import React, { useState, useMemo } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import {
   CalendarDays,
@@ -11,13 +10,17 @@ import {
   CheckCircle,
   Wallet,
   Info,
-  Unlock
+  Unlock,
+  ArrowRight
 } from 'lucide-react'
-import { getStatusColor, getStatusLabel } from '@/lib/utils'
-import { getAvatarFallback } from '@/helpers/stringUtils'
+import { getStatusColor, getStatusLabel, getRoleBasePath } from '@/lib/utils'
 import { usePermission } from '@/hooks/usePermission'
+import { useNavigate } from '@tanstack/react-router'
 import type { Milestone } from '@/hooks/api/projects'
 import { ConfirmReleaseDialog } from './confirm-release-dialog'
+import { MembersAvatarList } from '@/components/members-avatar-list'
+import type { ProjectMember } from '@/hooks/api/projects'
+import { ROLE } from '@/const'
 
 interface MilestoneSidebarProps {
   milestone: Milestone
@@ -33,6 +36,7 @@ export const MilestoneSidebar: React.FC<MilestoneSidebarProps> = ({
   escrowBalance = 0
 }) => {
   const { isCompany, user } = usePermission()
+  const navigate = useNavigate()
   const [isConfirmOpen, setIsConfirmOpen] = useState(false)
 
   const calculateDaysRemaining = (endDate: string): string => {
@@ -46,7 +50,31 @@ export const MilestoneSidebar: React.FC<MilestoneSidebarProps> = ({
     return `${diffDays} ngày`
   }
 
-  const talents = milestone.talents || []
+  // Map talents to ProjectMember format
+  const talents: ProjectMember[] = useMemo(() => {
+    return (milestone.talents || []).map((talent: any) => ({
+      projectMemberId: talent.userId || '',
+      userId: talent.userId || '',
+      fullName: talent.name || talent.fullName || 'Unknown',
+      email: talent.email || '',
+      avatarUrl: talent.avatar || talent.avatarUrl || '',
+      roleName: ROLE.TALENT as 'TALENT',
+      isLeader: talent.isLeader || false,
+    }))
+  }, [milestone.talents])
+
+  // Map mentors to ProjectMember format
+  const mentors: ProjectMember[] = useMemo(() => {
+    return (milestone.mentors || []).map((mentor: any) => ({
+      projectMemberId: mentor.userId || '',
+      userId: mentor.userId || '',
+      fullName: mentor.name || mentor.fullName || 'Unknown',
+      email: mentor.email || '',
+      avatarUrl: mentor.avatar || mentor.avatarUrl || '',
+      roleName: ROLE.MENTOR as 'MENTOR',
+      isLeader: mentor.isLeader || false,
+    }))
+  }, [milestone.mentors])
 
   const amount = milestone.budget || 0
   const systemFee = amount * 0.1
@@ -112,29 +140,52 @@ export const MilestoneSidebar: React.FC<MilestoneSidebarProps> = ({
         </div>
 
         <div className="border-t pt-4 space-y-4">
+          {/* Mentors Section */}
+          {mentors.length > 0 && (
+            <div>
+              <div className="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-3">
+                <Users className="h-4 w-4" />
+                <span>Mentors ({mentors.length})</span>
+              </div>
+              <MembersAvatarList
+                members={mentors}
+                size="md"
+                maxVisible={5}
+                showCount={false}
+                emptyMessage="Chưa có mentor"
+              />
+            </div>
+          )}
+
+          {/* Talents Section */}
           <div>
             <div className="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-3">
               <Users className="h-4 w-4" />
               <span>Talents ({talents.length})</span>
             </div>
-            <div className="space-y-2">
-              {talents.length > 0 ? (
-                talents.map((talent) => (
-                  <div key={talent.userId} className="flex items-center gap-2 p-2 hover:bg-gray-50 rounded">
-                    <Avatar className="h-8 w-8">
-                      <AvatarImage src={talent.avatar} />
-                      <AvatarFallback className="text-xs">{getAvatarFallback(talent.name)}</AvatarFallback>
-                    </Avatar>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-gray-900 truncate">{talent.name}</p>
-                      <p className="text-xs text-gray-500 truncate">{talent.email}</p>
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <p className="text-sm text-gray-400 text-center py-2">Chưa có thành viên</p>
-              )}
-            </div>
+            <MembersAvatarList
+              members={talents}
+              size="md"
+              maxVisible={5}
+              showCount={false}
+              emptyMessage="Chưa có talent"
+            />
+          </div>
+
+          {/* Navigate to members page */}
+          <div className="pt-2">
+            <button
+              onClick={() => {
+                const basePath = getRoleBasePath(user?.role || '')
+                navigate({
+                  to: `${basePath}/projects/${milestone.projectId}/${milestone.id}/members`,
+                })
+              }}
+              className="flex items-center gap-2 text-sm text-[#2a9d8f] hover:text-[#1e7a6e] transition-colors w-full justify-center py-2 hover:bg-gray-50 rounded-md"
+            >
+              <span>Xem tất cả thành viên</span>
+              <ArrowRight className="h-4 w-4" />
+            </button>
           </div>
         </div>
 

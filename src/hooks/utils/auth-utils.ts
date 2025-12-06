@@ -28,3 +28,21 @@ export const getUserIdFromToken = (accessToken: string) => {
     } = jwtDecode(accessToken)
     return user.userId
 }
+
+/**
+ * Extract user role from sign-in response
+ * Tries multiple sources: res.data.user?.role, res.data.role, or decodes from JWT token
+ */
+export const extractRoleFromAuthResponse = (response: {
+    data: {
+        user?: { role?: string }
+        role?: string
+        accessToken: string
+    }
+}): string | undefined => {
+    return (
+        response.data.user?.role ??
+        response.data.role ??
+        (jwtDecode<{ role?: string }>(response.data.accessToken).role)
+    )
+}
