@@ -5,6 +5,7 @@ import { ChevronLeft, Users, Loader2 } from 'lucide-react'
 import { MembersList } from '@/features/projects/members/components'
 import type { ProjectMember } from '@/hooks/api/projects'
 import { useMemo } from 'react'
+import { ROLE } from '@/const'
 
 export default function MilestoneMembersPage() {
     const { projectId, milestoneId } = useParams({ strict: false })
@@ -22,7 +23,7 @@ export default function MilestoneMembersPage() {
             fullName: mentor.fullName || mentor.name || 'Unknown',
             email: mentor.email || '',
             avatarUrl: mentor.avatarUrl || mentor.avatar || '',
-            roleName: 'MENTOR' as const,
+            roleName: ROLE.MENTOR,
             isLeader: mentor.isLeader || false,
         }))
     }, [apiMembersData.mentors])
@@ -34,7 +35,7 @@ export default function MilestoneMembersPage() {
             fullName: talent.fullName || talent.name || 'Unknown',
             email: talent.email || '',
             avatarUrl: talent.avatarUrl || talent.avatar || '',
-            roleName: 'TALENT' as const,
+            roleName: ROLE.TALENT,
             isLeader: talent.isLeader || false,
         }))
     }, [apiMembersData.talents])
@@ -85,7 +86,7 @@ export default function MilestoneMembersPage() {
                 {/* Mentors Section */}
                 <MembersList
                     members={mentors}
-                    role="MENTOR"
+                    role={ROLE.MENTOR as 'MENTOR'}
                     title="Mentors"
                     emptyMessage="Chưa có mentor nào trong milestone"
                     iconColor="#2a9d8f"
@@ -95,7 +96,7 @@ export default function MilestoneMembersPage() {
                 {/* Talents Section */}
                 <MembersList
                     members={talents}
-                    role="TALENT"
+                    role={ROLE.TALENT as 'TALENT'}
                     title="Talents"
                     emptyMessage="Chưa có talent nào trong milestone"
                     iconColor="#e76f51"
