@@ -99,6 +99,7 @@ export default function ProjectForm({ initialData }: { initialData: ProjectFormD
                                         <Input
                                             {...field}
                                             disabled={!isUpdateMode}
+                                            className='bg-muted/20 text-foreground disabled:opacity-100'
                                         />
                                     </FormControl>
                                     <FormMessage />
@@ -120,6 +121,7 @@ export default function ProjectForm({ initialData }: { initialData: ProjectFormD
                                             {...field}
                                             disabled={!isUpdateMode}
                                             value={field.value}
+                                            className='bg-muted/20 text-foreground disabled:opacity-100'
                                         />
                                     </FormControl>
                                     <FormMessage />
@@ -137,7 +139,7 @@ export default function ProjectForm({ initialData }: { initialData: ProjectFormD
                                         Trạng thái
                                     </FormLabel>
                                     <FormControl>
-                                        <Input value={statusLabel} disabled />
+                                        <Input value={statusLabel} disabled className='bg-muted/20 text-foreground disabled:opacity-100' />
                                     </FormControl>
                                 </FormItem>
                             )}
@@ -167,6 +169,7 @@ export default function ProjectForm({ initialData }: { initialData: ProjectFormD
                                                     : 'Chưa có'
                                             }
                                             disabled
+                                            className='bg-muted/20 text-foreground disabled:opacity-100'
                                         />
                                     </FormControl>
                                     <FormMessage />
@@ -195,6 +198,7 @@ export default function ProjectForm({ initialData }: { initialData: ProjectFormD
                                                     : 'Chưa có'
                                             }
                                             disabled
+                                            className='bg-muted/20 text-foreground disabled:opacity-100'
                                         />
                                     </FormControl>
                                     <FormMessage />
@@ -252,7 +256,7 @@ export default function ProjectForm({ initialData }: { initialData: ProjectFormD
                                             rows={10}
                                             {...field}
                                             disabled={!isUpdateMode}
-                                            className="resize-none"
+                                            className='bg-muted/20 text-foreground disabled:opacity-100 resize-none'
                                         />
                                     </FormControl>
                                     <FormMessage />
