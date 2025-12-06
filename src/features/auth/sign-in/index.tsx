@@ -4,6 +4,8 @@ import { useNavigate, useSearch } from '@tanstack/react-router'
 import { useSignInWithGoogle } from '@/hooks/api'
 import { type CredentialResponse, GoogleLogin } from '@react-oauth/google'
 import { toast } from 'sonner'
+import { getRoleBasePath } from '@/lib/utils'
+import { extractRoleFromAuthResponse } from '@/hooks/utils/auth-utils'
 
 export default function SignIn() {
   const { redirect } = useSearch({ from: '/(auth)/sign-in/' })
@@ -16,7 +18,19 @@ export default function SignIn() {
       signInGoogle.mutate({ idToken }, {
         onSuccess: async (response) => {
           toast.success(response.message);
-          await navigate({ to: '/' });
+
+          // Extract role from auth response
+          const decodedRole = extractRoleFromAuthResponse(response)
+
+          // Use getRoleBasePath to get the correct route based on role
+          const basePath = getRoleBasePath(decodedRole || '')
+          const navigateRoute = basePath || '/'
+
+          // Wait a bit to ensure auth state is updated before navigating
+          // This prevents redirect back to sign-in page
+          setTimeout(() => {
+            navigate({ to: navigateRoute as any });
+          }, 100);
         },
       });
     }
