@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
-import { PROJECT_STATUS, PROJECT_STATUS_LABEL } from '../data/schema'
+import { PROJECT_STATUS } from '../data/schema'
 import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
 import { ConfirmDialog } from '@/components/confirm-dialog'
@@ -23,11 +23,16 @@ import { useLabAdminApproveProject, useUpdateProjectStatus } from '@/hooks/api/p
 import { AddMemberModal } from './add-member-modal'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { MoneyInput } from '@/components/admin/MoneyInput'
+import { ReferenceField } from '@/components/admin/ReferenceField'
 
 /* -------------------- SCHEMA -------------------- */
 const projectSchema = z.object({
     id: z.string(),
     title: z.string(),
+    companyId: z.string().optional(),
+    companyName: z.string().optional(),
+    createdBy: z.string().optional(),
+    createdByName: z.string().optional(),
     description: z.string(),
     status: z.string(),
     startDate: z.string(),
@@ -97,10 +102,6 @@ export default function ProjectForm({
 
     const approveProject = useLabAdminApproveProject();
 
-    const statusLabel =
-        PROJECT_STATUS_LABEL[initialData.status as keyof typeof PROJECT_STATUS_LABEL] ??
-        "Không xác định"
-
     return (
         <>
             <div className="max-w-5xl mx-auto py-2">
@@ -119,6 +120,28 @@ export default function ProjectForm({
                                         </FormLabel>
                                         <FormControl>
                                             <Input {...field} disabled className='bg-muted/20 text-foreground disabled:opacity-100' />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+
+                            <FormField
+                                control={form.control}
+                                name="companyName"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel className="text-base font-medium">
+                                            Công ty
+                                        </FormLabel>
+                                        <FormControl>
+                                            <ReferenceField
+                                                type="company"
+                                                value={field.value}
+                                                id={form.getValues("companyId")}
+                                                userRole={'LAB_ADMIN'}
+                                            />
+
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -147,18 +170,23 @@ export default function ProjectForm({
                                 )}
                             />
 
-                            {/* Trạng thái */}
                             <FormField
                                 control={form.control}
-                                name="status"
-                                render={() => (
+                                name="createdByName"
+                                render={({ field }) => (
                                     <FormItem>
                                         <FormLabel className="text-base font-medium">
-                                            Trạng thái
+                                            Quản lý dự án
                                         </FormLabel>
                                         <FormControl>
-                                            <Input value={statusLabel} disabled className='bg-muted/20 text-foreground disabled:opacity-100' />
+                                            <ReferenceField
+                                                type="user"
+                                                value={field.value}
+                                                id={form.getValues("createdBy")}
+                                                userRole={'LAB_ADMIN'}
+                                            />
                                         </FormControl>
+                                        <FormMessage />
                                     </FormItem>
                                 )}
                             />
