@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useMemo } from 'react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
@@ -15,15 +15,18 @@ import {
   Circle,
   ArrowRight,
 } from 'lucide-react'
-import { getAvatarUrl, getRoleBasePath, getStatusColor, getStatusLabel, getTagColor } from '@/lib/utils'
+import { getRoleBasePath, getStatusColor, getStatusLabel, getTagColor } from '@/lib/utils'
 import { useNavigate } from '@tanstack/react-router'
-import type { ProjectDetail } from '@/hooks/api/projects/types'
+import type { ProjectDetail, ProjectMentor } from '@/hooks/api/projects/types'
 import { toast } from 'sonner'
 import { projectKeys, useUpdateStatusHiring, useGetProjectApplicants } from '@/hooks/api/projects'
 import { useQueryClient } from '@tanstack/react-query'
 import { usePermission } from '@/hooks/usePermission'
 import { Plus } from 'lucide-react'
 import { useUser } from '@/context/UserContext'
+import { MembersAvatarList } from '@/components/members-avatar-list'
+import type { ProjectMember } from '@/hooks/api/projects'
+import { ROLE } from '@/const'
 
 interface ProjectOverviewTabProps {
   projectData: ProjectDetail;
@@ -41,6 +44,20 @@ export const ProjectOverviewTab: React.FC<ProjectOverviewTabProps> = ({ projectD
   // Get applicants count
   const { data: applicantsData } = useGetProjectApplicants(projectData.id)
   const applicantsCount = applicantsData?.data?.length || 0
+
+  // Map talents to ProjectMember format
+  const talents: ProjectMember[] = useMemo(() => {
+    return (projectData.talents || []).map((talent: any) => ({
+      projectMemberId: talent.id || talent.userId || '',
+      userId: talent.id || talent.userId || '',
+      fullName: talent.name || 'Unknown',
+      email: talent.email || '',
+      avatarUrl: talent.avatar || talent.avatarUrl || '',
+      roleName: ROLE.TALENT as 'TALENT',
+      isLeader: talent.leader || talent.isLeader || false,
+    }))
+  }, [projectData.talents])
+
 
   const handleToggleHiring = async (checked: boolean) => {
     updateStatusMutation.mutate(
@@ -157,22 +174,16 @@ export const ProjectOverviewTab: React.FC<ProjectOverviewTabProps> = ({ projectD
                 <span>Đội ngũ</span>
               </div>
               <div className="flex-1">
-                <div className="flex flex-wrap items-center gap-2">
-                  {projectData.talents && projectData.talents.length > 0 ? (
+                <div className="flex flex-wrap items-center gap-3">
+                  {talents.length > 0 ? (
                     <>
-                      {projectData.talents.slice(0, 8).map((member) => (
-                        <Avatar key={member.id} className="h-8 w-8 border-2 border-white shadow-sm hover:scale-110 transition-transform cursor-pointer">
-                          <AvatarImage src={member.avatar} />
-                          <AvatarFallback>
-                            <img src={getAvatarUrl(member.name)} alt={member.name} />
-                          </AvatarFallback>
-                        </Avatar>
-                      ))}
-                      {projectData.talents.length > 8 && (
-                        <div className="h-8 w-8 rounded-full bg-gray-100 border-2 border-white shadow-sm flex items-center justify-center text-xs font-semibold text-gray-600">
-                          +{projectData.talents.length - 8}
-                        </div>
-                      )}
+                      <MembersAvatarList
+                        members={talents}
+                        size="md"
+                        maxVisible={8}
+                        showCount={false}
+                        emptyMessage="Chưa có thành viên trong đội ngũ"
+                      />
                       <button
                         onClick={() => navigate({ to: `${getRoleBasePath(user.role)}/projects/${projectData.id}/members` })}
                         className="h-8 px-3 rounded-full bg-[#2a9d8f]/10 hover:bg-[#2a9d8f]/20 text-[#2a9d8f] text-xs font-medium flex items-center gap-1 transition-colors border border-[#2a9d8f]/30"
@@ -182,9 +193,16 @@ export const ProjectOverviewTab: React.FC<ProjectOverviewTabProps> = ({ projectD
                       </button>
                     </>
                   ) : (
-                    <>
+                    <div className="flex items-center gap-2">
                       <span className="text-sm text-gray-500">Chưa có thành viên trong đội ngũ</span>
-                    </>
+                      <button
+                        onClick={() => navigate({ to: `${getRoleBasePath(user.role)}/projects/${projectData.id}/members` })}
+                        className="h-8 px-3 rounded-full bg-[#2a9d8f]/10 hover:bg-[#2a9d8f]/20 text-[#2a9d8f] text-xs font-medium flex items-center gap-1 transition-colors border border-[#2a9d8f]/30"
+                      >
+                        <Plus className="h-3 w-3" />
+                        Thêm thành viên
+                      </button>
+                    </div>
                   )}
                 </div>
               </div>
@@ -196,12 +214,13 @@ export const ProjectOverviewTab: React.FC<ProjectOverviewTabProps> = ({ projectD
                 <span>Giảng viên</span>
               </div>
               <div className="flex-1 flex flex-wrap items-center gap-2">
-                {projectData.mentors ? projectData.mentors.map((leader) => (
-                  <div key={leader.id} className="inline-flex items-center gap-2 bg-gray-100 rounded-full px-2 py-1">
+                {projectData.mentors ? projectData.mentors.map((mentor: ProjectMentor) => (
+                  <div key={mentor.id} className="inline-flex items-center gap-2 bg-gray-100 rounded-full px-2 py-1">
                     <Avatar className="h-6 w-6">
-                      <AvatarFallback>{leader.name[0]}</AvatarFallback>
+                      <AvatarImage src={mentor.avatar} />
+                      <AvatarFallback>{mentor.name[0]}</AvatarFallback>
                     </Avatar>
-                    <span className="font-medium text-sm text-gray-800">{leader.name}</span>
+                    <span className="font-medium text-sm text-gray-800">{mentor.name}</span>
                   </div>
                 )) : (
                   <span className="text-sm text-gray-500">Chưa có giảng viên phụ trách</span>

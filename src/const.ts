@@ -6,4 +6,5 @@ export const ROLE = {
   MENTOR: 'MENTOR',
   COMPANY: 'COMPANY',
   USER: 'USER',
+  TALENT: 'TALENT',
 }

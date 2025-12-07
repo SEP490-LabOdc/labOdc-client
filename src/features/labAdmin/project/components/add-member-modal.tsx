@@ -22,7 +22,7 @@ import { toast } from 'sonner'
 interface SystemUser {
   id: string;
   name: string;
-  avatar: string;
+  avatarUrl: string;
   email: string;
 }
 
@@ -53,7 +53,7 @@ export function AddMemberModal({
     id: m.id,
     name: m.name,
     email: m.email,
-    avatar: `https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(m.name)}`,
+    avatarUrl: `https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(m.name)}`,
   }))
 
   const filteredUsers = cleanedMentors.filter(user =>
@@ -168,7 +168,7 @@ export function AddMemberModal({
                           }`}
                       >
                         <Avatar className="h-8 w-8">
-                          <AvatarImage src={user.avatar} />
+                          <AvatarImage src={user.avatarUrl} />
                           <AvatarFallback>{user.name[0]}</AvatarFallback>
                         </Avatar>
                         <div>

@@ -4,6 +4,7 @@ import { Badge } from '@/components/ui/badge'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { type Project } from '../data/schema'
 import { Link } from '@tanstack/react-router'
+import { getRoleBasePath } from '@/lib/utils'
 
 export const createProjectsColumns = (userRole: string): ColumnDef<Project>[] => [
   {
@@ -43,18 +44,8 @@ export const createProjectsColumns = (userRole: string): ColumnDef<Project>[] =>
       const projectId = row.original.id
 
       const getProjectLink = (role: string, id: string) => {
-        switch (role) {
-          case 'LAB_ADMIN':
-            return { to: '/lab-admin/projects/$projectId' as const, params: { projectId: id } }
-          case 'MENTOR':
-            return { to: '/mentor/projects/$projectId' as const, params: { projectId: id } }
-          case 'SYSTEM_ADMIN':
-          case 'COMPANY':
-          case 'USER':
-            return { to: '/talent/projects/$projectId' as const, params: { projectId: id } }
-          default:
-            return { to: '/talent/projects/$projectId' as const, params: { projectId: id } }
-        }
+        const basePath = getRoleBasePath(role)
+        return { to: `${basePath}/projects/$projectId` as const, params: { projectId: id } }
       }
 
       const linkProps = getProjectLink(userRole, projectId)

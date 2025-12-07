@@ -3,7 +3,7 @@ import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Link, useNavigate } from '@tanstack/react-router'
-import { cn } from '@/lib/utils'
+import { cn, getRoleBasePath } from '@/lib/utils'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
@@ -11,7 +11,7 @@ import { Loader2, LogIn } from 'lucide-react'
 import { PasswordInput } from '@/components/password-input'
 import { toast } from 'sonner'
 import { useSignIn } from '@/hooks/api/auth'
-import { jwtDecode } from 'jwt-decode'
+import { extractRoleFromAuthResponse } from '@/hooks/utils/auth-utils'
 
 const formSchema = z.object({
   email: z.email({
@@ -39,30 +39,23 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
     },
   })
 
-  type UserRole = 'SYSTEM_ADMIN' | 'LAB_ADMIN' | 'MENTOR' | 'COMPANY' | 'USER';
-
-  const roleNavigateRoute: Record<UserRole, string> = {
-    SYSTEM_ADMIN: '/admin/',
-    LAB_ADMIN: '/lab-admin/',
-    MENTOR: '/mentor',
-    COMPANY: '/company-manage/',
-    USER: '/'
-  };
-
   function onSubmit(data: z.infer<typeof formSchema>) {
     signIn.mutate(data, {
       onSuccess: async (res) => {
         toast.success('Đăng nhập thành công!')
 
-        const decodedRole =
-          res.data.user?.role ??
-          res.data.role ??
-          (jwtDecode<{ role?: string }>(res.data.accessToken).role);
+        // Extract role from auth response
+        const decodedRole = extractRoleFromAuthResponse(res)
 
-        const role = decodedRole as UserRole | undefined;
-        const navagatedRoute = role ? roleNavigateRoute[role] : '/';
+        // Use getRoleBasePath to get the correct route based on role
+        const basePath = getRoleBasePath(decodedRole || '')
+        const navigateRoute = basePath || '/'
 
-        await navigate({ to: navagatedRoute })
+        // Wait a bit to ensure auth state is updated before navigating
+        // This prevents redirect back to sign-in page
+        setTimeout(() => {
+          navigate({ to: navigateRoute as any })
+        }, 100)
       },
       onError: () => {
         toast.error('Đăng nhập thất bại!')

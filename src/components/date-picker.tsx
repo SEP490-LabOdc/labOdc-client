@@ -1,4 +1,5 @@
 import { format } from 'date-fns'
+import { vi } from 'date-fns/locale'
 import { Calendar as CalendarIcon } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
@@ -33,7 +34,7 @@ export function DatePicker({
           disabled={disabled}
         >
           {selected ? (
-            format(selected, 'MMM d, yyyy')
+            format(selected, 'dd/MM/yyyy', { locale: vi })
           ) : (
             <span>{placeholder}</span>
           )}
@@ -46,6 +47,7 @@ export function DatePicker({
           captionLayout='dropdown'
           selected={selected}
           onSelect={onSelect}
+          locale={vi}
           disabled={(date: Date) => {
             if (disabled) return true
             if (minDate) {
