@@ -13,7 +13,7 @@ export function useUpdateMilestoneMemberLeader() {
         }) => {
             const { data } = await apiRequest.patch(
                 `/api/v1/project-milestones/${payload.milestoneId}/milestone-members/${payload.milestoneMemberId}/role`,
-                { leader: payload.leader }
+                { isLeader: payload.leader }
             )
             return data
         },

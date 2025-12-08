@@ -12,7 +12,15 @@ export interface PayMilestonePayload {
 }
 
 export interface PaymentDepositResponse {
-  paymentUrl?: string
+  bin?: string
+  accountNumber?: string
+  orderCode?: number
+  amount?: number
+  description?: string
+  checkoutUrl?: string
+  qrCode?: string
+  status?: string
+  paymentUrl?: string // Keep for backward compatibility
   paymentId?: string
   [key: string]: any
 }

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Wallet } from 'lucide-react'
 import { usePermission } from '@/hooks/usePermission'
 import {
@@ -7,10 +7,13 @@ import {
     WithdrawDialog,
     BankAccountDialog,
     DepositDialog,
+    PaymentSuccessDialog,
+    PaymentFailureDialog,
     type Transaction
 } from './components'
 import { useUser } from '@/context/UserContext'
 import { useGetMyWallet } from '@/hooks/api/wallet'
+import { useSearch, useNavigate } from '@tanstack/react-router'
 
 // Mock Data
 const MOCK_TRANSACTIONS: Transaction[] = [
@@ -69,13 +72,67 @@ const MOCK_BANK_ACCOUNT = {
 export const MyWalletPage: React.FC = () => {
     const { user, isCompany } = usePermission()
     const { user: userProfile } = useUser()
+    const navigate = useNavigate()
+
+    // Get search params from URL (callback params)
+    const search = useSearch({ strict: false }) as {
+        code?: string
+        id?: string
+        cancel?: string
+        status?: string
+        orderCode?: string
+    }
 
     const [isWithdrawOpen, setIsWithdrawOpen] = useState(false)
     const [isBankAccountOpen, setIsBankAccountOpen] = useState(false)
     const [isDepositOpen, setIsDepositOpen] = useState(false)
+    const [isPaymentSuccessOpen, setIsPaymentSuccessOpen] = useState(false)
+    const [isPaymentFailureOpen, setIsPaymentFailureOpen] = useState(false)
+    const [paymentResult, setPaymentResult] = useState<{
+        orderCode?: string
+        errorCode?: string
+        isCancelled?: boolean
+        amount?: number
+    }>({})
 
     // Fetch wallet data from API
-    const { data: walletResponse } = useGetMyWallet()
+    const { data: walletResponse, refetch: refetchWallet } = useGetMyWallet()
+
+    // Handle payment callback
+    useEffect(() => {
+        if (search.code || search.status || search.cancel) {
+            // Check if payment was successful
+            if (search.code === '00' && search.status !== 'CANCELLED' && !search.cancel) {
+                setPaymentResult({
+                    orderCode: search.orderCode,
+                    amount: undefined // Could be extracted from URL if available
+                })
+                setIsPaymentSuccessOpen(true)
+                // Refetch wallet data to update balance
+                refetchWallet()
+            } else {
+                const isCancelled = search.cancel === 'true' || search.status === 'CANCELLED'
+                setPaymentResult({
+                    orderCode: search.orderCode,
+                    errorCode: search.code,
+                    isCancelled
+                })
+                setIsPaymentFailureOpen(true)
+            }
+
+            // Clear URL params after showing notification
+            const url = new URL(window.location.href)
+            url.searchParams.delete('code')
+            url.searchParams.delete('id')
+            url.searchParams.delete('cancel')
+            url.searchParams.delete('status')
+            url.searchParams.delete('orderCode')
+            navigate({
+                to: url.pathname,
+                replace: true,
+            })
+        }
+    }, [search.code, search.id, search.cancel, search.status, search.orderCode, navigate, refetchWallet])
 
     // Use API data if available, otherwise fallback to mock data
     const availableBalance = walletResponse?.data?.balance ?? 0
@@ -234,6 +291,34 @@ export const MyWalletPage: React.FC = () => {
                     onClose={() => setIsDepositOpen(false)}
                 />
             )}
+
+            {/* Payment Success Dialog */}
+            <PaymentSuccessDialog
+                isOpen={isPaymentSuccessOpen}
+                onClose={() => {
+                    setIsPaymentSuccessOpen(false)
+                    setPaymentResult({})
+                }}
+                orderCode={paymentResult.orderCode}
+                amount={paymentResult.amount}
+            />
+
+            {/* Payment Failure Dialog */}
+            <PaymentFailureDialog
+                isOpen={isPaymentFailureOpen}
+                onClose={() => {
+                    setIsPaymentFailureOpen(false)
+                    setPaymentResult({})
+                }}
+                onRetry={() => {
+                    setIsPaymentFailureOpen(false)
+                    setIsDepositOpen(true)
+                    setPaymentResult({})
+                }}
+                orderCode={paymentResult.orderCode}
+                errorCode={paymentResult.errorCode}
+                isCancelled={paymentResult.isCancelled}
+            />
         </>
     )
 }

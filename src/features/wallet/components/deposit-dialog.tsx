@@ -13,6 +13,8 @@ import {
 import { Plus, Wallet } from 'lucide-react'
 import { toast } from 'sonner'
 import { usePaymentDeposit } from '@/hooks/api/payment'
+import { useUser } from '@/context/UserContext'
+import { getRoleBasePath } from '@/lib/utils'
 
 interface DepositDialogProps {
     isOpen: boolean
@@ -26,6 +28,7 @@ export const DepositDialog: React.FC<DepositDialogProps> = ({
     onClose
 }) => {
     const [amount, setAmount] = useState<string>('')
+    const { user } = useUser()
 
     const paymentDeposit = usePaymentDeposit()
 
@@ -38,16 +41,23 @@ export const DepositDialog: React.FC<DepositDialogProps> = ({
             return
         }
 
+        // Get wallet URL based on user role
+        const basePath = getRoleBasePath(user?.role || '')
+        const walletUrl = `${window.location.origin}${basePath}/wallet`
+
         try {
             const result = await paymentDeposit.mutateAsync({
                 amount: amountNum,
-                returnUrl: `${window.location.origin}/company-manage/wallet`,
-                cancelUrl: `${window.location.origin}/company-manage/wallet`
+                returnUrl: walletUrl,
+                cancelUrl: walletUrl
             })
 
-            if (result.paymentUrl) {
+            // Use checkoutUrl from response (or fallback to paymentUrl for backward compatibility)
+            const paymentUrl = result?.data?.checkoutUrl
+
+            if (paymentUrl) {
                 // Redirect to payment URL
-                window.location.href = result.paymentUrl
+                window.location.href = paymentUrl
             } else {
                 toast.error('Không thể tạo link thanh toán. Vui lòng thử lại.')
             }
