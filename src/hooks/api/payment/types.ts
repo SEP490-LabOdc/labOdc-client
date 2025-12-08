@@ -1,14 +1,10 @@
-export interface CreatePaymentLinkPayload {
-  milestoneId: string
-  projectId: string
-  companyId: string
-  milestoneTitle: string
+export interface PaymentDepositPayload {
   amount: number
   returnUrl: string
   cancelUrl: string
 }
 
-export interface PaymentLinkResponse {
+export interface PaymentDepositResponse {
   paymentUrl?: string
   paymentId?: string
   [key: string]: any

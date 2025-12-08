@@ -1,21 +1,21 @@
 import apiRequest from '@/config/request.ts'
 import { useMutation } from '@tanstack/react-query'
-import type { CreatePaymentLinkPayload, PaymentLinkResponse } from './types'
+import type { PaymentDepositPayload, PaymentDepositResponse } from './types'
 
 /**
- * Hook to create a payment link for milestone deposit
+ * Hook to create a payment deposit
  */
-export function useCreatePaymentLink() {
-  return useMutation<PaymentLinkResponse, Error, CreatePaymentLinkPayload>({
-    mutationFn: async (payload: CreatePaymentLinkPayload) => {
-      const { data } = await apiRequest.post<PaymentLinkResponse>(
-        '/api/v1/payment/create-link',
+export function usePaymentDeposit() {
+  return useMutation<PaymentDepositResponse, Error, PaymentDepositPayload>({
+    mutationFn: async (payload: PaymentDepositPayload) => {
+      const { data } = await apiRequest.post<PaymentDepositResponse>(
+        '/api/v1/payment/deposit',
         payload
       )
       return data
     },
     onError: (error: Error) => {
-      console.error('Create payment link failed:', error)
+      console.error('Payment deposit failed:', error)
       throw error
     },
   })

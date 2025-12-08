@@ -78,8 +78,8 @@ export const MyWalletPage: React.FC = () => {
     const { data: walletResponse } = useGetMyWallet()
 
     // Use API data if available, otherwise fallback to mock data
-    const availableBalance = walletResponse?.data?.balance ?? 3500000
-    const pendingBalance = walletResponse?.data?.heldBalance ?? 2000000
+    const availableBalance = walletResponse?.data?.balance ?? 0
+    const pendingBalance = walletResponse?.data?.heldBalance ?? 0
 
     // Mock data for fields not yet available from API
     const [transactions] = useState<Transaction[]>(MOCK_TRANSACTIONS)
@@ -232,7 +232,6 @@ export const MyWalletPage: React.FC = () => {
                 <DepositDialog
                     isOpen={isDepositOpen}
                     onClose={() => setIsDepositOpen(false)}
-                    companyId={user.userId}
                 />
             )}
         </>
