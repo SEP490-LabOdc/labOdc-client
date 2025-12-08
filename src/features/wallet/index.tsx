@@ -14,6 +14,7 @@ import {
 import { useUser } from '@/context/UserContext'
 import { useGetMyWallet } from '@/hooks/api/wallet'
 import { useSearch, useNavigate } from '@tanstack/react-router'
+import { Main } from '@/components/layout/main'
 
 // Mock Data
 const MOCK_TRANSACTIONS: Transaction[] = [
@@ -162,7 +163,7 @@ export const MyWalletPage: React.FC = () => {
     }
 
     return (
-        <>
+        <Main>
             <div className="max-w-7xl mx-auto space-y-6">
                 {/* Header */}
                 <div className="flex items-center justify-between">
@@ -187,7 +188,7 @@ export const MyWalletPage: React.FC = () => {
                     </span>
                     <span className="text-gray-400">•</span>
                     <span className="text-gray-500">
-                        Role: {user?.role === 'MENTOR' ? 'Mentor' : 'Talent'}
+                        Role: {user?.role}
                     </span>
                 </div>
                 {/* Info Cards */}
@@ -319,7 +320,7 @@ export const MyWalletPage: React.FC = () => {
                 errorCode={paymentResult.errorCode}
                 isCancelled={paymentResult.isCancelled}
             />
-        </>
+        </Main>
     )
 }
 

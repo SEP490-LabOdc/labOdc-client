@@ -33,7 +33,7 @@ export const DepositDialog: React.FC<DepositDialogProps> = ({
     const paymentDeposit = usePaymentDeposit()
 
     const amountNum = parseFloat(amount) || 0
-    const minDeposit = 1000 // Tối thiểu 100k
+    const minDeposit = 2000
 
     const handleSubmit = async () => {
         if (amountNum < minDeposit) {
