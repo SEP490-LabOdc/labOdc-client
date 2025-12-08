@@ -13,7 +13,7 @@ import {
 } from './components'
 
 const MilestoneDetailPage: React.FC = () => {
-  const { milestoneId } = useParams({ strict: false })
+  const { milestoneId, projectId } = useParams({ strict: false })
   const { data: milestoneData, isLoading, error } = useGetMilestoneById(milestoneId as string)
   const { user } = usePermission()
 
@@ -35,6 +35,7 @@ const MilestoneDetailPage: React.FC = () => {
             milestone={milestone}
             paymentStatus={'PENDING_DEPOSIT'}
             escrowBalance={milestone.escrowBalance || 0}
+            projectId={projectId as string || milestone.projectId}
           />
         </div>
 
