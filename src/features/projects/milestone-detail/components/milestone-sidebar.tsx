@@ -21,11 +21,14 @@ import { ConfirmReleaseDialog } from './confirm-release-dialog'
 import { MembersAvatarList } from '@/components/members-avatar-list'
 import type { ProjectMember } from '@/hooks/api/projects'
 import { ROLE } from '@/const'
+import { usePayMilestone } from '@/hooks/api/payment'
+import { toast } from 'sonner'
 
 interface MilestoneSidebarProps {
   milestone: Milestone
   paymentStatus?: 'PENDING_DEPOSIT' | 'DEPOSITED' | 'RELEASED'
   escrowBalance?: number
+  projectId?: string
 }
 
 const formatVND = (v: number) => new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(v)
@@ -33,11 +36,14 @@ const formatVND = (v: number) => new Intl.NumberFormat('vi-VN', { style: 'curren
 export const MilestoneSidebar: React.FC<MilestoneSidebarProps> = ({
   milestone,
   paymentStatus = 'PENDING_DEPOSIT',
-  escrowBalance = 0
+  escrowBalance = 0,
+  projectId
 }) => {
   const { isCompany, user } = usePermission()
   const navigate = useNavigate()
-  const [isConfirmOpen, setIsConfirmOpen] = useState(false)
+  const [isConfirmDepositOpen, setIsConfirmDepositOpen] = useState(false)
+  const [isConfirmReleaseOpen, setIsConfirmReleaseOpen] = useState(false)
+  const payMilestone = usePayMilestone()
 
   const calculateDaysRemaining = (endDate: string): string => {
     const end = new Date(endDate)
@@ -83,10 +89,40 @@ export const MilestoneSidebar: React.FC<MilestoneSidebarProps> = ({
   const hasEnoughBalance = escrowBalance >= amount
   const canRelease = isCompany && paymentStatus === 'DEPOSITED' && hasEnoughBalance
 
+  // Handle nạp tiền vào Escrow
+  const handleDepositToEscrow = async () => {
+    if (!projectId) {
+      toast.error('Không tìm thấy thông tin dự án')
+      return
+    }
+
+    try {
+      const result = await payMilestone.mutateAsync({
+        milestoneId: milestone.id,
+        projectId: projectId,
+        milestoneTitle: milestone.title,
+        amount: amount
+      })
+
+      if (result.paymentUrl) {
+        // Redirect to payment URL
+        window.location.href = result.paymentUrl
+      } else {
+        toast.success('Nạp tiền vào Escrow thành công!')
+        setIsConfirmDepositOpen(false)
+        // Optionally refresh data here
+      }
+    } catch (error: any) {
+      toast.error(error?.message || 'Có lỗi xảy ra khi nạp tiền vào Escrow')
+    }
+  }
+
+  // Handle giải ngân/phân bổ tiền (chưa có API)
   const handleReleaseFunds = () => {
-    // TODO: Integrate with API
+    // TODO: Integrate with release funds API
     console.log('Releasing funds for milestone:', milestone.id)
-    setIsConfirmOpen(false)
+    toast.info('Chức năng giải ngân đang được phát triển')
+    setIsConfirmReleaseOpen(false)
   }
 
   return (
@@ -210,9 +246,14 @@ export const MilestoneSidebar: React.FC<MilestoneSidebarProps> = ({
                     </div>
                   </div>
                 </div>
-                <Button size="sm" className="w-full bg-orange-600 hover:bg-orange-700 text-xs">
+                <Button
+                  size="sm"
+                  className="w-full bg-orange-600 hover:bg-orange-700 text-xs"
+                  onClick={() => setIsConfirmDepositOpen(true)}
+                  disabled={payMilestone.isPending}
+                >
                   <Wallet className="w-3 h-3 mr-1.5" />
-                  Nạp vào Escrow
+                  {payMilestone.isPending ? 'Đang xử lý...' : 'Nạp vào Escrow'}
                 </Button>
               </div>
             )}
@@ -252,7 +293,7 @@ export const MilestoneSidebar: React.FC<MilestoneSidebarProps> = ({
                   size="sm"
                   className="w-full bg-green-600 hover:bg-green-700 text-white text-xs font-semibold"
                   disabled={!canRelease}
-                  onClick={() => setIsConfirmOpen(true)}
+                  onClick={() => setIsConfirmReleaseOpen(true)}
                 >
                   <CheckCircle className="w-3 h-3 mr-1.5" />
                   Giải ngân {formatVND(amount)}
@@ -304,15 +345,31 @@ export const MilestoneSidebar: React.FC<MilestoneSidebarProps> = ({
         )}
       </CardContent>
 
-      {/* Confirm Release Dialog */}
+      {/* Confirm Deposit Dialog - Nạp tiền vào Escrow */}
       <ConfirmReleaseDialog
-        isOpen={isConfirmOpen}
-        onClose={() => setIsConfirmOpen(false)}
+        isOpen={isConfirmDepositOpen}
+        onClose={() => setIsConfirmDepositOpen(false)}
+        onConfirm={handleDepositToEscrow}
+        amount={amount}
+        systemFee={systemFee}
+        mentorShare={mentorShare}
+        teamShare={teamShare}
+        isLoading={payMilestone.isPending}
+        title="Xác nhận Nạp tiền vào Escrow"
+        description={`Bạn có chắc chắn muốn nạp ${formatVND(amount)} vào Escrow cho milestone này?`}
+        showDistribution={false}
+      />
+
+      {/* Confirm Release Dialog - Giải ngân */}
+      <ConfirmReleaseDialog
+        isOpen={isConfirmReleaseOpen}
+        onClose={() => setIsConfirmReleaseOpen(false)}
         onConfirm={handleReleaseFunds}
         amount={amount}
         systemFee={systemFee}
         mentorShare={mentorShare}
         teamShare={teamShare}
+        isLoading={false}
       />
     </Card>
   )

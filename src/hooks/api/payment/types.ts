@@ -4,6 +4,13 @@ export interface PaymentDepositPayload {
   cancelUrl: string
 }
 
+export interface PayMilestonePayload {
+  milestoneId: string
+  projectId: string
+  milestoneTitle: string
+  amount: number
+}
+
 export interface PaymentDepositResponse {
   paymentUrl?: string
   paymentId?: string
