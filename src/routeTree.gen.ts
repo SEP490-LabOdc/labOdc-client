@@ -70,6 +70,7 @@ import { Route as AuthenticatedCompanyManageSettingsIndexRouteImport } from './r
 import { Route as AuthenticatedCompanyManageProjectsIndexRouteImport } from './routes/_authenticated/company-manage/projects/index'
 import { Route as AuthenticatedAdminUsersIndexRouteImport } from './routes/_authenticated/admin/users/index'
 import { Route as AuthenticatedAdminTasksIndexRouteImport } from './routes/_authenticated/admin/tasks/index'
+import { Route as AuthenticatedAdminSystemConfigIndexRouteImport } from './routes/_authenticated/admin/system-config/index'
 import { Route as AuthenticatedAdminSettingsIndexRouteImport } from './routes/_authenticated/admin/settings/index'
 import { Route as AuthenticatedAdminCompaniesIndexRouteImport } from './routes/_authenticated/admin/companies/index'
 import { Route as AuthenticatedTalentSettingsAppearanceRouteImport } from './routes/_authenticated/talent/settings/appearance'
@@ -450,6 +451,12 @@ const AuthenticatedAdminTasksIndexRoute =
     path: '/tasks/',
     getParentRoute: () => AuthenticatedAdminRouteRoute,
   } as any)
+const AuthenticatedAdminSystemConfigIndexRoute =
+  AuthenticatedAdminSystemConfigIndexRouteImport.update({
+    id: '/system-config/',
+    path: '/system-config/',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
 const AuthenticatedAdminSettingsIndexRoute =
   AuthenticatedAdminSettingsIndexRouteImport.update({
     id: '/',
@@ -755,6 +762,7 @@ export interface FileRoutesByFullPath {
   '/talent/settings/appearance': typeof AuthenticatedTalentSettingsAppearanceRoute
   '/admin/companies': typeof AuthenticatedAdminCompaniesIndexRoute
   '/admin/settings/': typeof AuthenticatedAdminSettingsIndexRoute
+  '/admin/system-config': typeof AuthenticatedAdminSystemConfigIndexRoute
   '/admin/tasks': typeof AuthenticatedAdminTasksIndexRoute
   '/admin/users': typeof AuthenticatedAdminUsersIndexRoute
   '/company-manage/projects': typeof AuthenticatedCompanyManageProjectsIndexRoute
@@ -843,6 +851,7 @@ export interface FileRoutesByTo {
   '/talent/settings/appearance': typeof AuthenticatedTalentSettingsAppearanceRoute
   '/admin/companies': typeof AuthenticatedAdminCompaniesIndexRoute
   '/admin/settings': typeof AuthenticatedAdminSettingsIndexRoute
+  '/admin/system-config': typeof AuthenticatedAdminSystemConfigIndexRoute
   '/admin/tasks': typeof AuthenticatedAdminTasksIndexRoute
   '/admin/users': typeof AuthenticatedAdminUsersIndexRoute
   '/company-manage/projects': typeof AuthenticatedCompanyManageProjectsIndexRoute
@@ -948,6 +957,7 @@ export interface FileRoutesById {
   '/_authenticated/talent/settings/appearance': typeof AuthenticatedTalentSettingsAppearanceRoute
   '/_authenticated/admin/companies/': typeof AuthenticatedAdminCompaniesIndexRoute
   '/_authenticated/admin/settings/': typeof AuthenticatedAdminSettingsIndexRoute
+  '/_authenticated/admin/system-config/': typeof AuthenticatedAdminSystemConfigIndexRoute
   '/_authenticated/admin/tasks/': typeof AuthenticatedAdminTasksIndexRoute
   '/_authenticated/admin/users/': typeof AuthenticatedAdminUsersIndexRoute
   '/_authenticated/company-manage/projects/': typeof AuthenticatedCompanyManageProjectsIndexRoute
@@ -1051,6 +1061,7 @@ export interface FileRouteTypes {
     | '/talent/settings/appearance'
     | '/admin/companies'
     | '/admin/settings/'
+    | '/admin/system-config'
     | '/admin/tasks'
     | '/admin/users'
     | '/company-manage/projects'
@@ -1139,6 +1150,7 @@ export interface FileRouteTypes {
     | '/talent/settings/appearance'
     | '/admin/companies'
     | '/admin/settings'
+    | '/admin/system-config'
     | '/admin/tasks'
     | '/admin/users'
     | '/company-manage/projects'
@@ -1243,6 +1255,7 @@ export interface FileRouteTypes {
     | '/_authenticated/talent/settings/appearance'
     | '/_authenticated/admin/companies/'
     | '/_authenticated/admin/settings/'
+    | '/_authenticated/admin/system-config/'
     | '/_authenticated/admin/tasks/'
     | '/_authenticated/admin/users/'
     | '/_authenticated/company-manage/projects/'
@@ -1739,6 +1752,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminTasksIndexRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
     }
+    '/_authenticated/admin/system-config/': {
+      id: '/_authenticated/admin/system-config/'
+      path: '/system-config'
+      fullPath: '/admin/system-config'
+      preLoaderRoute: typeof AuthenticatedAdminSystemConfigIndexRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
     '/_authenticated/admin/settings/': {
       id: '/_authenticated/admin/settings/'
       path: '/'
@@ -2104,6 +2124,7 @@ interface AuthenticatedAdminRouteRouteChildren {
   AuthenticatedAdminSettingsRouteRoute: typeof AuthenticatedAdminSettingsRouteRouteWithChildren
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
   AuthenticatedAdminCompaniesIndexRoute: typeof AuthenticatedAdminCompaniesIndexRoute
+  AuthenticatedAdminSystemConfigIndexRoute: typeof AuthenticatedAdminSystemConfigIndexRoute
   AuthenticatedAdminTasksIndexRoute: typeof AuthenticatedAdminTasksIndexRoute
   AuthenticatedAdminUsersIndexRoute: typeof AuthenticatedAdminUsersIndexRoute
   AuthenticatedAdminCompaniesCompanyIdIndexRoute: typeof AuthenticatedAdminCompaniesCompanyIdIndexRoute
@@ -2118,6 +2139,8 @@ const AuthenticatedAdminRouteRouteChildren: AuthenticatedAdminRouteRouteChildren
     AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
     AuthenticatedAdminCompaniesIndexRoute:
       AuthenticatedAdminCompaniesIndexRoute,
+    AuthenticatedAdminSystemConfigIndexRoute:
+      AuthenticatedAdminSystemConfigIndexRoute,
     AuthenticatedAdminTasksIndexRoute: AuthenticatedAdminTasksIndexRoute,
     AuthenticatedAdminUsersIndexRoute: AuthenticatedAdminUsersIndexRoute,
     AuthenticatedAdminCompaniesCompanyIdIndexRoute:

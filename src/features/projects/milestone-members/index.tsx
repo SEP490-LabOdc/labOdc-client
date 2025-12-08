@@ -76,6 +76,7 @@ export default function MilestoneMembersPage() {
                     )
                 },
                 onError: (error) => {
+                    toast.error('Cập nhật thất bại')
                     console.error('Error updating milestone member leader:', error)
                 },
             }
