@@ -34,6 +34,7 @@ export const MembersList: React.FC<MembersListProps> = ({
     removeLeaderLabel = 'Gỡ leader',
     badgeLabel = 'Leader',
 }) => {
+    console.log(members)
     return (
         <Card className="mb-6">
             <CardHeader>
@@ -51,7 +52,7 @@ export const MembersList: React.FC<MembersListProps> = ({
                                 className="p-4 border rounded-lg hover:shadow-md transition-shadow bg-white relative"
                             >
                                 <div className="absolute top-3 right-3 flex items-center gap-2">
-                                    {member.isLeader && (
+                                    {member.leader && (
                                         <Badge className="bg-yellow-100 text-yellow-800">
                                             {badgeLabel}
                                         </Badge>
@@ -69,7 +70,7 @@ export const MembersList: React.FC<MembersListProps> = ({
                                             {role === 'MENTOR' ? (
                                                 <>
                                                     {member.fullName}
-                                                    {member.isLeader && (
+                                                    {member.leader && (
                                                         <Crown className="h-4 w-4 text-yellow-500 fill-yellow-500" />
                                                     )}
                                                 </>
@@ -83,20 +84,20 @@ export const MembersList: React.FC<MembersListProps> = ({
                                 {showActionButton && onToggleLeader && (
                                     <Button
                                         size="sm"
-                                        variant={member.isLeader ? "default" : "outline"}
-                                        className={`w-full mt-3 ${member.isLeader
+                                        variant={member.leader ? "default" : "outline"}
+                                        className={`w-full mt-3 ${member.leader
                                             ? 'bg-yellow-500 hover:bg-yellow-600 text-white'
                                             : 'border-yellow-500 text-yellow-600 hover:bg-yellow-50'
                                             }`}
                                         disabled={isActionLoading}
-                                        onClick={() => onToggleLeader(member.userId, member.isLeader || false)}
+                                        onClick={() => onToggleLeader(member.userId, member.leader || false)}
                                     >
                                         {isActionLoading ? (
                                             <>
                                                 <Loader2 className="h-4 w-4 mr-2 animate-spin" />
                                                 Đang xử lý...
                                             </>
-                                        ) : member.isLeader ? (
+                                        ) : member.leader ? (
                                             <>
                                                 <Crown className="h-4 w-4 mr-2" />
                                                 {removeLeaderLabel}

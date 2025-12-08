@@ -43,7 +43,7 @@ export interface ProjectMember {
   email: string
   avatarUrl?: string
   roleName: 'MENTOR' | 'TALENT'
-  isLeader?: boolean
+  leader?: boolean
 }
 
 export interface ProjectListItem {
