@@ -56,8 +56,6 @@ export default function Project() {
     // Giả định API response có cấu trúc { data: Company[], ... }
     const projects = data?.data || [];
 
-    console.log(projects);
-
     return (
         <>
             <ProjectsProvider>

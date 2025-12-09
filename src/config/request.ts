@@ -32,6 +32,7 @@ const refreshApiRequest = axios.create({
 
 let isRefreshing = false;
 let failedQueue: QueueItem[] = [];
+let isHandlingAuthFailure = false; // Flag to prevent multiple auth failure handlers
 
 const processQueue = (error: Error | null, token: string | null = null): void => {
   failedQueue.forEach(({ resolve, reject }) => {
@@ -70,16 +71,26 @@ apiRequest.interceptors.response.use(
     }
 
     if (error.response?.status === 401) {
+      // Skip handling if we're already handling auth failure to prevent loops
+      if (isHandlingAuthFailure) {
+        return Promise.reject(error);
+      }
+
       if (originalRequest._retry) {
         handleAuthenticationFailure('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.');
         return Promise.reject(error);
       }
 
       const { refreshToken } = useAuthStore.getState();
-      if (isRefreshing || !refreshToken) {
-        if (!isRefreshing) {
-          handleAuthenticationFailure('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.');
-        }
+
+      // If no refresh token, handle auth failure immediately
+      if (!refreshToken) {
+        handleAuthenticationFailure('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.');
+        return Promise.reject(error);
+      }
+
+      // If already refreshing, queue this request
+      if (isRefreshing) {
         return new Promise<AxiosResponse>((resolve, reject) => {
           failedQueue.push({
             resolve: (token?: string) => {
@@ -127,28 +138,45 @@ apiRequest.interceptors.response.use(
 
 
 const handleAuthenticationFailure = (message: string): void => {
-  useAuthStore.getState().logout();
-  if (typeof window !== 'undefined') {
-    toast.error(message, {
-      duration: 2000,
-    });
+  // Prevent multiple calls to this function
+  if (isHandlingAuthFailure) {
+    return;
+  }
 
-    setTimeout(() => {
-      window.location.href = '/sign-in';
-    }, 2000);
+  isHandlingAuthFailure = true;
+  useAuthStore.getState().logout();
+
+  if (typeof window !== 'undefined') {
+    // Only show toast if not already on sign-in page to prevent multiple toasts
+    if (!window.location.pathname.includes('/sign-in')) {
+      toast.error(message, {
+        duration: 2000,
+      });
+
+      setTimeout(() => {
+        // Use replace to avoid adding to history
+        window.location.replace('/sign-in');
+        isHandlingAuthFailure = false; // Reset flag after redirect
+      }, 2000);
+    } else {
+      // Already on sign-in page, just reset flag
+      isHandlingAuthFailure = false;
+    }
+  } else {
+    isHandlingAuthFailure = false;
   }
 };
 
 async function refreshAccessToken(refreshToken: string, userId: string) {
-    const { data } = await refreshApiRequest.post<RefreshTokenResponse>(
-      "/api/v1/auth/refresh",
-      {
-        userId,
-        refreshToken
-      }
-    );
+  const { data } = await refreshApiRequest.post<RefreshTokenResponse>(
+    "/api/v1/auth/refresh",
+    {
+      userId,
+      refreshToken
+    }
+  );
 
-    return data.data.accessToken;
+  return data.data.accessToken;
 }
 
 declare module 'axios' {
