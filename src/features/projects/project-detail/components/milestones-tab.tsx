@@ -54,7 +54,7 @@ export const MilestonesTab: React.FC<MilestonesTabProps> = ({
       toast.success('Thêm thành viên vào milestone thành công')
       onRefresh?.()
     } catch (error) {
-      console.log(error)
+      console.error(error)
       toast.error('Thêm thành viên thất bại')
     }
   }

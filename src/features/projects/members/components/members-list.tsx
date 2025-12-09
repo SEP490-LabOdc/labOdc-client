@@ -34,7 +34,6 @@ export const MembersList: React.FC<MembersListProps> = ({
     removeLeaderLabel = 'Gỡ leader',
     badgeLabel = 'Leader',
 }) => {
-    console.log(members)
     return (
         <Card className="mb-6">
             <CardHeader>

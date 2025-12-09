@@ -29,9 +29,6 @@ export default function Users() {
     // Giả định API response có cấu trúc { data: Company[], ... }
     const users = data?.data || [];
 
-    console.log(users);
-    console.log(isLoading);
-
     return (
         <UsersProvider>
             <>

@@ -34,7 +34,7 @@ export const MilestonePageHeader: React.FC<MilestonePageHeaderProps> = ({ milest
       toast.success('Milestone đã được phê duyệt')
       await queryClient.invalidateQueries({ queryKey: milestoneKeys.detail(milestone.id) })
     } catch (error) {
-      console.log(error)
+      console.error(error)
       toast.error('Không thể phê duyệt milestone')
     }
   }
@@ -45,7 +45,7 @@ export const MilestonePageHeader: React.FC<MilestonePageHeaderProps> = ({ milest
       toast.success('Milestone đã được bắt đầu')
       await queryClient.invalidateQueries({ queryKey: milestoneKeys.detail(milestone.id) })
     } catch (error) {
-      console.log(error)
+      console.error(error)
       toast.error('Không thể bắt đầu milestone')
     }
   }
