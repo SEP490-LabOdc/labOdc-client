@@ -1,5 +1,0 @@
-export { MilestoneDocumentsTab } from './milestone-documents-tab.tsx'
-export { MilestoneOverviewTab } from './milestone-overview-tab.tsx'
-export { MilestoneReportsTab } from './milestone-reports-tab.tsx'
-export { MilestonePageHeader } from './milestone-page-header.tsx'
-export { MilestoneSidebar } from './milestone-sidebar.tsx'
