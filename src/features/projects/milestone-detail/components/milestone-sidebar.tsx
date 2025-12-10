@@ -16,7 +16,7 @@ import {
 import { getStatusColor, getStatusLabel, getRoleBasePath } from '@/lib/utils'
 import { usePermission } from '@/hooks/usePermission'
 import { useNavigate } from '@tanstack/react-router'
-import type { Milestone } from '@/hooks/api/projects'
+import type { Milestone } from '@/hooks/api/milestones'
 import { ConfirmReleaseDialog } from './confirm-release-dialog'
 import { MembersAvatarList } from '@/components/members-avatar-list'
 import type { ProjectMember } from '@/hooks/api/projects'
