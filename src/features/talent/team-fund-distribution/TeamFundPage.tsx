@@ -17,6 +17,7 @@ import {
 } from './finance.types'
 import { useGetMyProjects, useGetProjectMilestones } from '@/hooks/api/projects'
 import { useGetMilestonesMembers } from '@/hooks/api/milestones/queries'
+import type { MilestoneMember } from '@/hooks/api/milestones'
 import { usePermission } from '@/hooks/usePermission'
 
 export const TeamFundPage: React.FC = () => {
@@ -78,18 +79,18 @@ export const TeamFundPage: React.FC = () => {
         if (!hasMembers) {
             return [] // Return empty array if no members
         }
-        return apiMembers.map((m: any) => {
-            // Check if user is leader (by comparing userId with current user or check isLeader field)
-            const isLeader = m.isLeader || m.userId === currentUserId
+        return apiMembers.map((m: MilestoneMember) => {
+            // Check if user is leader
+            const isLeader = m.leader || m.userId === currentUserId
 
             return {
-                id: m.userId || m.projectMemberId || m.id,
-                name: m.fullName || m.name || 'Unknown',
-                avatar: m.avatarUrl || m.avatar || '',
+                id: m.userId,
+                name: m.fullName,
+                avatar: m.avatarUrl,
                 role: isLeader ? 'LEADER' : 'MEMBER' as const,
                 status: (m.leftAt === null || !m.leftAt) ? 'ACTIVE' : 'INACTIVE' as const,
-                email: m.email || '',
-                joinedAt: m.joinedAt || new Date().toISOString()
+                email: m.email,
+                joinedAt: m.joinedAt
             }
         })
     }, [apiMembers, currentUserId, hasMembers])

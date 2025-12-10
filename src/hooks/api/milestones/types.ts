@@ -45,6 +45,27 @@ export interface MilestoneUser {
   phone: string
 }
 
+export interface MilestoneMember {
+  milestoneMemberId: string
+  projectMemberId: string
+  userId: string
+  fullName: string
+  email: string
+  phone: string
+  avatarUrl: string
+  isActive: boolean
+  joinedAt: string
+  leftAt: string | null
+  leader: boolean
+}
+
+export interface MilestoneMembersData {
+  mentors: MilestoneMember[]
+  talents: MilestoneMember[]
+}
+
+export type MilestoneMembersResponse = ApiResponse<MilestoneMembersData>
+
 export interface MilestoneDetail {
   id: string
   projectId: string

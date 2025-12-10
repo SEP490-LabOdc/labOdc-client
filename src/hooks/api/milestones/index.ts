@@ -7,4 +7,7 @@ export type {
     MilestoneDetailResponse,
     Milestone,
     MilestoneAttachment,
+    MilestoneMember,
+    MilestoneMembersData,
+    MilestoneMembersResponse,
 } from './types.ts'

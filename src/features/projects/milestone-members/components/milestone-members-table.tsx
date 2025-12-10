@@ -1,0 +1,173 @@
+import React from 'react'
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from '@/components/ui/table'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Crown, Loader2 } from 'lucide-react'
+import { getAvatarUrl } from '@/lib/utils'
+import type { MilestoneMember } from '@/hooks/api/milestones'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Users } from 'lucide-react'
+
+interface MilestoneMembersTableProps {
+    members: MilestoneMember[]
+    title: string
+    emptyMessage: string
+    iconColor?: string
+    showActionButton?: boolean
+    isActionLoading?: boolean
+    onToggleLeader?: (milestoneMemberId: string, currentLeaderStatus: boolean) => void
+    leaderLabel?: string
+    removeLeaderLabel?: string
+    badgeLabel?: string
+}
+
+export const MilestoneMembersTable: React.FC<MilestoneMembersTableProps> = ({
+    members,
+    title,
+    emptyMessage,
+    iconColor = '#2a9d8f',
+    showActionButton = false,
+    isActionLoading = false,
+    onToggleLeader,
+    leaderLabel = 'Đặt làm leader',
+    removeLeaderLabel = 'Gỡ leader',
+    badgeLabel = 'Leader',
+}) => {
+    const formatDate = (dateString: string | null): string => {
+        if (!dateString) return '-'
+        return new Date(dateString).toLocaleDateString('vi-VN', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+        })
+    }
+
+    return (
+        <Card className="mb-6">
+            <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                    <Users className="h-5 w-5" style={{ color: iconColor }} />
+                    {title} ({members.length})
+                </CardTitle>
+            </CardHeader>
+            <CardContent>
+                {members.length > 0 ? (
+                    <Table>
+                        <TableHeader>
+                            <TableRow>
+                                <TableHead>Thành viên</TableHead>
+                                <TableHead>Số điện thoại</TableHead>
+                                <TableHead>Trạng thái</TableHead>
+                                <TableHead>Ngày tham gia</TableHead>
+                                <TableHead>Ngày rời</TableHead>
+                                <TableHead>Leader</TableHead>
+                                {showActionButton && <TableHead className="text-right">Thao tác</TableHead>}
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                            {members.map((member) => (
+                                <TableRow key={member.milestoneMemberId}>
+                                    <TableCell>
+                                        <div className="flex items-center gap-3">
+                                            <Avatar className="h-10 w-10">
+                                                <AvatarImage src={member.avatarUrl} />
+                                                <AvatarFallback>
+                                                    <img src={getAvatarUrl(member.fullName)} alt={member.fullName} />
+                                                </AvatarFallback>
+                                            </Avatar>
+                                            <div className="flex flex-col min-w-0">
+                                                <div className="font-medium text-gray-900 truncate">
+                                                    {member.fullName}
+                                                </div>
+                                                <div className="text-sm text-gray-500 truncate">
+                                                    {member.email}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </TableCell>
+                                    <TableCell>
+                                        <span className="text-sm text-gray-700">
+                                            {member.phone || '-'}
+                                        </span>
+                                    </TableCell>
+                                    <TableCell>
+                                        <Badge
+                                            variant={member.isActive ? 'default' : 'secondary'}
+                                            className={member.isActive ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}
+                                        >
+                                            {member.isActive ? 'Hoạt động' : 'Không hoạt động'}
+                                        </Badge>
+                                    </TableCell>
+                                    <TableCell>
+                                        <span className="text-sm text-gray-700">
+                                            {formatDate(member.joinedAt)}
+                                        </span>
+                                    </TableCell>
+                                    <TableCell>
+                                        <span className="text-sm text-gray-700">
+                                            {formatDate(member.leftAt)}
+                                        </span>
+                                    </TableCell>
+                                    <TableCell>
+                                        {member.leader ? (
+                                            <Badge className="bg-yellow-100 text-yellow-800 flex items-center gap-1 w-fit">
+                                                <Crown className="h-3 w-3" />
+                                                {badgeLabel}
+                                            </Badge>
+                                        ) : (
+                                            <span className="text-sm text-gray-400">-</span>
+                                        )}
+                                    </TableCell>
+                                    {showActionButton && (
+                                        <TableCell className="text-right">
+                                            <Button
+                                                size="sm"
+                                                variant={member.leader ? "default" : "outline"}
+                                                className={member.leader
+                                                    ? 'bg-yellow-500 hover:bg-yellow-600 text-white'
+                                                    : 'border-yellow-500 text-yellow-600 hover:bg-yellow-50'
+                                                }
+                                                disabled={isActionLoading}
+                                                onClick={() => onToggleLeader?.(member.milestoneMemberId, member.leader)}
+                                            >
+                                                {isActionLoading ? (
+                                                    <>
+                                                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                                                        Đang xử lý...
+                                                    </>
+                                                ) : member.leader ? (
+                                                    <>
+                                                        <Crown className="h-4 w-4 mr-2" />
+                                                        {removeLeaderLabel}
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <Crown className="h-4 w-4 mr-2" />
+                                                        {leaderLabel}
+                                                    </>
+                                                )}
+                                            </Button>
+                                        </TableCell>
+                                    )}
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                ) : (
+                    <p className="text-sm text-gray-500 text-center py-8">
+                        {emptyMessage}
+                    </p>
+                )}
+            </CardContent>
+        </Card>
+    )
+}
+

@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import { milestoneKeys } from './query-keys'
 import apiRequest from '@/config/request';
+import type { MilestoneMembersResponse } from './types';
 
 export function useGetMilestonesByProjectId(projectId: string) {
     return useQuery({
@@ -41,10 +42,10 @@ export function useGetMilestonesById(milestoneId: string) {
 
 
 export function useGetMilestonesMembers(milestoneId: string) {
-    return useQuery({
+    return useQuery<MilestoneMembersResponse>({
         queryKey: milestoneKeys.milestoneMembers(milestoneId),
         queryFn: async () => {
-            const { data } = await apiRequest.get(
+            const { data } = await apiRequest.get<MilestoneMembersResponse>(
                 `/api/v1/project-milestones/${milestoneId}/milestone-members`
             );
             return data;

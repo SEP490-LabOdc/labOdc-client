@@ -1,17 +1,15 @@
 import { useNavigate, useParams } from '@tanstack/react-router'
 import { useGetMilestonesMembers, useGetMilestonesById, useUpdateMilestoneMemberLeader } from '@/hooks/api/milestones'
+import type { MilestoneMember } from '@/hooks/api/milestones'
 import { Button } from '@/components/ui/button'
 import { ChevronLeft, Users, Loader2 } from 'lucide-react'
-import { MembersList } from '@/features/projects/members/components'
-import { ROLE } from '@/const'
+import { MilestoneMembersTable } from './components'
 import { getRoleBasePath } from '@/lib/utils'
 import { useUser } from '@/context/UserContext'
 import { usePermission } from '@/hooks/usePermission'
 import { toast } from 'sonner'
 import { useQueryClient } from '@tanstack/react-query'
 import { milestoneKeys } from '@/hooks/api/milestones'
-import { useMemo } from 'react'
-import type { ProjectMember } from '@/hooks/api/projects'
 
 export default function MilestoneMembersPage() {
     const { projectId, milestoneId } = useParams({ strict: false })
@@ -25,34 +23,10 @@ export default function MilestoneMembersPage() {
 
     const updateMilestoneMemberLeaderMutation = useUpdateMilestoneMemberLeader()
 
-    // Map API response to ProjectMember format
+    // Get API response data
     const apiMembersData = membersResponse?.data || { mentors: [], talents: [] }
-
-    // Map mentors to ProjectMember format
-    const mentors: ProjectMember[] = useMemo(() => {
-        return (apiMembersData.mentors || []).map((mentor: any) => ({
-            projectMemberId: mentor.milestoneMemberId || mentor.projectMemberId || mentor.userId || '',
-            userId: mentor.userId || '',
-            fullName: mentor.name || mentor.fullName || 'Unknown',
-            email: mentor.email || '',
-            avatarUrl: mentor.avatar || mentor.avatarUrl || '',
-            roleName: ROLE.MENTOR as 'MENTOR',
-            leader: mentor.leader || mentor.isLeader || false,
-        }))
-    }, [apiMembersData.mentors])
-
-    // Map talents to ProjectMember format
-    const talents: ProjectMember[] = useMemo(() => {
-        return (apiMembersData.talents || []).map((talent: any) => ({
-            projectMemberId: talent.milestoneMemberId || talent.projectMemberId || talent.userId || '',
-            userId: talent.userId || '',
-            fullName: talent.name || talent.fullName || 'Unknown',
-            email: talent.email || '',
-            avatarUrl: talent.avatar || talent.avatarUrl || '',
-            roleName: ROLE.TALENT as 'TALENT',
-            leader: talent.leader || talent.isLeader || false,
-        }))
-    }, [apiMembersData.talents])
+    const mentors: MilestoneMember[] = apiMembersData.mentors || []
+    const talents: MilestoneMember[] = apiMembersData.talents || []
 
     const handleToggleMilestoneMemberLeader = (milestoneMemberId: string, currentLeaderStatus: boolean) => {
         updateMilestoneMemberLeaderMutation.mutate(
@@ -130,19 +104,15 @@ export default function MilestoneMembersPage() {
                 </div>
 
                 {/* Mentors Section */}
-                <MembersList
+                <MilestoneMembersTable
                     members={mentors}
-                    role={ROLE.MENTOR as 'MENTOR'}
                     title="Mentors"
                     emptyMessage="Chưa có mentor nào trong milestone"
                     iconColor="#2a9d8f"
                     showActionButton={isLabAdmin}
                     isActionLoading={updateMilestoneMemberLeaderMutation.isPending}
-                    onToggleLeader={(memberId: string, currentLeaderStatus: boolean) => {
-                        const member = mentors.find(m => m.userId === memberId)
-                        if (member?.projectMemberId) {
-                            handleToggleMilestoneMemberLeader(member.projectMemberId, currentLeaderStatus)
-                        }
+                    onToggleLeader={(milestoneMemberId: string, currentLeaderStatus: boolean) => {
+                        handleToggleMilestoneMemberLeader(milestoneMemberId, currentLeaderStatus)
                     }}
                     leaderLabel="Đặt làm trưởng nhóm"
                     removeLeaderLabel="Gỡ trưởng nhóm"
@@ -150,19 +120,15 @@ export default function MilestoneMembersPage() {
                 />
 
                 {/* Talents Section */}
-                <MembersList
+                <MilestoneMembersTable
                     members={talents}
-                    role={ROLE.TALENT as 'TALENT'}
                     title="Talents"
                     emptyMessage="Chưa có talent nào trong milestone"
                     iconColor="#e76f51"
                     showActionButton={isMentor}
                     isActionLoading={updateMilestoneMemberLeaderMutation.isPending}
-                    onToggleLeader={(memberId: string, currentLeaderStatus: boolean) => {
-                        const member = talents.find(t => t.userId === memberId)
-                        if (member?.projectMemberId) {
-                            handleToggleMilestoneMemberLeader(member.projectMemberId, currentLeaderStatus)
-                        }
+                    onToggleLeader={(milestoneMemberId: string, currentLeaderStatus: boolean) => {
+                        handleToggleMilestoneMemberLeader(milestoneMemberId, currentLeaderStatus)
                     }}
                     leaderLabel="Đặt làm leader"
                     removeLeaderLabel="Gỡ leader"
