@@ -13,6 +13,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { FileText, Download, CheckCircle2, Calendar } from 'lucide-react'
 import { useSystemTemplates } from '@/hooks/api/system-templates/queries'
+import { formatDateLong } from '@/helpers/datetime'
 
 interface ReportTemplateModalProps {
     isOpen: boolean
@@ -71,13 +72,6 @@ export const ReportTemplateModal: React.FC<ReportTemplateModalProps> = ({
         }
     }
 
-    const formatDate = (dateString: string) => {
-        return new Date(dateString).toLocaleDateString('vi-VN', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-        })
-    }
 
     return (
         <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
@@ -153,7 +147,7 @@ export const ReportTemplateModal: React.FC<ReportTemplateModalProps> = ({
                                         <Calendar className="w-4 h-4 text-gray-400" />
                                         <span className="font-medium">Cập nhật:</span>
                                         <span className="text-gray-900">
-                                            {template.updatedAt ? formatDate(template.updatedAt) : 'N/A'}
+                                            {template.updatedAt ? formatDateLong(template.updatedAt) : 'N/A'}
                                         </span>
                                     </div>
                                 </div>

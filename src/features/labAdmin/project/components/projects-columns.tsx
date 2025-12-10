@@ -8,15 +8,7 @@ import { PROJECT_STATUS_LABEL, type Project } from '../data/schema'
 import { DataTableRowActions } from './data-table-row-actions'
 import { Link } from '@tanstack/react-router'
 import { callTypes } from '../data/data'
-
-// Helper format date
-const formatDate = (date: Date) => {
-    return date.toLocaleDateString('vi-VN', {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-    })
-}
+import { formatDateOnly } from '@/helpers/datetime'
 
 // Column definitions
 export const projectsColumns: ColumnDef<Project>[] = [
@@ -110,7 +102,7 @@ export const projectsColumns: ColumnDef<Project>[] = [
             const dateString = row.getValue('startDate') as string
             const dateValue = new Date(dateString)
             if (isNaN(dateValue.getTime())) return <div>Không hợp lệ</div>
-            return <div>{formatDate(dateValue)}</div>
+            return <div>{formatDateOnly(dateValue)}</div>
         },
     },
 
@@ -124,7 +116,7 @@ export const projectsColumns: ColumnDef<Project>[] = [
             const dateString = row.getValue('endDate') as string
             const dateValue = new Date(dateString)
             if (isNaN(dateValue.getTime())) return <div>Không hợp lệ</div>
-            return <div>{formatDate(dateValue)}</div>
+            return <div>{formatDateOnly(dateValue)}</div>
         },
     },
 

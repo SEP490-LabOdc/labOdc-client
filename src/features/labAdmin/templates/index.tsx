@@ -32,6 +32,7 @@ import { toast } from 'sonner'
 import { usePermission } from '@/hooks/usePermission'
 import { useNavigate } from '@tanstack/react-router'
 import { CreateTemplateModal } from './components'
+import { formatDateLong } from '@/helpers/datetime'
 
 export const TEMPLATE_TYPES = {
     REPORT_WEEKLY: 'REPORT_WEEKLY',
@@ -146,13 +147,6 @@ export default function TemplatesManagementPage() {
         }
     }
 
-    const formatDate = (dateString: string) => {
-        return new Date(dateString).toLocaleDateString('vi-VN', {
-            year: 'numeric',
-            month: 'short',
-            day: 'numeric',
-        })
-    }
 
     if (!isLabAdmin) {
         return null
@@ -312,7 +306,7 @@ export default function TemplatesManagementPage() {
                                         <TableCell>
                                             <div className="flex items-center gap-2 text-sm text-gray-500">
                                                 <Calendar className="h-4 w-4" />
-                                                {formatDate(template.updatedAt)}
+                                                {formatDateLong(template.updatedAt)}
                                             </div>
                                         </TableCell>
                                         <TableCell className="text-right">

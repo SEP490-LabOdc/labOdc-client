@@ -15,6 +15,7 @@ import { getAvatarUrl } from '@/lib/utils'
 import type { MilestoneMember } from '@/hooks/api/milestones'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Users } from 'lucide-react'
+import { formatDateOnly } from '@/helpers/datetime'
 
 interface MilestoneMembersTableProps {
     members: MilestoneMember[]
@@ -41,15 +42,6 @@ export const MilestoneMembersTable: React.FC<MilestoneMembersTableProps> = ({
     removeLeaderLabel = 'Gỡ leader',
     badgeLabel = 'Leader',
 }) => {
-    const formatDate = (dateString: string | null): string => {
-        if (!dateString) return '-'
-        return new Date(dateString).toLocaleDateString('vi-VN', {
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit',
-        })
-    }
-
     return (
         <Card className="mb-6">
             <CardHeader>
@@ -108,12 +100,12 @@ export const MilestoneMembersTable: React.FC<MilestoneMembersTableProps> = ({
                                     </TableCell>
                                     <TableCell>
                                         <span className="text-sm text-gray-700">
-                                            {formatDate(member.joinedAt)}
+                                            {formatDateOnly(member.joinedAt)}
                                         </span>
                                     </TableCell>
                                     <TableCell>
                                         <span className="text-sm text-gray-700">
-                                            {formatDate(member.leftAt)}
+                                            {formatDateOnly(member.leftAt)}
                                         </span>
                                     </TableCell>
                                     <TableCell>

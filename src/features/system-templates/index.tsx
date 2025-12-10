@@ -18,6 +18,7 @@ import {
 import { Input } from '@/components/ui/input'
 import { cn } from '@/lib/utils'
 import { getRoleBasePath } from '@/lib/utils'
+import { formatDateLong } from '@/helpers/datetime'
 import { useUser } from '@/context/UserContext'
 import { useSystemTemplates, useGetAllSystemTemplates } from '@/hooks/api/system-templates'
 import {
@@ -168,13 +169,6 @@ export const TemplatesPage: React.FC = () => {
         }
     }
 
-    const formatDate = (dateString: string) => {
-        return new Date(dateString).toLocaleDateString('vi-VN', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-        })
-    }
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
@@ -408,7 +402,7 @@ export const TemplatesPage: React.FC = () => {
                                                     <div className="text-xs text-gray-500 mb-1">Cập nhật lần cuối</div>
                                                     <div className="text-sm font-medium text-gray-900 flex items-center gap-2">
                                                         <Calendar className="w-4 h-4 text-gray-400" />
-                                                        {formatDate(template.updatedAt)}
+                                                        {formatDateLong(template.updatedAt)}
                                                     </div>
                                                 </div>
                                             </div>
