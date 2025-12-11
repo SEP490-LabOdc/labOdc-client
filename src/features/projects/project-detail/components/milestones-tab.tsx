@@ -6,13 +6,15 @@ import { Button } from '@/components/ui/button'
 import { CalendarDays, CheckCircle2, Circle, Clock, Plus, UserPlus, Users } from 'lucide-react'
 import { getRoleBasePath, getStatusColor, getStatusLabel } from '@/lib/utils'
 import { useNavigate } from '@tanstack/react-router'
-import type { Milestone, ProjectDetail } from '@/hooks/api/projects/types'
+import type { Milestone } from '@/hooks/api/milestones'
+import type { ProjectDetail } from '@/hooks/api/projects/types'
 import { CreateMilestoneModal } from './create-milestone-modal'
 import { AddMemberModal } from '@/features/projects/components/add-member-modal'
 import { useAddTalentToMilestone } from '@/hooks/api/projects/mutation'
 import { useGetProjectMembers } from '@/hooks/api/projects/queries'
 import { toast } from 'sonner'
 import { usePermission } from '@/hooks/usePermission'
+import { calculateProgress } from '@/helpers/milestoneUtils'
 
 interface MilestonesTabProps {
   milestones: Milestone[]
@@ -20,6 +22,17 @@ interface MilestonesTabProps {
   projectData?: ProjectDetail
   onRefresh?: () => void
   showApprovalActions?: boolean
+}
+
+const getStatusIcon = (status: string) => {
+  switch (status.toUpperCase()) {
+    case 'COMPLETE':
+      return <CheckCircle2 className="h-4 w-4 text-green-600" />
+    case 'ON_GOING':
+      return <Clock className="h-4 w-4 text-[#2a9d8f]" />
+    default:
+      return <Circle className="h-4 w-4 text-gray-400" />
+  }
 }
 
 export const MilestonesTab: React.FC<MilestonesTabProps> = ({
@@ -34,7 +47,7 @@ export const MilestonesTab: React.FC<MilestonesTabProps> = ({
   const [isAddMemberModalOpen, setIsAddMemberModalOpen] = useState(false)
   const [selectedMilestoneId, setSelectedMilestoneId] = useState<string | null>(null)
 
-  const { data: projectMembersData, isLoading: isLoadingMembers, refetch: refetchMembers } = useGetProjectMembers(
+  const { data: projectMembersData, isLoading: isLoadingMembers } = useGetProjectMembers(
     projectId,
     selectedMilestoneId || undefined
   )
@@ -44,7 +57,6 @@ export const MilestonesTab: React.FC<MilestonesTabProps> = ({
 
   const handleAddMembers = async (selectedUserIds: string[]) => {
     if (!selectedMilestoneId) return
-    await refetchMembers()
 
     try {
       await addTalentMutation.mutateAsync({
@@ -62,28 +74,6 @@ export const MilestonesTab: React.FC<MilestonesTabProps> = ({
   const openAddMemberModal = (milestoneId: string) => {
     setSelectedMilestoneId(milestoneId)
     setIsAddMemberModalOpen(true)
-  }
-
-  const calculateProgress = (startDate: string, endDate: string): number => {
-    const start = new Date(startDate).getTime()
-    const end = new Date(endDate).getTime()
-    const now = Date.now()
-
-    if (now < start) return 0
-    if (now > end) return 100
-
-    return Math.round(((now - start) / (end - start)) * 100)
-  }
-
-  const getStatusIcon = (status: string) => {
-    switch (status.toUpperCase()) {
-      case 'COMPLETE':
-        return <CheckCircle2 className="h-4 w-4 text-green-600" />
-      case 'ON_GOING':
-        return <Clock className="h-4 w-4 text-[#2a9d8f]" />
-      default:
-        return <Circle className="h-4 w-4 text-gray-400" />
-    }
   }
 
   const handleNavigateToMilestone = async (milestoneId: string) => {

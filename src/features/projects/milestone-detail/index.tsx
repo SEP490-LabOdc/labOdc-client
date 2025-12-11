@@ -9,7 +9,7 @@ import {
   MilestoneReportsTab,
   MilestoneSidebar,
   MilestoneDocumentsTab,
-  MilestoneFinancialsTab // <-- Component mới
+  MilestoneFinancialsTab
 } from './components'
 
 const MilestoneDetailPage: React.FC = () => {
@@ -71,6 +71,7 @@ const MilestoneDetailPage: React.FC = () => {
                 amount={milestone.budget}
                 status={'PENDING_DEPOSIT'}
                 userRole={userRole}
+                milestoneId={milestone.id}
               />
             </TabsContent>
           </Tabs>

@@ -40,9 +40,31 @@ export interface PreviewDisbursementParams {
 }
 
 /**
+ * Thông tin leader trong preview disbursement
+ */
+export interface DisbursementLeader {
+    userId: string
+    fullName: string
+    email: string
+    avatarUrl: string
+    roleInProject: string
+    amount: number
+    leader: boolean
+}
+
+/**
  * Response từ API preview disbursement
  */
-export type PreviewDisbursementResponse = ApiResponse<DisbursementCalculation>
+export interface PreviewDisbursementData {
+    milestoneId: string
+    totalAmount: number
+    systemFee: number
+    status: string
+    mentorLeader: DisbursementLeader
+    talentLeader: DisbursementLeader
+}
+
+export type PreviewDisbursementResponse = ApiResponse<PreviewDisbursementData>
 
 /**
  * Payload để thực hiện giải ngân

@@ -18,6 +18,7 @@ import { useNavigate } from '@tanstack/react-router'
 import { getRoleBasePath } from '@/lib/utils'
 import { usePermission } from '@/hooks/usePermission'
 import { CandidateDetailModal } from '@/features/projects/project-candidates/components/candidate-detail-modal'
+import { formatDateLongWithTime } from '@/helpers/datetime'
 
 interface Application {
     id: string
@@ -30,15 +31,6 @@ interface Application {
     cvUrl?: string
 }
 
-const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('vi-VN', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
-    })
-}
 
 export default function MyApplicationsPage() {
     const { user } = usePermission()
@@ -147,7 +139,7 @@ export default function MyApplicationsPage() {
                                                 </Badge>
                                                 <div className="flex items-center gap-1.5 text-sm text-gray-500">
                                                     <Calendar className="h-4 w-4" />
-                                                    <span>Ứng tuyển: {formatDate(application.appliedAt)}</span>
+                                                    <span>Ứng tuyển: {formatDateLongWithTime(application.appliedAt)}</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -157,7 +149,7 @@ export default function MyApplicationsPage() {
                                     <div className="flex items-center justify-between">
                                         <div className="flex items-center gap-2">
                                             <div className="text-sm text-gray-500">
-                                                Cập nhật: {formatDate(application.updatedAt)}
+                                                Cập nhật: {formatDateLongWithTime(application.updatedAt)}
                                             </div>
                                         </div>
                                         <div className="flex items-center gap-2">

@@ -2,8 +2,8 @@ import { useNavigate, useParams } from '@tanstack/react-router'
 import { useGetProjectMembers } from '@/hooks/api/projects/queries'
 import { type ProjectMember } from '@/hooks/api/projects'
 import { Button } from '@/components/ui/button'
-import { ChevronLeft, Users } from 'lucide-react'
-import { MembersList } from './components'
+import { ChevronLeft, Users, Loader2 } from 'lucide-react'
+import { ProjectMembersTable } from './components'
 import { getRoleBasePath } from '@/lib/utils'
 import { useUser } from '@/context/UserContext'
 
@@ -15,17 +15,20 @@ export default function ProjectMembersPage() {
   const { data: projectMembersData, isLoading } = useGetProjectMembers(projectId as string)
   const projectMembers = projectMembersData?.data || []
 
-  if (isLoading) {
-    return (
-      <div className="flex justify-center items-center min-h-screen">
-        <div className="text-gray-500">Đang tải...</div>
-      </div>
-    )
-  }
-
   // Group members by role
   const mentors = projectMembers.filter((m: ProjectMember) => m.roleName === 'MENTOR')
   const talents = projectMembers.filter((m: ProjectMember) => m.roleName === 'TALENT')
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <div className="text-center">
+          <Loader2 className="h-8 w-8 animate-spin mx-auto text-[#2a9d8f]" />
+          <p className="text-gray-500 mt-4">Đang tải...</p>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 p-6">
@@ -59,23 +62,19 @@ export default function ProjectMembersPage() {
         </div>
 
         {/* Mentors Section */}
-        <MembersList
+        <ProjectMembersTable
           members={mentors}
-          role="MENTOR"
           title="Mentors"
           emptyMessage="Chưa có mentor nào trong dự án"
           iconColor="#2a9d8f"
-          showActionButton={false}
         />
 
         {/* Talents Section */}
-        <MembersList
+        <ProjectMembersTable
           members={talents}
-          role="TALENT"
           title="Talents"
           emptyMessage="Chưa có talent nào trong dự án"
           iconColor="#e76f51"
-          showActionButton={false}
         />
       </div>
     </div>

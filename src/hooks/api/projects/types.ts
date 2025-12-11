@@ -1,5 +1,4 @@
 import React from 'react'
-import type { ApiResponse } from '@/hooks/api/types'
 
 export enum ProjectTypes {
   PENDING = 'PENDING',
@@ -41,9 +40,12 @@ export interface ProjectMember {
   userId: string
   fullName: string
   email: string
+  phone?: string
   avatarUrl?: string
   roleName: 'MENTOR' | 'TALENT'
-  leader?: boolean
+  isActive: boolean
+  joinedAt: string
+  leftAt: string | null
 }
 
 export interface ProjectListItem {
@@ -71,15 +73,6 @@ export interface Project {
   budget?: number
   status?: ProjectTypes
 }
-export interface MilestoneUser {
-  userId: string
-  name: string
-  avatar: string
-  email: string
-  phone: string
-}
-
-export type MilestonesResponse = ApiResponse<Milestone[]>
 
 export interface Note {
   id: number;
@@ -130,25 +123,4 @@ export interface ProjectDetail {
   companyName: string
 }
 
-export interface MilestoneAttachment {
-  id: string
-  name: string
-  fileName: string
-  url: string
-}
-
-export interface Milestone {
-  id: string
-  projectId: string
-  projectName: string
-  title: string
-  budget: number
-  description: string
-  startDate: string
-  endDate: string
-  status: string
-  talents: MilestoneUser[]
-  mentors: MilestoneUser[]
-  attachments?: MilestoneAttachment[]
-}
 

@@ -7,6 +7,8 @@ export type {
     DisbursementCalculation,
     PreviewDisbursementParams,
     PreviewDisbursementResponse,
+    PreviewDisbursementData,
+    DisbursementLeader,
     ExecuteDisbursementPayload,
     ExecuteDisbursementResponse,
     ExecuteDisbursementResult,

@@ -8,7 +8,6 @@ import type { PreviewDisbursementParams, PreviewDisbursementResponse } from './t
  */
 export function usePreviewDisbursement(
     params: PreviewDisbursementParams,
-    options?: { enabled?: boolean }
 ) {
     return useQuery<PreviewDisbursementResponse, Error>({
         queryKey: disbursementKeys.preview(params.milestoneId, params.totalAmount),
@@ -24,9 +23,6 @@ export function usePreviewDisbursement(
             )
             return data
         },
-        enabled: options?.enabled !== undefined
-            ? options.enabled && !!params.milestoneId && params.totalAmount > 0
-            : !!params.milestoneId && params.totalAmount > 0,
     })
 }
 

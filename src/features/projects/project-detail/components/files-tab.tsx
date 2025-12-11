@@ -11,6 +11,7 @@ import {
 import { Separator } from '@/components/ui/separator'
 import { UploadFileModal } from './upload-file-modal'
 import { useGetProjectDocuments } from '@/hooks/api/projects/queries'
+import { formatDateOnly } from '@/helpers/datetime'
 
 export interface ProjectDocument {
   id: string
@@ -37,13 +38,6 @@ export const ProjectFilesTab: React.FC<ProjectFilesTabProps> = ({
 
   const files = documentsResponse?.data || []
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('vi-VN', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric'
-    })
-  }
 
   const handleDownload = (url: string, fileName: string) => {
     const link = document.createElement('a')
@@ -121,7 +115,7 @@ export const ProjectFilesTab: React.FC<ProjectFilesTabProps> = ({
                       <div className="min-w-0">
                         <p className="font-medium text-gray-800 truncate">{file.documentName}</p>
                         <p className="text-sm text-gray-500">
-                          {file.documentType.toUpperCase()} • {formatDate(file.uploadedAt)}
+                          {file.documentType.toUpperCase()} • {formatDateOnly(file.uploadedAt)}
                         </p>
                       </div>
                     </div>
