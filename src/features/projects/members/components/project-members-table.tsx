@@ -56,7 +56,7 @@ export const ProjectMembersTable: React.FC<ProjectMembersTableProps> = ({
                                             <Avatar className="h-10 w-10">
                                                 <AvatarImage src={member.avatarUrl} />
                                                 <AvatarFallback>
-                                                    <img src={getAvatarUrl(member.fullName)} alt={member.fullName} />
+                                                    <img src={getAvatarUrl(member.fullName || '')} alt={member.fullName || ''} />
                                                 </AvatarFallback>
                                             </Avatar>
                                             <div className="flex flex-col min-w-0">

@@ -15,6 +15,7 @@ import { useGetProjectMembers } from '@/hooks/api/projects/queries'
 import { toast } from 'sonner'
 import { usePermission } from '@/hooks/usePermission'
 import { calculateProgress } from '@/helpers/milestoneUtils'
+import { StatusRenderer } from '@/components/status-renderer'
 
 interface MilestonesTabProps {
   milestones: Milestone[]
@@ -25,14 +26,16 @@ interface MilestonesTabProps {
 }
 
 const getStatusIcon = (status: string) => {
-  switch (status.toUpperCase()) {
-    case 'COMPLETE':
-      return <CheckCircle2 className="h-4 w-4 text-green-600" />
-    case 'ON_GOING':
-      return <Clock className="h-4 w-4 text-[#2a9d8f]" />
-    default:
-      return <Circle className="h-4 w-4 text-gray-400" />
-  }
+  return (
+    <StatusRenderer
+      status={status.toUpperCase()}
+      renderers={{
+        COMPLETE: <CheckCircle2 className="h-4 w-4 text-green-600" />,
+        ON_GOING: <Clock className="h-4 w-4 text-[#2a9d8f]" />,
+      }}
+      fallback={<Circle className="h-4 w-4 text-gray-400" />}
+    />
+  )
 }
 
 export const MilestonesTab: React.FC<MilestonesTabProps> = ({
@@ -164,17 +167,29 @@ export const MilestonesTab: React.FC<MilestonesTabProps> = ({
                     </div>
 
                     <div className="flex items-center gap-2">
-                      {isMentor && milestone.status === 'ON_GOING' && (
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={() => openAddMemberModal(milestone.id)}
-                          disabled={isLoadingMembers}
-                        >
-                          <UserPlus className="h-4 w-4 mr-1" />
-                          Thêm thành viên
-                        </Button>
-                      )}
+                      {(() => {
+                        const addMemberButton = isMentor ? (
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => openAddMemberModal(milestone.id)}
+                            disabled={isLoadingMembers}
+                          >
+                            <UserPlus className="h-4 w-4 mr-1" />
+                            Thêm thành viên
+                          </Button>
+                        ) : null
+
+                        return (
+                          <StatusRenderer
+                            status={milestone.status}
+                            renderers={{
+                              ON_GOING: addMemberButton,
+                              PENDING_START: addMemberButton,
+                            }}
+                          />
+                        )
+                      })()}
                     </div>
                   </div>
                 </div>

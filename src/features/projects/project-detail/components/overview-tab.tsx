@@ -54,7 +54,9 @@ export const ProjectOverviewTab: React.FC<ProjectOverviewTabProps> = ({ projectD
       email: talent.email || '',
       avatarUrl: talent.avatar || talent.avatarUrl || '',
       roleName: ROLE.TALENT as 'TALENT',
-      isLeader: talent.leader || talent.isLeader || false,
+      isActive: true,
+      joinedAt: new Date().toISOString(),
+      leftAt: null,
     }))
   }, [projectData.talents])
 

@@ -125,7 +125,7 @@ export function AddMemberModal({
                     className="flex items-center gap-2 p-1 pr-2"
                   >
                     <Avatar className="h-5 w-5">
-                      <AvatarImage src={user.avatar} />
+                      <AvatarImage src={user.avatarUrl} />
                       <AvatarFallback>{user.name[0]}</AvatarFallback>
                     </Avatar>
                     <span className="font-medium">{user.name}</span>
