@@ -1,3 +1,5 @@
+import type { ProjectMember } from "@/hooks/api/projects"
+
 /**
  * Tính toán phần trăm tiến độ của milestone dựa trên ngày bắt đầu và kết thúc
  * @param startDate - Ngày bắt đầu (ISO string)
@@ -15,3 +17,24 @@ export const calculateProgress = (startDate: string, endDate: string): number =>
     return Math.round(((now - start) / (end - start)) * 100)
 }
 
+export const calculateDaysRemaining = (endDate: string): string => {
+    const end = new Date(endDate)
+    const today = new Date()
+    const diffTime = end.getTime() - today.getTime()
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+
+    if (diffDays < 0) return 'Quá hạn'
+    if (diffDays === 0) return 'Hôm nay'
+    return `${diffDays} ngày`
+}
+
+// helpers/milestoneUtils.tsx
+export function mapMilestoneMembers(members: any[]): ProjectMember[] {
+    return members.map((member) => ({
+        userId: member.userId || '',
+        fullName: member.name || 'Unknown',
+        email: member.email || '',
+        avatarUrl: member.avatar || '',
+        leader: member.leader || false,
+    }))
+}

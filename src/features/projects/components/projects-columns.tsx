@@ -3,7 +3,6 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { Badge } from '@/components/ui/badge'
 import { type Project } from '../data/schema'
 import { Link } from '@tanstack/react-router'
-import { getRoleBasePath } from '@/lib/utils'
 import { MembersAvatarList } from '@/components/members-avatar-list'
 import type { ProjectMember } from '@/hooks/api/projects'
 import { ROLE } from '@/const'
@@ -37,16 +36,23 @@ export const createProjectsColumns = (userRole: string): ColumnDef<Project>[] =>
     cell: ({ row }) => {
       const projectId = row.original.id
 
-      const getProjectLink = (role: string, id: string) => {
-        const basePath = getRoleBasePath(role)
-        return { to: `${basePath}/projects/$projectId` as const, params: { projectId: id } }
+      const getProjectRoute = (role: string) => {
+        const roleRouteMap: Record<string, string> = {
+          [ROLE.SYSTEM_ADMIN]: '/admin/projects/$projectId',
+          [ROLE.LAB_ADMIN]: '/lab-admin/projects/$projectId',
+          [ROLE.MENTOR]: '/mentor/projects/$projectId',
+          [ROLE.COMPANY]: '/company-manage/projects/$projectId',
+          [ROLE.USER]: '/talent/projects/$projectId',
+        }
+        return roleRouteMap[role] || '/talent/projects/$projectId'
       }
 
-      const linkProps = getProjectLink(userRole, projectId)
+      const routePath = getProjectRoute(userRole)
 
       return (
         <Link
-          {...linkProps}
+          to={routePath as any}
+          params={{ projectId } as any}
           className="font-medium hover:underline"
         >
           {row.getValue('title')}

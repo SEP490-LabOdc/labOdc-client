@@ -14,7 +14,7 @@ export default function Users() {
 
 
     // 1. Lấy trạng thái truy vấn từ hook
-    const { data, isLoading, isError, error } = useGetUsers();
+    const { data, isError, error } = useGetUsers();
 
     // 3. Xử lý trạng thái Error
     if (isError) {

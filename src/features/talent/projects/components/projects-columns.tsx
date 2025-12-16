@@ -64,7 +64,9 @@ export const projectsColumns: ColumnDef<Project>[] = [
           ? (mentor as any).avatar
           : undefined,
         roleName: ROLE.MENTOR as 'MENTOR',
-        isLeader: mentor.leader,
+        isActive: true,
+        joinedAt: new Date().toISOString(),
+        leftAt: null,
       }))
 
       return (

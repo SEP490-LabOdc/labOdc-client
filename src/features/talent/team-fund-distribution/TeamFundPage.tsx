@@ -46,15 +46,15 @@ export const TeamFundPage: React.FC = () => {
 
     // Get the correct member list based on user role
     // API returns: { data: { mentors: [], talents: [] } }
-    const apiMembersData = membersResponse?.data || {}
+    const apiMembersData = membersResponse?.data
     const apiMembers = useMemo(() => {
         // If user is MENTOR, show mentors list
         // If user is USER/TALENT, show talents list
         if (userRole === 'MENTOR') {
-            return apiMembersData.mentors || []
+            return apiMembersData?.mentors || []
         } else {
             // USER, TALENT, or other roles
-            return apiMembersData.talents || []
+            return apiMembersData?.talents || []
         }
     }, [apiMembersData, userRole])
 
@@ -113,7 +113,7 @@ export const TeamFundPage: React.FC = () => {
         ? selectedMilestone.remainingAmount - totalAllocated
         : 0
 
-    const canSubmit = selectedMilestone && remaining >= 0 && totalAllocated > 0 && hasMembers
+    const canSubmit = (selectedMilestone && remaining >= 0 && totalAllocated > 0 && hasMembers) || false
 
     // Handlers
     const handleProjectChange = (projectId: string) => {

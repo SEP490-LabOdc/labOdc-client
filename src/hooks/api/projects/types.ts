@@ -36,16 +36,16 @@ export interface TeamMember {
 }
 
 export interface ProjectMember {
-  projectMemberId: string
-  userId: string
-  fullName: string
-  email: string
+  projectMemberId?: string
+  userId?: string
+  fullName?: string
+  email?: string
   phone?: string
   avatarUrl?: string
-  roleName: 'MENTOR' | 'TALENT'
-  isActive: boolean
-  joinedAt: string
-  leftAt: string | null
+  roleName?: 'MENTOR' | 'TALENT'
+  isActive?: boolean
+  joinedAt?: string
+  leftAt?: string | null
 }
 
 export interface ProjectListItem {
