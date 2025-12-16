@@ -4,13 +4,8 @@ import { useNavigate, useSearch } from '@tanstack/react-router'
 import { useSignInWithGoogle } from '@/hooks/api'
 import { type CredentialResponse, GoogleLogin } from '@react-oauth/google'
 import { toast } from 'sonner'
-import { AxiosError } from 'axios'
-
-interface ApiErrorResponse {
-  message?: string;
-  error?: string;
-  errorCode?: string;
-}
+import { getRoleBasePath } from '@/lib/utils'
+import { extractRoleFromAuthResponse } from '@/hooks/utils/auth-utils'
 
 export default function SignIn() {
   const { redirect } = useSearch({ from: '/(auth)/sign-in/' })
@@ -19,28 +14,24 @@ export default function SignIn() {
 
   const handleSignInWithGoogleSuccess = async (credentialResponse: CredentialResponse) => {
     const idToken = credentialResponse.credential
-    if(idToken) {
+    if (idToken) {
       signInGoogle.mutate({ idToken }, {
         onSuccess: async (response) => {
-          toast.success(response.message || 'Đăng nhập thành công!');
-          await navigate({ to: redirect || '/' });
+          toast.success(response.message);
+
+          // Extract role from auth response
+          const decodedRole = extractRoleFromAuthResponse(response)
+
+          // Use getRoleBasePath to get the correct route based on role
+          const basePath = getRoleBasePath(decodedRole || '')
+          const navigateRoute = basePath || '/'
+
+          // Wait a bit to ensure auth state is updated before navigating
+          // This prevents redirect back to sign-in page
+          setTimeout(() => {
+            navigate({ to: navigateRoute as any });
+          }, 100);
         },
-        onError: (error) => {
-          console.log(error)
-          let errorMessage = 'Đăng nhập thất bại!';
-
-          if (error && 'response' in error) {
-            const axiosError = error as AxiosError<ApiErrorResponse>;
-            errorMessage = axiosError?.response?.data?.message ||
-              axiosError?.response?.data?.error ||
-              axiosError?.message ||
-              'Đăng nhập thất bại!';
-          } else {
-            errorMessage = error?.message || 'Đăng nhập thất bại!';
-          }
-
-          toast.error(errorMessage);
-        }
       });
     }
   }

@@ -18,6 +18,7 @@ import { Button } from "@/components/ui/button"
 import { toast } from "sonner"
 import { useUpdateProject } from "@/hooks/api/projects"
 import { MoneyInput } from "@/components/admin/MoneyInput"
+import { DatePicker } from "@/components/date-picker"
 
 const projectSchema = z.object({
     id: z.string(),
@@ -25,8 +26,23 @@ const projectSchema = z.object({
     description: z.string(),
     status: z.string(),
     budget: z.coerce.number<number>().min(1, "Ngân sách không được nhỏ hơn 0").refine((v) => v >= 0, "Ngân sách không được nhỏ hơn 0"),
-    startDate: z.string().optional(),
-    endDate: z.string().optional(),
+    startDate: z.date({
+        message: 'Ngày bắt đầu là bắt buộc.',
+    }).refine((date) => {
+        if (!date) return false
+        const today = new Date()
+        today.setHours(0, 0, 0, 0)
+        const minDate = new Date(today)
+        minDate.setDate(minDate.getDate() + 5)
+        const selectedDate = new Date(date)
+        selectedDate.setHours(0, 0, 0, 0)
+        return selectedDate >= minDate
+    }, {
+        message: 'Ngày bắt đầu phải sau 5 ngày so với ngày hiện tại.',
+    }).optional(),
+    endDate: z.date({
+        message: 'Ngày kết thúc là bắt buộc.',
+    }).optional(),
     skills: z.array(
         z.object({
             id: z.string(),
@@ -34,6 +50,18 @@ const projectSchema = z.object({
             description: z.string(),
         })
     ),
+}).refine((data) => {
+    if (data.startDate && data.endDate) {
+        const start = new Date(data.startDate)
+        start.setHours(0, 0, 0, 0)
+        const end = new Date(data.endDate)
+        end.setHours(0, 0, 0, 0)
+        return end > start
+    }
+    return true
+}, {
+    message: 'Ngày kết thúc phải sau ngày bắt đầu.',
+    path: ['endDate'],
 })
 
 export type ProjectFormData = z.infer<typeof projectSchema>
@@ -41,10 +69,12 @@ export type ProjectFormData = z.infer<typeof projectSchema>
 export default function ProjectForm({ initialData }: { initialData: ProjectFormData }) {
     const form = useForm<ProjectFormData>({
         resolver: zodResolver(projectSchema),
-        defaultValues: initialData
+        defaultValues: {
+            ...initialData,
+            startDate: initialData.startDate ? new Date(initialData.startDate) : undefined,
+            endDate: initialData.endDate ? new Date(initialData.endDate) : undefined,
+        }
     })
-
-    console.log(form.formState.errors)
 
     if (!initialData) return null
 
@@ -67,6 +97,8 @@ export default function ProjectForm({ initialData }: { initialData: ProjectFormD
             description: values.description,
             budget: Number(values.budget),
             skillIds: values.skills.map((s: any) => s.id),
+            startDate: values.startDate,
+            endDate: values.endDate,
         }
 
         const promise = updateProject.mutateAsync(payload)
@@ -99,6 +131,7 @@ export default function ProjectForm({ initialData }: { initialData: ProjectFormD
                                         <Input
                                             {...field}
                                             disabled={!isUpdateMode}
+                                            className='bg-muted/20 text-foreground disabled:opacity-100'
                                         />
                                     </FormControl>
                                     <FormMessage />
@@ -120,6 +153,7 @@ export default function ProjectForm({ initialData }: { initialData: ProjectFormD
                                             {...field}
                                             disabled={!isUpdateMode}
                                             value={field.value}
+                                            className='bg-muted/20 text-foreground disabled:opacity-100'
                                         />
                                     </FormControl>
                                     <FormMessage />
@@ -137,7 +171,7 @@ export default function ProjectForm({ initialData }: { initialData: ProjectFormD
                                         Trạng thái
                                     </FormLabel>
                                     <FormControl>
-                                        <Input value={statusLabel} disabled />
+                                        <Input value={statusLabel} disabled className='bg-muted/20 text-foreground disabled:opacity-100' />
                                     </FormControl>
                                 </FormItem>
                             )}
@@ -150,56 +184,77 @@ export default function ProjectForm({ initialData }: { initialData: ProjectFormD
                         <FormField
                             control={form.control}
                             name="startDate"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel className="text-base font-medium">
-                                        Ngày bắt đầu
-                                    </FormLabel>
-                                    <FormControl>
-                                        <Input
-                                            value={
-                                                field.value
-                                                    ? new Date(field.value).toLocaleDateString('vi-VN', {
-                                                        year: 'numeric',
-                                                        month: 'long',
-                                                        day: 'numeric',
-                                                    })
-                                                    : 'Chưa có'
-                                            }
-                                            disabled
-                                        />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
+                            render={({ field }) => {
+                                // Tính minDate: sau 5 ngày từ hôm nay
+                                const today = new Date()
+                                today.setHours(0, 0, 0, 0)
+                                const minStartDate = new Date(today)
+                                minStartDate.setDate(minStartDate.getDate() + 5)
+
+                                return (
+                                    <FormItem>
+                                        <FormLabel className="text-base font-medium">
+                                            Ngày bắt đầu
+                                        </FormLabel>
+                                        <FormControl>
+                                            <DatePicker
+                                                selected={field.value}
+                                                onSelect={field.onChange}
+                                                placeholder="Chọn ngày bắt đầu"
+                                                disabled={!isUpdateMode}
+                                                minDate={minStartDate}
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                        {isUpdateMode && (
+                                            <p className="text-xs text-gray-500 mt-1">
+                                                Ngày bắt đầu phải sau 5 ngày so với ngày hiện tại
+                                            </p>
+                                        )}
+                                    </FormItem>
+                                )
+                            }}
                         />
 
                         {/* Ngày kết thúc */}
                         <FormField
                             control={form.control}
                             name="endDate"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel className="text-base font-medium">
-                                        Ngày kết thúc
-                                    </FormLabel>
-                                    <FormControl>
-                                        <Input
-                                            value={
-                                                field.value
-                                                    ? new Date(field.value).toLocaleDateString('vi-VN', {
-                                                        year: 'numeric',
-                                                        month: 'long',
-                                                        day: 'numeric',
-                                                    })
-                                                    : 'Chưa có'
-                                            }
-                                            disabled
-                                        />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
+                            render={({ field }) => {
+                                // Tính minDate: sau ngày bắt đầu
+                                const startDate = form.watch('startDate')
+                                const minEndDate = startDate ? (() => {
+                                    const min = new Date(startDate)
+                                    min.setDate(min.getDate() + 1) // Phải sau ngày bắt đầu
+                                    min.setHours(0, 0, 0, 0)
+                                    return min
+                                })() : undefined
+
+                                return (
+                                    <FormItem>
+                                        <FormLabel className="text-base font-medium">
+                                            Ngày kết thúc
+                                        </FormLabel>
+                                        <FormControl>
+                                            <DatePicker
+                                                selected={field.value}
+                                                onSelect={field.onChange}
+                                                placeholder="Chọn ngày kết thúc"
+                                                disabled={!isUpdateMode || !startDate}
+                                                minDate={minEndDate}
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                        {isUpdateMode && (
+                                            <p className="text-xs text-gray-500 mt-1">
+                                                {startDate
+                                                    ? 'Ngày kết thúc phải sau ngày bắt đầu'
+                                                    : 'Vui lòng chọn ngày bắt đầu trước'}
+                                            </p>
+                                        )}
+                                    </FormItem>
+                                )
+                            }}
                         />
                     </div>
 
@@ -252,7 +307,7 @@ export default function ProjectForm({ initialData }: { initialData: ProjectFormD
                                             rows={10}
                                             {...field}
                                             disabled={!isUpdateMode}
-                                            className="resize-none"
+                                            className='bg-muted/20 text-foreground disabled:opacity-100 resize-none'
                                         />
                                     </FormControl>
                                     <FormMessage />

@@ -17,6 +17,7 @@ import {
 } from './finance.types'
 import { useGetMyProjects, useGetProjectMilestones } from '@/hooks/api/projects'
 import { useGetMilestonesMembers } from '@/hooks/api/milestones/queries'
+import type { MilestoneMember } from '@/hooks/api/milestones'
 import { usePermission } from '@/hooks/usePermission'
 
 export const TeamFundPage: React.FC = () => {
@@ -45,15 +46,15 @@ export const TeamFundPage: React.FC = () => {
 
     // Get the correct member list based on user role
     // API returns: { data: { mentors: [], talents: [] } }
-    const apiMembersData = membersResponse?.data || {}
+    const apiMembersData = membersResponse?.data
     const apiMembers = useMemo(() => {
         // If user is MENTOR, show mentors list
         // If user is USER/TALENT, show talents list
         if (userRole === 'MENTOR') {
-            return apiMembersData.mentors || []
+            return apiMembersData?.mentors || []
         } else {
             // USER, TALENT, or other roles
-            return apiMembersData.talents || []
+            return apiMembersData?.talents || []
         }
     }, [apiMembersData, userRole])
 
@@ -78,18 +79,18 @@ export const TeamFundPage: React.FC = () => {
         if (!hasMembers) {
             return [] // Return empty array if no members
         }
-        return apiMembers.map((m: any) => {
-            // Check if user is leader (by comparing userId with current user or check isLeader field)
-            const isLeader = m.isLeader || m.userId === currentUserId
+        return apiMembers.map((m: MilestoneMember) => {
+            // Check if user is leader
+            const isLeader = m.leader || m.userId === currentUserId
 
             return {
-                id: m.userId || m.projectMemberId || m.id,
-                name: m.fullName || m.name || 'Unknown',
-                avatar: m.avatarUrl || m.avatar || '',
+                id: m.userId,
+                name: m.fullName,
+                avatar: m.avatarUrl,
                 role: isLeader ? 'LEADER' : 'MEMBER' as const,
                 status: (m.leftAt === null || !m.leftAt) ? 'ACTIVE' : 'INACTIVE' as const,
-                email: m.email || '',
-                joinedAt: m.joinedAt || new Date().toISOString()
+                email: m.email,
+                joinedAt: m.joinedAt
             }
         })
     }, [apiMembers, currentUserId, hasMembers])
@@ -112,7 +113,7 @@ export const TeamFundPage: React.FC = () => {
         ? selectedMilestone.remainingAmount - totalAllocated
         : 0
 
-    const canSubmit = selectedMilestone && remaining >= 0 && totalAllocated > 0 && hasMembers
+    const canSubmit = (selectedMilestone && remaining >= 0 && totalAllocated > 0 && hasMembers) || false
 
     // Handlers
     const handleProjectChange = (projectId: string) => {

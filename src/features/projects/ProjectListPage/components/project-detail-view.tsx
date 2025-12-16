@@ -52,7 +52,7 @@ export function ProjectDetailView({ project, onApply }: ProjectDetailViewProps) 
         <p className="text-gray-500 mt-1 mb-3">Chi tiết thông tin dự án</p>
 
         <Button
-          className="w-full bg-red-600 hover:bg-red-700 text-lg py-3 font-bold mt-2"
+          className="w-full bg-[#e76f51] hover:bg-[#d65a3f] text-white text-lg py-3 font-bold mt-2 shadow-lg hover:shadow-xl transition-all"
           onClick={() => onApply(project)}
           disabled={!canApply || isAppLoading}
         >

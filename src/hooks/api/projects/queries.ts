@@ -32,8 +32,29 @@ export function useCreateProject() {
       description: string
       skillIds: string[]
       budget: number
+      startDate?: Date | string
+      endDate?: Date | string
     }) => {
-      const res = await apiRequest.post('/api/v1/projects', payload)
+      // Format dates to ISO string if they are Date objects
+      const requestBody: any = {
+        title: payload.title,
+        description: payload.description,
+        skillIds: payload.skillIds,
+        budget: payload.budget,
+      }
+
+      if (payload.startDate) {
+        requestBody.startDate = payload.startDate instanceof Date
+          ? payload.startDate.toISOString()
+          : payload.startDate
+      }
+      if (payload.endDate) {
+        requestBody.endDate = payload.endDate instanceof Date
+          ? payload.endDate.toISOString()
+          : payload.endDate
+      }
+
+      const res = await apiRequest.post('/api/v1/projects', requestBody)
       return res.data
     },
   })
@@ -225,12 +246,27 @@ export function useUpdateProject() {
       description: string;
       budget: number;
       skillIds: string[];
+      startDate?: Date | string;
+      endDate?: Date | string;
     }) => {
-      const { projectId, ...body } = payload;
+      const { projectId, startDate, endDate, ...body } = payload;
+
+      // Format dates to ISO string if they are Date objects
+      const requestBody: any = { ...body };
+      if (startDate) {
+        requestBody.startDate = startDate instanceof Date
+          ? startDate.toISOString()
+          : startDate;
+      }
+      if (endDate) {
+        requestBody.endDate = endDate instanceof Date
+          ? endDate.toISOString()
+          : endDate;
+      }
 
       const { data } = await apiRequest.put(
         `/api/v1/projects/${projectId}`,
-        body
+        requestBody
       );
 
       return data;

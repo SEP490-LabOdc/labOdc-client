@@ -5,7 +5,7 @@ import ProjectForm from '../components/project-form'
 import { useGetProjectById } from '@/hooks/api/projects'
 import { PROJECT_STATUS } from '../data/schema'
 import { StatusAlert } from '@/components/admin/StatusAlert'
-import ProjectDetailPage from '@/features/mentor/project-detail'
+import ProjectDetailPage from '@/features/projects/project-detail'
 
 const route = getRouteApi('/_authenticated/company-manage/projects/$projectId/')
 
@@ -42,17 +42,6 @@ export default function ViewProject() {
     return (
         <>
             <Main>
-                <div className="mb-2 flex flex-wrap items-center justify-between space-y-2">
-                    <div>
-                        <h2 className="text-2xl font-bold tracking-tight">
-                            Thông tin dự án
-                        </h2>
-                        <p className="text-muted-foreground">
-                            Xem chi tiết dự án tại đây.
-                        </p>
-                    </div>
-                </div>
-
                 {project?.status === PROJECT_STATUS.PENDING && (
                     <StatusAlert
                         variant="info"
@@ -95,7 +84,7 @@ export default function ViewProject() {
                     )
                 }
                 {
-                    (project.status == PROJECT_STATUS.PLANNING) && (
+                    (project.status !== PROJECT_STATUS.PENDING && project.status !== PROJECT_STATUS.UPDATE_REQUIRED) && (
                         <ProjectDetailPage />
                     )
                 }

@@ -1,59 +1,50 @@
-// import { useState } from 'react'
-// import { ApiErrorTypes, type TApiErrors } from './types.ts'
-// import { Modal, ModalContent } from '@/components/v2/Modal'
-// import { Table, TableContainer, TBody, Td, Th, THead, Tr } from '@/components/v2/Table'
-// import { toast } from 'sonner'
-// import axios from 'axios'
+import axios from 'axios'
+import { MutationCache, QueryClient } from '@tanstack/react-query'
+import { ApiErrorTypes, type TApiErrors } from './types.ts'
+import { toast } from 'sonner'
 
-// function ValidationErrorModal({ serverResponse }: { serverResponse: TApiErrors }) {
-//   const [open, setOpen] = useState(true);
+export const onRequestError = (error: unknown) => {
+  if (axios.isAxiosError(error)) {
+    const statusCode = error.response?.status
+    const serverResponse = error.response?.data as TApiErrors | { message?: string }
 
-//   if (serverResponse.error !== ApiErrorTypes.ValidationError) {
-//     return null;
-//   }
+    // Log message từ API nếu status code là 400 hoặc 503
+    if (statusCode === 400 || statusCode === 503) {
+      // Lấy message từ response, ưu tiên message từ API
+      let errorMessage = 'Đã xảy ra lỗi'
 
-//   return (
-//     <Modal isOpen={open} onOpenChange={setOpen}>
-//       <ModalContent title="Validation Error Details">
-//         <TableContainer>
-//           <Table>
-//             <THead>
-//               <Tr>
-//                 <Th>Field</Th>
-//                 <Th>Issue</Th>
-//               </Tr>
-//             </THead>
-//             <TBody>
-//               {serverResponse.message?.map(({ message, path }) => (
-//                 <Tr key={path.join(".")}>
-//                   <Td>{path.join(".")}</Td>
-//                   <Td>{message.toLowerCase()}</Td>
-//                 </Tr>
-//               ))}
-//             </TBody>
-//           </Table>
-//         </TableContainer>
-//       </ModalContent>
-//     </Modal>
-//   );
-// }
+      if (serverResponse) {
+        // Kiểm tra nếu là TApiErrors có message
+        if ('message' in serverResponse && typeof serverResponse.message === 'string') {
+          errorMessage = serverResponse.message
+        } else if ('error' in serverResponse && 'message' in serverResponse) {
+          // Nếu là TApiErrors
+          errorMessage = (serverResponse as TApiErrors).message || errorMessage
+        }
+      }
 
-// export const onRequestError = (error: unknown) => {
-//   if (axios.isAxiosError(error)) => {
-//     const serverResponse = error.response?.data as TApiErrors;
-//     if(serverResponse?.error === ApiErrorTypes.ValidationError) {
-//       toast.error("Please check the input and try again.");
-//       return;
-//     };
-//   }
-// }
+      // Fallback về error.message nếu không có message từ API
+      if (errorMessage === 'Đã xảy ra lỗi' && error.message) {
+        errorMessage = error.message
+      }
 
-import { QueryClient } from '@tanstack/react-query'
+      // Hiển thị toast với message từ API
+      toast.error(errorMessage)
+      return
+    }
+
+    // Xử lý các lỗi validation
+    if (serverResponse && 'error' in serverResponse && serverResponse.error === ApiErrorTypes.ValidationError) {
+      toast.error("Please check the input and try again.")
+      return
+    }
+  }
+}
 
 export const queryClient = new QueryClient({
-  // mutationCache: new MutationCache({
-  //   onError: onRequestError
-  // }),
+  mutationCache: new MutationCache({
+    onError: onRequestError
+  }),
   defaultOptions: {
     queries: {
       refetchOnWindowFocus: false,

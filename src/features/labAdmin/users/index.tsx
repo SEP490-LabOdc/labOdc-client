@@ -12,7 +12,7 @@ export default function Users() {
     const navigate = route.useNavigate()
 
     // 1. Lấy trạng thái truy vấn từ hook
-    const { data, isLoading, isError, error } = useGetUsers();
+    const { data, isError, error } = useGetUsers();
 
     // 3. Xử lý trạng thái Error
     if (isError) {
@@ -28,9 +28,6 @@ export default function Users() {
     // 4. Lấy dữ liệu khi đã thành công
     // Giả định API response có cấu trúc { data: Company[], ... }
     const users = data?.data || [];
-
-    console.log(users);
-    console.log(isLoading);
 
     return (
         <UsersProvider>

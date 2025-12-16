@@ -22,6 +22,7 @@ export interface Skill {
 export interface ProjectMentor {
   id: string
   name: string
+  avatar: string
   roleName: string
   leader: boolean
 }
@@ -35,13 +36,16 @@ export interface TeamMember {
 }
 
 export interface ProjectMember {
-  projectMemberId: string
-  userId: string
-  fullName: string
-  email: string
+  projectMemberId?: string
+  userId?: string
+  fullName?: string
+  email?: string
+  phone?: string
   avatarUrl?: string
-  roleName: 'MENTOR' | 'TALENT'
-  isLeader?: boolean
+  roleName?: 'MENTOR' | 'TALENT'
+  isActive?: boolean
+  joinedAt?: string
+  leftAt?: string | null
 }
 
 export interface ProjectListItem {
@@ -57,14 +61,6 @@ export interface ProjectListItem {
   companyName?: string
 }
 
-export interface ApiResponse<T> {
-  success: boolean
-  message: string
-  data: T
-  errorCode: string
-  timestamp: string
-}
-
 export interface Project {
   projectId: string
   projectName: string
@@ -76,21 +72,6 @@ export interface Project {
   skills: Skill[]
   budget?: number
   status?: ProjectTypes
-}
-export interface MilestoneUser {
-  userId: string
-  name: string
-  avatar: string
-  email: string
-  phone: string
-}
-
-export interface MilestonesResponse {
-  success: boolean
-  message: string
-  data: Milestone[]
-  errorCode: string
-  timestamp: string
 }
 
 export interface Note {
@@ -142,25 +123,4 @@ export interface ProjectDetail {
   companyName: string
 }
 
-export interface MilestoneAttachment {
-  id: string
-  name: string
-  fileName: string
-  url: string
-}
-
-export interface Milestone {
-  id: string
-  projectId: string
-  projectName: string
-  title: string
-  budget: number
-  description: string
-  startDate: string
-  endDate: string
-  status: string
-  talents: MilestoneUser[]
-  mentors: MilestoneUser[]
-  attachments?: MilestoneAttachment[]
-}
 

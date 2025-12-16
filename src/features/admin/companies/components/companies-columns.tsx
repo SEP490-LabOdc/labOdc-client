@@ -7,14 +7,7 @@ import { LongText } from '@/components/long-text'
 import { callTypes } from '../data/data'
 import { COMPANY_STATUS_LABEL, type Company } from '../data/schema'
 import { Link } from '@tanstack/react-router'
-
-const formatDate = (date: Date) => {
-    return date.toLocaleDateString('vi-VN', {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-    })
-}
+import { formatDateOnly } from '@/helpers/datetime'
 
 export const companiesColumns: ColumnDef<Company>[] = [
     {
@@ -167,7 +160,7 @@ export const companiesColumns: ColumnDef<Company>[] = [
                 return <div>Không hợp lệ</div>;
             }
 
-            return <div className="min-w-[100px]">{formatDate(dateValue)}</div>
+            return <div className="min-w-[100px]">{formatDateOnly(dateValue)}</div>
         },
     },
 ]

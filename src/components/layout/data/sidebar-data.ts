@@ -140,6 +140,11 @@ export const systemAmdminSidebarData: SidebarData = {
           icon: IconSettings,
           items: [
             {
+              title: 'Cấu hình hệ thống',
+              url: '/admin/system-config',
+              icon: IconSettings,
+            },
+            {
               title: 'Lịch sử cập nhật',
               url: '/',
               icon: IconHistory,
