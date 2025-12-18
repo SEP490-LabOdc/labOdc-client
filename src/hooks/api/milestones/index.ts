@@ -11,3 +11,4 @@ export type {
     MilestoneMembersData,
     MilestoneMembersResponse,
 } from './types.ts'
+export { MilestoneStatus } from './enums.ts'

@@ -11,6 +11,7 @@ import {
   MilestoneDocumentsTab,
   MilestoneFinancialsTab
 } from './components'
+import { MilestoneStatus } from '@/hooks/api/milestones'
 
 const MilestoneDetailPage: React.FC = () => {
   const { milestoneId, projectId } = useParams({ strict: false })
@@ -33,7 +34,7 @@ const MilestoneDetailPage: React.FC = () => {
         <div className="col-span-12 lg:col-span-4 space-y-6">
           <MilestoneSidebar
             milestone={milestone}
-            paymentStatus={'PENDING_DEPOSIT'}
+            paymentStatus={MilestoneStatus.PENDING_DEPOSIT}
             escrowBalance={milestone.escrowBalance || 0}
             projectId={projectId as string || milestone.projectId}
           />
@@ -69,7 +70,7 @@ const MilestoneDetailPage: React.FC = () => {
             <TabsContent value="financials" className="mt-6">
               <MilestoneFinancialsTab
                 amount={milestone.budget}
-                status={'PENDING_DEPOSIT'}
+                status={MilestoneStatus.PENDING_DEPOSIT}
                 userRole={userRole}
                 milestoneId={milestone.id}
               />

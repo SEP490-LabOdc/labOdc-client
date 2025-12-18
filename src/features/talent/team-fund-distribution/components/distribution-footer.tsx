@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button'
 import { CheckCircle, AlertTriangle, XCircle, ArrowRight } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { formatVND } from '../finance.types'
-import type { MilestoneFund } from '../finance.types'
+import type { MilestoneFund } from '@/hooks/api/milestones/types'
 
 interface DistributionFooterProps {
     milestone: MilestoneFund

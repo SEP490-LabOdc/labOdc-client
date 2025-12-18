@@ -9,12 +9,12 @@ import {
     TrendingUp,
     DollarSign
 } from 'lucide-react'
-import type { Member } from '../finance.types'
+import type { MilestoneMember } from '@/hooks/api/milestones/types'
 import { formatVND, calculatePercentage } from '../finance.types'
 import { cn } from '@/lib/utils'
 
 interface DistributionTableProps {
-    members: Member[]
+    members: MilestoneMember[]
     totalFund: number
     allocations: Record<string, number>
     onAllocationChange: (memberId: string, amount: number) => void
@@ -209,14 +209,14 @@ export const DistributionTable: React.FC<DistributionTableProps> = ({
                                 </tr>
                             ) : (
                                 members.map((member) => {
-                                    const allocation = allocations[member.id] || 0
+                                    const allocation = allocations[member.userId] || 0
                                     const percentage = getPercentage(allocation)
-                                    const isCurrentUser = member.id === currentUserId
-                                    const isInactive = member.status === 'INACTIVE'
+                                    const isCurrentUser = member.userId === currentUserId
+                                    const isInactive = member.leftAt !== null && member.leftAt !== undefined
 
                                     return (
                                         <tr
-                                            key={member.id}
+                                            key={member.userId}
                                             className={cn(
                                                 "transition-colors hover:bg-gray-50",
                                                 isCurrentUser && "bg-indigo-50/50 hover:bg-indigo-50",
@@ -230,7 +230,7 @@ export const DistributionTable: React.FC<DistributionTableProps> = ({
                                                         "h-10 w-10",
                                                         isInactive && "grayscale"
                                                     )}>
-                                                        <AvatarImage src={member.avatar} alt={member.name} />
+                                                        <AvatarImage src={member.avatarUrl} alt={member.fullName} />
                                                         <AvatarFallback>
                                                             <User className="h-5 w-5" />
                                                         </AvatarFallback>
@@ -241,15 +241,15 @@ export const DistributionTable: React.FC<DistributionTableProps> = ({
                                                                 "font-semibold text-gray-900 truncate",
                                                                 isInactive && "text-gray-500"
                                                             )}>
-                                                                {member.name}
+                                                                {member.fullName}
                                                             </p>
-                                                            {member.role === 'LEADER' && (
+                                                            {member.leader && (
                                                                 <Badge
                                                                     variant="outline"
                                                                     className="bg-yellow-50 text-yellow-700 border-yellow-300 flex items-center gap-1"
                                                                 >
                                                                     <Crown className="h-3 w-3" />
-                                                                    Leader
+                                                                    Trưởng nhóm
                                                                 </Badge>
                                                             )}
                                                             {isInactive && (
@@ -277,7 +277,7 @@ export const DistributionTable: React.FC<DistributionTableProps> = ({
                                                             inputMode="numeric"
                                                             pattern="[0-9]*"
                                                             value={allocation === 0 ? '' : allocation.toString()}
-                                                            onChange={(e) => handleInputChange(member.id, e.target.value)}
+                                                            onChange={(e) => handleInputChange(member.userId, e.target.value)}
                                                             placeholder="0"
                                                             className={cn(
                                                                 "pr-16 text-right font-mono",

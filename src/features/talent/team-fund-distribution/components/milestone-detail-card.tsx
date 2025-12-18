@@ -5,11 +5,11 @@ import { Users, DollarSign, Clock } from 'lucide-react'
 import { formatVND } from '../finance.types'
 import { DistributionTable } from './distribution-table'
 import { DistributionFooter } from './distribution-footer'
-import type { MilestoneFund, Member } from '../finance.types'
+import type { MilestoneFund, MilestoneMember } from '@/hooks/api/milestones/types'
 
 interface MilestoneDetailCardProps {
     milestone: MilestoneFund
-    members: Member[]
+    members: MilestoneMember[]
     allocations: Record<string, number>
     onAllocationChange: (memberId: string, amount: number) => void
     currentUserId: string

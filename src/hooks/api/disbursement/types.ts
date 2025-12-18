@@ -85,3 +85,10 @@ export interface ExecuteDisbursementResult {
 
 export type ExecuteDisbursementResponse = ApiResponse<ExecuteDisbursementResult>
 
+export interface DisbursePayload {
+    milestoneId: string
+    disbursements: Array<{
+        userId: string
+        amount: number
+    }>
+}
