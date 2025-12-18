@@ -296,3 +296,25 @@ export function useCreateMilestoneDocument() {
     }
   })
 }
+
+export function useCompleteProject() {
+  return useMutation({
+    mutationFn: async (projectId: string) => {
+      const { data } = await apiRequest.patch(
+        `/api/v1/projects/${projectId}/complete`
+      )
+      return data
+    }
+  })
+}
+
+export function useCloseProject() {
+  return useMutation({
+    mutationFn: async (projectId: string) => {
+      const { data } = await apiRequest.patch(
+        `/api/v1/projects/${projectId}/complete`
+      )
+      return data
+    }
+  })
+}

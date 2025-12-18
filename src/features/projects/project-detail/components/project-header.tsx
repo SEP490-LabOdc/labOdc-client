@@ -1,15 +1,15 @@
 import React from 'react'
 import { useNavigate, useRouter } from '@tanstack/react-router'
 import { Button } from '@/components/ui/button'
-import { ChevronLeft } from 'lucide-react'
+import { ChevronLeft, Loader2 } from 'lucide-react'
 import { getRoleBasePath } from '@/lib/utils'
 import { useUser } from '@/context/UserContext'
 import { usePermission } from '@/hooks/usePermission'
-import { ProjectStatus } from '@/hooks/api/projects'
+import { ProjectStatus, useCloseProject, useCompleteProject } from '@/hooks/api/projects'
 import type { ProjectDetail } from '@/hooks/api/projects/types'
 
 interface ProjectPageHeaderProps {
-  projectData?: ProjectDetail
+  projectData: ProjectDetail
 }
 
 export const ProjectPageHeader: React.FC<ProjectPageHeaderProps> = ({ projectData }) => {
@@ -17,6 +17,9 @@ export const ProjectPageHeader: React.FC<ProjectPageHeaderProps> = ({ projectDat
   const { history } = useRouter()
   const { user } = useUser()
   const { isCompany, isLabAdmin } = usePermission()
+
+  const completeProjectMutation = useCompleteProject()
+  const closeProjectMutation = useCloseProject()
 
   const handleGoBack = () => {
     // Try to go back in history, if no history, navigate to projects list
@@ -27,12 +30,12 @@ export const ProjectPageHeader: React.FC<ProjectPageHeaderProps> = ({ projectDat
     }
   }
 
-  const handleCompleteProject = () => {
-    console.log('Hoàn thành dự án:', projectData?.id)
+  const handleCompleteProject = async (projectId: string) => {
+    await completeProjectMutation.mutateAsync(projectId)
   }
 
-  const handleCloseProject = () => {
-    console.log('Đóng dự án:', projectData?.id)
+  const handleCloseProject = async (projectId: string) => {
+    await closeProjectMutation.mutateAsync(projectId)
   }
 
   const projectStatus = projectData?.status
@@ -60,19 +63,29 @@ export const ProjectPageHeader: React.FC<ProjectPageHeaderProps> = ({ projectDat
       <div className="flex items-center gap-3">
         {showCompleteButton && (
           <Button
-            onClick={handleCompleteProject}
+            onClick={() => handleCompleteProject(projectData?.id)}
             className="bg-green-600 hover:bg-green-700 text-white"
+            disabled={completeProjectMutation.isPending}
           >
-            Hoàn thành
+            {completeProjectMutation.isPending ? (
+              <><Loader2 className="h-4 w-4 mr-2 animate-spin" /> Đang hoàn thành...</>
+            ) : (
+              'Hoàn thành'
+            )}
           </Button>
         )}
 
         {showCloseButton && (
           <Button
-            onClick={handleCloseProject}
+            onClick={() => handleCloseProject(projectData?.id)}
             variant="destructive"
+            disabled={closeProjectMutation.isPending}
           >
-            Đóng dự án
+            {closeProjectMutation.isPending ? (
+              <><Loader2 className="h-4 w-4 mr-2 animate-spin" /> Đang đóng dự án...</>
+            ) : (
+              'Đóng dự án'
+            )}
           </Button>
         )}
       </div>
