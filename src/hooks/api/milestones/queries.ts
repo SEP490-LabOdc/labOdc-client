@@ -54,4 +54,15 @@ export function useGetMilestonesMembers(milestoneId: string) {
     });
 }
 
-
+export function useGetMilestonesMembersByRole(milestoneId: string, role: string) {
+    return useQuery<MilestoneMembersResponse>({
+        queryKey: milestoneKeys.milestoneMembersByRole(milestoneId, role),
+        queryFn: async () => {
+            const { data } = await apiRequest.get<MilestoneMembersResponse>(
+                `/api/v1/project-milestones/${milestoneId}/milestone-members/by-role?role=${role}`
+            );
+            return data;
+        },
+        enabled: !!milestoneId && !!role,
+    });
+}
