@@ -1,7 +1,7 @@
 import React from 'react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Wallet, TrendingUp } from 'lucide-react'
-import { formatVND } from '../finance.types'
+import { formatVND } from '@/helpers/currency'
 
 interface SummaryCardsProps {
     remainingInHolding: number
@@ -9,8 +9,8 @@ interface SummaryCardsProps {
 }
 
 export const SummaryCards: React.FC<SummaryCardsProps> = ({
-    remainingInHolding,
-    totalDistributed
+    remainingInHolding = 0,
+    totalDistributed = 0
 }) => {
     return (
         <div className="grid grid-cols-2 gap-3">

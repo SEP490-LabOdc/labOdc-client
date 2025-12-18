@@ -8,17 +8,14 @@ import {
     MilestoneDetailCard,
     EmptyMilestoneState
 } from './components'
-import {
-    formatVND,
-    calculateTeamFundSummary,
-    getOpenMilestones,
-    type Member,
-    type MilestoneFund
-} from './finance.types'
 import { useGetMyProjects, useGetProjectMilestones } from '@/hooks/api/projects'
 import { useGetMilestonesMembers } from '@/hooks/api/milestones/queries'
-import type { MilestoneMember } from '@/hooks/api/milestones'
+import type { MilestoneMember, MilestoneStatus } from '@/hooks/api/milestones'
 import { usePermission } from '@/hooks/usePermission'
+import type { MilestoneFund } from '@/hooks/api/milestones/types'
+import { formatVND } from '@/helpers/currency'
+import { getPaidMilestones } from '@/helpers/milestone'
+import { useDisburse } from '@/hooks/api/disbursement/mutations'
 
 export const TeamFundPage: React.FC = () => {
     const { user } = usePermission()
@@ -64,8 +61,8 @@ export const TeamFundPage: React.FC = () => {
             id: m.id,
             title: m.title,
             totalReceived: m.budget || 0,
-            remainingAmount: m.budget || 0, // TODO: Calculate actual remaining from API
-            status: m.status === 'ON_GOING' ? 'OPEN' : 'CLOSED' as const,
+            remainingAmount: m.budget || 0,
+            status: m.status as MilestoneStatus,
             releasedAt: m.endDate || new Date().toISOString(),
             description: m.description || ''
         }))
@@ -75,31 +72,18 @@ export const TeamFundPage: React.FC = () => {
     const hasMembers = apiMembers && apiMembers.length > 0
 
     // Map API members to Member format
-    const members: Member[] = useMemo(() => {
+    const members: MilestoneMember[] = useMemo(() => {
         if (!hasMembers) {
-            return [] // Return empty array if no members
+            return []
         }
-        return apiMembers.map((m: MilestoneMember) => {
-            // Check if user is leader
-            const isLeader = m.leader || m.userId === currentUserId
-
-            return {
-                id: m.userId,
-                name: m.fullName,
-                avatar: m.avatarUrl,
-                role: isLeader ? 'LEADER' : 'MEMBER' as const,
-                status: (m.leftAt === null || !m.leftAt) ? 'ACTIVE' : 'INACTIVE' as const,
-                email: m.email,
-                joinedAt: m.joinedAt
-            }
-        })
+        return apiMembers
     }, [apiMembers, currentUserId, hasMembers])
 
     // Get open milestones only
-    const openMilestones = getOpenMilestones(milestones)
+    const openMilestones = getPaidMilestones(milestones)
 
     // Calculate summary stats
-    const summary = calculateTeamFundSummary(milestones, members)
+    // const summary = calculateTeamFundSummary(openMilestones, members)
 
     // Get selected milestone
     const selectedMilestone = milestones.find(m => m.id === selectedMilestoneId)
@@ -134,28 +118,40 @@ export const TeamFundPage: React.FC = () => {
         }))
     }
 
+    // Disbursement
+    const { mutateAsync: disburse } = useDisburse()
+
     const handleConfirmDistribution = async () => {
-        if (!canSubmit) return
+        if (!canSubmit || !selectedMilestoneId) return
+
+        const disbursements = Object.entries(allocations)
+            .filter(([_, amount]) => amount > 0)
+            .map(([userId, amount]) => ({
+                userId,
+                amount
+            }))
+
+        if (disbursements.length === 0) {
+            toast.error('Vui lòng phân bổ tiền cho ít nhất một thành viên')
+            return
+        }
 
         setIsSubmitting(true)
         try {
-            // TODO: Call API to submit distribution
-            console.log('Distribution:', {
+            await disburse({
                 milestoneId: selectedMilestoneId,
-                allocations,
-                totalAmount: totalAllocated
+                disbursements
             })
-
-            // Simulate API call
-            await new Promise(resolve => setTimeout(resolve, 1500))
 
             toast.success(`Đã phân bổ thành công ${formatVND(totalAllocated)}`)
 
-            // Reset state
+            // Reset state after success
             setAllocations({})
             setSelectedMilestoneId('')
-        } catch (error) {
-            toast.error('Có lỗi xảy ra, vui lòng thử lại')
+        } catch (error: any) {
+            // Handle error from API
+            const errorMessage = error?.response?.data?.message || error?.message || 'Có lỗi xảy ra, vui lòng thử lại'
+            toast.error(errorMessage)
             console.error('Distribution error:', error)
         } finally {
             setIsSubmitting(false)
@@ -190,8 +186,8 @@ export const TeamFundPage: React.FC = () => {
                     <div className="col-span-12 lg:col-span-4 flex flex-col gap-4 h-full overflow-hidden">
                         {/* Summary Cards */}
                         <SummaryCards
-                            remainingInHolding={summary.remainingInHolding}
-                            totalDistributed={summary.totalDistributed}
+                            remainingInHolding={0}
+                            totalDistributed={0}
                         />
 
                         {/* Milestone List */}
