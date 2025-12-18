@@ -11,7 +11,7 @@ import type { MilestoneDetail } from '@/hooks/api/milestones/types'
 import { useApproveMilestone, useStartMilestone } from '@/hooks/api/projects/mutation'
 import { toast } from 'sonner'
 import { usePermission } from '@/hooks/usePermission'
-import { ProjectTypes } from '@/hooks/api/projects'
+import { ProjectStatus } from '@/hooks/api/projects'
 import { RejectMilestoneModal } from './reject-milestone-modal'
 import { useQueryClient } from '@tanstack/react-query'
 import { milestoneKeys } from '@/hooks/api/milestones/query-keys'
@@ -73,7 +73,7 @@ export const MilestonePageHeader: React.FC<MilestonePageHeaderProps> = ({ milest
             </div>
 
             <div className="flex items-center gap-3">
-              {isCompany && milestone.status === ProjectTypes.PENDING && (
+              {isCompany && milestone.status === ProjectStatus.PENDING && (
                 <>
                   <Button
                     variant="outline"
@@ -92,7 +92,7 @@ export const MilestonePageHeader: React.FC<MilestonePageHeaderProps> = ({ milest
                   </Button>
                 </>
               )}
-              {isMentor && milestone.status === ProjectTypes.PENDING_START && (
+              {isMentor && milestone.status === ProjectStatus.PENDING_START && (
                 <>
                   <Button
                     variant="outline"

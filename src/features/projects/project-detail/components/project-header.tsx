@@ -5,7 +5,7 @@ import { ChevronLeft } from 'lucide-react'
 import { getRoleBasePath } from '@/lib/utils'
 import { useUser } from '@/context/UserContext'
 import { usePermission } from '@/hooks/usePermission'
-import { ProjectTypes } from '@/hooks/api/projects/types'
+import { ProjectStatus } from '@/hooks/api/projects'
 import type { ProjectDetail } from '@/hooks/api/projects/types'
 
 interface ProjectPageHeaderProps {
@@ -36,8 +36,8 @@ export const ProjectPageHeader: React.FC<ProjectPageHeaderProps> = ({ projectDat
   }
 
   const projectStatus = projectData?.status
-  const isOngoing = projectStatus === ProjectTypes.ON_GOING
-  const isPaused = projectStatus === ProjectTypes.PAUSED
+  const isOngoing = projectStatus === ProjectStatus.ON_GOING
+  const isPaused = projectStatus === ProjectStatus.PAUSED
 
   // Điều kiện hiển thị nút "Hoàn thành"
   const showCompleteButton = isOngoing && isCompany

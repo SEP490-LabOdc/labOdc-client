@@ -1,0 +1,18 @@
+export enum ProjectStatus {
+    PENDING = 'PENDING',
+    UPDATE_REQUIRED = 'UPDATE_REQUIRED',
+    REJECTED = 'REJECTED',
+    PLANNING = 'PLANNING',
+    ON_GOING = 'ON_GOING',
+    CLOSED = 'CLOSED',
+    COMPLETED = 'COMPLETED',
+    PAUSED = 'PAUSED',
+    PENDING_START = 'PENDING_START',
+    PAID = 'PAID',
+}
+
+export enum ReportStatus {
+    PENDING = 'PENDING',
+    APPROVED = 'APPROVED',
+    REJECTED = 'REJECTED',
+}
