@@ -1,12 +1,11 @@
 import React from 'react'
-
-type PaymentStatus = 'PENDING_DEPOSIT' | 'DEPOSITED' | 'RELEASED'
+import { MilestoneStatus } from '@/hooks/api/milestones'
 
 interface PaymentStatusRendererProps {
-    status: PaymentStatus
+    status: MilestoneStatus
     children: {
-        pendingDeposit?: React.ReactNode
-        deposited?: React.ReactNode
+        completed?: React.ReactNode
+        paid?: React.ReactNode
         released?: React.ReactNode
         fallback?: React.ReactNode
     }
@@ -17,11 +16,11 @@ export const PaymentStatusRenderer: React.FC<PaymentStatusRendererProps> = ({
     children,
 }) => {
     switch (status) {
-        case 'PENDING_DEPOSIT':
-            return <>{children.pendingDeposit || children.fallback}</>
-        case 'DEPOSITED':
-            return <>{children.deposited || children.fallback}</>
-        case 'RELEASED':
+        case MilestoneStatus.COMPLETED:
+            return <>{children.completed || children.fallback}</>
+        case MilestoneStatus.PAID:
+            return <>{children.paid || children.fallback}</>
+        case MilestoneStatus.RELEASED:
             return <>{children.released || children.fallback}</>
         default:
             return <>{children.fallback}</>
