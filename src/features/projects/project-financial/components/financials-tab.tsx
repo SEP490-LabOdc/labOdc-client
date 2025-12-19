@@ -1,17 +1,12 @@
 import React from 'react'
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card.tsx'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card.tsx'
 import { Badge } from '@/components/ui/badge.tsx'
 import { Button } from '@/components/ui/button.tsx'
-import { Progress } from '@/components/ui/progress.tsx'
 import {
   Plus,
   ArrowUpRight,
   Wallet,
   ShieldCheck,
-  UserCheck,
-  Users,
-  AlertCircle,
-  CreditCard,
   Download
 } from 'lucide-react'
 import {

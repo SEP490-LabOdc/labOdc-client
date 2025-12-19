@@ -1,7 +1,6 @@
 import apiRequest from '@/config/request.ts'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { milestoneKeys } from '@/hooks/api/milestones'
-import type { ReportStatus } from './enums'
 
 // export function useCreateProject() {
 //   return useMutation({
@@ -220,7 +219,7 @@ export function useReviewReport() {
   return useMutation({
     mutationFn: async (payload: {
       reportId: string
-      status: ReportStatus
+      status: string
       feedback?: string
     }) => {
       const { data } = await apiRequest.patch(

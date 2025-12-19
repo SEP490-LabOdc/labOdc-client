@@ -12,7 +12,9 @@ export enum ProjectStatus {
 }
 
 export enum ReportStatus {
-    PENDING = 'PENDING',
+    SUBMITTED = 'SUBMITTED',
+    UNDER_REVIEW = 'UNDER_REVIEW',
     APPROVED = 'APPROVED',
     REJECTED = 'REJECTED',
+    FINAL = 'FINAL',
 }

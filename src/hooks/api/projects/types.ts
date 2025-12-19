@@ -1,6 +1,5 @@
 import React from 'react'
 import { ProjectStatus } from './enums'
-import type { UserRole } from '../users'
 
 export interface Skill {
   id: string
@@ -31,7 +30,7 @@ export interface ProjectMember {
   email?: string
   phone?: string
   avatarUrl?: string
-  roleName?: UserRole
+  roleName?: string
   isActive?: boolean
   joinedAt?: string
   leftAt?: string | null

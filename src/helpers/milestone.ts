@@ -1,5 +1,5 @@
 import { MilestoneStatus } from "@/hooks/api/milestones"
-import type { Milestone, MilestoneFund } from "@/hooks/api/milestones/types"
+import type { Milestone } from "@/hooks/api/milestones/types"
 import type { ProjectMember } from "@/hooks/api/projects"
 
 /**
