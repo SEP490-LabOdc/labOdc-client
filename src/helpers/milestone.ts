@@ -1,5 +1,5 @@
 import { MilestoneStatus } from "@/hooks/api/milestones"
-import type { MilestoneFund } from "@/hooks/api/milestones/types"
+import type { Milestone, MilestoneFund } from "@/hooks/api/milestones/types"
 import type { ProjectMember } from "@/hooks/api/projects"
 
 /**
@@ -41,6 +41,6 @@ export function mapMilestoneMembers(members: any[]): ProjectMember[] {
     }))
 }
 
-export const getPaidMilestones = (milestones: MilestoneFund[]): MilestoneFund[] => {
+export const getPaidMilestones = (milestones: Milestone[]): Milestone[] => {
     return milestones.filter(milestone => milestone.status === MilestoneStatus.PAID)
 }

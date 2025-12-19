@@ -9,7 +9,7 @@ import {
   IconWallet,
 } from '@tabler/icons-react'
 import type { SidebarData } from '@/components/layout/types.ts'
-import { ProjectTypes } from '@/hooks/api/projects/types'
+import { ProjectStatus } from '@/hooks/api/projects/enums'
 
 export const mentorSidebarData: SidebarData = {
   navGroups: [
@@ -32,27 +32,27 @@ export const mentorSidebarData: SidebarData = {
             },
             {
               title: 'Đang lên kế hoạch',
-              url: `/mentor/projects?status=${ProjectTypes.PLANNING}`,
+              url: `/mentor/projects?status=${ProjectStatus.PLANNING}`,
               icon: IconClockHour4,
             },
             {
               title: 'Đang tiến hành',
-              url: `/mentor/projects?status=${ProjectTypes.ON_GOING}`,
+              url: `/mentor/projects?status=${ProjectStatus.ON_GOING}`,
               icon: IconCircleCheck,
             },
             {
               title: 'Đã hoàn thành',
-              url: `/mentor/projects?status=${ProjectTypes.COMPLETED}`,
+              url: `/mentor/projects?status=${ProjectStatus.COMPLETED}`,
               icon: IconCircleCheckFilled,
             },
             {
               title: 'Đã tạm dừng',
-              url: `/mentor/projects?status=${ProjectTypes.PAUSED}`,
+              url: `/mentor/projects?status=${ProjectStatus.PAUSED}`,
               icon: IconCircleX,
             },
             {
               title: 'Đã đóng',
-              url: `/mentor/projects?status=${ProjectTypes.CLOSED}`,
+              url: `/mentor/projects?status=${ProjectStatus.CLOSED}`,
               icon: IconCircleX,
             },
           ]

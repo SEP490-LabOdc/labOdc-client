@@ -1,7 +1,8 @@
 import type { ApiResponse } from '@/hooks/api/types'
+import type { DisbursementStatus } from './enums'
 
 /**
- * Payload để tính toán phân bổ tiền
+ * Payload to calculate disbursement
  */
 export interface CalculateDisbursementPayload {
     projectId: string
@@ -12,7 +13,7 @@ export interface CalculateDisbursementPayload {
 }
 
 /**
- * Response từ API calculate disbursement
+ * Response from API calculate disbursement
  */
 export interface DisbursementCalculation {
     disbursementId?: string
@@ -32,7 +33,7 @@ export interface DisbursementCalculation {
 export type CalculateDisbursementResponse = ApiResponse<DisbursementCalculation>
 
 /**
- * Payload để xem trước phân bổ tiền
+ * Payload to preview disbursement
  */
 export interface PreviewDisbursementParams {
     milestoneId: string
@@ -40,7 +41,7 @@ export interface PreviewDisbursementParams {
 }
 
 /**
- * Thông tin leader trong preview disbursement
+ * Leader information in preview disbursement
  */
 export interface DisbursementLeader {
     userId: string
@@ -53,7 +54,7 @@ export interface DisbursementLeader {
 }
 
 /**
- * Response từ API preview disbursement
+ * Response from API preview disbursement
  */
 export interface PreviewDisbursementData {
     milestoneId: string
@@ -67,14 +68,14 @@ export interface PreviewDisbursementData {
 export type PreviewDisbursementResponse = ApiResponse<PreviewDisbursementData>
 
 /**
- * Payload để thực hiện giải ngân
+ * Payload to execute disbursement
  */
 export interface ExecuteDisbursementPayload {
     disbursementId: string
 }
 
 /**
- * Response từ API execute disbursement
+ * Response from API execute disbursement
  */
 export interface ExecuteDisbursementResult {
     success: boolean
@@ -85,10 +86,29 @@ export interface ExecuteDisbursementResult {
 
 export type ExecuteDisbursementResponse = ApiResponse<ExecuteDisbursementResult>
 
+/**
+ * Payload to disburse
+ */
 export interface DisbursePayload {
     milestoneId: string
     disbursements: Array<{
         userId: string
         amount: number
     }>
+}
+
+/**
+ * Disbursement information
+ */
+export interface Disbursement {
+    disbursementId: string
+    milestoneId: string
+    totalAmount: number
+    systemFee: number
+    mentorAmount: number
+    mentorLeaderId: string
+    talentAmount: number
+    talentLeaderId: string
+    status: DisbursementStatus
+    updatedAt: string
 }

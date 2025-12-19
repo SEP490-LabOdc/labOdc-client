@@ -1,6 +1,7 @@
 import apiRequest from '@/config/request.ts'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { milestoneKeys } from '@/hooks/api/milestones'
+import type { ReportStatus } from './enums'
 
 // export function useCreateProject() {
 //   return useMutation({
@@ -219,7 +220,7 @@ export function useReviewReport() {
   return useMutation({
     mutationFn: async (payload: {
       reportId: string
-      status: 'APPROVED' | 'REJECTED'
+      status: ReportStatus
       feedback?: string
     }) => {
       const { data } = await apiRequest.patch(
@@ -290,6 +291,28 @@ export function useCreateMilestoneDocument() {
       const { data } = await apiRequest.post(
         `/api/v1/project-milestones/${payload.milestoneId}/milestone-attachments`,
         { attachments: payload.attachmentsUrl }
+      )
+      return data
+    }
+  })
+}
+
+export function useCompleteProject() {
+  return useMutation({
+    mutationFn: async (projectId: string) => {
+      const { data } = await apiRequest.patch(
+        `/api/v1/projects/${projectId}/complete`
+      )
+      return data
+    }
+  })
+}
+
+export function useCloseProject() {
+  return useMutation({
+    mutationFn: async (projectId: string) => {
+      const { data } = await apiRequest.patch(
+        `/api/v1/projects/${projectId}/complete`
       )
       return data
     }

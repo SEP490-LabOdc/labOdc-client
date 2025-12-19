@@ -15,7 +15,6 @@ export const MentorTalentStatusView: React.FC<MentorTalentStatusViewProps> = ({
     mentorShare,
     formatVND,
 }) => {
-    console.log('status', status)
     const getStatusText = () => {
         switch (status) {
             case MilestoneStatus.PAID:
