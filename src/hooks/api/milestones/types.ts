@@ -60,11 +60,13 @@ export interface MilestoneDetail {
   projectName: string
   title: string
   description: string
+  budget: number
   startDate: string
   endDate: string
   status: string
   talents: MilestoneUser[]
   mentors: MilestoneUser[]
+  attachments: MilestoneAttachment[]
 }
 
 export interface MilestoneFund {
@@ -75,4 +77,21 @@ export interface MilestoneFund {
   status: MilestoneStatus
   releasedAt: string
   description: string
+}
+
+export interface MilestoneFeedback {
+  id: string
+  userId: string
+  content: string
+  attachments: MilestoneAttachment[]
+  createdAt: string
+}
+
+export interface UpdateMilestonePayload {
+  title: string
+  description: string
+  startDate: string
+  endDate: string
+  status: MilestoneStatus
+  attachments: MilestoneAttachment[]
 }
