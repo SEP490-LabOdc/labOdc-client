@@ -42,10 +42,10 @@ export const ProjectPageHeader: React.FC<ProjectPageHeaderProps> = ({ projectDat
   const isOngoing = projectStatus === ProjectStatus.ON_GOING
   const isPaused = projectStatus === ProjectStatus.PAUSED
 
-  // Điều kiện hiển thị nút "Hoàn thành"
+  // Condition to show complete button
   const showCompleteButton = isOngoing && isCompany
 
-  // Điều kiện hiển thị nút "Đóng dự án"
+  // Condition to show close button
   const showCloseButton = (isOngoing || isPaused) && isLabAdmin
 
   return (
