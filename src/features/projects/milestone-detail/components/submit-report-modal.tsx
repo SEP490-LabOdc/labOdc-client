@@ -19,6 +19,7 @@ import {
 import { FileUpload } from '@/components/file/FileUpload'
 import { useCreateReport } from '@/hooks/api/projects/mutation'
 import { toast } from 'sonner'
+import type { ReportRecipient } from '@/hooks/api/projects/types'
 
 type ReportType = 'DAILY_REPORT' | 'WEEKLY_REPORT' | 'MILESTONE_REPORT' | 'DELIVERY_REPORT';
 
@@ -39,6 +40,7 @@ interface SubmitReportModalProps {
   lastFeedback?: string
   projectId: string
   milestoneId: string
+  recipients: ReportRecipient[]
 }
 
 export const SubmitReportModal: React.FC<SubmitReportModalProps> = ({
@@ -47,13 +49,22 @@ export const SubmitReportModal: React.FC<SubmitReportModalProps> = ({
   onSuccess,
   lastFeedback,
   projectId,
-  milestoneId
+  milestoneId,
+  recipients
 }) => {
   const [reportType, setReportType] = useState<ReportType>('MILESTONE_REPORT')
   const [content, setContent] = useState('')
   const [attachmentUrl, setAttachmentUrl] = useState<string | null>(null)
+  const [selectedRecipientId, setSelectedRecipientId] = useState<string>('')
 
   const { mutateAsync: createReport, isPending } = useCreateReport()
+
+  // Set default recipient when recipients are loaded
+  React.useEffect(() => {
+    if (recipients.length > 0 && !selectedRecipientId) {
+      setSelectedRecipientId(recipients[0].id)
+    }
+  }, [recipients, selectedRecipientId])
 
   const handleSubmit = async () => {
     if (!content.trim()) {
@@ -66,19 +77,26 @@ export const SubmitReportModal: React.FC<SubmitReportModalProps> = ({
       return
     }
 
+    if (!selectedRecipientId) {
+      toast.error('Vui lòng chọn người nhận báo cáo')
+      return
+    }
+
     try {
       await createReport({
         projectId,
         milestoneId,
         reportType,
         content: content.trim(),
-        attachmentsUrl: attachmentUrl ? [attachmentUrl] : []
+        attachmentsUrl: attachmentUrl ? [attachmentUrl] : [],
+        recipientId: selectedRecipientId
       })
 
       toast.success('Nộp báo cáo thành công')
       setContent('')
       setAttachmentUrl(null)
       setReportType('MILESTONE_REPORT')
+      setSelectedRecipientId(recipients.length > 0 ? recipients[0].id : '')
       onSuccess()
       onClose()
     } catch (error) {
@@ -120,6 +138,31 @@ export const SubmitReportModal: React.FC<SubmitReportModalProps> = ({
           </div>
 
           <div className="space-y-2">
+            <label className="text-sm font-medium">
+              Người nhận báo cáo <span className="text-red-500">*</span>
+            </label>
+            <Select
+              value={selectedRecipientId}
+              onValueChange={setSelectedRecipientId}
+              disabled={isPending || recipients.length === 0}
+            >
+              <SelectTrigger className='w-full'>
+                <SelectValue placeholder={recipients.length === 0 ? "Không có người nhận" : "Chọn người nhận"} />
+              </SelectTrigger>
+              <SelectContent>
+                {recipients.map((recipient) => (
+                  <SelectItem key={recipient.id} value={recipient.id}>
+                    {recipient.name} ({recipient.roleName})
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            {recipients.length === 0 && (
+              <p className="text-xs text-gray-500">Không có người nhận nào được cấu hình cho milestone này</p>
+            )}
+          </div>
+
+          <div className="space-y-2">
             <label className="text-sm font-medium">Nội dung báo cáo / Cập nhật</label>
             <Textarea
               value={content}
@@ -149,7 +192,7 @@ export const SubmitReportModal: React.FC<SubmitReportModalProps> = ({
           </Button>
           <Button
             onClick={handleSubmit}
-            disabled={!content.trim() || isPending}
+            disabled={!content.trim() || !selectedRecipientId || isPending}
           >
             {isPending ? 'Đang nộp...' : 'Nộp Báo cáo'}
           </Button>

@@ -111,4 +111,11 @@ export interface ProjectDetail {
   companyName: string
 }
 
+export interface ReportRecipient {
+  id: string
+  name: string
+  roleName: string
+  avatar: string
+}
+
 

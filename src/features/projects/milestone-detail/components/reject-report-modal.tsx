@@ -18,13 +18,15 @@ interface RejectReportModalProps {
   onClose: () => void
   onConfirm: (reason: string) => void
   reportId: string
+  milestoneId: string
 }
 
 export const RejectReportModal: React.FC<RejectReportModalProps> = ({
   isOpen,
   onClose,
   onConfirm,
-  reportId
+  reportId,
+  milestoneId
 }) => {
   const [feedbackInput, setFeedbackInput] = useState('')
   const { mutateAsync: reviewReport, isPending } = useReviewReport()
@@ -36,7 +38,8 @@ export const RejectReportModal: React.FC<RejectReportModalProps> = ({
       await reviewReport({
         reportId,
         status: 'REJECTED',
-        feedback: feedbackInput.trim()
+        feedback: feedbackInput.trim(),
+        milestoneId: milestoneId
       })
       toast.success('Đã gửi yêu cầu chỉnh sửa')
       onConfirm(feedbackInput)

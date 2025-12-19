@@ -198,6 +198,7 @@ export function useCreateReport() {
       content: string
       attachmentsUrl: string[]
       milestoneId: string
+      recipientId: string
     }) => {
       const { data } = await apiRequest.post(
         `/api/v1/reports`,
@@ -221,12 +222,14 @@ export function useReviewReport() {
       reportId: string
       status: string
       feedback?: string
+      milestoneId: string
     }) => {
       const { data } = await apiRequest.patch(
         `/api/v1/reports/${payload.reportId}/review`,
         {
           status: payload.status,
-          ...(payload.feedback && { feedback: payload.feedback })
+          ...(payload.feedback && { feedback: payload.feedback }),
+          milestoneId: payload.milestoneId
         }
       )
       return data
@@ -317,3 +320,4 @@ export function useCloseProject() {
     }
   })
 }
+
