@@ -1,6 +1,7 @@
 import React from 'react'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import {
   Shield,
   User,
@@ -10,38 +11,39 @@ import {
   DollarSign,
   Wallet,
   TrendingUp,
-  Info
+  Info,
+  Loader2,
+  Crown
 } from 'lucide-react'
-
-// Hàm format tiền
-const formatVND = (v: number) => new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(v)
-
-// Payment Status types
-type PaymentStatus = 'PENDING_DEPOSIT' | 'DEPOSITED' | 'RELEASED'
+import { formatVND } from '@/helpers/currency'
+import { usePreviewDisbursement } from '@/hooks/api/disbursement'
+import { getAvatarUrl } from '@/lib/utils'
+import { MilestoneStatus } from '@/hooks/api/milestones'
 
 interface MilestoneFinancialsTabProps {
   amount: number
-  status: PaymentStatus
+  status: MilestoneStatus
   userRole: string
+  milestoneId: string
 }
 
-const getStatusInfo = (status: PaymentStatus) => {
+const getStatusInfo = (status: MilestoneStatus) => {
   switch (status) {
-    case 'PENDING_DEPOSIT':
+    case MilestoneStatus.PENDING_DEPOSIT:
       return {
         label: 'Chưa ký quỹ',
         color: 'bg-orange-100 text-orange-800 border-orange-200',
         iconColor: 'text-orange-500',
         IconComponent: AlertCircle
       }
-    case 'DEPOSITED':
+    case MilestoneStatus.PAID:
       return {
         label: 'Đã ký quỹ',
         color: 'bg-blue-100 text-blue-800 border-blue-200',
         iconColor: 'text-blue-500',
         IconComponent: CheckCircle
       }
-    case 'RELEASED':
+    case MilestoneStatus.RELEASED:
       return {
         label: 'Đã giải ngân',
         color: 'bg-green-100 text-green-800 border-green-200',
@@ -54,14 +56,35 @@ const getStatusInfo = (status: PaymentStatus) => {
 export const MilestoneFinancialsTab: React.FC<MilestoneFinancialsTabProps> = ({
   amount,
   status,
-  userRole
+  userRole,
+  milestoneId
 }) => {
-  const systemFee = amount * 0.1
-  const mentorShare = amount * 0.2
-  const teamShare = amount * 0.7
+  // Fetch preview disbursement data
+  const { data: previewData, isLoading: isLoadingPreview } = usePreviewDisbursement(
+    {
+      milestoneId: milestoneId,
+      totalAmount: amount,
+    },
+  )
 
-  const statusInfo = getStatusInfo(status)
-  const StatusIcon = statusInfo.IconComponent
+  // Use preview data if available, otherwise use calculated values
+  const systemFee = previewData?.data?.systemFee || amount * 0.1
+  const mentorShare = previewData?.data?.mentorLeader?.amount || amount * 0.2
+  const teamShare = previewData?.data?.talentLeader?.amount || amount * 0.7
+  const mentorLeader = previewData?.data?.mentorLeader
+  const talentLeader = previewData?.data?.talentLeader
+
+  const statusInfo = getStatusInfo(status as MilestoneStatus)
+  const StatusIcon = statusInfo?.IconComponent || null
+
+  if (isLoadingPreview && status === MilestoneStatus.PENDING_DEPOSIT) {
+    return (
+      <div className="flex items-center justify-center py-12">
+        <Loader2 className="h-8 w-8 animate-spin text-[#2a9d8f]" />
+        <span className="ml-2 text-gray-600">Đang tải thông tin phân bổ...</span>
+      </div>
+    )
+  }
 
   return (
     <div className="space-y-6">
@@ -78,9 +101,9 @@ export const MilestoneFinancialsTab: React.FC<MilestoneFinancialsTabProps> = ({
                 Thông tin minh bạch về phân bổ ngân sách và giải ngân
               </CardDescription>
             </div>
-            <Badge className={`${statusInfo.color} border flex items-center gap-2 px-3 py-1.5`}>
-              <StatusIcon className={`h-4 w-4 ${statusInfo.iconColor}`} />
-              {statusInfo.label}
+            <Badge className={`${statusInfo?.color} border flex items-center gap-2 px-3 py-1.5`}>
+              {StatusIcon && <StatusIcon className={`h-4 w-4 ${statusInfo?.iconColor}`} /> || null}
+              {statusInfo?.label}
             </Badge>
           </div>
         </CardHeader>
@@ -110,6 +133,19 @@ export const MilestoneFinancialsTab: React.FC<MilestoneFinancialsTabProps> = ({
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
+          {/* Info Note */}
+          <div className="flex gap-3 p-4 bg-blue-50 text-blue-800 text-sm rounded-lg border border-blue-200">
+            <Info className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" />
+            <div>
+              <p className="font-semibold mb-1">Lưu ý về phân bổ tự động:</p>
+              <ul className="text-xs space-y-1 text-blue-700">
+                <li>• Phí hệ thống (10%) được giữ lại để vận hành nền tảng</li>
+                <li>• Mentor (20%) được chuyển về ví nhóm và <strong>Trưởng nhóm</strong> chịu trách nhiệm phân chia</li>
+                <li>• Team Talents (70%) được chuyển về ví nhóm và <strong>Trưởng nhóm</strong> chịu trách nhiệm phân chia</li>
+                <li>• Tất cả giao dịch được ghi nhận và có thể tra cứu</li>
+              </ul>
+            </div>
+          </div>
           {/* Visual Progress Bar */}
           <div className="space-y-2">
             <div className="flex items-center justify-between text-sm font-medium">
@@ -119,21 +155,21 @@ export const MilestoneFinancialsTab: React.FC<MilestoneFinancialsTabProps> = ({
             <div className="flex h-8 w-full overflow-hidden rounded-lg border-2 border-gray-200">
               <div
                 className="bg-gray-400 flex items-center justify-center text-white text-xs font-bold"
-                style={{ width: '10%' }}
+                style={{ width: `${(systemFee / amount) * 100}%` }}
               >
-                10%
+                {((systemFee / amount) * 100).toFixed(0)}%
               </div>
               <div
                 className="bg-blue-500 flex items-center justify-center text-white text-xs font-bold"
-                style={{ width: '20%' }}
+                style={{ width: `${(mentorShare / amount) * 100}%` }}
               >
-                20%
+                {((mentorShare / amount) * 100).toFixed(0)}%
               </div>
               <div
                 className="bg-green-500 flex items-center justify-center text-white text-xs font-bold"
-                style={{ width: '70%' }}
+                style={{ width: `${(teamShare / amount) * 100}%` }}
               >
-                70%
+                {((teamShare / amount) * 100).toFixed(0)}%
               </div>
             </div>
             <div className="flex items-center justify-between text-xs text-gray-500">
@@ -154,7 +190,7 @@ export const MilestoneFinancialsTab: React.FC<MilestoneFinancialsTabProps> = ({
                 </div>
                 <div>
                   <p className="font-bold text-gray-900">Phí hệ thống</p>
-                  <p className="text-xs text-gray-500">10% tổng giá trị</p>
+                  <p className="text-xs text-gray-500">{((systemFee / amount) * 100).toFixed(1)}% tổng giá trị</p>
                 </div>
               </div>
               <div className="text-2xl font-bold text-gray-700 mb-1">{formatVND(systemFee)}</div>
@@ -173,16 +209,40 @@ export const MilestoneFinancialsTab: React.FC<MilestoneFinancialsTabProps> = ({
                 <div className="p-2 bg-blue-100 rounded-full">
                   <User className="w-4 h-4 text-blue-600" />
                 </div>
-                <div>
+                <div className="flex-1">
                   <p className="font-bold text-blue-900">Mentor</p>
-                  <p className="text-xs text-blue-600">20% tổng giá trị</p>
+                  <p className="text-xs text-blue-600">{((mentorShare / amount) * 100).toFixed(1)}% tổng giá trị</p>
                 </div>
               </div>
               <div className="text-2xl font-bold text-blue-700 mb-1">{formatVND(mentorShare)}</div>
-              <div className="text-xs text-blue-600">
-                Hướng dẫn và quản lý dự án
-              </div>
-              {status === 'RELEASED' && (
+              {mentorLeader && (
+                <div className="mt-3 p-2 bg-white rounded border border-blue-200">
+                  <div className="flex items-center gap-2 mb-1">
+                    <Avatar className="h-6 w-6">
+                      <AvatarImage src={mentorLeader.avatarUrl} />
+                      <AvatarFallback>
+                        <img src={getAvatarUrl(mentorLeader.fullName)} alt={mentorLeader.fullName} />
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-1">
+                        <p className="text-xs font-medium text-blue-900 truncate">{mentorLeader.fullName}</p>
+                        {mentorLeader.leader && <Crown className="h-3 w-3 text-yellow-500" />}
+                      </div>
+                      <p className="text-xs text-blue-600 truncate">{mentorLeader.email}</p>
+                    </div>
+                  </div>
+                  <p className="text-xs text-blue-700 font-semibold mt-1">
+                    Nhận: {formatVND(mentorLeader.amount)}
+                  </p>
+                </div>
+              )}
+              {!mentorLeader && (
+                <div className="text-xs text-blue-600">
+                  Hướng dẫn và quản lý dự án
+                </div>
+              )}
+              {status === MilestoneStatus.RELEASED && (
                 <div className="mt-3 flex items-center gap-1 text-xs text-green-600 bg-green-100 px-2 py-1 rounded">
                   <CheckCircle className="w-3 h-3" />
                   Đã chuyển về ví
@@ -200,35 +260,45 @@ export const MilestoneFinancialsTab: React.FC<MilestoneFinancialsTabProps> = ({
                 <div className="p-2 bg-green-100 rounded-full">
                   <Users className="w-4 h-4 text-green-600" />
                 </div>
-                <div>
+                <div className="flex-1">
                   <p className="font-bold text-green-900">Nhóm Talents</p>
-                  <p className="text-xs text-green-600">70% tổng giá trị</p>
+                  <p className="text-xs text-green-600">{((teamShare / amount) * 100).toFixed(1)}% tổng giá trị</p>
                 </div>
               </div>
               <div className="text-2xl font-bold text-green-700 mb-1">{formatVND(teamShare)}</div>
-              <div className="text-xs text-green-600">
-                Thực hiện và phát triển
-              </div>
-              {status === 'RELEASED' && (
+              {talentLeader && (
+                <div className="mt-3 p-2 bg-white rounded border border-green-200">
+                  <div className="flex items-center gap-2 mb-1">
+                    <Avatar className="h-6 w-6">
+                      <AvatarImage src={talentLeader.avatarUrl} />
+                      <AvatarFallback>
+                        <img src={getAvatarUrl(talentLeader.fullName)} alt={talentLeader.fullName} />
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-1">
+                        <p className="text-xs font-medium text-green-900 truncate">{talentLeader.fullName}</p>
+                        {talentLeader.leader && <Crown className="h-3 w-3 text-yellow-500" />}
+                      </div>
+                      <p className="text-xs text-green-600 truncate">{talentLeader.email}</p>
+                    </div>
+                  </div>
+                  <p className="text-xs text-green-700 font-semibold mt-1">
+                    Nhận: {formatVND(talentLeader.amount)}
+                  </p>
+                </div>
+              )}
+              {!talentLeader && (
+                <div className="text-xs text-green-600">
+                  Thực hiện và phát triển
+                </div>
+              )}
+              {status === MilestoneStatus.RELEASED && (
                 <div className="mt-3 flex items-center gap-1 text-xs text-green-600 bg-green-100 px-2 py-1 rounded">
                   <CheckCircle className="w-3 h-3" />
                   Đã chuyển về ví Leader
                 </div>
               )}
-            </div>
-          </div>
-
-          {/* Info Note */}
-          <div className="flex gap-3 p-4 bg-blue-50 text-blue-800 text-sm rounded-lg border border-blue-200">
-            <Info className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" />
-            <div>
-              <p className="font-semibold mb-1">Lưu ý về phân bổ tự động:</p>
-              <ul className="text-xs space-y-1 text-blue-700">
-                <li>• Phí hệ thống (10%) được giữ lại để vận hành nền tảng</li>
-                <li>• Mentor (20%) nhận trực tiếp vào ví cá nhân</li>
-                <li>• Team Talents (70%) được chuyển về ví của Leader để phân chia</li>
-                <li>• Tất cả giao dịch được ghi nhận và có thể tra cứu</li>
-              </ul>
             </div>
           </div>
         </CardContent>

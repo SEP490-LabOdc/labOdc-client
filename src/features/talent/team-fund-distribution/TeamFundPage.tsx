@@ -8,163 +8,144 @@ import {
     MilestoneDetailCard,
     EmptyMilestoneState
 } from './components'
-import {
-    formatVND,
-    calculateTeamFundSummary,
-    getOpenMilestones,
-    type Member,
-    type MilestoneFund
-} from './finance.types'
 import { useGetMyProjects, useGetProjectMilestones } from '@/hooks/api/projects'
-import { useGetMilestonesMembers } from '@/hooks/api/milestones/queries'
+import { useGetMilestonesMembersByRole } from '@/hooks/api/milestones/queries'
+import type { MilestoneMember } from '@/hooks/api/milestones'
 import { usePermission } from '@/hooks/usePermission'
+import { formatVND } from '@/helpers/currency'
+import { useDisburse } from '@/hooks/api/disbursement/mutations'
+import { UserRole } from '@/hooks/api/users'
+import { useGetDisbursementByMilestoneId } from '@/hooks/api/disbursement'
+import { DisbursementStatus } from '@/hooks/api/disbursement/enums'
+import { Spinner } from '@/components/ui/spinner'
+import type { Milestone } from '@/features/labAdmin/data'
 
 export const TeamFundPage: React.FC = () => {
     const { user } = usePermission()
 
-    // State Management
     const [selectedProjectId, setSelectedProjectId] = useState<string>('')
     const [selectedMilestoneId, setSelectedMilestoneId] = useState<string>('')
     const [allocations, setAllocations] = useState<Record<string, number>>({})
     const [isSubmitting, setIsSubmitting] = useState(false)
 
-    // Fetch projects
     const { data: projectsResponse, isLoading: isLoadingProjects } = useGetMyProjects('')
     const projects = projectsResponse?.data || []
 
-    // Fetch milestones when project is selected
     const { data: milestonesResponse, isLoading: isLoadingMilestones } = useGetProjectMilestones(selectedProjectId)
     const apiMilestones = milestonesResponse?.data || []
 
-    // Get current user ID (Leader)
     const currentUserId = user?.userId || ''
     const userRole = user?.role || ''
 
-    // Fetch members when milestone is selected
-    const { data: membersResponse, isLoading: isLoadingMembers } = useGetMilestonesMembers(selectedMilestoneId)
+    const { data: membersResponse, isLoading: isLoadingMembers } = useGetMilestonesMembersByRole(
+        selectedMilestoneId,
+        userRole
+    )
 
-    // Get the correct member list based on user role
-    // API returns: { data: { mentors: [], talents: [] } }
-    const apiMembersData = membersResponse?.data || {}
-    const apiMembers = useMemo(() => {
-        // If user is MENTOR, show mentors list
-        // If user is USER/TALENT, show talents list
-        if (userRole === 'MENTOR') {
-            return apiMembersData.mentors || []
-        } else {
-            // USER, TALENT, or other roles
-            return apiMembersData.talents || []
-        }
-    }, [apiMembersData, userRole])
+    const { data: disbursementResponse, isLoading: isLoadingDisbursement } = useGetDisbursementByMilestoneId(selectedMilestoneId)
+    const disbursement = disbursementResponse?.data
+    const hasDisbursement = !!disbursement
+    const isDisbursementCompleted = disbursement?.status === DisbursementStatus.COMPLETED
 
-    // Map API milestones to MilestoneFund format
-    const milestones: MilestoneFund[] = useMemo(() => {
-        return apiMilestones.map((m: any) => ({
-            id: m.id,
-            title: m.title,
-            totalReceived: m.budget || 0,
-            remainingAmount: m.budget || 0, // TODO: Calculate actual remaining from API
-            status: m.status === 'ON_GOING' ? 'OPEN' : 'CLOSED' as const,
-            releasedAt: m.endDate || new Date().toISOString(),
-            description: m.description || ''
-        }))
-    }, [apiMilestones])
+    const roleAmount = useMemo(() => {
+        if (!disbursement) return 0
+        return userRole === UserRole.MENTOR
+            ? disbursement.mentorAmount
+            : disbursement.talentAmount
+    }, [disbursement, userRole])
 
-    // Check if members list is empty (no fallback to mock)
-    const hasMembers = apiMembers && apiMembers.length > 0
+    const apiMembers: MilestoneMember[] = membersResponse?.data
+        ? (Array.isArray(membersResponse.data)
+            ? membersResponse.data
+            : [])
+        : []
 
-    // Map API members to Member format
-    const members: Member[] = useMemo(() => {
-        if (!hasMembers) {
-            return [] // Return empty array if no members
-        }
-        return apiMembers.map((m: any) => {
-            // Check if user is leader (by comparing userId with current user or check isLeader field)
-            const isLeader = m.isLeader || m.userId === currentUserId
+    const hasMembers = apiMembers.length > 0
+    const selectedMilestone = apiMilestones.find((m: Milestone) => m.id === selectedMilestoneId)
 
-            return {
-                id: m.userId || m.projectMemberId || m.id,
-                name: m.fullName || m.name || 'Unknown',
-                avatar: m.avatarUrl || m.avatar || '',
-                role: isLeader ? 'LEADER' : 'MEMBER' as const,
-                status: (m.leftAt === null || !m.leftAt) ? 'ACTIVE' : 'INACTIVE' as const,
-                email: m.email || '',
-                joinedAt: m.joinedAt || new Date().toISOString()
-            }
-        })
-    }, [apiMembers, currentUserId, hasMembers])
-
-    // Get open milestones only
-    const openMilestones = getOpenMilestones(milestones)
-
-    // Calculate summary stats
-    const summary = calculateTeamFundSummary(milestones, members)
-
-    // Get selected milestone
-    const selectedMilestone = milestones.find(m => m.id === selectedMilestoneId)
-
-    // Calculate allocations
     const totalAllocated = useMemo(() => {
+        if (hasDisbursement && disbursement) {
+            return roleAmount
+        }
         return Object.values(allocations).reduce((sum, amount) => sum + amount, 0)
-    }, [allocations])
+    }, [hasDisbursement, disbursement, roleAmount, allocations])
 
     const remaining = selectedMilestone
         ? selectedMilestone.remainingAmount - totalAllocated
         : 0
 
-    const canSubmit = selectedMilestone && remaining >= 0 && totalAllocated > 0 && hasMembers
+    const canSubmit = (selectedMilestone
+        && !isDisbursementCompleted
+        && remaining >= 0
+        && totalAllocated > 0
+        && hasMembers) || false
 
-    // Handlers
     const handleProjectChange = (projectId: string) => {
         setSelectedProjectId(projectId)
-        setSelectedMilestoneId('') // Reset milestone when changing project
-        setAllocations({}) // Reset allocations
+        setSelectedMilestoneId('')
+        setAllocations({})
     }
 
     const handleMilestoneChange = (milestoneId: string) => {
         setSelectedMilestoneId(milestoneId)
-        setAllocations({}) // Reset allocations when changing milestone
+        setAllocations({})
     }
 
     const handleAllocationChange = (memberId: string, amount: number) => {
+        if (isDisbursementCompleted) return
+
         setAllocations(prev => ({
             ...prev,
             [memberId]: amount
         }))
     }
 
+    const { mutateAsync: disburse } = useDisburse()
+
     const handleConfirmDistribution = async () => {
-        if (!canSubmit) return
+        if (!canSubmit || !selectedMilestoneId) return
+
+        const disbursements = Object.entries(allocations)
+            .filter(([_, amount]) => amount > 0)
+            .map(([userId, amount]) => ({
+                userId,
+                amount
+            }))
+
+        if (disbursements.length === 0) {
+            toast.error('Vui lòng phân bổ tiền cho ít nhất một thành viên')
+            return
+        }
 
         setIsSubmitting(true)
         try {
-            // TODO: Call API to submit distribution
-            console.log('Distribution:', {
+            await disburse({
                 milestoneId: selectedMilestoneId,
-                allocations,
-                totalAmount: totalAllocated
+                disbursements
             })
-
-            // Simulate API call
-            await new Promise(resolve => setTimeout(resolve, 1500))
 
             toast.success(`Đã phân bổ thành công ${formatVND(totalAllocated)}`)
 
-            // Reset state
             setAllocations({})
             setSelectedMilestoneId('')
-        } catch (error) {
-            toast.error('Có lỗi xảy ra, vui lòng thử lại')
+        } catch (error: any) {
+            const errorMessage = error?.response?.data?.message || error?.message || 'Có lỗi xảy ra, vui lòng thử lại'
+            toast.error(errorMessage)
             console.error('Distribution error:', error)
         } finally {
             setIsSubmitting(false)
         }
     }
 
+    if (isLoadingProjects || isLoadingMilestones || isLoadingMembers || isLoadingDisbursement) {
+        return <div className="flex items-center justify-center h-full">
+            <Spinner />
+        </div>
+    }
+
     return (
         <div className="overflow-hidden">
             <div className="h-full p-4">
-                {/* Page Header */}
                 <div className="mb-6">
                     <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
                         <Wallet className="h-8 w-8 text-[#2a9d8f]" />
@@ -175,7 +156,6 @@ export const TeamFundPage: React.FC = () => {
                     </p>
                 </div>
 
-                {/* Project Selector */}
                 <ProjectSelector
                     projects={projects}
                     selectedProjectId={selectedProjectId}
@@ -183,19 +163,15 @@ export const TeamFundPage: React.FC = () => {
                     isLoading={isLoadingProjects}
                 />
 
-                {/* Master-Detail Layout */}
                 <div className="grid grid-cols-12 gap-6 h-[calc(100%-80px)]">
-                    {/* LEFT COLUMN - Master (Sidebar) */}
                     <div className="col-span-12 lg:col-span-4 flex flex-col gap-4 h-full overflow-hidden">
-                        {/* Summary Cards */}
                         <SummaryCards
-                            remainingInHolding={summary.remainingInHolding}
-                            totalDistributed={summary.totalDistributed}
+                            remainingInHolding={0}
+                            totalDistributed={0}
                         />
 
-                        {/* Milestone List */}
                         <MilestoneList
-                            milestones={openMilestones}
+                            milestones={apiMilestones}
                             selectedMilestoneId={selectedMilestoneId}
                             selectedProjectId={selectedProjectId}
                             isLoading={isLoadingMilestones}
@@ -203,16 +179,14 @@ export const TeamFundPage: React.FC = () => {
                         />
                     </div>
 
-                    {/* RIGHT COLUMN - Detail (Work Area) */}
                     <div className="col-span-12 lg:col-span-8 h-full">
                         {selectedMilestone ? (
                             <MilestoneDetailCard
                                 milestone={selectedMilestone}
-                                members={members}
+                                members={apiMembers}
                                 allocations={allocations}
                                 onAllocationChange={handleAllocationChange}
                                 currentUserId={currentUserId}
-                                isLoadingMembers={isLoadingMembers}
                                 hasMembers={hasMembers}
                                 userRole={userRole}
                                 totalAllocated={totalAllocated}
@@ -220,13 +194,15 @@ export const TeamFundPage: React.FC = () => {
                                 canSubmit={canSubmit}
                                 isSubmitting={isSubmitting}
                                 onSubmit={handleConfirmDistribution}
+                                disbursement={disbursement}
+                                roleAmount={roleAmount}
+                                isDisbursementCompleted={isDisbursementCompleted}
                             />
                         ) : (
                             <EmptyMilestoneState />
                         )}
                     </div>
                 </div>
-
             </div>
         </div>
     )

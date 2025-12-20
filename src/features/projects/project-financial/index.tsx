@@ -71,22 +71,6 @@ const ProjectFinancialPage: React.FC = () => {
 
       {/* 2. Nội dung chính */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-
-        {/* Banner cảnh báo (Ví dụ: Cho Leader nếu chưa chia tiền) */}
-        {currentUserRole === 'TALENT_LEADER' && summary.teamFund.heldByLeader > 0 && (
-          <div className="mb-6 bg-orange-50 border border-orange-200 rounded-lg p-4 flex items-start justify-between">
-            <div>
-              <h4 className="text-sm font-bold text-orange-800">Cần hành động: Phân bổ quỹ nhóm</h4>
-              <p className="text-sm text-orange-700 mt-1">
-                Bạn đang giữ <span className="font-bold">4.000.000 VNĐ</span> của nhóm chưa được phân chia. Vui lòng thực hiện phân bổ ngay để đảm bảo minh bạch.
-              </p>
-            </div>
-            <Button size="sm" className="bg-orange-600 hover:bg-orange-700 text-white border-none">
-              Phân bổ ngay
-            </Button>
-          </div>
-        )}
-
         {/* Gọi lại component phức tạp chúng ta đã build */}
         <ProjectFinancialsTab
           summary={summary}

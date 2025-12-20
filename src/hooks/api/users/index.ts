@@ -1,2 +1,3 @@
 export { userKeys } from './query-keys.ts'
 export { useGetUsers, useGetUserById, useGetMeQuery, useUpdateProfile, useUpdateUserRole, useUpdateUserStatus, useCreateUser, useGetMentorByProjectId, useUpdatePassword } from './queries.ts'
+export { UserRole } from './enums.ts'

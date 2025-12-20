@@ -17,6 +17,7 @@ import { Badge } from '@/components/ui/badge'
 import { Search, X, Users } from 'lucide-react'
 import { Label } from '@/components/ui/label'
 import { getAvatarUrl } from '@/lib/utils.ts'
+import { UserRole } from '@/hooks/api/users'
 
 interface SystemUser {
   projectMemberId: string
@@ -34,16 +35,16 @@ interface AddMemberModalProps {
 }
 
 export function AddMemberModal({
-                                 isOpen,
-                                 onClose,
-                                 onAddMembers,
-                                 projectMembers = []
-                               }: AddMemberModalProps) {
+  isOpen,
+  onClose,
+  onAddMembers,
+  projectMembers = []
+}: AddMemberModalProps) {
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedUsers, setSelectedUsers] = useState<SystemUser[]>([])
 
   // Lọc chỉ lấy các thành viên có roleName là TALENT
-  const talentMembers = projectMembers.filter(user => user.roleName === 'TALENT')
+  const talentMembers = projectMembers.filter(user => user.roleName === UserRole.TALENT)
 
   const filteredUsers = talentMembers.filter(user =>
     user.fullName.toLowerCase().includes(searchQuery.toLowerCase()) ||

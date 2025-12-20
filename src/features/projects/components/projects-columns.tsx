@@ -1,10 +1,12 @@
 import { type ColumnDef } from '@tanstack/react-table'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Badge } from '@/components/ui/badge'
-import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { type Project } from '../data/schema'
 import { Link } from '@tanstack/react-router'
-import { getRoleBasePath } from '@/lib/utils'
+import { MembersAvatarList } from '@/components/members-avatar-list'
+import type { ProjectMember } from '@/hooks/api/projects'
+import { ROLE } from '@/const'
+import { UserRole } from '@/hooks/api/users'
 
 export const createProjectsColumns = (userRole: string): ColumnDef<Project>[] => [
   {
@@ -30,29 +32,28 @@ export const createProjectsColumns = (userRole: string): ColumnDef<Project>[] =>
     enableHiding: false,
   },
   {
-    accessorKey: 'id',
-    header: 'Mã dự án',
-    cell: ({ row }) => {
-      const id = row.getValue('id') as string
-      return <div className="font-mono text-sm">{id.slice(0, 8)}</div>
-    },
-  },
-  {
     accessorKey: 'title',
     header: 'Tên dự án',
     cell: ({ row }) => {
       const projectId = row.original.id
 
-      const getProjectLink = (role: string, id: string) => {
-        const basePath = getRoleBasePath(role)
-        return { to: `${basePath}/projects/$projectId` as const, params: { projectId: id } }
+      const getProjectRoute = (role: string) => {
+        const roleRouteMap: Record<string, string> = {
+          [ROLE.SYSTEM_ADMIN]: '/admin/projects/$projectId',
+          [ROLE.LAB_ADMIN]: '/lab-admin/projects/$projectId',
+          [ROLE.MENTOR]: '/mentor/projects/$projectId',
+          [ROLE.COMPANY]: '/company-manage/projects/$projectId',
+          [ROLE.USER]: '/talent/projects/$projectId',
+        }
+        return roleRouteMap[role] || '/talent/projects/$projectId'
       }
 
-      const linkProps = getProjectLink(userRole, projectId)
+      const routePath = getProjectRoute(userRole)
 
       return (
         <Link
-          {...linkProps}
+          to={routePath as any}
+          params={{ projectId } as any}
           className="font-medium hover:underline"
         >
           {row.getValue('title')}
@@ -62,22 +63,63 @@ export const createProjectsColumns = (userRole: string): ColumnDef<Project>[] =>
   },
   {
     accessorKey: 'mentors',
-    header: 'Trưởng nhóm',
+    header: 'Giảng Viên',
     cell: ({ row }) => {
       const mentors = row.getValue('mentors') as Project['mentors']
-      const leader = mentors.find(m => m.leader)
 
-      if (!leader) return <span className="text-sm text-gray-400">Chưa có</span>
+      // Map mentors to ProjectMember format
+      const mentorMembers: ProjectMember[] = mentors.map((mentor) => ({
+        projectMemberId: mentor.id,
+        userId: mentor.id,
+        fullName: mentor.name,
+        email: '',
+        avatarUrl: (mentor as any).avatar && (mentor as any).avatar.trim() !== ''
+          ? (mentor as any).avatar
+          : undefined,
+        roleName: UserRole.MENTOR,
+        isLeader: mentor.leader,
+      }))
 
       return (
-        <div className="flex items-center gap-2">
-          <Avatar className="h-8 w-8">
-            <AvatarFallback>
-              {leader.name.split(' ').map(n => n[0]).join('')}
-            </AvatarFallback>
-          </Avatar>
-          <span className="text-sm">{leader.name}</span>
-        </div>
+        <MembersAvatarList
+          members={mentorMembers}
+          maxVisible={3}
+          size="sm"
+          showLeaderBadge={false}
+          emptyMessage="Chưa có"
+        />
+      )
+    },
+  },
+  {
+    accessorKey: 'talents',
+    header: 'Đội ngũ',
+    cell: ({ row }) => {
+      const project = row.original
+      // Check if talents exists in the project data
+      const talents = (project as any).talents || []
+
+      // Map talents to ProjectMember format
+      const talentMembers: ProjectMember[] = talents.map((talent: any) => ({
+        projectMemberId: talent.id || talent.userId,
+        userId: talent.userId || talent.id,
+        fullName: talent.name || talent.fullName,
+        email: talent.email || '',
+        avatarUrl: talent.avatar && talent.avatar.trim() !== ''
+          ? talent.avatar
+          : undefined,
+        roleName: ROLE.TALENT as 'TALENT',
+        isLeader: talent.leader || talent.isLeader || false,
+      }))
+
+      return (
+        <MembersAvatarList
+          members={talentMembers}
+          maxVisible={3}
+          size="sm"
+          showLeaderBadge={false}
+          emptyMessage="Chưa có"
+        />
       )
     },
   },

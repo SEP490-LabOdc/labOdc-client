@@ -9,4 +9,8 @@ export const milestoneKeys = {
 
     milestoneMembers: (milestoneId: string) =>
         [...milestoneKeys.all, 'milestone-members', milestoneId] as const,
+    milestoneMembersByRole: (milestoneId: string, role: string) =>
+        [...milestoneKeys.all, 'milestone-members-by-role', milestoneId, role] as const,
+    milestoneFeedbacks: (milestoneId: string) =>
+        [...milestoneKeys.all, 'milestone-feedbacks', milestoneId] as const,
 }

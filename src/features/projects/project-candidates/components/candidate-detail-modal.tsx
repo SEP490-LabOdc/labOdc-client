@@ -22,6 +22,7 @@ import {
 } from 'lucide-react'
 import { type Candidate } from '../schema'
 import { getCandidateStatusColor, getCandidateStatusLabel } from '@/lib/utils'
+import { formatDateLongWithTime } from '@/helpers/datetime'
 
 interface CandidateDetailModalProps {
     isOpen: boolean
@@ -108,16 +109,6 @@ export const CandidateDetailModal: React.FC<CandidateDetailModalProps> = ({
     const status = candidate.status
     const aiScanResult = candidate.aiScanResult
 
-    const formatDate = (dateString: string) => {
-        const date = new Date(dateString)
-        return date.toLocaleDateString('vi-VN', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit',
-        })
-    }
 
     return (
         <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
@@ -141,7 +132,7 @@ export const CandidateDetailModal: React.FC<CandidateDetailModalProps> = ({
                                     {getCandidateStatusLabel(status)}
                                 </Badge>
                                 <span className="text-sm text-gray-500">
-                                    Ứng tuyển: {formatDate(candidate.appliedAt)}
+                                    Ứng tuyển: {formatDateLongWithTime(candidate.appliedAt)}
                                 </span>
                             </div>
                         </div>

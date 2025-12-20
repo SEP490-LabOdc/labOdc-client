@@ -129,8 +129,6 @@ export default function CompanyApprovingForm({
                 toast.success('Đã phê duyệt yêu cầu thành công!');
                 navigate({ to: '/lab-admin/companies/' + initialData.id });
             }
-
-            console.log('Gửi yêu cầu thành công!')
         } catch (error: any) {
             console.error('PATCH company failed:', error)
             toast.error(error?.message ? 'Gửi yêu cầu thất bại, ' + error?.message : 'Gửi yêu cầu thất bại, vui lòng thử lại!')

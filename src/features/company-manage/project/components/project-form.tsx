@@ -76,8 +76,6 @@ export default function ProjectForm({ initialData }: { initialData: ProjectFormD
         }
     })
 
-    console.log(form.formState.errors)
-
     if (!initialData) return null
 
     // ========== CHECK UPDATE MODE ==========

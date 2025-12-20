@@ -12,6 +12,7 @@ import { useGetProjectMilestoneDocuments } from '@/hooks/api/projects/queries'
 import { usePermission } from '@/hooks/usePermission'
 import { ROLE } from '@/const.ts'
 import { CreateDocumentModal } from './create-document-modal.tsx'
+import { formatDate } from '@/helpers/datetime'
 
 interface MilestoneDocument {
   id: string
@@ -40,15 +41,6 @@ export const MilestoneDocumentsTab: React.FC<MilestoneDocumentsTabProps> = ({ mi
     await refetch()
   }
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('vi-VN', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    })
-  }
 
   const handleDownload = (url: string, fileName: string) => {
     const link = document.createElement('a')

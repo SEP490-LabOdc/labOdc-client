@@ -1,47 +1,61 @@
 import { useNavigate, useParams } from '@tanstack/react-router'
-import { useGetMilestonesMembers, useGetMilestonesById } from '@/hooks/api/milestones'
+import { useGetMilestonesMembers, useGetMilestonesById, useUpdateMilestoneMemberLeader } from '@/hooks/api/milestones'
+import type { MilestoneMember } from '@/hooks/api/milestones'
 import { Button } from '@/components/ui/button'
 import { ChevronLeft, Users, Loader2 } from 'lucide-react'
-import { MembersList } from '@/features/projects/members/components'
-import type { ProjectMember } from '@/hooks/api/projects'
-import { useMemo } from 'react'
-import { ROLE } from '@/const'
+import { MilestoneMembersTable } from './components'
 import { getRoleBasePath } from '@/lib/utils'
 import { useUser } from '@/context/UserContext'
+import { usePermission } from '@/hooks/usePermission'
+import { toast } from 'sonner'
+import { useQueryClient } from '@tanstack/react-query'
+import { milestoneKeys } from '@/hooks/api/milestones'
 
 export default function MilestoneMembersPage() {
     const { projectId, milestoneId } = useParams({ strict: false })
     const navigate = useNavigate()
     const { user } = useUser()
+    const { isLabAdmin, isMentor } = usePermission()
+    const queryClient = useQueryClient()
 
     const { data: milestoneData, isLoading: isLoadingMilestone } = useGetMilestonesById(milestoneId as string)
     const { data: membersResponse, isLoading: isLoadingMembers } = useGetMilestonesMembers(milestoneId as string)
 
-    // Map API response to ProjectMember format
-    const apiMembersData = membersResponse?.data || {}
-    const mentors: ProjectMember[] = useMemo(() => {
-        return (apiMembersData.mentors || []).map((mentor: any) => ({
-            projectMemberId: mentor.userId || mentor.projectMemberId || '',
-            userId: mentor.userId || '',
-            fullName: mentor.fullName || mentor.name || 'Unknown',
-            email: mentor.email || '',
-            avatarUrl: mentor.avatarUrl || mentor.avatar || '',
-            roleName: ROLE.MENTOR,
-            isLeader: mentor.isLeader || false,
-        }))
-    }, [apiMembersData.mentors])
+    const updateMilestoneMemberLeaderMutation = useUpdateMilestoneMemberLeader()
 
-    const talents: ProjectMember[] = useMemo(() => {
-        return (apiMembersData.talents || []).map((talent: any) => ({
-            projectMemberId: talent.userId || talent.projectMemberId || '',
-            userId: talent.userId || '',
-            fullName: talent.fullName || talent.name || 'Unknown',
-            email: talent.email || '',
-            avatarUrl: talent.avatarUrl || talent.avatar || '',
-            roleName: ROLE.TALENT,
-            isLeader: talent.isLeader || false,
-        }))
-    }, [apiMembersData.talents])
+    // Get API response data
+    const apiMembersData = membersResponse?.data || { mentors: [], talents: [] }
+    const mentors: MilestoneMember[] = apiMembersData.mentors || []
+    const talents: MilestoneMember[] = apiMembersData.talents || []
+
+    const handleToggleMilestoneMemberLeader = (milestoneMemberId: string, currentLeaderStatus: boolean) => {
+        updateMilestoneMemberLeaderMutation.mutate(
+            {
+                milestoneId: milestoneId as string,
+                milestoneMemberId: milestoneMemberId,
+                leader: !currentLeaderStatus,
+            },
+            {
+                onSuccess: async () => {
+                    await queryClient.invalidateQueries({
+                        queryKey: milestoneKeys.milestoneMembers(milestoneId as string),
+                    })
+                    await queryClient.invalidateQueries({
+                        queryKey: milestoneKeys.detail(milestoneId as string),
+                    })
+                    toast.success(
+                        !currentLeaderStatus
+                            ? 'Đã đặt làm leader thành công'
+                            : 'Đã gỡ quyền leader thành công'
+                    )
+                },
+                onError: (error) => {
+                    toast.error('Cập nhật thất bại')
+                    console.error('Error updating milestone member leader:', error)
+                },
+            }
+        )
+    }
 
     const isLoading = isLoadingMilestone || isLoadingMembers
 
@@ -90,23 +104,35 @@ export default function MilestoneMembersPage() {
                 </div>
 
                 {/* Mentors Section */}
-                <MembersList
+                <MilestoneMembersTable
                     members={mentors}
-                    role={ROLE.MENTOR as 'MENTOR'}
                     title="Mentors"
                     emptyMessage="Chưa có mentor nào trong milestone"
                     iconColor="#2a9d8f"
-                    showActionButton={false}
+                    showActionButton={isLabAdmin}
+                    isActionLoading={updateMilestoneMemberLeaderMutation.isPending}
+                    onToggleLeader={(milestoneMemberId: string, currentLeaderStatus: boolean) => {
+                        handleToggleMilestoneMemberLeader(milestoneMemberId, currentLeaderStatus)
+                    }}
+                    leaderLabel="Đặt làm trưởng nhóm"
+                    removeLeaderLabel="Gỡ trưởng nhóm"
+                    badgeLabel="Trưởng nhóm"
                 />
 
                 {/* Talents Section */}
-                <MembersList
+                <MilestoneMembersTable
                     members={talents}
-                    role={ROLE.TALENT as 'TALENT'}
                     title="Talents"
                     emptyMessage="Chưa có talent nào trong milestone"
                     iconColor="#e76f51"
-                    showActionButton={false}
+                    showActionButton={isMentor}
+                    isActionLoading={updateMilestoneMemberLeaderMutation.isPending}
+                    onToggleLeader={(milestoneMemberId: string, currentLeaderStatus: boolean) => {
+                        handleToggleMilestoneMemberLeader(milestoneMemberId, currentLeaderStatus)
+                    }}
+                    leaderLabel="Đặt làm leader"
+                    removeLeaderLabel="Gỡ leader"
+                    badgeLabel="Leader"
                 />
             </div>
         </div>

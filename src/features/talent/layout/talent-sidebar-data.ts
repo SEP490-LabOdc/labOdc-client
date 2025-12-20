@@ -8,7 +8,7 @@ import {
   IconWallet,
 } from '@tabler/icons-react'
 import type { SidebarData } from '@/components/layout/types.ts'
-import { ProjectTypes } from '@/hooks/api/projects'
+import { ProjectStatus } from '@/hooks/api/projects'
 
 export const talentSidebarData: SidebarData = {
   navGroups: [
@@ -36,22 +36,22 @@ export const talentSidebarData: SidebarData = {
             },
             {
               title: 'Đang lên kế hoạch',
-              url: `/talent/projects?status=${ProjectTypes.PLANNING}`,
+              url: `/talent/projects?status=${ProjectStatus.PLANNING}`,
               icon: IconClockHour4,
             },
             {
               title: 'Đang tiến hành',
-              url: `/talent/projects?status=${ProjectTypes.ON_GOING}`,
+              url: `/talent/projects?status=${ProjectStatus.ON_GOING}`,
               icon: IconCircleCheck,
             },
             {
               title: 'Đã tạm dừng',
-              url: `/talent/projects?status=${ProjectTypes.PAUSED}`,
+              url: `/talent/projects?status=${ProjectStatus.PAUSED}`,
               icon: IconCircleX,
             },
             {
               title: 'Đã đóng',
-              url: `/talent/projects?status=${ProjectTypes.CLOSED}`,
+              url: `/talent/projects?status=${ProjectStatus.CLOSED}`,
               icon: IconCircleX,
             },
           ]

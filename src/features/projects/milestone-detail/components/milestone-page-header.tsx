@@ -1,20 +1,15 @@
 import React, { useState } from 'react'
 import { Button } from '@/components/ui/button'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
-import { ChevronLeft, Edit, MoreHorizontal } from 'lucide-react'
+import { ChevronLeft, Edit } from 'lucide-react'
 import type { MilestoneDetail } from '@/hooks/api/milestones/types'
 import { useApproveMilestone, useStartMilestone } from '@/hooks/api/projects/mutation'
 import { toast } from 'sonner'
 import { usePermission } from '@/hooks/usePermission'
-import { ProjectTypes } from '@/hooks/api/projects'
+import { ProjectStatus } from '@/hooks/api/projects'
 import { RejectMilestoneModal } from './reject-milestone-modal'
 import { useQueryClient } from '@tanstack/react-query'
 import { milestoneKeys } from '@/hooks/api/milestones/query-keys'
+import { useNavigate } from '@tanstack/react-router'
 
 interface MilestonePageHeaderProps {
   milestone: MilestoneDetail
@@ -24,7 +19,7 @@ export const MilestonePageHeader: React.FC<MilestonePageHeaderProps> = ({ milest
   const { isCompany, isMentor } = usePermission()
   const [rejectModalOpen, setRejectModalOpen] = useState(false)
   const queryClient = useQueryClient()
-
+  const navigate = useNavigate()
   const approveMutation = useApproveMilestone()
   const startMutation = useStartMilestone()
 
@@ -34,7 +29,7 @@ export const MilestonePageHeader: React.FC<MilestonePageHeaderProps> = ({ milest
       toast.success('Milestone đã được phê duyệt')
       await queryClient.invalidateQueries({ queryKey: milestoneKeys.detail(milestone.id) })
     } catch (error) {
-      console.log(error)
+      console.error(error)
       toast.error('Không thể phê duyệt milestone')
     }
   }
@@ -45,7 +40,7 @@ export const MilestonePageHeader: React.FC<MilestonePageHeaderProps> = ({ milest
       toast.success('Milestone đã được bắt đầu')
       await queryClient.invalidateQueries({ queryKey: milestoneKeys.detail(milestone.id) })
     } catch (error) {
-      console.log(error)
+      console.error(error)
       toast.error('Không thể bắt đầu milestone')
     }
   }
@@ -73,7 +68,7 @@ export const MilestonePageHeader: React.FC<MilestonePageHeaderProps> = ({ milest
             </div>
 
             <div className="flex items-center gap-3">
-              {isCompany && milestone.status === ProjectTypes.PENDING && (
+              {isCompany && milestone.status === ProjectStatus.PENDING && (
                 <>
                   <Button
                     variant="outline"
@@ -92,7 +87,7 @@ export const MilestonePageHeader: React.FC<MilestonePageHeaderProps> = ({ milest
                   </Button>
                 </>
               )}
-              {isMentor && milestone.status === ProjectTypes.PENDING_START && (
+              {isMentor && milestone.status === ProjectStatus.PENDING_START && (
                 <>
                   <Button
                     variant="outline"
@@ -104,21 +99,14 @@ export const MilestonePageHeader: React.FC<MilestonePageHeaderProps> = ({ milest
                   </Button>
                 </>
               )}
-              <Button variant="outline">
-                <Edit className="h-4 w-4 mr-2" />
-                Sửa Milestone
-              </Button>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="icon">
-                    <MoreHorizontal className="h-4 w-4" />
+              {isMentor && milestone.status === ProjectStatus.UPDATE_REQUIRED && (
+                <>
+                  <Button variant="outline" onClick={() => navigate({ to: '/mentor/projects/$projectId/$milestoneId/update', params: { projectId: milestone.projectId, milestoneId: milestone.id } })}>
+                    <Edit className="h-4 w-4 mr-2" />
+                    Sửa Milestone
                   </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuItem>Đánh dấu Hoàn thành</DropdownMenuItem>
-                  <DropdownMenuItem className="text-red-600">Xóa Milestone</DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+                </>
+              )}
             </div>
           </div>
         </div>

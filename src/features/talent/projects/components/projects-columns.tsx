@@ -1,10 +1,12 @@
 import { type ColumnDef } from '@tanstack/react-table'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Badge } from '@/components/ui/badge'
-import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Link } from '@tanstack/react-router'
 import type { Project } from '@/features/projects/data/schema.ts'
 import { getStatusColor, getStatusLabel } from '@/lib/utils.ts'
+import { MembersAvatarList } from '@/components/members-avatar-list'
+import type { ProjectMember } from '@/hooks/api/projects'
+import { ROLE } from '@/const'
 
 export const projectsColumns: ColumnDef<Project>[] = [
   {
@@ -30,14 +32,6 @@ export const projectsColumns: ColumnDef<Project>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: 'id',
-    header: 'Mã dự án',
-    cell: ({ row }) => {
-      const id = row.getValue('id') as string
-      return <div className="font-mono text-sm">{id.slice(0, 8)}</div>
-    },
-  },
-  {
     accessorKey: 'title',
     header: 'Tên dự án',
     cell: ({ row }) => {
@@ -56,22 +50,65 @@ export const projectsColumns: ColumnDef<Project>[] = [
   },
   {
     accessorKey: 'mentors',
-    header: 'Giảng viên',
+    header: 'Giảng Viên',
     cell: ({ row }) => {
       const mentors = row.getValue('mentors') as Project['mentors']
-      const leader = mentors.find(m => m.leader)
 
-      if (!leader) return <span className="text-sm text-gray-400">Chưa có</span>
+      // Map mentors to ProjectMember format
+      const mentorMembers: ProjectMember[] = mentors.map((mentor) => ({
+        projectMemberId: mentor.id,
+        userId: mentor.id,
+        fullName: mentor.name,
+        email: '',
+        avatarUrl: (mentor as any).avatar && (mentor as any).avatar.trim() !== ''
+          ? (mentor as any).avatar
+          : undefined,
+        roleName: ROLE.MENTOR as 'MENTOR',
+        isActive: true,
+        joinedAt: new Date().toISOString(),
+        leftAt: null,
+      }))
 
       return (
-        <div className="flex items-center gap-2">
-          <Avatar className="h-8 w-8">
-            <AvatarFallback>
-              {leader.name.split(' ').map(n => n[0]).join('')}
-            </AvatarFallback>
-          </Avatar>
-          <span className="text-sm">{leader.name}</span>
-        </div>
+        <MembersAvatarList
+          members={mentorMembers}
+          maxVisible={3}
+          size="sm"
+          showLeaderBadge={false}
+          emptyMessage="Chưa có"
+        />
+      )
+    },
+  },
+  {
+    accessorKey: 'talents',
+    header: 'Đội ngũ',
+    cell: ({ row }) => {
+      const project = row.original
+      // Check if talents exists in the project data
+      const talents = (project as any).talents || []
+
+      // Map talents to ProjectMember format
+      const talentMembers: ProjectMember[] = talents.map((talent: any) => ({
+        projectMemberId: talent.id || talent.userId,
+        userId: talent.userId || talent.id,
+        fullName: talent.name || talent.fullName,
+        email: talent.email || '',
+        avatarUrl: talent.avatar && talent.avatar.trim() !== ''
+          ? talent.avatar
+          : undefined,
+        roleName: ROLE.TALENT as 'TALENT',
+        isLeader: talent.leader || talent.isLeader || false,
+      }))
+
+      return (
+        <MembersAvatarList
+          members={talentMembers}
+          maxVisible={3}
+          size="sm"
+          showLeaderBadge={false}
+          emptyMessage="Chưa có"
+        />
       )
     },
   },

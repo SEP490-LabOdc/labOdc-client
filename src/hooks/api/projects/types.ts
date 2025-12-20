@@ -1,18 +1,5 @@
 import React from 'react'
-import type { ApiResponse } from '@/hooks/api/types'
-
-export enum ProjectTypes {
-  PENDING = 'PENDING',
-  UPDATE_REQUIRED = 'UPDATE_REQUIRED',
-  REJECTED = 'REJECTED',
-  PLANNING = 'PLANNING',
-  ON_GOING = 'ON_GOING',
-  CLOSED = 'CLOSED',
-  COMPLETED = 'COMPLETED',
-  PAUSED = 'PAUSED',
-  PENDING_START = 'PENDING_START',
-  PAID = 'PAID',
-}
+import { ProjectStatus } from './enums'
 
 export interface Skill {
   id: string
@@ -37,20 +24,23 @@ export interface TeamMember {
 }
 
 export interface ProjectMember {
-  projectMemberId: string
-  userId: string
-  fullName: string
-  email: string
+  projectMemberId?: string
+  userId?: string
+  fullName?: string
+  email?: string
+  phone?: string
   avatarUrl?: string
-  roleName: 'MENTOR' | 'TALENT'
-  isLeader?: boolean
+  roleName?: string
+  isActive?: boolean
+  joinedAt?: string
+  leftAt?: string | null
 }
 
 export interface ProjectListItem {
   id: string
   title: string
   description: string
-  status: ProjectTypes
+  status: ProjectStatus
   startDate: string
   endDate: string
   budget: number
@@ -69,17 +59,8 @@ export interface Project {
   mentors: ProjectMentor[]
   skills: Skill[]
   budget?: number
-  status?: ProjectTypes
+  status?: ProjectStatus
 }
-export interface MilestoneUser {
-  userId: string
-  name: string
-  avatar: string
-  email: string
-  phone: string
-}
-
-export type MilestonesResponse = ApiResponse<Milestone[]>
 
 export interface Note {
   id: number;
@@ -130,25 +111,11 @@ export interface ProjectDetail {
   companyName: string
 }
 
-export interface MilestoneAttachment {
+export interface ReportRecipient {
   id: string
   name: string
-  fileName: string
-  url: string
+  roleName: string
+  avatar: string
 }
 
-export interface Milestone {
-  id: string
-  projectId: string
-  projectName: string
-  title: string
-  budget: number
-  description: string
-  startDate: string
-  endDate: string
-  status: string
-  talents: MilestoneUser[]
-  mentors: MilestoneUser[]
-  attachments?: MilestoneAttachment[]
-}
 
