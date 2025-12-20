@@ -68,6 +68,7 @@ import { Route as AuthenticatedLabAdminCompaniesIndexRouteImport } from './route
 import { Route as AuthenticatedCompanyManageWalletIndexRouteImport } from './routes/_authenticated/company-manage/wallet/index'
 import { Route as AuthenticatedCompanyManageSettingsIndexRouteImport } from './routes/_authenticated/company-manage/settings/index'
 import { Route as AuthenticatedCompanyManageProjectsIndexRouteImport } from './routes/_authenticated/company-manage/projects/index'
+import { Route as AuthenticatedAdminWithdrawalIndexRouteImport } from './routes/_authenticated/admin/withdrawal/index'
 import { Route as AuthenticatedAdminUsersIndexRouteImport } from './routes/_authenticated/admin/users/index'
 import { Route as AuthenticatedAdminTasksIndexRouteImport } from './routes/_authenticated/admin/tasks/index'
 import { Route as AuthenticatedAdminSystemConfigIndexRouteImport } from './routes/_authenticated/admin/system-config/index'
@@ -440,6 +441,12 @@ const AuthenticatedCompanyManageProjectsIndexRoute =
     path: '/projects/',
     getParentRoute: () => AuthenticatedCompanyManageRouteRoute,
   } as any)
+const AuthenticatedAdminWithdrawalIndexRoute =
+  AuthenticatedAdminWithdrawalIndexRouteImport.update({
+    id: '/withdrawal/',
+    path: '/withdrawal/',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
 const AuthenticatedAdminUsersIndexRoute =
   AuthenticatedAdminUsersIndexRouteImport.update({
     id: '/users/',
@@ -772,6 +779,7 @@ export interface FileRoutesByFullPath {
   '/admin/system-config': typeof AuthenticatedAdminSystemConfigIndexRoute
   '/admin/tasks': typeof AuthenticatedAdminTasksIndexRoute
   '/admin/users': typeof AuthenticatedAdminUsersIndexRoute
+  '/admin/withdrawal': typeof AuthenticatedAdminWithdrawalIndexRoute
   '/company-manage/projects': typeof AuthenticatedCompanyManageProjectsIndexRoute
   '/company-manage/settings/': typeof AuthenticatedCompanyManageSettingsIndexRoute
   '/company-manage/wallet': typeof AuthenticatedCompanyManageWalletIndexRoute
@@ -862,6 +870,7 @@ export interface FileRoutesByTo {
   '/admin/system-config': typeof AuthenticatedAdminSystemConfigIndexRoute
   '/admin/tasks': typeof AuthenticatedAdminTasksIndexRoute
   '/admin/users': typeof AuthenticatedAdminUsersIndexRoute
+  '/admin/withdrawal': typeof AuthenticatedAdminWithdrawalIndexRoute
   '/company-manage/projects': typeof AuthenticatedCompanyManageProjectsIndexRoute
   '/company-manage/settings': typeof AuthenticatedCompanyManageSettingsIndexRoute
   '/company-manage/wallet': typeof AuthenticatedCompanyManageWalletIndexRoute
@@ -969,6 +978,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/system-config/': typeof AuthenticatedAdminSystemConfigIndexRoute
   '/_authenticated/admin/tasks/': typeof AuthenticatedAdminTasksIndexRoute
   '/_authenticated/admin/users/': typeof AuthenticatedAdminUsersIndexRoute
+  '/_authenticated/admin/withdrawal/': typeof AuthenticatedAdminWithdrawalIndexRoute
   '/_authenticated/company-manage/projects/': typeof AuthenticatedCompanyManageProjectsIndexRoute
   '/_authenticated/company-manage/settings/': typeof AuthenticatedCompanyManageSettingsIndexRoute
   '/_authenticated/company-manage/wallet/': typeof AuthenticatedCompanyManageWalletIndexRoute
@@ -1074,6 +1084,7 @@ export interface FileRouteTypes {
     | '/admin/system-config'
     | '/admin/tasks'
     | '/admin/users'
+    | '/admin/withdrawal'
     | '/company-manage/projects'
     | '/company-manage/settings/'
     | '/company-manage/wallet'
@@ -1164,6 +1175,7 @@ export interface FileRouteTypes {
     | '/admin/system-config'
     | '/admin/tasks'
     | '/admin/users'
+    | '/admin/withdrawal'
     | '/company-manage/projects'
     | '/company-manage/settings'
     | '/company-manage/wallet'
@@ -1270,6 +1282,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/system-config/'
     | '/_authenticated/admin/tasks/'
     | '/_authenticated/admin/users/'
+    | '/_authenticated/admin/withdrawal/'
     | '/_authenticated/company-manage/projects/'
     | '/_authenticated/company-manage/settings/'
     | '/_authenticated/company-manage/wallet/'
@@ -1751,6 +1764,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedCompanyManageProjectsIndexRouteImport
       parentRoute: typeof AuthenticatedCompanyManageRouteRoute
     }
+    '/_authenticated/admin/withdrawal/': {
+      id: '/_authenticated/admin/withdrawal/'
+      path: '/withdrawal'
+      fullPath: '/admin/withdrawal'
+      preLoaderRoute: typeof AuthenticatedAdminWithdrawalIndexRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
     '/_authenticated/admin/users/': {
       id: '/_authenticated/admin/users/'
       path: '/users'
@@ -2147,6 +2167,7 @@ interface AuthenticatedAdminRouteRouteChildren {
   AuthenticatedAdminSystemConfigIndexRoute: typeof AuthenticatedAdminSystemConfigIndexRoute
   AuthenticatedAdminTasksIndexRoute: typeof AuthenticatedAdminTasksIndexRoute
   AuthenticatedAdminUsersIndexRoute: typeof AuthenticatedAdminUsersIndexRoute
+  AuthenticatedAdminWithdrawalIndexRoute: typeof AuthenticatedAdminWithdrawalIndexRoute
   AuthenticatedAdminCompaniesCompanyIdIndexRoute: typeof AuthenticatedAdminCompaniesCompanyIdIndexRoute
   AuthenticatedAdminUsersCreateIndexRoute: typeof AuthenticatedAdminUsersCreateIndexRoute
   AuthenticatedAdminUsersInfoIndexRoute: typeof AuthenticatedAdminUsersInfoIndexRoute
@@ -2163,6 +2184,8 @@ const AuthenticatedAdminRouteRouteChildren: AuthenticatedAdminRouteRouteChildren
       AuthenticatedAdminSystemConfigIndexRoute,
     AuthenticatedAdminTasksIndexRoute: AuthenticatedAdminTasksIndexRoute,
     AuthenticatedAdminUsersIndexRoute: AuthenticatedAdminUsersIndexRoute,
+    AuthenticatedAdminWithdrawalIndexRoute:
+      AuthenticatedAdminWithdrawalIndexRoute,
     AuthenticatedAdminCompaniesCompanyIdIndexRoute:
       AuthenticatedAdminCompaniesCompanyIdIndexRoute,
     AuthenticatedAdminUsersCreateIndexRoute:
