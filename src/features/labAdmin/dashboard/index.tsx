@@ -1,178 +1,308 @@
-﻿// import { getRouteApi } from '@tanstack/react-router'
-import { Button } from '@/components/ui/button'
+﻿import { Main } from '@/components/layout/main'
 import {
     Card,
     CardContent,
-    CardDescription,
     CardHeader,
     CardTitle,
+    CardDescription,
 } from '@/components/ui/card'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Main } from '@/components/layout/main'
-import { Overview } from './components/overview'
-import { RecentSales } from './components/recent-sales'
+import { Badge } from '@/components/ui/badge'
+import {
+    Building2,
+    FolderKanban,
+    AlertTriangle,
+    GraduationCap,
+    UserCheck,
+    Wallet,
+    Briefcase,
+} from 'lucide-react'
 
-// const route = getRouteApi('/_authenticated/admin/')
+/* =======================
+   MOCK DATA – LABODC
+======================= */
+
+const approvalStats = {
+    pendingCompanies: 42,
+    pendingProjects: 42,
+}
+
+const systemOverview = {
+    activeCompanies: 88,
+    activeProjects: 44,
+    recruitingProjects: 17,
+    totalMentors: 100,
+    availableMentors: 30,
+    totalStudents: 500,
+    joinedStudents: 100,
+    totalCapital: 12_500_000,
+}
+
+const recentActivities = [
+    {
+        type: 'APPROVAL_PROJECT',
+        title: 'Có dự án mới cần phê duyệt',
+        description:
+            'Dự án "Hệ thống Microservices E-commerce" vừa được tạo và đang chờ phê duyệt.',
+        time: 'Khoảng 19 giờ trước',
+    },
+    {
+        type: 'APPROVAL_COMPANY',
+        title: 'Công ty cập nhật thông tin cần duyệt',
+        description:
+            'Doanh nghiệp "Công ty SoftWave" đã cập nhật thông tin đăng ký.',
+        time: 'Khoảng 19 giờ trước',
+    },
+    {
+        type: 'REGISTER_COMPANY',
+        title: 'Có công ty đăng ký mới',
+        description:
+            'Doanh nghiệp "Công ty SoftWave" vừa đăng ký tham gia nền tảng.',
+        time: 'Khoảng 19 giờ trước',
+    },
+]
+
+/* =======================
+   DASHBOARD
+======================= */
 
 export default function Dashboard() {
     return (
-        <>
-            {/* ===== Main ===== */}
-            <Main>
-                <div className='mb-2 flex items-center justify-between space-y-2'>
-                    <h1 className='text-2xl font-bold tracking-tight'>Dashboard</h1>
-                    <div className='flex items-center space-x-2'>
-                        <Button>Tải xuống</Button>
-                    </div>
+        <Main>
+            {/* ===== HEADER ===== */}
+            <div className="mb-6">
+                <h1 className="text-2xl font-bold tracking-tight">
+                    Dashboard
+                </h1>
+                <p className="text-muted-foreground text-sm">
+                    Tổng quan vận hành và nguồn lực của hệ thống LabODC
+                </p>
+            </div>
+
+            <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
+                {/* =======================
+                    LEFT COLUMN (7)
+                ======================= */}
+                <div className="space-y-6 lg:col-span-7">
+                    {/* ===== APPROVAL REQUIRED ===== */}
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>
+                                Yêu cầu chờ phê duyệt
+                            </CardTitle>
+                            <CardDescription>
+                                Các yêu cầu cần quản trị viên xử lý
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent className="space-y-4">
+                            <div className="grid grid-cols-2 gap-4">
+                                <ApprovalBox
+                                    icon={<Building2 size={16} />}
+                                    label="Doanh nghiệp chờ phê duyệt"
+                                    value={approvalStats.pendingCompanies}
+                                    variant="company"
+                                />
+                                <ApprovalBox
+                                    icon={<FolderKanban size={16} />}
+                                    label="Dự án chờ phê duyệt"
+                                    value={approvalStats.pendingProjects}
+                                    variant="project"
+                                />
+                            </div>
+
+                            <p className="text-sm text-muted-foreground">
+                                ⚠️ Hiện có{' '}
+                                <strong>
+                                    {approvalStats.pendingCompanies} doanh nghiệp
+                                </strong>{' '}
+                                và{' '}
+                                <strong>
+                                    {approvalStats.pendingProjects} dự án
+                                </strong>{' '}
+                                đang chờ phê duyệt.
+                            </p>
+                        </CardContent>
+                    </Card>
+
+                    {/* ===== RECENT ACTIVITIES ===== */}
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>
+                                Hoạt động gần đây
+                            </CardTitle>
+                            <CardDescription>
+                                Các sự kiện mới nhất trong hệ thống
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent className="space-y-4">
+                            {recentActivities.map((item, index) => (
+                                <div
+                                    key={index}
+                                    className="rounded-md border p-4"
+                                >
+                                    <div className="mb-1 flex items-center gap-2">
+                                        <Badge>
+                                            {item.type ===
+                                                'APPROVAL_PROJECT'
+                                                ? 'Phê duyệt dự án'
+                                                : item.type ===
+                                                    'APPROVAL_COMPANY'
+                                                    ? 'Phê duyệt doanh nghiệp'
+                                                    : 'Đăng ký mới'}
+                                        </Badge>
+                                        <span className="text-sm font-medium">
+                                            {item.title}
+                                        </span>
+                                    </div>
+                                    <p className="text-muted-foreground text-sm">
+                                        {item.description}
+                                    </p>
+                                    <p className="mt-1 text-xs text-muted-foreground">
+                                        {item.time}
+                                    </p>
+                                </div>
+                            ))}
+                        </CardContent>
+                    </Card>
                 </div>
-                <Tabs
-                    orientation='vertical'
-                    defaultValue='overview'
-                    className='space-y-4'
+
+                {/* =======================
+                    RIGHT COLUMN (5)
+                ======================= */}
+                <div className="space-y-6 lg:col-span-5">
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>
+                                Tổng quan hệ thống
+                            </CardTitle>
+                            <CardDescription>
+                                Tình trạng vận hành & nguồn lực
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent className="space-y-3 text-sm">
+                            <OverviewItem
+                                icon={<Wallet size={16} />}
+                                label="Tổng số vốn"
+                                value={`${systemOverview.totalCapital.toLocaleString()} VND`}
+                            />
+                            <OverviewItem
+                                icon={<Building2 size={16} />}
+                                label="Doanh nghiệp đang hoạt động"
+                                value={systemOverview.activeCompanies}
+                            />
+                            <OverviewItem
+                                icon={<FolderKanban size={16} />}
+                                label="Dự án đang triển khai"
+                                value={systemOverview.activeProjects}
+                            />
+                            <OverviewItem
+                                icon={<Briefcase size={16} />}
+                                label="Dự án đang tuyển dụng"
+                                value={systemOverview.recruitingProjects}
+                            />
+                            <OverviewItem
+                                icon={<UserCheck size={16} />}
+                                label="Mentor khả dụng"
+                                value={`${systemOverview.availableMentors} / ${systemOverview.totalMentors}`}
+                            />
+                            <OverviewItem
+                                icon={<GraduationCap size={16} />}
+                                label="Sinh viên tham gia dự án"
+                                value={`${systemOverview.joinedStudents} / ${systemOverview.totalStudents}`}
+                            />
+                        </CardContent>
+                    </Card>
+                </div>
+            </div>
+        </Main>
+    )
+}
+
+/* =======================
+   INLINE UI BLOCKS
+======================= */
+
+function ApprovalBox({
+    icon,
+    label,
+    value,
+    variant,
+}: {
+    icon: React.ReactNode
+    label: string
+    value: number
+    variant: 'company' | 'project'
+}) {
+    const styles =
+        variant === 'company'
+            ? {
+                border: 'border-amber-200',
+                bg: 'bg-amber-50',
+                iconBg: 'bg-amber-100',
+                iconText: 'text-amber-700',
+                accent: 'bg-amber-400',
+                text: 'text-amber-900',
+            }
+            : {
+                border: 'border-blue-200',
+                bg: 'bg-blue-50',
+                iconBg: 'bg-blue-100',
+                iconText: 'text-blue-700',
+                accent: 'bg-blue-400',
+                text: 'text-blue-900',
+            }
+
+    return (
+        <div
+            className={`relative rounded-lg border ${styles.border} ${styles.bg} p-4`}
+        >
+            {/* Accent strip */}
+            <div
+                className={`absolute left-0 top-0 h-full w-1 rounded-l-lg ${styles.accent}`}
+            />
+
+            <div className="mb-2 flex items-center gap-2">
+                <div
+                    className={`flex h-8 w-8 items-center justify-center rounded-full ${styles.iconBg} ${styles.iconText}`}
                 >
-                    <div className='w-full overflow-x-auto pb-2'>
-                        <TabsList>
-                            <TabsTrigger value='overview'>Tổng quan</TabsTrigger>
-                            <TabsTrigger value='analytics' disabled>
-                                Phân tích
-                            </TabsTrigger>
-                            <TabsTrigger value='reports' disabled>
-                                Báo cáo
-                            </TabsTrigger>
-                            <TabsTrigger value='notifications' disabled>
-                                Thông báo
-                            </TabsTrigger>
-                        </TabsList>
-                    </div>
-                    <TabsContent value='overview' className='space-y-4'>
-                        <div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-4'>
-                            <Card>
-                                <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-                                    <CardTitle className='text-sm font-medium'>
-                                        Tổng doanh thu
-                                    </CardTitle>
-                                    <svg
-                                        xmlns='http://www.w3.org/2000/svg'
-                                        viewBox='0 0 24 24'
-                                        fill='none'
-                                        stroke='currentColor'
-                                        strokeLinecap='round'
-                                        strokeLinejoin='round'
-                                        strokeWidth='2'
-                                        className='text-muted-foreground h-4 w-4'
-                                    >
-                                        <path d='M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6' />
-                                    </svg>
-                                </CardHeader>
-                                <CardContent>
-                                    <div className='text-2xl font-bold'>$45,231.89</div>
-                                    <p className='text-muted-foreground text-xs'>
-                                        +20.1% so với tháng trước
-                                    </p>
-                                </CardContent>
-                            </Card>
-                            <Card>
-                                <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-                                    <CardTitle className='text-sm font-medium'>
-                                        Người dùng mới
-                                    </CardTitle>
-                                    <svg
-                                        xmlns='http://www.w3.org/2000/svg'
-                                        viewBox='0 0 24 24'
-                                        fill='none'
-                                        stroke='currentColor'
-                                        strokeLinecap='round'
-                                        strokeLinejoin='round'
-                                        strokeWidth='2'
-                                        className='text-muted-foreground h-4 w-4'
-                                    >
-                                        <path d='M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2' />
-                                        <circle cx='9' cy='7' r='4' />
-                                        <path d='M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75' />
-                                    </svg>
-                                </CardHeader>
-                                <CardContent>
-                                    <div className='text-2xl font-bold'>+2350</div>
-                                    <p className='text-muted-foreground text-xs'>
-                                        +180.1% so với tháng trước
-                                    </p>
-                                </CardContent>
-                            </Card>
-                            <Card>
-                                <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-                                    <CardTitle className='text-sm font-medium'>Tổng công ty</CardTitle>
-                                    <svg
-                                        xmlns='http://www.w3.org/2000/svg'
-                                        viewBox='0 0 24 24'
-                                        fill='none'
-                                        stroke='currentColor'
-                                        strokeLinecap='round'
-                                        strokeLinejoin='round'
-                                        strokeWidth='2'
-                                        className='text-muted-foreground h-4 w-4'
-                                    >
-                                        <path d="M3 21V7a2 2 0 0 1 2-2h4v16H3z" />
-                                        <path d="M9 21V3h6v18H9z" />
-                                        <path d="M15 21V9h4a2 2 0 0 1 2 2v10h-6z" />
-                                    </svg>
-                                </CardHeader>
-                                <CardContent>
-                                    <div className='text-2xl font-bold'>+12,234</div>
-                                    <p className='text-muted-foreground text-xs'>
-                                        +19% so với tháng trước
-                                    </p>
-                                </CardContent>
-                            </Card>
-                            <Card>
-                                <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-                                    <CardTitle className='text-sm font-medium'>
-                                        Đang hoạt động
-                                    </CardTitle>
-                                    <svg
-                                        xmlns='http://www.w3.org/2000/svg'
-                                        viewBox='0 0 24 24'
-                                        fill='none'
-                                        stroke='currentColor'
-                                        strokeLinecap='round'
-                                        strokeLinejoin='round'
-                                        strokeWidth='2'
-                                        className='text-muted-foreground h-4 w-4'
-                                    >
-                                        <path d='M22 12h-4l-3 9L9 3l-3 9H2' />
-                                    </svg>
-                                </CardHeader>
-                                <CardContent>
-                                    <div className='text-2xl font-bold'>+573</div>
-                                    <p className='text-muted-foreground text-xs'>
-                                        +201 so với giờ trước
-                                    </p>
-                                </CardContent>
-                            </Card>
-                        </div>
-                        <div className='grid grid-cols-1 gap-4 lg:grid-cols-7'>
-                            <Card className='col-span-1 lg:col-span-4'>
-                                <CardHeader>
-                                    <CardTitle>Tổng quan</CardTitle>
-                                </CardHeader>
-                                <CardContent className='ps-2'>
-                                    <Overview />
-                                </CardContent>
-                            </Card>
-                            <Card className='col-span-1 lg:col-span-3'>
-                                <CardHeader>
-                                    <CardTitle>Giao dịch gần đây</CardTitle>
-                                    <CardDescription>
-                                        Bạn đã thực hiện 265 giao dịch trong tháng này.
-                                    </CardDescription>
-                                </CardHeader>
-                                <CardContent>
-                                    <RecentSales />
-                                </CardContent>
-                            </Card>
-                        </div>
-                    </TabsContent>
-                </Tabs>
-            </Main>
-        </>
+                    {icon}
+                </div>
+                <span className={`text-sm font-medium ${styles.text}`}>
+                    {label}
+                </span>
+            </div>
+
+            <p className={`text-3xl font-bold ${styles.text}`}>
+                {value}
+            </p>
+
+            <AlertTriangle
+                size={16}
+                className={`absolute right-3 top-3 ${styles.iconText}`}
+            />
+        </div>
+    )
+}
+
+function OverviewItem({
+    icon,
+    label,
+    value,
+}: {
+    icon: React.ReactNode
+    label: string
+    value: string | number
+}) {
+    return (
+        <div className="flex items-center justify-between rounded-md border p-3">
+            <div className="flex items-center gap-3 text-muted-foreground">
+                <div className="flex h-9 w-9 items-center justify-center rounded-full bg-muted">
+                    {icon}
+                </div>
+                <span>{label}</span>
+            </div>
+            <span className="text-lg font-semibold">
+                {value}
+            </span>
+        </div>
     )
 }
