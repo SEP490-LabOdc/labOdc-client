@@ -3,6 +3,7 @@ import { Main } from '@/components/layout/main'
 import UsersForm from '../components/users-forms'
 import { useGetUserById } from '@/hooks/api/users'
 import { ErrorView } from '@/components/admin/ErrorView'
+import { Spinner } from '@/components/ui/spinner'
 // import { UsersDialogs } from './components/users-dialogs'
 // import { UsersProvider } from './components/users-provider'
 // import { UsersTable } from './components/users-table'
@@ -34,7 +35,8 @@ export default function EditUser() {
 
     if (isLoading) {
         return (
-            <div >
+            <div className="flex h-screen flex-col items-center justify-center">
+                <Spinner className="h-8 w-8" />
             </div>
         )
     }

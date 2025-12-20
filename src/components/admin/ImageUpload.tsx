@@ -3,6 +3,7 @@ import { X, Loader2, Eye, RotateCcw, ImageIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useUploadFile } from "@/hooks/api/file";
+import { Spinner } from "../ui/spinner";
 
 interface ImageUploadProps {
     value?: string | null;
@@ -133,7 +134,7 @@ export function ImageUpload({
                     )}
 
                     <p className="text-sm mt-3">
-                        {isUploading ? "Đang tải lên..." : placeholder}
+                        {isUploading ? <Spinner className="h-32 w-32" /> : placeholder}
                     </p>
                     <p className="text-xs text-gray-400 mt-1">Kéo & thả ảnh vào đây</p>
                     <p className="text-xs text-gray-400 mt-1">

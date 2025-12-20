@@ -10,6 +10,7 @@ import { ProjectsTable } from "./components"
 import { useUser } from '@/context/UserContext'
 import { useGetMyProjects } from '@/hooks/api/projects'
 import { useSearch } from '@tanstack/react-router'
+import { Spinner } from "@/components/ui/spinner"
 
 export default function MentorProjectPage() {
   const { user } = useUser()
@@ -37,8 +38,8 @@ export default function MentorProjectPage() {
 
   if (isLoading) {
     return (
-      <div className="container mx-auto px-8 py-12 text-center">
-        <div className="text-gray-500">Đang tải dữ liệu...</div>
+      <div className="flex h-screen w-screen items-center justify-center bg-bunker-800">
+        <Spinner className="h-32 w-32" />
       </div>
     )
   }

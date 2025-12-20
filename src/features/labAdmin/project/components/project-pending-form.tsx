@@ -15,8 +15,8 @@ import { PROJECT_STATUS } from '../data/schema'
 import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
 import { ConfirmDialog } from '@/components/confirm-dialog'
-import { Loader2 } from 'lucide-react'
 import { useState } from 'react'
+import { Spinner } from '@/components/ui/spinner'
 import { useNavigate } from '@tanstack/react-router'
 import { toast } from 'sonner'
 import { useLabAdminApproveProject, useUpdateProjectStatus } from '@/hooks/api/projects'
@@ -353,7 +353,7 @@ export default function ProjectForm({
                             confirmText={
                                 loadingUpdate ? (
                                     <>
-                                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                        <Spinner className="mr-2 h-4 w-4" />
                                         Đang gửi...
                                     </>
                                 ) : (

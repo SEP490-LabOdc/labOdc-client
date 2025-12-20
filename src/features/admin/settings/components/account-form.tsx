@@ -13,6 +13,7 @@ import { useGetUserById, useUpdatePassword } from "@/hooks/api/users";
 import { toast } from "sonner";
 import { useForm } from "react-hook-form";
 import { PasswordInput } from "@/components/password-input";
+import { Spinner } from "@/components/ui/spinner";
 
 export function AccountForm() {
     const userId =
@@ -34,7 +35,11 @@ export function AccountForm() {
     }, [userId, refetch]);
 
     if (isLoading) {
-        return <p className="text-center py-6">Đang tải dữ liệu người dùng...</p>;
+        return (
+            <div className="flex h-screen w-screen items-center justify-center bg-bunker-800">
+                <Spinner className="h-32 w-32" />
+            </div>
+        )
     }
 
     const form = useForm({

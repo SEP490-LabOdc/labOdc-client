@@ -6,6 +6,7 @@ import { useGetProjectById } from '@/hooks/api/projects'
 import { PROJECT_STATUS } from '../data/schema'
 import { StatusAlert } from '@/components/admin/StatusAlert'
 import ProjectDetailPage from '@/features/projects/project-detail'
+import { Spinner } from '@/components/ui/spinner'
 
 const route = getRouteApi('/_authenticated/company-manage/projects/$projectId/')
 
@@ -32,7 +33,7 @@ export default function ViewProject() {
     if (isLoading) {
         return (
             <div className="flex h-screen flex-col items-center justify-center">
-                <p className="text-muted-foreground">Đang tải thông tin dự án...</p>
+                <Spinner className="h-32 w-32" />
             </div>
         )
     }

@@ -21,6 +21,7 @@ import { toast } from 'sonner'
 import type { UpdateProfilePayload } from '@/hooks/api/users/queries'
 import { DatePicker } from '@/components/date-picker'
 import { ImageUpload } from '@/components/admin/ImageUpload'
+import { Spinner } from '@/components/ui/spinner'
 
 // ============================
 //  SCHEMA
@@ -112,7 +113,11 @@ export function ProfileForm() {
     }
 
     if (isLoading) {
-        return <p className="text-center py-6">Đang tải dữ liệu người dùng...</p>
+        return (
+            <div className="flex h-screen w-screen items-center justify-center bg-bunker-800">
+                <Spinner className="h-32 w-32" />
+            </div>
+        )
     }
 
     return (

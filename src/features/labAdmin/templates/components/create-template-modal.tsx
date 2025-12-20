@@ -18,8 +18,8 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select'
-import { Loader2 } from 'lucide-react'
 import { FileUpload } from '@/components/file/FileUpload'
+import { Spinner } from '@/components/ui/spinner'
 import { useCreateSystemTemplate } from '@/hooks/api/system-templates'
 import { toast } from 'sonner'
 import { TEMPLATE_TYPES, TEMPLATE_TYPE_LABELS } from '../index'
@@ -223,7 +223,7 @@ export function CreateTemplateModal({
                     >
                         {createMutation.isPending ? (
                             <>
-                                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                                <Spinner className="h-4 w-4 mr-2" />
                                 Đang tạo...
                             </>
                         ) : (

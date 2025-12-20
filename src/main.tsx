@@ -35,8 +35,7 @@ const router = createRouter({
   context: { queryClient, authStore: useAuthStore },
   defaultPendingComponent: () => (
     <div className="flex h-screen w-screen items-center justify-center bg-bunker-800">
-      <Spinner className="h-10 w-10" />
-      <span className="text-white">Đang tải dữ liệu...</span>
+      <Spinner className="h-32 w-32" />
     </div>
   ),
   notFoundMode: 'root',

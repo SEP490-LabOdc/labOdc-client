@@ -25,8 +25,8 @@ import {
     Trash2,
     Calendar,
     Sparkles,
-    Loader2,
 } from 'lucide-react'
+import { Spinner } from '@/components/ui/spinner'
 import { useGetAllSystemTemplates, useDeleteSystemTemplate } from '@/hooks/api/system-templates'
 import { toast } from 'sonner'
 import { usePermission } from '@/hooks/usePermission'
@@ -245,7 +245,7 @@ export default function TemplatesManagementPage() {
                 <CardContent>
                     {isLoading ? (
                         <div className="flex items-center justify-center py-12">
-                            <Loader2 className="h-6 w-6 animate-spin text-[#2a9d8f]" />
+                            <Spinner className="h-6 w-6 text-[#2a9d8f]" />
                         </div>
                     ) : templates.length === 0 ? (
                         <div className="text-center py-12">

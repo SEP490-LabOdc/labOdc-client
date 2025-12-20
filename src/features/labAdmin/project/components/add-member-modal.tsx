@@ -18,6 +18,7 @@ import { Search, X, Users } from 'lucide-react'
 import { Label } from '@/components/ui/label.tsx'
 import { useGetMentorByProjectId } from '@/hooks/api/users'
 import { toast } from 'sonner'
+import { Spinner } from '@/components/ui/spinner'
 
 interface SystemUser {
   id: string;
@@ -146,7 +147,7 @@ export function AddMemberModal({
           <ScrollArea className="h-[250px] border rounded-md">
             <div className="p-4 space-y-3">
               {mentorLoading ? (
-                <p className="text-center text-gray-500">Đang tải...</p>
+                <Spinner className="h-8 w-8" />
               ) : filteredUsers.length > 0 ? (
                 filteredUsers.map(user => {
                   const disabled =
