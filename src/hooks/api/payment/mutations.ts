@@ -1,6 +1,7 @@
 import apiRequest from '@/config/request.ts'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import type { PaymentDepositPayload, PaymentDepositResponse, PayMilestonePayload } from './types'
+import { milestoneKeys } from '../milestones'
 
 /**
  * Hook to create a payment deposit
@@ -23,6 +24,7 @@ export function usePaymentDeposit() {
 
 
 export function usePayMilestone() {
+  const queryClient = useQueryClient()
   return useMutation<PaymentDepositResponse, Error, PayMilestonePayload>({
     mutationFn: async (payload: PayMilestonePayload) => {
       const { data } = await apiRequest.post<PaymentDepositResponse>(
@@ -30,6 +32,11 @@ export function usePayMilestone() {
         payload
       )
       return data
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({
+        queryKey: milestoneKeys.detail(data.milestoneId)
+      })
     },
     onError: (error: Error) => {
       console.error('Pay milestone failed:', error)
