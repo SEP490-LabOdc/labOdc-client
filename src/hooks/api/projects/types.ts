@@ -1,17 +1,5 @@
 import React from 'react'
-
-export enum ProjectTypes {
-  PENDING = 'PENDING',
-  UPDATE_REQUIRED = 'UPDATE_REQUIRED',
-  REJECTED = 'REJECTED',
-  PLANNING = 'PLANNING',
-  ON_GOING = 'ON_GOING',
-  CLOSED = 'CLOSED',
-  COMPLETED = 'COMPLETED',
-  PAUSED = 'PAUSED',
-  PENDING_START = 'PENDING_START',
-  PAID = 'PAID',
-}
+import { ProjectStatus } from './enums'
 
 export interface Skill {
   id: string
@@ -42,7 +30,7 @@ export interface ProjectMember {
   email?: string
   phone?: string
   avatarUrl?: string
-  roleName?: 'MENTOR' | 'TALENT'
+  roleName?: string
   isActive?: boolean
   joinedAt?: string
   leftAt?: string | null
@@ -52,7 +40,7 @@ export interface ProjectListItem {
   id: string
   title: string
   description: string
-  status: ProjectTypes
+  status: ProjectStatus
   startDate: string
   endDate: string
   budget: number
@@ -71,7 +59,7 @@ export interface Project {
   mentors: ProjectMentor[]
   skills: Skill[]
   budget?: number
-  status?: ProjectTypes
+  status?: ProjectStatus
 }
 
 export interface Note {
@@ -121,6 +109,13 @@ export interface ProjectDetail {
   currentMilestoneId: string
   currentMilestoneName: string
   companyName: string
+}
+
+export interface ReportRecipient {
+  id: string
+  name: string
+  roleName: string
+  avatar: string
 }
 
 

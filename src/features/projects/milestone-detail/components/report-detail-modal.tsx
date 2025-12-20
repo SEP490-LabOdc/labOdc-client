@@ -44,6 +44,7 @@ interface ReportDetailModalProps {
   isCompany: boolean
   onApprove: () => void
   onRequestChanges: () => void
+  milestoneId: string
 }
 
 const getStatusBadge = (status: ReportStatus) => {
@@ -61,8 +62,10 @@ export const ReportDetailModal: React.FC<ReportDetailModalProps> = ({
   report,
   isCompany,
   onApprove,
-  onRequestChanges
+  onRequestChanges,
+  milestoneId
 }) => {
+
   const { mutateAsync: reviewReport, isPending } = useReviewReport()
 
   const handleApprove = async () => {
@@ -71,7 +74,8 @@ export const ReportDetailModal: React.FC<ReportDetailModalProps> = ({
     try {
       await reviewReport({
         reportId: report.id,
-        status: 'APPROVED'
+        status: 'APPROVED',
+        milestoneId: milestoneId
       })
       toast.success('Phê duyệt báo cáo thành công')
       onApprove()

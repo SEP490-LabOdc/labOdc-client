@@ -290,5 +290,15 @@ export function useGetMyApplications() {
   })
 }
 
+export function useGetReportRecipients(projectId: string, milestoneId: string) {
+  return useQuery({
+    queryKey: projectKeys.getReportRecipients(projectId, milestoneId),
+    queryFn: async () => {
+      const { data } = await apiRequest.get(`/api/v1/reports/recipients?projectId=${projectId}&milestoneId=${milestoneId}`);
+      return data;
+    }
+  })
+}
+
 
 

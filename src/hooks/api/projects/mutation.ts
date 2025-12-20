@@ -198,6 +198,7 @@ export function useCreateReport() {
       content: string
       attachmentsUrl: string[]
       milestoneId: string
+      recipientId: string
     }) => {
       const { data } = await apiRequest.post(
         `/api/v1/reports`,
@@ -219,14 +220,16 @@ export function useReviewReport() {
   return useMutation({
     mutationFn: async (payload: {
       reportId: string
-      status: 'APPROVED' | 'REJECTED'
+      status: string
       feedback?: string
+      milestoneId: string
     }) => {
       const { data } = await apiRequest.patch(
         `/api/v1/reports/${payload.reportId}/review`,
         {
           status: payload.status,
-          ...(payload.feedback && { feedback: payload.feedback })
+          ...(payload.feedback && { feedback: payload.feedback }),
+          milestoneId: payload.milestoneId
         }
       )
       return data
@@ -295,3 +298,26 @@ export function useCreateMilestoneDocument() {
     }
   })
 }
+
+export function useCompleteProject() {
+  return useMutation({
+    mutationFn: async (projectId: string) => {
+      const { data } = await apiRequest.patch(
+        `/api/v1/projects/${projectId}/complete`
+      )
+      return data
+    }
+  })
+}
+
+export function useCloseProject() {
+  return useMutation({
+    mutationFn: async (projectId: string) => {
+      const { data } = await apiRequest.patch(
+        `/api/v1/projects/${projectId}/complete`
+      )
+      return data
+    }
+  })
+}
+

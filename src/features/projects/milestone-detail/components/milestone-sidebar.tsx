@@ -24,20 +24,17 @@ import { PendingDepositAction } from './pending-deposit-action'
 import { DepositedAction } from './deposited-action'
 import { ReleasedStatus } from './released-status'
 import { MentorTalentStatusView } from './mentor-talent-status-view'
+import { MilestoneStatus } from '@/hooks/api/milestones/enums'
+import { formatVND } from '@/helpers/currency'
 
 interface MilestoneSidebarProps {
   milestone: Milestone
-  paymentStatus?: 'PENDING_DEPOSIT' | 'DEPOSITED' | 'RELEASED'
-  escrowBalance?: number
+  paymentStatus?: MilestoneStatus
   projectId?: string
 }
 
-const formatVND = (v: number) => new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(v)
-
 export const MilestoneSidebar: React.FC<MilestoneSidebarProps> = ({
   milestone,
-  paymentStatus = 'PENDING_DEPOSIT',
-  escrowBalance = 0,
   projectId
 }) => {
   const { isCompany, user } = usePermission()
@@ -55,7 +52,7 @@ export const MilestoneSidebar: React.FC<MilestoneSidebarProps> = ({
       fullName: talent.name || 'Unknown',
       email: talent.email || '',
       avatarUrl: talent.avatar || '',
-      leader: talent.leader || false,
+      leader: talent.isLeader || false,
     }))
   }, [milestone.talents])
 
@@ -66,12 +63,11 @@ export const MilestoneSidebar: React.FC<MilestoneSidebarProps> = ({
       fullName: mentor.name || 'Unknown',
       email: mentor.email || '',
       avatarUrl: mentor.avatar || '',
-      leader: mentor.leader || false,
+      leader: mentor.isLeader || false,
     }))
   }, [milestone.mentors])
 
   const amount = milestone.budget || 0
-  const hasEnoughBalance = escrowBalance >= amount
 
   // Get mentor leader and talent leader IDs
   const mentorLeaderId = useMemo(() => {
@@ -112,7 +108,7 @@ export const MilestoneSidebar: React.FC<MilestoneSidebarProps> = ({
   const systemFee = disbursementInfo.systemFee
   const mentorShare = disbursementInfo.mentorShare
   const teamShare = disbursementInfo.teamShare
-  const canRelease = isCompany && paymentStatus === 'DEPOSITED' && hasEnoughBalance && !!mentorLeaderId && !!talentLeaderId
+  const canRelease = isCompany && milestone.status === MilestoneStatus.PAID
 
   // Handle nạp tiền vào Escrow
   const handleDepositToEscrow = async () => {
@@ -250,20 +246,17 @@ export const MilestoneSidebar: React.FC<MilestoneSidebarProps> = ({
               <span>Hành động giải ngân</span>
             </div>
 
-            <PaymentStatusRenderer status={paymentStatus}>
+            <PaymentStatusRenderer status={milestone.status as MilestoneStatus}>
               {{
-                pendingDeposit: (
+                completed: (
                   <PendingDepositAction
                     onDeposit={() => setIsConfirmDepositOpen(true)}
                     isLoading={payMilestone.isPending}
                   />
                 ),
-                deposited: (
+                paid: (
                   <DepositedAction
                     amount={amount}
-                    escrowBalance={escrowBalance}
-                    hasEnoughBalance={hasEnoughBalance}
-                    hasLeaders={!!mentorLeaderId && !!talentLeaderId}
                     canRelease={canRelease}
                     isLoading={calculateDisbursement.isPending || executeDisbursement.isPending}
                     isLoadingPreview={isLoadingPreview}
@@ -280,7 +273,7 @@ export const MilestoneSidebar: React.FC<MilestoneSidebarProps> = ({
         {/* View Only for Mentor/Talent */}
         {!isCompany && (
           <MentorTalentStatusView
-            status={paymentStatus}
+            status={milestone.status as MilestoneStatus}
             userRole={user?.role || ''}
             mentorShare={mentorShare}
             formatVND={formatVND}
@@ -299,7 +292,7 @@ export const MilestoneSidebar: React.FC<MilestoneSidebarProps> = ({
         teamShare={teamShare}
         isLoading={payMilestone.isPending}
         title="Xác nhận Nạp tiền vào Escrow"
-        description={`Bạn có chắc chắn muốn nạp ${formatVND(amount)} vào Escrow cho milestone này?`}
+        description={`Bạn có chắc chắn muốn nạp ${formatVND(milestone.budget)} vào Escrow cho milestone này?`}
         showDistribution={false}
       />
 

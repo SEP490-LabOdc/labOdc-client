@@ -3,6 +3,9 @@
  * @description Type definitions and mock data for team fund management
  */
 
+import { MilestoneStatus } from "@/hooks/api/milestones"
+import type { MilestoneFund } from "@/hooks/api/milestones/types"
+
 // ============================================================================
 // TYPE DEFINITIONS
 // ============================================================================
@@ -33,15 +36,6 @@ export interface Member {
 /**
  * Milestone fund interface
  */
-export interface MilestoneFund {
-    id: string
-    title: string
-    totalReceived: number
-    remainingAmount: number
-    status: MilestoneFundStatus
-    releasedAt: string
-    description: string
-}
 
 /**
  * Allocation detail for a single member
@@ -198,39 +192,6 @@ export const MOCK_TEAM_MEMBERS: Member[] = [
 ]
 
 /**
- * Mock milestone funds data
- */
-export const MOCK_MILESTONE_FUNDS: MilestoneFund[] = [
-    {
-        id: 'mf-001',
-        title: 'Milestone 1: Thiết kế và Xây dựng Database',
-        totalReceived: 10500000,
-        remainingAmount: 0,
-        status: 'CLOSED',
-        releasedAt: '2024-11-15T10:30:00Z',
-        description: 'Hoàn thành thiết kế UI/UX và xây dựng database schema cho hệ thống'
-    },
-    {
-        id: 'mf-002',
-        title: 'Milestone 2: Phát triển Backend APIs',
-        totalReceived: 14000000,
-        remainingAmount: 5600000,
-        status: 'OPEN',
-        releasedAt: '2024-12-20T14:15:00Z',
-        description: 'Xây dựng RESTful APIs và tích hợp authentication, authorization'
-    },
-    {
-        id: 'mf-003',
-        title: 'Milestone 3: Phát triển Frontend và Testing',
-        totalReceived: 17500000,
-        remainingAmount: 12250000,
-        status: 'OPEN',
-        releasedAt: '2025-01-25T09:45:00Z',
-        description: 'Hoàn thiện giao diện người dùng, tích hợp APIs và testing tổng thể'
-    }
-]
-
-/**
  * Mock allocation history data
  */
 export const MOCK_ALLOCATION_HISTORY: AllocationHistory[] = [
@@ -325,7 +286,7 @@ export const calculateTeamFundSummary = (
     const totalReceived = milestones.reduce((sum, m) => sum + m.totalReceived, 0)
     const remainingInHolding = milestones.reduce((sum, m) => sum + m.remainingAmount, 0)
     const totalDistributed = totalReceived - remainingInHolding
-    const activeMilestones = milestones.filter(m => m.status === 'OPEN').length
+    const activeMilestones = milestones.filter(m => m.status === MilestoneStatus.PAID).length
     const totalMembers = members.filter(m => m.status === 'ACTIVE').length
 
     return {
@@ -367,9 +328,6 @@ export const getActiveMembers = (members: Member[]): Member[] => {
  * @param milestones - Array of milestones
  * @returns Array of open milestones
  */
-export const getOpenMilestones = (milestones: MilestoneFund[]): MilestoneFund[] => {
-    return milestones.filter(milestone => milestone.status === 'OPEN')
-}
 
 // ============================================================================
 // CONSTANTS

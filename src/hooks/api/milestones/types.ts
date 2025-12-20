@@ -1,19 +1,7 @@
 import type { ApiResponse } from '@/hooks/api/types'
+import type { MilestoneStatus } from './enums'
 
 export type MilestoneDetailResponse = ApiResponse<MilestoneDetail>
-
-export enum MilestoneStatus {
-  PENDING = 'PENDING',
-  UPDATE_REQUIRED = 'UPDATE_REQUIRED',
-  REJECTED = 'REJECTED',
-  PLANNING = 'PLANNING',
-  ON_GOING = 'ON_GOING',
-  CLOSED = 'CLOSED',
-  COMPLETED = 'COMPLETED',
-  PAUSED = 'PAUSED',
-  PENDING_START = 'PENDING_START',
-  PAID = 'PAID',
-}
 
 export interface MilestoneAttachment {
   id: string
@@ -72,10 +60,38 @@ export interface MilestoneDetail {
   projectName: string
   title: string
   description: string
+  budget: number
   startDate: string
   endDate: string
   status: string
   talents: MilestoneUser[]
   mentors: MilestoneUser[]
+  attachments: MilestoneAttachment[]
 }
 
+export interface MilestoneFund {
+  id: string
+  title: string
+  totalReceived: number
+  remainingAmount: number
+  status: MilestoneStatus
+  releasedAt: string
+  description: string
+}
+
+export interface MilestoneFeedback {
+  id: string
+  userId: string
+  content: string
+  attachments: MilestoneAttachment[]
+  createdAt: string
+}
+
+export interface UpdateMilestonePayload {
+  title: string
+  description: string
+  startDate: string
+  endDate: string
+  status: MilestoneStatus
+  attachments: MilestoneAttachment[]
+}

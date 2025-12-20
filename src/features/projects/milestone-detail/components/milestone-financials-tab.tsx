@@ -18,34 +18,32 @@ import {
 import { formatVND } from '@/helpers/currency'
 import { usePreviewDisbursement } from '@/hooks/api/disbursement'
 import { getAvatarUrl } from '@/lib/utils'
-
-// Payment Status types
-type PaymentStatus = 'PENDING_DEPOSIT' | 'DEPOSITED' | 'RELEASED'
+import { MilestoneStatus } from '@/hooks/api/milestones'
 
 interface MilestoneFinancialsTabProps {
   amount: number
-  status: PaymentStatus
+  status: MilestoneStatus
   userRole: string
   milestoneId: string
 }
 
-const getStatusInfo = (status: PaymentStatus) => {
+const getStatusInfo = (status: MilestoneStatus) => {
   switch (status) {
-    case 'PENDING_DEPOSIT':
+    case MilestoneStatus.PENDING_DEPOSIT:
       return {
         label: 'Chưa ký quỹ',
         color: 'bg-orange-100 text-orange-800 border-orange-200',
         iconColor: 'text-orange-500',
         IconComponent: AlertCircle
       }
-    case 'DEPOSITED':
+    case MilestoneStatus.PAID:
       return {
         label: 'Đã ký quỹ',
         color: 'bg-blue-100 text-blue-800 border-blue-200',
         iconColor: 'text-blue-500',
         IconComponent: CheckCircle
       }
-    case 'RELEASED':
+    case MilestoneStatus.RELEASED:
       return {
         label: 'Đã giải ngân',
         color: 'bg-green-100 text-green-800 border-green-200',
@@ -76,10 +74,10 @@ export const MilestoneFinancialsTab: React.FC<MilestoneFinancialsTabProps> = ({
   const mentorLeader = previewData?.data?.mentorLeader
   const talentLeader = previewData?.data?.talentLeader
 
-  const statusInfo = getStatusInfo(status)
-  const StatusIcon = statusInfo.IconComponent
+  const statusInfo = getStatusInfo(status as MilestoneStatus)
+  const StatusIcon = statusInfo?.IconComponent || null
 
-  if (isLoadingPreview && status === 'DEPOSITED') {
+  if (isLoadingPreview && status === MilestoneStatus.PENDING_DEPOSIT) {
     return (
       <div className="flex items-center justify-center py-12">
         <Loader2 className="h-8 w-8 animate-spin text-[#2a9d8f]" />
@@ -103,9 +101,9 @@ export const MilestoneFinancialsTab: React.FC<MilestoneFinancialsTabProps> = ({
                 Thông tin minh bạch về phân bổ ngân sách và giải ngân
               </CardDescription>
             </div>
-            <Badge className={`${statusInfo.color} border flex items-center gap-2 px-3 py-1.5`}>
-              <StatusIcon className={`h-4 w-4 ${statusInfo.iconColor}`} />
-              {statusInfo.label}
+            <Badge className={`${statusInfo?.color} border flex items-center gap-2 px-3 py-1.5`}>
+              {StatusIcon && <StatusIcon className={`h-4 w-4 ${statusInfo?.iconColor}`} /> || null}
+              {statusInfo?.label}
             </Badge>
           </div>
         </CardHeader>
@@ -244,7 +242,7 @@ export const MilestoneFinancialsTab: React.FC<MilestoneFinancialsTabProps> = ({
                   Hướng dẫn và quản lý dự án
                 </div>
               )}
-              {status === 'RELEASED' && (
+              {status === MilestoneStatus.RELEASED && (
                 <div className="mt-3 flex items-center gap-1 text-xs text-green-600 bg-green-100 px-2 py-1 rounded">
                   <CheckCircle className="w-3 h-3" />
                   Đã chuyển về ví
@@ -295,7 +293,7 @@ export const MilestoneFinancialsTab: React.FC<MilestoneFinancialsTabProps> = ({
                   Thực hiện và phát triển
                 </div>
               )}
-              {status === 'RELEASED' && (
+              {status === MilestoneStatus.RELEASED && (
                 <div className="mt-3 flex items-center gap-1 text-xs text-green-600 bg-green-100 px-2 py-1 rounded">
                   <CheckCircle className="w-3 h-3" />
                   Đã chuyển về ví Leader

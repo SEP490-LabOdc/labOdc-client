@@ -7,7 +7,7 @@ import { getStatusColor, getStatusLabel } from '@/lib/utils.ts'
 import { LongText } from '@/components/long-text.tsx'
 import { MembersAvatarList } from '@/components/members-avatar-list'
 import type { ProjectMember } from '@/hooks/api/projects'
-import { ROLE } from '@/const'
+import { UserRole } from '@/hooks/api/users'
 
 export const projectsColumns: ColumnDef<Project>[] = [
   {
@@ -66,7 +66,7 @@ export const projectsColumns: ColumnDef<Project>[] = [
         avatarUrl: (mentor as any).avatar && (mentor as any).avatar.trim() !== ''
           ? (mentor as any).avatar
           : undefined,
-        roleName: ROLE.MENTOR as 'MENTOR',
+        roleName: UserRole.MENTOR,
         isLeader: mentor.leader,
       }))
 
@@ -98,7 +98,7 @@ export const projectsColumns: ColumnDef<Project>[] = [
         avatarUrl: talent.avatar && talent.avatar.trim() !== ''
           ? talent.avatar
           : undefined,
-        roleName: ROLE.TALENT as 'TALENT',
+        roleName: UserRole.TALENT,
         isLeader: talent.leader || talent.isLeader || false,
       }))
 

@@ -11,6 +11,8 @@ import {
   MilestoneDocumentsTab,
   MilestoneFinancialsTab
 } from './components'
+import { MilestoneStatus } from '@/hooks/api/milestones'
+import { Spinner } from '@/components/ui/spinner'
 
 const MilestoneDetailPage: React.FC = () => {
   const { milestoneId, projectId } = useParams({ strict: false })
@@ -20,7 +22,9 @@ const MilestoneDetailPage: React.FC = () => {
   // Get user role for display (used by MilestoneFinancialsTab)
   const userRole = user?.role || 'USER'
 
-  if (isLoading) return <div className="min-h-screen bg-gray-50 flex items-center justify-center">Đang tải...</div>
+  if (isLoading) return <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+    <Spinner />
+  </div>
   if (error || !milestoneData?.data) return <div className="min-h-screen bg-gray-50 flex items-center justify-center">Lỗi tải dữ liệu</div>
 
   const milestone = milestoneData.data
@@ -33,8 +37,7 @@ const MilestoneDetailPage: React.FC = () => {
         <div className="col-span-12 lg:col-span-4 space-y-6">
           <MilestoneSidebar
             milestone={milestone}
-            paymentStatus={'PENDING_DEPOSIT'}
-            escrowBalance={milestone.escrowBalance || 0}
+            paymentStatus={MilestoneStatus.PENDING_DEPOSIT}
             projectId={projectId as string || milestone.projectId}
           />
         </div>
@@ -69,7 +72,7 @@ const MilestoneDetailPage: React.FC = () => {
             <TabsContent value="financials" className="mt-6">
               <MilestoneFinancialsTab
                 amount={milestone.budget}
-                status={'PENDING_DEPOSIT'}
+                status={MilestoneStatus.PENDING_DEPOSIT}
                 userRole={userRole}
                 milestoneId={milestone.id}
               />

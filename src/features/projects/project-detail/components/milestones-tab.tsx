@@ -14,7 +14,7 @@ import { useAddTalentToMilestone } from '@/hooks/api/projects/mutation'
 import { useGetProjectMembers } from '@/hooks/api/projects/queries'
 import { toast } from 'sonner'
 import { usePermission } from '@/hooks/usePermission'
-import { calculateProgress } from '@/helpers/milestoneUtils'
+import { calculateProgress } from '@/helpers/milestone'
 import { StatusRenderer } from '@/components/status-renderer'
 
 interface MilestonesTabProps {

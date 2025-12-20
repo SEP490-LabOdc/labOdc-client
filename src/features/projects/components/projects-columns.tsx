@@ -6,6 +6,7 @@ import { Link } from '@tanstack/react-router'
 import { MembersAvatarList } from '@/components/members-avatar-list'
 import type { ProjectMember } from '@/hooks/api/projects'
 import { ROLE } from '@/const'
+import { UserRole } from '@/hooks/api/users'
 
 export const createProjectsColumns = (userRole: string): ColumnDef<Project>[] => [
   {
@@ -75,7 +76,7 @@ export const createProjectsColumns = (userRole: string): ColumnDef<Project>[] =>
         avatarUrl: (mentor as any).avatar && (mentor as any).avatar.trim() !== ''
           ? (mentor as any).avatar
           : undefined,
-        roleName: ROLE.MENTOR as 'MENTOR',
+        roleName: UserRole.MENTOR,
         isLeader: mentor.leader,
       }))
 

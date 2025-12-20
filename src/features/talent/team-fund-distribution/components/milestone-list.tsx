@@ -2,13 +2,12 @@ import React from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import { Clock, Layers } from 'lucide-react'
+import { Layers } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { formatVND } from '../finance.types'
-import type { MilestoneFund } from '../finance.types'
+import type { Milestone } from '@/hooks/api/milestones/types'
 
 interface MilestoneListProps {
-    milestones: MilestoneFund[]
+    milestones: Milestone[]
     selectedMilestoneId: string
     selectedProjectId: string
     isLoading: boolean
@@ -70,22 +69,6 @@ export const MilestoneList: React.FC<MilestoneListProps> = ({
                                                         Đang chọn
                                                     </Badge>
                                                 )}
-                                            </div>
-
-                                            <div className="flex items-center justify-between">
-                                                <Badge className="bg-green-100 text-green-800 border-green-300">
-                                                    {formatVND(milestone.remainingAmount)}
-                                                </Badge>
-                                                <span className="text-xs text-gray-500">
-                                                    Còn lại
-                                                </span>
-                                            </div>
-
-                                            <div className="flex items-center gap-1 text-xs text-gray-500">
-                                                <Clock className="h-3 w-3" />
-                                                <span>
-                                                    {new Date(milestone.releasedAt).toLocaleDateString('vi-VN')}
-                                                </span>
                                             </div>
                                         </div>
                                     </button>

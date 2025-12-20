@@ -26,7 +26,7 @@ import { Plus } from 'lucide-react'
 import { useUser } from '@/context/UserContext'
 import { MembersAvatarList } from '@/components/members-avatar-list'
 import type { ProjectMember } from '@/hooks/api/projects'
-import { ROLE } from '@/const'
+import { UserRole } from '@/hooks/api/users'
 
 interface ProjectOverviewTabProps {
   projectData: ProjectDetail;
@@ -53,7 +53,7 @@ export const ProjectOverviewTab: React.FC<ProjectOverviewTabProps> = ({ projectD
       fullName: talent.name || 'Unknown',
       email: talent.email || '',
       avatarUrl: talent.avatar || talent.avatarUrl || '',
-      roleName: ROLE.TALENT as 'TALENT',
+      roleName: UserRole.TALENT,
       isActive: true,
       joinedAt: new Date().toISOString(),
       leftAt: null,

@@ -6,6 +6,8 @@ import type {
     ExecuteDisbursementPayload,
     ExecuteDisbursementResponse,
 } from './types.ts'
+import type { ApiResponse } from '../types.ts'
+import type { DisbursePayload } from './types.ts'
 
 /**
  * Hook để tính toán phân bổ tiền cho milestone
@@ -40,6 +42,24 @@ export function useExecuteDisbursement() {
         },
         onError: (error: Error) => {
             console.error('Execute disbursement failed:', error)
+            throw error
+        },
+    })
+}
+
+export function useDisburse() {
+    return useMutation<{}, Error, DisbursePayload>({
+        mutationFn: async (payload: DisbursePayload) => {
+            const { data } = await apiRequest.post<ApiResponse<{}>>(
+                `/api/v1/disbursement/milestones/${payload.milestoneId}/disburse`,
+                {
+                    disbursements: payload.disbursements
+                }
+            )
+            return data
+        },
+        onError: (error: Error) => {
+            console.error('Disburse failed:', error)
             throw error
         },
     })

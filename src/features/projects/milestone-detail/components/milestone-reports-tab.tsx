@@ -18,6 +18,8 @@ import { SubmitReportModal } from '@/features/projects/milestone-detail/componen
 import { ReportTemplateModal } from '@/features/projects/milestone-detail/components/report-template-modal'
 import { usePermission } from '@/hooks/usePermission'
 import { useGetProjectMilestoneReports } from '@/hooks/api/projects'
+import { useGetReportRecipients } from '@/hooks/api/projects'
+import type { ReportRecipient } from '@/hooks/api/projects/types'
 import { ROLE } from '@/const.ts'
 
 // --- Types ---
@@ -144,6 +146,12 @@ export const MilestoneReportsTab: React.FC<Props> = ({ milestone }) => {
     isError,
     refetch,
   } = useGetProjectMilestoneReports(milestone.id);
+
+  // Get report recipients
+  const { data: recipientsResponse, isLoading: isLoadingRecipients } =
+    useGetReportRecipients(milestone.projectId, milestone.id);
+
+  const recipients = recipientsResponse?.data || [];
 
   // Map API data to UI format and filter by reportType
   const reports = useMemo(() => {
@@ -278,6 +286,30 @@ export const MilestoneReportsTab: React.FC<Props> = ({ milestone }) => {
           )}
         </CardHeader>
         <CardContent>
+          {/* Recipients Info Section */}
+          {isLoadingRecipients ? (
+            <div className="mb-4 p-3 bg-gray-50 rounded-lg">
+              <Skeleton className="h-4 w-48" />
+            </div>
+          ) : recipients.length > 0 && (
+            <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="text-sm font-semibold text-blue-800">Người nhận báo cáo:</span>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {recipients.map((recipient: ReportRecipient) => (
+                  <Badge
+                    key={recipient.id}
+                    variant="outline"
+                    className="bg-white text-blue-700 border-blue-300"
+                  >
+                    {recipient.name} ({recipient.roleName})
+                  </Badge>
+                ))}
+              </div>
+            </div>
+          )}
+
           {/* Filter by Report Type */}
           <div className="mb-4 flex items-center gap-3">
             <div className="flex items-center gap-2">
@@ -351,6 +383,7 @@ export const MilestoneReportsTab: React.FC<Props> = ({ milestone }) => {
         isCompany={isCompany}
         onApprove={handleApprove}
         onRequestChanges={handleOpenReject}
+        milestoneId={milestone.id}
       />
 
       <RejectReportModal
@@ -358,6 +391,7 @@ export const MilestoneReportsTab: React.FC<Props> = ({ milestone }) => {
         onClose={() => setIsRejectOpen(false)}
         onConfirm={handleConfirmReject}
         reportId={selectedReport?.id || ''}
+        milestoneId={milestone.id}
       />
 
       <SubmitReportModal
@@ -367,6 +401,7 @@ export const MilestoneReportsTab: React.FC<Props> = ({ milestone }) => {
         lastFeedback={isLatestRejected ? reports[0]?.feedback : undefined}
         projectId={milestone.projectId}
         milestoneId={milestone.id}
+        recipients={recipients}
       />
 
       <ReportTemplateModal

@@ -1,17 +1,12 @@
 import React from 'react'
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card.tsx'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card.tsx'
 import { Badge } from '@/components/ui/badge.tsx'
 import { Button } from '@/components/ui/button.tsx'
-import { Progress } from '@/components/ui/progress.tsx'
 import {
   Plus,
   ArrowUpRight,
   Wallet,
   ShieldCheck,
-  UserCheck,
-  Users,
-  AlertCircle,
-  CreditCard,
   Download
 } from 'lucide-react'
 import {
@@ -67,15 +62,10 @@ const getTransactionColor = (type: TransactionType) => {
 };
 
 export const ProjectFinancialsTab: React.FC<ProjectFinancialsTabProps> = ({
-                                                                            summary,
-                                                                            transactions,
-                                                                            userRole
-                                                                          }) => {
-
-  // Tính toán tự động cho phần Allocation Breakdown dựa trên số tiền đã giải ngân
-  const systemFee = summary.totalReleased * 0.10;
-  const mentorShare = summary.totalReleased * 0.20;
-  const teamShare = summary.totalReleased * 0.70;
+  summary,
+  transactions,
+  userRole
+}) => {
 
   return (
     <div className="space-y-6">
@@ -134,104 +124,12 @@ export const ProjectFinancialsTab: React.FC<ProjectFinancialsTabProps> = ({
         </Card>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* SECTION 2: ALLOCATION BREAKDOWN (MINH BẠCH 10/20/70) */}
-        <Card className="lg:col-span-2">
-          <CardHeader>
-            <CardTitle className="text-lg flex items-center gap-2">
-              <ShieldCheck className="w-5 h-5 text-indigo-600" />
-              Minh bạch Phân bổ Dòng tiền
-            </CardTitle>
-            <CardDescription>
-              Tổng số tiền đã giải ngân ({formatVND(summary.totalReleased)}) được hệ thống tự động phân chia như sau:
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              {/* 10% System */}
-              <div className="p-4 rounded-lg bg-gray-50 border border-gray-100 flex flex-col justify-between">
-                <div className="flex items-center gap-2 mb-2">
-                  <div className="p-1.5 bg-gray-200 rounded text-gray-600"><CreditCard className="w-4 h-4" /></div>
-                  <span className="font-semibold text-gray-600">Phí Hệ thống</span>
-                </div>
-                <div>
-                  <span className="text-xs font-bold bg-gray-200 text-gray-700 px-2 py-0.5 rounded">10%</span>
-                  <div className="text-xl font-bold text-gray-800 mt-1">{formatVND(systemFee)}</div>
-                </div>
-              </div>
-
-              {/* 20% Mentor */}
-              <div className="p-4 rounded-lg bg-purple-50 border border-purple-100 flex flex-col justify-between">
-                <div className="flex items-center gap-2 mb-2">
-                  <div className="p-1.5 bg-purple-200 rounded text-purple-600"><UserCheck className="w-4 h-4" /></div>
-                  <span className="font-semibold text-purple-700">Mentor</span>
-                </div>
-                <div>
-                  <span className="text-xs font-bold bg-purple-200 text-purple-700 px-2 py-0.5 rounded">20%</span>
-                  <div className="text-xl font-bold text-purple-900 mt-1">{formatVND(mentorShare)}</div>
-                </div>
-              </div>
-
-              {/* 70% Team */}
-              <div className="p-4 rounded-lg bg-orange-50 border border-orange-100 flex flex-col justify-between ring-2 ring-orange-100">
-                <div className="flex items-center gap-2 mb-2">
-                  <div className="p-1.5 bg-orange-200 rounded text-orange-600"><Users className="w-4 h-4" /></div>
-                  <span className="font-semibold text-orange-700">Talent Team</span>
-                </div>
-                <div>
-                  <span className="text-xs font-bold bg-orange-200 text-orange-800 px-2 py-0.5 rounded">70%</span>
-                  <div className="text-xl font-bold text-orange-900 mt-1">{formatVND(teamShare)}</div>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* SECTION 3: TEAM FUND MONITOR (DÀNH CHO TALENT TEAM) */}
-        <Card className="bg-gradient-to-br from-white to-orange-50/50 border-orange-100">
-          <CardHeader>
-            <CardTitle className="text-lg text-orange-900">Quỹ Nhóm</CardTitle>
-            <CardDescription>Theo dõi dòng tiền về nhóm</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-5">
-            <div>
-              <div className="flex justify-between text-sm mb-1">
-                <span className="text-gray-600">Đã nhận (Về ví Leader)</span>
-                <span className="font-bold">{formatVND(summary.teamFund.totalReceived)}</span>
-              </div>
-              <div className="flex justify-between text-sm mb-1">
-                <span className="text-green-600">Đã chia cho Member</span>
-                <span className="font-bold text-green-600">{formatVND(summary.teamFund.distributed)}</span>
-              </div>
-              <Progress value={(summary.teamFund.distributed / summary.teamFund.totalReceived) * 100 || 0} className="h-2 bg-orange-100" />
-            </div>
-
-            <div className="bg-white p-3 rounded-lg border border-orange-200 shadow-sm">
-              <div className="flex items-start gap-3">
-                <AlertCircle className={`w-5 h-5 mt-0.5 ${summary.teamFund.heldByLeader > 0 ? 'text-red-500' : 'text-green-500'}`} />
-                <div>
-                  <p className="text-sm font-medium text-gray-700">Đang giữ bởi Leader</p>
-                  <p className={`text-xl font-bold ${summary.teamFund.heldByLeader > 0 ? 'text-red-600' : 'text-green-600'}`}>
-                    {formatVND(summary.teamFund.heldByLeader)}
-                  </p>
-                </div>
-              </div>
-              {userRole === 'TALENT_LEADER' && summary.teamFund.heldByLeader > 0 && (
-                <Button size="sm" className="w-full mt-3 bg-orange-600 hover:bg-orange-700 text-white">
-                  Phân bổ ngay
-                </Button>
-              )}
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
       {/* SECTION 4: TRANSACTION HISTORY */}
       <Card>
         <CardHeader className="flex flex-row items-center justify-between pb-2">
           <CardTitle className="text-lg font-semibold">Lịch sử Giao dịch</CardTitle>
           <div className="flex gap-2">
-            <Button variant="outline" size="sm"><Download className="w-4 h-4 mr-2"/> Xuất báo cáo</Button>
+            <Button variant="outline" size="sm"><Download className="w-4 h-4 mr-2" /> Xuất báo cáo</Button>
           </div>
         </CardHeader>
         <CardContent>

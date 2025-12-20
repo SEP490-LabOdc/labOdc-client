@@ -1,5 +1,5 @@
 import { Badge } from "@/components/ui/badge"
-import { calculateDaysRemaining } from "@/helpers/milestoneUtils"
+import { calculateDaysRemaining } from "@/helpers/milestone"
 import type { Milestone } from "@/hooks/api/milestones"
 import { getStatusColor, getStatusLabel } from "@/lib/utils"
 import { CalendarDays, DollarSign } from "lucide-react"
