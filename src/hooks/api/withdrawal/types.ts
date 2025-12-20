@@ -36,3 +36,11 @@ export interface WithdrawalRequestItem {
     createdAt: string
     updatedAt: string
 }
+
+export interface WithdrawalFilter {
+    status: string
+    fromDate: string
+    toDate: string
+    page: number
+    size: number
+}
