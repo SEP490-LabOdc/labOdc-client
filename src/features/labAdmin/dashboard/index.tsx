@@ -17,18 +17,18 @@ import {
     Briefcase,
 } from 'lucide-react'
 import { Link } from '@tanstack/react-router'
-
+import { useUser } from '@/context/UserContext'
+import { useGetUserNotifications } from '@/hooks/api/notifications'
+import { Bar, BarChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
+import { formatVND } from '@/helpers/currency'
 
 /* =======================
    MOCK DATA – LABODC
 ======================= */
 
-const approvalStats = {
+const systemOverview = {
     pendingCompanies: 42,
     pendingProjects: 42,
-}
-
-const systemOverview = {
     activeCompanies: 88,
     activeProjects: 44,
     recruitingProjects: 17,
@@ -36,38 +36,68 @@ const systemOverview = {
     availableMentors: 30,
     totalStudents: 500,
     joinedStudents: 100,
-    totalCapital: 12_500_000,
+    totalCapital: 12500000,
 }
 
-const recentActivities = [
-    {
-        type: 'APPROVAL_PROJECT',
-        title: 'Có dự án mới cần phê duyệt',
-        description:
-            'Dự án "Hệ thống Microservices E-commerce" vừa được tạo và đang chờ phê duyệt.',
-        time: 'Khoảng 19 giờ trước',
-    },
-    {
-        type: 'APPROVAL_COMPANY',
-        title: 'Công ty cập nhật thông tin cần duyệt',
-        description:
-            'Doanh nghiệp "Công ty SoftWave" đã cập nhật thông tin đăng ký.',
-        time: 'Khoảng 19 giờ trước',
-    },
-    {
-        type: 'REGISTER_COMPANY',
-        title: 'Có công ty đăng ký mới',
-        description:
-            'Doanh nghiệp "Công ty SoftWave" vừa đăng ký tham gia nền tảng.',
-        time: 'Khoảng 19 giờ trước',
-    },
+const projectCreatedByMonth = [
+    { month: '2025-11', total: 18 },
+    { month: '2025-12', total: 24 },
+    { month: '2026-01', total: 15 },
+    { month: '2026-02', total: 21 },
+    { month: '2026-03', total: 19 },
+    { month: '2026-04', total: 26 },
 ]
+
+const companyCreatedByMonth = [
+    { month: '2025-11', total: 6 },
+    { month: '2025-12', total: 9 },
+    { month: '2026-01', total: 7 },
+    { month: '2026-02', total: 10 },
+    { month: '2026-03', total: 8 },
+    { month: '2026-04', total: 11 },
+]
+
+const formatMonthLabel = (month: string) => {
+    const [year, m] = month.split('-')
+    return `${m}/${year}`
+}
 
 /* =======================
    DASHBOARD
 ======================= */
 
 export default function Dashboard() {
+    const { user } = useUser()
+
+    const {
+        data: notifications = [],
+        isLoading,
+    } = useGetUserNotifications(user?.id);
+
+    let latestNotifications = [];
+
+    if (!isLoading) {
+        latestNotifications = [...notifications?.data]
+            .sort(
+                (a, b) =>
+                    new Date(b.sentAt).getTime() -
+                    new Date(a.sentAt).getTime()
+            )
+            .slice(0, 8)
+
+    }
+
+    const projectChartData = projectCreatedByMonth.map(item => ({
+        label: formatMonthLabel(item.month), // 11/2025
+        total: item.total,
+    }))
+
+    const companyChartData = companyCreatedByMonth.map(item => ({
+        label: formatMonthLabel(item.month),
+        total: item.total,
+    }))
+
+
     return (
         <Main>
             {/* ===== HEADER ===== */}
@@ -105,7 +135,7 @@ export default function Dashboard() {
                                     <ApprovalBox
                                         icon={<Building2 size={16} />}
                                         label="Doanh nghiệp chờ phê duyệt"
-                                        value={approvalStats.pendingCompanies}
+                                        value={systemOverview.pendingCompanies}
                                         variant="company"
                                     />
                                 </Link>
@@ -118,7 +148,7 @@ export default function Dashboard() {
                                     <ApprovalBox
                                         icon={<FolderKanban size={16} />}
                                         label="Dự án chờ phê duyệt"
-                                        value={approvalStats.pendingProjects}
+                                        value={systemOverview.pendingProjects}
                                         variant="project"
                                     />
                                 </Link>
@@ -127,11 +157,11 @@ export default function Dashboard() {
                             <p className="text-sm text-muted-foreground">
                                 ⚠️ Hiện có{' '}
                                 <strong>
-                                    {approvalStats.pendingCompanies} doanh nghiệp
+                                    {systemOverview.pendingCompanies} doanh nghiệp
                                 </strong>{' '}
                                 và{' '}
                                 <strong>
-                                    {approvalStats.pendingProjects} dự án
+                                    {systemOverview.pendingProjects} dự án
                                 </strong>{' '}
                                 đang chờ phê duyệt.
                             </p>
@@ -141,41 +171,59 @@ export default function Dashboard() {
                     {/* ===== RECENT ACTIVITIES ===== */}
                     <Card>
                         <CardHeader>
-                            <CardTitle>
-                                Hoạt động gần đây
-                            </CardTitle>
+                            <CardTitle>Hoạt động gần đây</CardTitle>
                             <CardDescription>
-                                Các sự kiện mới nhất trong hệ thống
+                                8 thông báo mới nhất cần quản trị viên xử lý
                             </CardDescription>
                         </CardHeader>
-                        <CardContent className="space-y-4">
-                            {recentActivities.map((item, index) => (
-                                <div
-                                    key={index}
-                                    className="rounded-md border p-4"
-                                >
-                                    <div className="mb-1 flex items-center gap-2">
-                                        <Badge>
-                                            {item.type ===
-                                                'APPROVAL_PROJECT'
-                                                ? 'Phê duyệt dự án'
-                                                : item.type ===
-                                                    'APPROVAL_COMPANY'
-                                                    ? 'Phê duyệt doanh nghiệp'
-                                                    : 'Đăng ký mới'}
-                                        </Badge>
-                                        <span className="text-sm font-medium">
-                                            {item.title}
-                                        </span>
-                                    </div>
-                                    <p className="text-muted-foreground text-sm">
-                                        {item.description}
-                                    </p>
-                                    <p className="mt-1 text-xs text-muted-foreground">
-                                        {item.time}
-                                    </p>
-                                </div>
-                            ))}
+
+                        <CardContent className="space-y-3">
+                            {isLoading && (
+                                <p className="text-sm text-muted-foreground">
+                                    Đang tải thông báo...
+                                </p>
+                            )}
+
+                            {!isLoading && latestNotifications.length === 0 && (
+                                <p className="text-sm text-muted-foreground">
+                                    Không có thông báo mới
+                                </p>
+                            )}
+
+                            {!isLoading &&
+                                latestNotifications.map((item) => (
+                                    <Link
+                                        key={item.notificationRecipientId}
+                                        to={item.deepLink}
+                                        className="block rounded-md border p-4 transition hover:bg-muted"
+                                    >
+                                        <div className="mb-1 flex items-center gap-2">
+                                            <Badge>
+                                                {item.category === 'PROJECT_MANAGEMENT'
+                                                    ? 'Dự án'
+                                                    : 'Doanh nghiệp'}
+                                            </Badge>
+
+                                            {!item.readStatus && (
+                                                <span className="text-xs font-semibold text-red-500">
+                                                    ●
+                                                </span>
+                                            )}
+
+                                            <span className="text-sm font-medium">
+                                                {item.title}
+                                            </span>
+                                        </div>
+
+                                        <p className="text-muted-foreground text-sm">
+                                            {item.content}
+                                        </p>
+
+                                        <p className="mt-1 text-xs text-muted-foreground">
+                                            {new Date(item.sentAt).toLocaleString('vi-VN')}
+                                        </p>
+                                    </Link>
+                                ))}
                         </CardContent>
                     </Card>
                 </div>
@@ -197,7 +245,7 @@ export default function Dashboard() {
                             <OverviewItem
                                 icon={<Wallet size={16} />}
                                 label="Tổng số vốn"
-                                value={`${systemOverview.totalCapital.toLocaleString()} VND`}
+                                value={`${formatVND(systemOverview.totalCapital)}`}
                             />
                             <OverviewItem
                                 icon={<Building2 size={16} />}
@@ -224,6 +272,52 @@ export default function Dashboard() {
                                 label="Sinh viên tham gia dự án"
                                 value={`${systemOverview.joinedStudents} / ${systemOverview.totalStudents}`}
                             />
+                        </CardContent>
+                    </Card>
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Dự án mới theo tháng</CardTitle>
+                            <CardDescription>Số dự án được tạo trong 6 tháng gần nhất</CardDescription>
+                        </CardHeader>
+                        <CardContent className="h-[220px]">
+                            <ResponsiveContainer width="100%" height="100%">
+                                <BarChart data={projectChartData}>
+                                    <XAxis dataKey="label" />
+                                    <YAxis allowDecimals={false} />
+                                    <Tooltip
+                                        formatter={(value: number) => [`${value} dự án`, 'Số lượng']}
+                                        labelFormatter={(label) => `Tháng ${label}`}
+                                    />
+                                    <Bar
+                                        dataKey="total"
+                                        radius={[4, 4, 0, 0]}
+                                        className="fill-primary"
+                                    />
+                                </BarChart>
+                            </ResponsiveContainer>
+                        </CardContent>
+                    </Card>
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Doanh nghiệp mới theo tháng</CardTitle>
+                            <CardDescription>Số doanh nghiệp đăng ký trong 6 tháng gần nhất</CardDescription>
+                        </CardHeader>
+                        <CardContent className="h-[220px]">
+                            <ResponsiveContainer width="100%" height="100%">
+                                <BarChart data={companyChartData}>
+                                    <XAxis dataKey="label" />
+                                    <YAxis allowDecimals={false} />
+                                    <Tooltip
+                                        formatter={(value: number) => [`${value} doanh nghiệp`, 'Đăng ký mới']}
+                                        labelFormatter={(label) => `Tháng ${label}`}
+                                    />
+                                    <Bar
+                                        dataKey="total"
+                                        radius={[4, 4, 0, 0]}
+                                        className="fill-primary"
+                                    />
+                                </BarChart>
+                            </ResponsiveContainer>
                         </CardContent>
                     </Card>
                 </div>
