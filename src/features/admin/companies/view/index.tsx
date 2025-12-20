@@ -5,7 +5,6 @@ import { COMPANY_STATUS } from "../data/schema";
 import ApproveCompany from "../approve";
 import EditCompany from "../edit";
 import { Main } from "@/components/layout/main";
-import { Spinner } from "@/components/ui/spinner";
 
 const route = getRouteApi('/_authenticated/admin/companies/$companyId/')
 
@@ -32,7 +31,7 @@ export default function ViewCompany() {
     if (isLoading) {
         return (
             <div className="flex h-screen flex-col items-center justify-center">
-                <Spinner className="h-32 w-32" />
+                <p className="text-muted-foreground">Đang tải thông tin công ty...</p>
             </div>
         )
     }

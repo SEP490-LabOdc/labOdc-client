@@ -5,7 +5,6 @@ import { COMPANY_STATUS } from "../data/schema"
 import ApproveCompany from "../approve"
 import { getRouteApi } from "@tanstack/react-router"
 import EditCompany from "../edit"
-import { Spinner } from "@/components/ui/spinner"
 
 
 const route = getRouteApi('/_authenticated/lab-admin/companies/$companyId/')
@@ -29,7 +28,7 @@ export default function ViewCompany() {
     if (isCompanyLoading) {
         return (
             <div className="flex h-screen flex-col items-center justify-center">
-                <Spinner className="h-32 w-32" />
+                <p className="text-muted-foreground">Đang tải thông tin công ty...</p>
             </div>
         )
     }

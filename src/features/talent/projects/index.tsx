@@ -18,7 +18,6 @@ import { ProjectsTable } from "./components"
 import { useUser } from '@/context/UserContext'
 import { useGetMyProjects } from '@/hooks/api/projects'
 import { useSearch } from '@tanstack/react-router'
-import { Spinner } from "@/components/ui/spinner"
 
 export default function TalentProjectPage() {
   const { user } = useUser()
@@ -27,7 +26,7 @@ export default function TalentProjectPage() {
   const status = search.status || ''
 
   const { data: projects, isLoading, error } = useGetMyProjects(status)
-  const mockNavigate = () => { }
+  const mockNavigate = () => {}
 
   if (!user) {
     return (
@@ -46,8 +45,8 @@ export default function TalentProjectPage() {
 
   if (isLoading) {
     return (
-      <div className="flex h-screen w-screen items-center justify-center bg-bunker-800">
-        <Spinner className="h-32 w-32" />
+      <div className="container mx-auto px-8 py-12 text-center">
+        <div className="text-gray-500">Đang tải dữ liệu...</div>
       </div>
     )
   }

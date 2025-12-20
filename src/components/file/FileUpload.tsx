@@ -3,7 +3,6 @@ import { Upload, X, FileIcon, AlertCircle, Loader2, Eye, RotateCcw } from 'lucid
 import { Button } from '@/components/ui/button.tsx';
 import { cn } from '@/lib/utils.ts';
 import { useUploadFile } from '@/hooks/api/file'
-import { Spinner } from '../ui/spinner';
 
 interface FileUploadProps {
   value?: string | null;
@@ -18,21 +17,21 @@ interface FileUploadProps {
 }
 
 export function FileUpload({
-  value,
-  onChange,
-  onFileUploaded,
-  existingFileName,
-  accept = '.pdf,.jpg,.jpeg,.png',
-  maxSize = 10,
-  placeholder = 'Chọn file để tải lên',
-  disabled = false,
-  className
-}: FileUploadProps) {
+                             value,
+                             onChange,
+                             onFileUploaded,
+                             existingFileName,
+                             accept = '.pdf,.jpg,.jpeg,.png',
+                             maxSize = 10,
+                             placeholder = 'Chọn file để tải lên',
+                             disabled = false,
+                             className
+                           }: FileUploadProps) {
   const [isDragOver, setIsDragOver] = useState(false);
   const [uploadError, setUploadError] = useState<string>('');
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [uploadedFileInfo, setUploadedFileInfo] = useState<{ fileName: string; fileUrl: string } | null>(null);
+  const [uploadedFileInfo, setUploadedFileInfo] = useState<{fileName: string; fileUrl: string} | null>(null);
 
   const { mutateAsync: uploadFile, isPending: isUploading } = useUploadFile();
 
@@ -211,7 +210,7 @@ export function FileUpload({
             )}
             <div>
               <p className="text-sm font-medium text-gray-700">
-                {isUploading ? <Spinner className="h-8 w-8" /> : placeholder}
+                {isUploading ? 'Đang tải lên...' : placeholder}
               </p>
               {!isUploading && (
                 <>
@@ -245,7 +244,7 @@ export function FileUpload({
                 <p className="text-xs text-gray-500">{fileSize}</p>
               )}
               {isUploading && (
-                <p className="text-xs text-blue-600"><Spinner className="h-8 w-8" /></p>
+                <p className="text-xs text-blue-600">Đang tải lên...</p>
               )}
             </div>
 

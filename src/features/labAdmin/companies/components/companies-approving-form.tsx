@@ -6,8 +6,8 @@ import { ConfirmDialog } from '@/components/confirm-dialog'
 import type { Company } from '../data/schema'
 import { Textarea } from '@/components/ui/textarea'
 import { usePatchPendingCompany } from '@/hooks/api/companies'
+import { Loader2 } from 'lucide-react'
 import { useNavigate } from '@tanstack/react-router'
-import { Spinner } from '@/components/ui/spinner'
 import { toast } from 'sonner'
 
 type ChecklistItem = {
@@ -316,7 +316,7 @@ export default function CompanyApprovingForm({
                 >
                     {loadingAction === 'ACTIVE' ? (
                         <>
-                            <Spinner className="mr-2 h-4 w-4" />
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                             Đang phê duyệt...
                         </>
                     ) : (
@@ -359,7 +359,7 @@ export default function CompanyApprovingForm({
                 confirmText={
                     loadingAction === 'UPDATE_REQUIRED' ? (
                         <>
-                            <Spinner className="mr-2 h-4 w-4" />
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                             Đang gửi...
                         </>
                     ) : (

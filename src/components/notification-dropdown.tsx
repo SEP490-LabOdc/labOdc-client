@@ -23,7 +23,6 @@ import { notificationsKeys, useGetUserNotifications, useGetUserNotificationsUnre
 import { useNotificationSubscription } from '@/hooks/use-notifications'
 import { Link } from '@tanstack/react-router'
 import { useMarkNotificationAsRead } from '@/hooks/api/notifications/queries.ts'
-import { Spinner } from './ui/spinner'
 
 type Notification = {
   notificationRecipientId: string;
@@ -133,7 +132,8 @@ export function NotificationDropdown() {
     if (isLoading) {
       return (
         <div className='p-4 text-center text-sm text-muted-foreground'>
-          <Spinner className="h-32 w-32" />
+          <div className='animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-2'></div>
+          <p>Đang tải thông báo...</p>
         </div>
       );
     }
@@ -212,7 +212,7 @@ export function NotificationDropdown() {
                 variant='link'
                 size='sm'
                 className='h-auto p-0 text-xs'
-              // onClick={handleMarkAllAsRead}
+                // onClick={handleMarkAllAsRead}
               >
                 Đánh dấu tất cả đã đọc
               </Button>
@@ -229,7 +229,7 @@ export function NotificationDropdown() {
             </TabsTrigger>
           </TabsList>
 
-          <DropdownMenuSeparator className="mt-2" />
+          <DropdownMenuSeparator className="mt-2"/>
 
           {/* Tab "Tất cả" */}
           <TabsContent value="all">

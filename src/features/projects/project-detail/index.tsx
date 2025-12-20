@@ -10,7 +10,6 @@ import { ArrowRight, Wallet, FileText } from 'lucide-react'
 import { Button } from '@/components/ui/button.tsx'
 import { getRoleBasePath } from '@/lib/utils.ts'
 import { useUser } from '@/context/UserContext'
-import { Spinner } from '@/components/ui/spinner'
 
 const ProjectDetailPage: React.FC = () => {
   const { user } = useUser()
@@ -22,7 +21,10 @@ const ProjectDetailPage: React.FC = () => {
   if (isLoadingProject) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <Spinner className="h-32 w-32" />
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#2a9d8f] mx-auto"></div>
+          <p className="mt-4 text-gray-600">Đang tải dữ liệu...</p>
+        </div>
       </div>
     )
   }
