@@ -16,6 +16,8 @@ import {
     Wallet,
     Briefcase,
 } from 'lucide-react'
+import { Link } from '@tanstack/react-router'
+
 
 /* =======================
    MOCK DATA – LABODC
@@ -95,18 +97,31 @@ export default function Dashboard() {
                         </CardHeader>
                         <CardContent className="space-y-4">
                             <div className="grid grid-cols-2 gap-4">
-                                <ApprovalBox
-                                    icon={<Building2 size={16} />}
-                                    label="Doanh nghiệp chờ phê duyệt"
-                                    value={approvalStats.pendingCompanies}
-                                    variant="company"
-                                />
-                                <ApprovalBox
-                                    icon={<FolderKanban size={16} />}
-                                    label="Dự án chờ phê duyệt"
-                                    value={approvalStats.pendingProjects}
-                                    variant="project"
-                                />
+                                <Link
+                                    to="/lab-admin/companies"
+                                    search={{ status: ['PENDING'] }}
+                                    className="block"
+                                >
+                                    <ApprovalBox
+                                        icon={<Building2 size={16} />}
+                                        label="Doanh nghiệp chờ phê duyệt"
+                                        value={approvalStats.pendingCompanies}
+                                        variant="company"
+                                    />
+                                </Link>
+
+                                <Link
+                                    to="/lab-admin/projects"
+                                    search={{ status: ['PENDING'] }}
+                                    className="block"
+                                >
+                                    <ApprovalBox
+                                        icon={<FolderKanban size={16} />}
+                                        label="Dự án chờ phê duyệt"
+                                        value={approvalStats.pendingProjects}
+                                        variant="project"
+                                    />
+                                </Link>
                             </div>
 
                             <p className="text-sm text-muted-foreground">
@@ -220,7 +235,6 @@ export default function Dashboard() {
 /* =======================
    INLINE UI BLOCKS
 ======================= */
-
 function ApprovalBox({
     icon,
     label,
@@ -253,7 +267,7 @@ function ApprovalBox({
 
     return (
         <div
-            className={`relative rounded-lg border ${styles.border} ${styles.bg} p-4`}
+            className={`relative rounded-lg border ${styles.border} ${styles.bg} p-4 transition hover:shadow-md`}
         >
             {/* Accent strip */}
             <div
@@ -275,6 +289,10 @@ function ApprovalBox({
                 {value}
             </p>
 
+            <span className="absolute bottom-3 right-3 text-xs text-muted-foreground">
+                Xem chi tiết →
+            </span>
+
             <AlertTriangle
                 size={16}
                 className={`absolute right-3 top-3 ${styles.iconText}`}
@@ -282,6 +300,7 @@ function ApprovalBox({
         </div>
     )
 }
+
 
 function OverviewItem({
     icon,
