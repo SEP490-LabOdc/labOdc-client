@@ -36,7 +36,7 @@ const systemOverview = {
     availableMentors: 30,
     totalStudents: 500,
     joinedStudents: 100,
-    totalCapital: 12500000,
+    totalBudget: 12500000,
 }
 
 const projectCreatedByMonth = [
@@ -245,7 +245,7 @@ export default function Dashboard() {
                             <OverviewItem
                                 icon={<Wallet size={16} />}
                                 label="Tổng số vốn"
-                                value={`${formatVND(systemOverview.totalCapital)}`}
+                                value={`${formatVND(systemOverview.totalBudget)}`}
                             />
                             <OverviewItem
                                 icon={<Building2 size={16} />}
