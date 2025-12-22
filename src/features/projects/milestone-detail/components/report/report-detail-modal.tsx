@@ -47,7 +47,6 @@ export const ReportDetailModal: React.FC<ReportDetailModalProps> = ({
       toast.success('Phê duyệt báo cáo thành công')
       onApprove()
     } catch (error) {
-      toast.error('Phê duyệt báo cáo thất bại')
       console.error(error)
     }
   }
