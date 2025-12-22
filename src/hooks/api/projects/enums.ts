@@ -10,11 +10,3 @@ export enum ProjectStatus {
     PENDING_START = 'PENDING_START',
     PAID = 'PAID',
 }
-
-export enum ReportStatus {
-    SUBMITTED = 'SUBMITTED',
-    UNDER_REVIEW = 'UNDER_REVIEW',
-    APPROVED = 'APPROVED',
-    REJECTED = 'REJECTED',
-    FINAL = 'FINAL',
-}

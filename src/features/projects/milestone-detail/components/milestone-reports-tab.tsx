@@ -21,116 +21,20 @@ import { useGetProjectMilestoneReports } from '@/hooks/api/projects'
 import { useGetReportRecipients } from '@/hooks/api/projects'
 import type { ReportRecipient } from '@/hooks/api/projects/types'
 import { ROLE } from '@/const.ts'
-
-// --- Types ---
-export type ReportStatus = 'SUBMITTED' | 'CHANGES_REQUESTED' | 'APPROVED';
-
-export type ReportType = 'DAILY_REPORT' | 'WEEKLY_REPORT' | 'MILESTONE_REPORT' | 'DELIVERY_REPORT';
-
-export interface ReportVersion {
-  id: string;
-  submittedAt: string;
-  submittedBy: string;
-  submittedByAvatar?: string;
-  content: string;
-  files: { name: string; size: string }[];
-  status: ReportStatus;
-  reportType: ReportType;
-  feedback?: string;
-}
-
-// API Report Type
-interface ApiReport {
-  id: string;
-  projectId: string;
-  projectName: string;
-  reporterId: string;
-  reporterName: string;
-  reporterEmail: string;
-  reporterAvatar: string;
-  recipientId: string;
-  reportType: string;
-  status: string;
-  content: string;
-  attachmentsUrl: string[];
-  reportingDate: string;
-  createdAt: string;
-  feedback?: string;
-  milestoneId: string;
-  milestoneTitle: string;
-}
+import { ReportType } from '@/hooks/api/report'
+import {
+  mapApiReportsToUI,
+  getReportTypeLabel,
+  getReportTypeBadge,
+  getStatusBadge,
+  type ReportVersion,
+} from '@/helpers/report'
 
 interface Props {
   milestone: {
     id: string;
     projectId: string;
   };
-}
-
-// Helper: Map API status to UI status
-const mapApiStatusToUIStatus = (apiStatus: string): ReportStatus => {
-  const statusMap: Record<string, ReportStatus> = {
-    'SUBMITTED': 'SUBMITTED',
-    'PENDING': 'SUBMITTED',
-    'CHANGES_REQUESTED': 'CHANGES_REQUESTED',
-    'REJECTED': 'CHANGES_REQUESTED',
-    'APPROVED': 'APPROVED',
-    'ACCEPTED': 'APPROVED',
-  };
-  return statusMap[apiStatus] || 'SUBMITTED';
-};
-
-// Helper: Get ReportType label
-const getReportTypeLabel = (reportType: string): string => {
-  const labels: Record<string, string> = {
-    'DAILY_REPORT': 'Báo cáo Hàng ngày',
-    'WEEKLY_REPORT': 'Báo cáo Tuần',
-    'MILESTONE_REPORT': 'Báo cáo Milestone',
-    'DELIVERY_REPORT': 'Báo cáo Giao hàng',
-  };
-  return labels[reportType] || reportType;
-};
-
-// Helper: Get ReportType badge color
-const getReportTypeBadge = (reportType: string) => {
-  const colors: Record<string, string> = {
-    'DAILY_REPORT': 'bg-blue-100 text-blue-700 border-blue-200',
-    'WEEKLY_REPORT': 'bg-purple-100 text-purple-700 border-purple-200',
-    'MILESTONE_REPORT': 'bg-indigo-100 text-indigo-700 border-indigo-200',
-    'DELIVERY_REPORT': 'bg-green-100 text-green-700 border-green-200',
-  };
-  return (
-    <Badge variant="outline" className={colors[reportType] || 'bg-gray-100 text-gray-700 border-gray-200'}>
-      {getReportTypeLabel(reportType)}
-    </Badge>
-  );
-};
-
-// Helper: Map API reports to UI format
-const mapApiReportsToUI = (apiReports: ApiReport[]): ReportVersion[] => {
-  return apiReports.map((report) => ({
-    id: report.id,
-    submittedAt: new Date(report.createdAt).toLocaleString('vi-VN'),
-    submittedBy: report.reporterName,
-    submittedByAvatar: report.reporterAvatar,
-    content: report.content,
-    files: report.attachmentsUrl.map((url) => ({
-      name: url.split('/').pop() || 'file',
-      size: 'N/A',
-    })),
-    status: mapApiStatusToUIStatus(report.status),
-    reportType: report.reportType as ReportType,
-    feedback: report.feedback,
-  }));
-};
-
-const getStatusBadge = (status: ReportStatus) => {
-  switch (status) {
-    case 'SUBMITTED': return <Badge variant="outline" className="bg-blue-100 text-blue-700 border-blue-200">Đang chờ duyệt</Badge>;
-    case 'CHANGES_REQUESTED': return <Badge variant="outline" className="bg-orange-100 text-orange-700 border-orange-200">Yêu cầu sửa</Badge>;
-    case 'APPROVED': return <Badge variant="outline" className="bg-green-100 text-green-700 border-green-200">Đã nghiệm thu</Badge>;
-    default: return null;
-  }
 }
 
 export const MilestoneReportsTab: React.FC<Props> = ({ milestone }) => {
@@ -270,7 +174,7 @@ export const MilestoneReportsTab: React.FC<Props> = ({ milestone }) => {
               <Button
                 variant="outline"
                 onClick={() => {
-                  setSelectedTemplateType(selectedReportType !== 'ALL' ? (selectedReportType as ReportType) : 'MILESTONE_REPORT')
+                  setSelectedTemplateType(selectedReportType !== 'ALL' ? (selectedReportType as ReportType) : ReportType.MILESTONE_REPORT)
                   setIsTemplateOpen(true)
                 }}
                 className="border-[#2a9d8f]/30 text-[#2a9d8f] hover:bg-[#2a9d8f]/10"
@@ -322,10 +226,10 @@ export const MilestoneReportsTab: React.FC<Props> = ({ milestone }) => {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="ALL">Tất cả loại báo cáo</SelectItem>
-                <SelectItem value="DAILY_REPORT">{getReportTypeLabel('DAILY_REPORT')}</SelectItem>
-                <SelectItem value="WEEKLY_REPORT">{getReportTypeLabel('WEEKLY_REPORT')}</SelectItem>
-                <SelectItem value="MILESTONE_REPORT">{getReportTypeLabel('MILESTONE_REPORT')}</SelectItem>
-                <SelectItem value="DELIVERY_REPORT">{getReportTypeLabel('DELIVERY_REPORT')}</SelectItem>
+                <SelectItem value={ReportType.DAILY_REPORT}>{getReportTypeLabel(ReportType.DAILY_REPORT)}</SelectItem>
+                <SelectItem value={ReportType.WEEKLY_REPORT}>{getReportTypeLabel(ReportType.WEEKLY_REPORT)}</SelectItem>
+                <SelectItem value={ReportType.MILESTONE_REPORT}>{getReportTypeLabel(ReportType.MILESTONE_REPORT)}</SelectItem>
+                <SelectItem value={ReportType.DELIVERY_REPORT}>{getReportTypeLabel(ReportType.DELIVERY_REPORT)}</SelectItem>
               </SelectContent>
             </Select>
           </div>
