@@ -64,6 +64,7 @@ import { Route as AuthenticatedLabAdminUsersIndexRouteImport } from './routes/_a
 import { Route as AuthenticatedLabAdminTemplatesIndexRouteImport } from './routes/_authenticated/lab-admin/templates/index'
 import { Route as AuthenticatedLabAdminSkillsIndexRouteImport } from './routes/_authenticated/lab-admin/skills/index'
 import { Route as AuthenticatedLabAdminSettingsIndexRouteImport } from './routes/_authenticated/lab-admin/settings/index'
+import { Route as AuthenticatedLabAdminReportsIndexRouteImport } from './routes/_authenticated/lab-admin/reports/index'
 import { Route as AuthenticatedLabAdminProjectsIndexRouteImport } from './routes/_authenticated/lab-admin/projects/index'
 import { Route as AuthenticatedLabAdminCompaniesIndexRouteImport } from './routes/_authenticated/lab-admin/companies/index'
 import { Route as AuthenticatedCompanyManageWalletIndexRouteImport } from './routes/_authenticated/company-manage/wallet/index'
@@ -417,6 +418,12 @@ const AuthenticatedLabAdminSettingsIndexRoute =
     id: '/',
     path: '/',
     getParentRoute: () => AuthenticatedLabAdminSettingsRouteRoute,
+  } as any)
+const AuthenticatedLabAdminReportsIndexRoute =
+  AuthenticatedLabAdminReportsIndexRouteImport.update({
+    id: '/reports/',
+    path: '/reports/',
+    getParentRoute: () => AuthenticatedLabAdminRouteRoute,
   } as any)
 const AuthenticatedLabAdminProjectsIndexRoute =
   AuthenticatedLabAdminProjectsIndexRouteImport.update({
@@ -792,6 +799,7 @@ export interface FileRoutesByFullPath {
   '/company-manage/wallet': typeof AuthenticatedCompanyManageWalletIndexRoute
   '/lab-admin/companies': typeof AuthenticatedLabAdminCompaniesIndexRoute
   '/lab-admin/projects': typeof AuthenticatedLabAdminProjectsIndexRoute
+  '/lab-admin/reports': typeof AuthenticatedLabAdminReportsIndexRoute
   '/lab-admin/settings/': typeof AuthenticatedLabAdminSettingsIndexRoute
   '/lab-admin/skills': typeof AuthenticatedLabAdminSkillsIndexRoute
   '/lab-admin/templates': typeof AuthenticatedLabAdminTemplatesIndexRoute
@@ -884,6 +892,7 @@ export interface FileRoutesByTo {
   '/company-manage/wallet': typeof AuthenticatedCompanyManageWalletIndexRoute
   '/lab-admin/companies': typeof AuthenticatedLabAdminCompaniesIndexRoute
   '/lab-admin/projects': typeof AuthenticatedLabAdminProjectsIndexRoute
+  '/lab-admin/reports': typeof AuthenticatedLabAdminReportsIndexRoute
   '/lab-admin/settings': typeof AuthenticatedLabAdminSettingsIndexRoute
   '/lab-admin/skills': typeof AuthenticatedLabAdminSkillsIndexRoute
   '/lab-admin/templates': typeof AuthenticatedLabAdminTemplatesIndexRoute
@@ -993,6 +1002,7 @@ export interface FileRoutesById {
   '/_authenticated/company-manage/wallet/': typeof AuthenticatedCompanyManageWalletIndexRoute
   '/_authenticated/lab-admin/companies/': typeof AuthenticatedLabAdminCompaniesIndexRoute
   '/_authenticated/lab-admin/projects/': typeof AuthenticatedLabAdminProjectsIndexRoute
+  '/_authenticated/lab-admin/reports/': typeof AuthenticatedLabAdminReportsIndexRoute
   '/_authenticated/lab-admin/settings/': typeof AuthenticatedLabAdminSettingsIndexRoute
   '/_authenticated/lab-admin/skills/': typeof AuthenticatedLabAdminSkillsIndexRoute
   '/_authenticated/lab-admin/templates/': typeof AuthenticatedLabAdminTemplatesIndexRoute
@@ -1100,6 +1110,7 @@ export interface FileRouteTypes {
     | '/company-manage/wallet'
     | '/lab-admin/companies'
     | '/lab-admin/projects'
+    | '/lab-admin/reports'
     | '/lab-admin/settings/'
     | '/lab-admin/skills'
     | '/lab-admin/templates'
@@ -1192,6 +1203,7 @@ export interface FileRouteTypes {
     | '/company-manage/wallet'
     | '/lab-admin/companies'
     | '/lab-admin/projects'
+    | '/lab-admin/reports'
     | '/lab-admin/settings'
     | '/lab-admin/skills'
     | '/lab-admin/templates'
@@ -1300,6 +1312,7 @@ export interface FileRouteTypes {
     | '/_authenticated/company-manage/wallet/'
     | '/_authenticated/lab-admin/companies/'
     | '/_authenticated/lab-admin/projects/'
+    | '/_authenticated/lab-admin/reports/'
     | '/_authenticated/lab-admin/settings/'
     | '/_authenticated/lab-admin/skills/'
     | '/_authenticated/lab-admin/templates/'
@@ -1748,6 +1761,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/lab-admin/settings/'
       preLoaderRoute: typeof AuthenticatedLabAdminSettingsIndexRouteImport
       parentRoute: typeof AuthenticatedLabAdminSettingsRouteRoute
+    }
+    '/_authenticated/lab-admin/reports/': {
+      id: '/_authenticated/lab-admin/reports/'
+      path: '/reports'
+      fullPath: '/lab-admin/reports'
+      preLoaderRoute: typeof AuthenticatedLabAdminReportsIndexRouteImport
+      parentRoute: typeof AuthenticatedLabAdminRouteRoute
     }
     '/_authenticated/lab-admin/projects/': {
       id: '/_authenticated/lab-admin/projects/'
@@ -2313,6 +2333,7 @@ interface AuthenticatedLabAdminRouteRouteChildren {
   AuthenticatedLabAdminIndexRoute: typeof AuthenticatedLabAdminIndexRoute
   AuthenticatedLabAdminCompaniesIndexRoute: typeof AuthenticatedLabAdminCompaniesIndexRoute
   AuthenticatedLabAdminProjectsIndexRoute: typeof AuthenticatedLabAdminProjectsIndexRoute
+  AuthenticatedLabAdminReportsIndexRoute: typeof AuthenticatedLabAdminReportsIndexRoute
   AuthenticatedLabAdminSkillsIndexRoute: typeof AuthenticatedLabAdminSkillsIndexRoute
   AuthenticatedLabAdminTemplatesIndexRoute: typeof AuthenticatedLabAdminTemplatesIndexRoute
   AuthenticatedLabAdminUsersIndexRoute: typeof AuthenticatedLabAdminUsersIndexRoute
@@ -2333,6 +2354,8 @@ const AuthenticatedLabAdminRouteRouteChildren: AuthenticatedLabAdminRouteRouteCh
       AuthenticatedLabAdminCompaniesIndexRoute,
     AuthenticatedLabAdminProjectsIndexRoute:
       AuthenticatedLabAdminProjectsIndexRoute,
+    AuthenticatedLabAdminReportsIndexRoute:
+      AuthenticatedLabAdminReportsIndexRoute,
     AuthenticatedLabAdminSkillsIndexRoute:
       AuthenticatedLabAdminSkillsIndexRoute,
     AuthenticatedLabAdminTemplatesIndexRoute:
