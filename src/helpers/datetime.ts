@@ -60,7 +60,6 @@ export const formatDateLongWithTime = (dateStr: string | Date | null | undefined
     });
 };
 
-// Tính số ngày làm việc
 export const calculateDays = (startDate: string | Date | null | undefined): string => {
     if (!startDate) return 'Không xác định';
 
@@ -73,3 +72,10 @@ export const calculateDays = (startDate: string | Date | null | undefined): stri
 
     return `${diffDays} ngày`;
 };
+
+export const formatDateToString = (date: Date): string => {
+    const year = date.getFullYear()
+    const month = String(date.getMonth() + 1).padStart(2, '0')
+    const day = String(date.getDate()).padStart(2, '0')
+    return `${year}-${month}-${day}`
+}

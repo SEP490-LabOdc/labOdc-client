@@ -1,0 +1,16 @@
+export enum COLOR_PALETTE {
+    SKY = 'bg-sky-200/40 text-sky-900 dark:text-sky-100 border-sky-300',
+    ORANGE = 'bg-orange-200/40 text-orange-900 dark:text-orange-100 border-orange-300',
+    RED = 'bg-red-200/40 text-red-900 dark:text-red-100 border-red-300',
+    BLUE = 'bg-blue-200/40 text-blue-900 dark:text-blue-100 border-blue-300',
+    GREEN = 'bg-green-200/40 text-green-900 dark:text-green-100 border-green-300',
+    TEAL = 'bg-teal-200/40 text-teal-900 dark:text-teal-100 border-teal-300',
+    EMERALD = 'bg-emerald-200/40 text-emerald-900 dark:text-emerald-100 border-emerald-300',
+    SLATE = 'bg-slate-200/40 text-slate-900 dark:text-slate-100 border-slate-300',
+    GRAY = 'bg-gray-200/40 text-gray-900 dark:text-gray-100 border-gray-300',
+    YELLOW = 'bg-yellow-200/40 text-yellow-900 dark:text-yellow-100 border-yellow-300',
+    AMBER = 'bg-amber-200/40 text-amber-900 dark:text-amber-100 border-amber-300',
+    NEUTRAL = 'bg-neutral-300/40 text-neutral-900 dark:text-neutral-100 border-neutral-300',
+    RED_DISABLED = 'bg-red-400/30 text-red-900 dark:bg-red-700/50 dark:text-red-100 border-red-500',
+    DESTRUCTIVE = 'bg-destructive/10 dark:bg-destructive/50 text-destructive dark:text-primary border-destructive/10',
+}

@@ -62,12 +62,14 @@ import { Route as AuthenticatedMentorSettingsIndexRouteImport } from './routes/_
 import { Route as AuthenticatedMentorProjectsIndexRouteImport } from './routes/_authenticated/mentor/projects/index'
 import { Route as AuthenticatedLabAdminUsersIndexRouteImport } from './routes/_authenticated/lab-admin/users/index'
 import { Route as AuthenticatedLabAdminTemplatesIndexRouteImport } from './routes/_authenticated/lab-admin/templates/index'
+import { Route as AuthenticatedLabAdminSkillsIndexRouteImport } from './routes/_authenticated/lab-admin/skills/index'
 import { Route as AuthenticatedLabAdminSettingsIndexRouteImport } from './routes/_authenticated/lab-admin/settings/index'
 import { Route as AuthenticatedLabAdminProjectsIndexRouteImport } from './routes/_authenticated/lab-admin/projects/index'
 import { Route as AuthenticatedLabAdminCompaniesIndexRouteImport } from './routes/_authenticated/lab-admin/companies/index'
 import { Route as AuthenticatedCompanyManageWalletIndexRouteImport } from './routes/_authenticated/company-manage/wallet/index'
 import { Route as AuthenticatedCompanyManageSettingsIndexRouteImport } from './routes/_authenticated/company-manage/settings/index'
 import { Route as AuthenticatedCompanyManageProjectsIndexRouteImport } from './routes/_authenticated/company-manage/projects/index'
+import { Route as AuthenticatedAdminWithdrawalIndexRouteImport } from './routes/_authenticated/admin/withdrawal/index'
 import { Route as AuthenticatedAdminUsersIndexRouteImport } from './routes/_authenticated/admin/users/index'
 import { Route as AuthenticatedAdminTasksIndexRouteImport } from './routes/_authenticated/admin/tasks/index'
 import { Route as AuthenticatedAdminSystemConfigIndexRouteImport } from './routes/_authenticated/admin/system-config/index'
@@ -404,6 +406,12 @@ const AuthenticatedLabAdminTemplatesIndexRoute =
     path: '/templates/',
     getParentRoute: () => AuthenticatedLabAdminRouteRoute,
   } as any)
+const AuthenticatedLabAdminSkillsIndexRoute =
+  AuthenticatedLabAdminSkillsIndexRouteImport.update({
+    id: '/skills/',
+    path: '/skills/',
+    getParentRoute: () => AuthenticatedLabAdminRouteRoute,
+  } as any)
 const AuthenticatedLabAdminSettingsIndexRoute =
   AuthenticatedLabAdminSettingsIndexRouteImport.update({
     id: '/',
@@ -439,6 +447,12 @@ const AuthenticatedCompanyManageProjectsIndexRoute =
     id: '/projects/',
     path: '/projects/',
     getParentRoute: () => AuthenticatedCompanyManageRouteRoute,
+  } as any)
+const AuthenticatedAdminWithdrawalIndexRoute =
+  AuthenticatedAdminWithdrawalIndexRouteImport.update({
+    id: '/withdrawal/',
+    path: '/withdrawal/',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
   } as any)
 const AuthenticatedAdminUsersIndexRoute =
   AuthenticatedAdminUsersIndexRouteImport.update({
@@ -772,12 +786,14 @@ export interface FileRoutesByFullPath {
   '/admin/system-config': typeof AuthenticatedAdminSystemConfigIndexRoute
   '/admin/tasks': typeof AuthenticatedAdminTasksIndexRoute
   '/admin/users': typeof AuthenticatedAdminUsersIndexRoute
+  '/admin/withdrawal': typeof AuthenticatedAdminWithdrawalIndexRoute
   '/company-manage/projects': typeof AuthenticatedCompanyManageProjectsIndexRoute
   '/company-manage/settings/': typeof AuthenticatedCompanyManageSettingsIndexRoute
   '/company-manage/wallet': typeof AuthenticatedCompanyManageWalletIndexRoute
   '/lab-admin/companies': typeof AuthenticatedLabAdminCompaniesIndexRoute
   '/lab-admin/projects': typeof AuthenticatedLabAdminProjectsIndexRoute
   '/lab-admin/settings/': typeof AuthenticatedLabAdminSettingsIndexRoute
+  '/lab-admin/skills': typeof AuthenticatedLabAdminSkillsIndexRoute
   '/lab-admin/templates': typeof AuthenticatedLabAdminTemplatesIndexRoute
   '/lab-admin/users': typeof AuthenticatedLabAdminUsersIndexRoute
   '/mentor/projects/': typeof AuthenticatedMentorProjectsIndexRoute
@@ -862,12 +878,14 @@ export interface FileRoutesByTo {
   '/admin/system-config': typeof AuthenticatedAdminSystemConfigIndexRoute
   '/admin/tasks': typeof AuthenticatedAdminTasksIndexRoute
   '/admin/users': typeof AuthenticatedAdminUsersIndexRoute
+  '/admin/withdrawal': typeof AuthenticatedAdminWithdrawalIndexRoute
   '/company-manage/projects': typeof AuthenticatedCompanyManageProjectsIndexRoute
   '/company-manage/settings': typeof AuthenticatedCompanyManageSettingsIndexRoute
   '/company-manage/wallet': typeof AuthenticatedCompanyManageWalletIndexRoute
   '/lab-admin/companies': typeof AuthenticatedLabAdminCompaniesIndexRoute
   '/lab-admin/projects': typeof AuthenticatedLabAdminProjectsIndexRoute
   '/lab-admin/settings': typeof AuthenticatedLabAdminSettingsIndexRoute
+  '/lab-admin/skills': typeof AuthenticatedLabAdminSkillsIndexRoute
   '/lab-admin/templates': typeof AuthenticatedLabAdminTemplatesIndexRoute
   '/lab-admin/users': typeof AuthenticatedLabAdminUsersIndexRoute
   '/mentor/projects': typeof AuthenticatedMentorProjectsIndexRoute
@@ -969,12 +987,14 @@ export interface FileRoutesById {
   '/_authenticated/admin/system-config/': typeof AuthenticatedAdminSystemConfigIndexRoute
   '/_authenticated/admin/tasks/': typeof AuthenticatedAdminTasksIndexRoute
   '/_authenticated/admin/users/': typeof AuthenticatedAdminUsersIndexRoute
+  '/_authenticated/admin/withdrawal/': typeof AuthenticatedAdminWithdrawalIndexRoute
   '/_authenticated/company-manage/projects/': typeof AuthenticatedCompanyManageProjectsIndexRoute
   '/_authenticated/company-manage/settings/': typeof AuthenticatedCompanyManageSettingsIndexRoute
   '/_authenticated/company-manage/wallet/': typeof AuthenticatedCompanyManageWalletIndexRoute
   '/_authenticated/lab-admin/companies/': typeof AuthenticatedLabAdminCompaniesIndexRoute
   '/_authenticated/lab-admin/projects/': typeof AuthenticatedLabAdminProjectsIndexRoute
   '/_authenticated/lab-admin/settings/': typeof AuthenticatedLabAdminSettingsIndexRoute
+  '/_authenticated/lab-admin/skills/': typeof AuthenticatedLabAdminSkillsIndexRoute
   '/_authenticated/lab-admin/templates/': typeof AuthenticatedLabAdminTemplatesIndexRoute
   '/_authenticated/lab-admin/users/': typeof AuthenticatedLabAdminUsersIndexRoute
   '/_authenticated/mentor/projects/': typeof AuthenticatedMentorProjectsIndexRoute
@@ -1074,12 +1094,14 @@ export interface FileRouteTypes {
     | '/admin/system-config'
     | '/admin/tasks'
     | '/admin/users'
+    | '/admin/withdrawal'
     | '/company-manage/projects'
     | '/company-manage/settings/'
     | '/company-manage/wallet'
     | '/lab-admin/companies'
     | '/lab-admin/projects'
     | '/lab-admin/settings/'
+    | '/lab-admin/skills'
     | '/lab-admin/templates'
     | '/lab-admin/users'
     | '/mentor/projects/'
@@ -1164,12 +1186,14 @@ export interface FileRouteTypes {
     | '/admin/system-config'
     | '/admin/tasks'
     | '/admin/users'
+    | '/admin/withdrawal'
     | '/company-manage/projects'
     | '/company-manage/settings'
     | '/company-manage/wallet'
     | '/lab-admin/companies'
     | '/lab-admin/projects'
     | '/lab-admin/settings'
+    | '/lab-admin/skills'
     | '/lab-admin/templates'
     | '/lab-admin/users'
     | '/mentor/projects'
@@ -1270,12 +1294,14 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/system-config/'
     | '/_authenticated/admin/tasks/'
     | '/_authenticated/admin/users/'
+    | '/_authenticated/admin/withdrawal/'
     | '/_authenticated/company-manage/projects/'
     | '/_authenticated/company-manage/settings/'
     | '/_authenticated/company-manage/wallet/'
     | '/_authenticated/lab-admin/companies/'
     | '/_authenticated/lab-admin/projects/'
     | '/_authenticated/lab-admin/settings/'
+    | '/_authenticated/lab-admin/skills/'
     | '/_authenticated/lab-admin/templates/'
     | '/_authenticated/lab-admin/users/'
     | '/_authenticated/mentor/projects/'
@@ -1709,6 +1735,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedLabAdminTemplatesIndexRouteImport
       parentRoute: typeof AuthenticatedLabAdminRouteRoute
     }
+    '/_authenticated/lab-admin/skills/': {
+      id: '/_authenticated/lab-admin/skills/'
+      path: '/skills'
+      fullPath: '/lab-admin/skills'
+      preLoaderRoute: typeof AuthenticatedLabAdminSkillsIndexRouteImport
+      parentRoute: typeof AuthenticatedLabAdminRouteRoute
+    }
     '/_authenticated/lab-admin/settings/': {
       id: '/_authenticated/lab-admin/settings/'
       path: '/'
@@ -1750,6 +1783,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/company-manage/projects'
       preLoaderRoute: typeof AuthenticatedCompanyManageProjectsIndexRouteImport
       parentRoute: typeof AuthenticatedCompanyManageRouteRoute
+    }
+    '/_authenticated/admin/withdrawal/': {
+      id: '/_authenticated/admin/withdrawal/'
+      path: '/withdrawal'
+      fullPath: '/admin/withdrawal'
+      preLoaderRoute: typeof AuthenticatedAdminWithdrawalIndexRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
     }
     '/_authenticated/admin/users/': {
       id: '/_authenticated/admin/users/'
@@ -2147,6 +2187,7 @@ interface AuthenticatedAdminRouteRouteChildren {
   AuthenticatedAdminSystemConfigIndexRoute: typeof AuthenticatedAdminSystemConfigIndexRoute
   AuthenticatedAdminTasksIndexRoute: typeof AuthenticatedAdminTasksIndexRoute
   AuthenticatedAdminUsersIndexRoute: typeof AuthenticatedAdminUsersIndexRoute
+  AuthenticatedAdminWithdrawalIndexRoute: typeof AuthenticatedAdminWithdrawalIndexRoute
   AuthenticatedAdminCompaniesCompanyIdIndexRoute: typeof AuthenticatedAdminCompaniesCompanyIdIndexRoute
   AuthenticatedAdminUsersCreateIndexRoute: typeof AuthenticatedAdminUsersCreateIndexRoute
   AuthenticatedAdminUsersInfoIndexRoute: typeof AuthenticatedAdminUsersInfoIndexRoute
@@ -2163,6 +2204,8 @@ const AuthenticatedAdminRouteRouteChildren: AuthenticatedAdminRouteRouteChildren
       AuthenticatedAdminSystemConfigIndexRoute,
     AuthenticatedAdminTasksIndexRoute: AuthenticatedAdminTasksIndexRoute,
     AuthenticatedAdminUsersIndexRoute: AuthenticatedAdminUsersIndexRoute,
+    AuthenticatedAdminWithdrawalIndexRoute:
+      AuthenticatedAdminWithdrawalIndexRoute,
     AuthenticatedAdminCompaniesCompanyIdIndexRoute:
       AuthenticatedAdminCompaniesCompanyIdIndexRoute,
     AuthenticatedAdminUsersCreateIndexRoute:
@@ -2270,6 +2313,7 @@ interface AuthenticatedLabAdminRouteRouteChildren {
   AuthenticatedLabAdminIndexRoute: typeof AuthenticatedLabAdminIndexRoute
   AuthenticatedLabAdminCompaniesIndexRoute: typeof AuthenticatedLabAdminCompaniesIndexRoute
   AuthenticatedLabAdminProjectsIndexRoute: typeof AuthenticatedLabAdminProjectsIndexRoute
+  AuthenticatedLabAdminSkillsIndexRoute: typeof AuthenticatedLabAdminSkillsIndexRoute
   AuthenticatedLabAdminTemplatesIndexRoute: typeof AuthenticatedLabAdminTemplatesIndexRoute
   AuthenticatedLabAdminUsersIndexRoute: typeof AuthenticatedLabAdminUsersIndexRoute
   AuthenticatedLabAdminCompaniesCompanyIdIndexRoute: typeof AuthenticatedLabAdminCompaniesCompanyIdIndexRoute
@@ -2289,6 +2333,8 @@ const AuthenticatedLabAdminRouteRouteChildren: AuthenticatedLabAdminRouteRouteCh
       AuthenticatedLabAdminCompaniesIndexRoute,
     AuthenticatedLabAdminProjectsIndexRoute:
       AuthenticatedLabAdminProjectsIndexRoute,
+    AuthenticatedLabAdminSkillsIndexRoute:
+      AuthenticatedLabAdminSkillsIndexRoute,
     AuthenticatedLabAdminTemplatesIndexRoute:
       AuthenticatedLabAdminTemplatesIndexRoute,
     AuthenticatedLabAdminUsersIndexRoute: AuthenticatedLabAdminUsersIndexRoute,

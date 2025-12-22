@@ -14,7 +14,6 @@ import { GoogleOAuthProvider } from '@react-oauth/google'
 // Generated Routes
 import { routeTree } from './routeTree.gen.ts'
 import { NotFoundError } from './features/errors/not-found-error'
-import { Lottie } from '@/components/v2/Lottie'
 //Constant
 import { GOOGLE_CLIENT_ID } from '@/const.ts'
 // Styles
@@ -24,6 +23,7 @@ import "nprogress/nprogress.css";
 import { GeneralError } from './features/errors/general-error.tsx';
 import { useAuthStore } from '@/stores/auth-store.ts'
 import { queryClient } from '@/hooks/api/reactQuery.tsx'
+import { Spinner } from './components/ui/spinner.tsx';
 
 
 // Create a new router instance
@@ -35,7 +35,8 @@ const router = createRouter({
   context: { queryClient, authStore: useAuthStore },
   defaultPendingComponent: () => (
     <div className="flex h-screen w-screen items-center justify-center bg-bunker-800">
-      <Lottie isAutoPlay icon="infisical_loading" className="h-32 w-32" />
+      <Spinner className="h-10 w-10" />
+      <span className="text-white">Đang tải dữ liệu...</span>
     </div>
   ),
   notFoundMode: 'root',
