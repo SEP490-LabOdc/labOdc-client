@@ -12,10 +12,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { History, Eye, Plus, AlertCircle, Filter, FileText } from 'lucide-react'
-import { ReportDetailModal } from '@/features/projects/milestone-detail/components/report-detail-modal'
-import { RejectReportModal } from '@/features/projects/milestone-detail/components/reject-report-modal'
-import { SubmitReportModal } from '@/features/projects/milestone-detail/components/submit-report-modal'
-import { ReportTemplateModal } from '@/features/projects/milestone-detail/components/report-template-modal'
+import { ReportDetailModal, RejectReportModal, SubmitReportModal, ReportTemplateModal } from './report'
 import { usePermission } from '@/hooks/usePermission'
 import { useGetProjectMilestoneReports } from '@/hooks/api/projects'
 import { useGetReportRecipients } from '@/hooks/api/projects'
