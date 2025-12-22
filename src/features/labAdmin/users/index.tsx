@@ -4,6 +4,7 @@ import { UsersDialogs } from './components/users-dialogs'
 import { UsersProvider } from './components/users-provider'
 import { UsersTable } from './components/users-table'
 import { useGetUsers } from '@/hooks/api/users'
+import { UsersImportButton } from './components/user-import-button'
 
 const route = getRouteApi('/_authenticated/lab-admin/users/')
 
@@ -39,6 +40,9 @@ export default function Users() {
                             <p className='text-muted-foreground'>
                                 Quản lý người dùng và phân quyền tại đây.
                             </p>
+                        </div>
+                        <div>
+                            <UsersImportButton />
                         </div>
                     </div>
                     <div className='-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-y-0 lg:space-x-12'>
