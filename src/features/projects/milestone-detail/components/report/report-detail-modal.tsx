@@ -131,7 +131,7 @@ export const ReportDetailModal: React.FC<ReportDetailModalProps> = ({
                   {isPending ? (
                     <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Đang xử lý...</>
                   ) : (
-                    <><CheckCircle className="w-4 h-4 mr-2" /> Phê duyệt & Trả tiền</>
+                    <><CheckCircle className="w-4 h-4 mr-2" />Phê duyệt</>
                   )}
                 </Button>
               </div>
