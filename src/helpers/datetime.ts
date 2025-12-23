@@ -79,3 +79,19 @@ export const formatDateToString = (date: Date): string => {
     const day = String(date.getDate()).padStart(2, '0')
     return `${year}-${month}-${day}`
 }
+
+// Format ngày giờ đầy đủ
+export const formatDateTime = (dateStr: string | Date | null | undefined): string => {
+    if (!dateStr) return '-'
+
+    const date = new Date(dateStr)
+    if (isNaN(date.getTime())) return '-'
+
+    return date.toLocaleString('vi-VN', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+    })
+}

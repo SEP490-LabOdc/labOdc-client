@@ -1,7 +1,8 @@
 import { COLOR_PALETTE } from '@/consts'
 import { CompanyStatus } from '@/hooks/api/companies/enums'
 import { MilestoneStatus } from '@/hooks/api/milestones'
-import { ProjectStatus, ReportStatus } from '@/hooks/api/projects'
+import { ProjectStatus } from '@/hooks/api/projects'
+import { ReportStatus } from '@/hooks/api/report'
 import { UserStatus } from '@/hooks/api/users/enums'
 
 export const PROJECT_STATUS_LABEL: Record<string, string> = {

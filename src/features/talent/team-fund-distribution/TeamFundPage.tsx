@@ -129,18 +129,22 @@ export const TeamFundPage: React.FC = () => {
             setAllocations({})
             setSelectedMilestoneId('')
         } catch (error: any) {
-            const errorMessage = error?.response?.data?.message || error?.message || 'Có lỗi xảy ra, vui lòng thử lại'
-            toast.error(errorMessage)
             console.error('Distribution error:', error)
         } finally {
             setIsSubmitting(false)
         }
     }
 
-    if (isLoadingProjects || isLoadingMilestones || isLoadingMembers || isLoadingDisbursement) {
-        return <div className="flex items-center justify-center h-full">
-            <Spinner />
-        </div>
+    const renderLoading = () => {
+        return (
+            <div className="flex items-center justify-center h-full">
+                <Spinner />
+            </div>
+        )
+    }
+
+    if (isLoadingProjects) {
+        return renderLoading()
     }
 
     return (
@@ -180,7 +184,7 @@ export const TeamFundPage: React.FC = () => {
                     </div>
 
                     <div className="col-span-12 lg:col-span-8 h-full">
-                        {selectedMilestone ? (
+                        {isLoadingMilestones || isLoadingMembers || isLoadingDisbursement ? renderLoading() : selectedMilestone ? (
                             <MilestoneDetailCard
                                 milestone={selectedMilestone}
                                 members={apiMembers}

@@ -1,6 +1,5 @@
 import React from 'react'
 import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
 import {
   Dialog,
   DialogContent,
@@ -12,30 +11,7 @@ import {
 import { FileText, CheckCircle, XCircle, AlertTriangle, DollarSign, Download, Loader2 } from 'lucide-react'
 import { useReviewReport } from '@/hooks/api/projects/mutation'
 import { toast } from 'sonner'
-
-type ReportStatus = 'SUBMITTED' | 'CHANGES_REQUESTED' | 'APPROVED';
-type ReportType = 'DAILY_REPORT' | 'WEEKLY_REPORT' | 'MILESTONE_REPORT' | 'DELIVERY_REPORT';
-
-interface ReportVersion {
-  id: string;
-  submittedAt: string;
-  submittedBy: string;
-  content: string;
-  files: { name: string; size: string }[];
-  status: ReportStatus;
-  reportType: ReportType;
-  feedback?: string;
-}
-
-const getReportTypeLabel = (reportType: ReportType): string => {
-  const labels: Record<ReportType, string> = {
-    'DAILY_REPORT': 'Báo cáo Hàng ngày',
-    'WEEKLY_REPORT': 'Báo cáo Tuần',
-    'MILESTONE_REPORT': 'Báo cáo Milestone',
-    'DELIVERY_REPORT': 'Báo cáo Giao hàng',
-  };
-  return labels[reportType];
-};
+import { getReportTypeLabel, getStatusBadge, type ReportVersion } from '@/helpers/report'
 
 interface ReportDetailModalProps {
   isOpen: boolean
@@ -45,15 +21,6 @@ interface ReportDetailModalProps {
   onApprove: () => void
   onRequestChanges: () => void
   milestoneId: string
-}
-
-const getStatusBadge = (status: ReportStatus) => {
-  switch (status) {
-    case 'SUBMITTED': return <Badge variant="outline" className="bg-blue-100 text-blue-700 border-blue-200">Đang chờ duyệt</Badge>;
-    case 'CHANGES_REQUESTED': return <Badge variant="outline" className="bg-orange-100 text-orange-700 border-orange-200">Yêu cầu sửa</Badge>;
-    case 'APPROVED': return <Badge variant="outline" className="bg-green-100 text-green-700 border-green-200">Đã nghiệm thu</Badge>;
-    default: return null;
-  }
 }
 
 export const ReportDetailModal: React.FC<ReportDetailModalProps> = ({
@@ -80,7 +47,6 @@ export const ReportDetailModal: React.FC<ReportDetailModalProps> = ({
       toast.success('Phê duyệt báo cáo thành công')
       onApprove()
     } catch (error) {
-      toast.error('Phê duyệt báo cáo thất bại')
       console.error(error)
     }
   }
@@ -164,7 +130,7 @@ export const ReportDetailModal: React.FC<ReportDetailModalProps> = ({
                   {isPending ? (
                     <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Đang xử lý...</>
                   ) : (
-                    <><CheckCircle className="w-4 h-4 mr-2" /> Phê duyệt & Trả tiền</>
+                    <><CheckCircle className="w-4 h-4 mr-2" />Phê duyệt</>
                   )}
                 </Button>
               </div>

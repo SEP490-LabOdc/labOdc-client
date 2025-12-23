@@ -20,18 +20,8 @@ import { FileUpload } from '@/components/file/FileUpload'
 import { useCreateReport } from '@/hooks/api/projects/mutation'
 import { toast } from 'sonner'
 import type { ReportRecipient } from '@/hooks/api/projects/types'
-
-type ReportType = 'DAILY_REPORT' | 'WEEKLY_REPORT' | 'MILESTONE_REPORT' | 'DELIVERY_REPORT';
-
-const getReportTypeLabel = (reportType: ReportType): string => {
-  const labels: Record<ReportType, string> = {
-    'DAILY_REPORT': 'Báo cáo Hàng ngày',
-    'WEEKLY_REPORT': 'Báo cáo Tuần',
-    'MILESTONE_REPORT': 'Báo cáo Milestone',
-    'DELIVERY_REPORT': 'Báo cáo Giao hàng',
-  };
-  return labels[reportType];
-};
+import { getReportTypeLabel } from '@/helpers/report'
+import { ReportType } from '@/hooks/api/report'
 
 interface SubmitReportModalProps {
   isOpen: boolean
@@ -52,7 +42,7 @@ export const SubmitReportModal: React.FC<SubmitReportModalProps> = ({
   milestoneId,
   recipients
 }) => {
-  const [reportType, setReportType] = useState<ReportType>('MILESTONE_REPORT')
+  const [reportType, setReportType] = useState<ReportType>(ReportType.MILESTONE_REPORT)
   const [content, setContent] = useState('')
   const [attachmentUrl, setAttachmentUrl] = useState<string | null>(null)
   const [selectedRecipientId, setSelectedRecipientId] = useState<string>('')
@@ -95,7 +85,7 @@ export const SubmitReportModal: React.FC<SubmitReportModalProps> = ({
       toast.success('Nộp báo cáo thành công')
       setContent('')
       setAttachmentUrl(null)
-      setReportType('MILESTONE_REPORT')
+      setReportType(ReportType.MILESTONE_REPORT)
       setSelectedRecipientId(recipients.length > 0 ? recipients[0].id : '')
       onSuccess()
       onClose()
@@ -129,10 +119,10 @@ export const SubmitReportModal: React.FC<SubmitReportModalProps> = ({
                 <SelectValue placeholder="Chọn loại báo cáo" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="DAILY_REPORT">{getReportTypeLabel('DAILY_REPORT')}</SelectItem>
-                <SelectItem value="WEEKLY_REPORT">{getReportTypeLabel('WEEKLY_REPORT')}</SelectItem>
-                <SelectItem value="MILESTONE_REPORT">{getReportTypeLabel('MILESTONE_REPORT')}</SelectItem>
-                <SelectItem value="DELIVERY_REPORT">{getReportTypeLabel('DELIVERY_REPORT')}</SelectItem>
+                <SelectItem value={ReportType.DAILY_REPORT}>{getReportTypeLabel(ReportType.DAILY_REPORT)}</SelectItem>
+                <SelectItem value={ReportType.WEEKLY_REPORT}>{getReportTypeLabel(ReportType.WEEKLY_REPORT)}</SelectItem>
+                <SelectItem value={ReportType.MILESTONE_REPORT}>{getReportTypeLabel(ReportType.MILESTONE_REPORT)}</SelectItem>
+                <SelectItem value={ReportType.DELIVERY_REPORT}>{getReportTypeLabel(ReportType.DELIVERY_REPORT)}</SelectItem>
               </SelectContent>
             </Select>
           </div>

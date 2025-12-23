@@ -8,6 +8,7 @@ import { UserRole } from '@/hooks/api/users'
 import type { Disbursement } from '@/hooks/api/disbursement/types'
 import { DistributionFooter, DistributionTable } from './distribution'
 import { formatDate } from '@/helpers/datetime'
+import { Spinner } from '@/components/ui/spinner'
 
 interface MilestoneDetailCardProps {
     milestone: Milestone

@@ -12,125 +12,27 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { History, Eye, Plus, AlertCircle, Filter, FileText } from 'lucide-react'
-import { ReportDetailModal } from '@/features/projects/milestone-detail/components/report-detail-modal'
-import { RejectReportModal } from '@/features/projects/milestone-detail/components/reject-report-modal'
-import { SubmitReportModal } from '@/features/projects/milestone-detail/components/submit-report-modal'
-import { ReportTemplateModal } from '@/features/projects/milestone-detail/components/report-template-modal'
+import { ReportDetailModal, RejectReportModal, SubmitReportModal, ReportTemplateModal, ReportNotice } from './report'
 import { usePermission } from '@/hooks/usePermission'
 import { useGetProjectMilestoneReports } from '@/hooks/api/projects'
 import { useGetReportRecipients } from '@/hooks/api/projects'
 import type { ReportRecipient } from '@/hooks/api/projects/types'
 import { ROLE } from '@/const.ts'
-
-// --- Types ---
-export type ReportStatus = 'SUBMITTED' | 'CHANGES_REQUESTED' | 'APPROVED';
-
-export type ReportType = 'DAILY_REPORT' | 'WEEKLY_REPORT' | 'MILESTONE_REPORT' | 'DELIVERY_REPORT';
-
-export interface ReportVersion {
-  id: string;
-  submittedAt: string;
-  submittedBy: string;
-  submittedByAvatar?: string;
-  content: string;
-  files: { name: string; size: string }[];
-  status: ReportStatus;
-  reportType: ReportType;
-  feedback?: string;
-}
-
-// API Report Type
-interface ApiReport {
-  id: string;
-  projectId: string;
-  projectName: string;
-  reporterId: string;
-  reporterName: string;
-  reporterEmail: string;
-  reporterAvatar: string;
-  recipientId: string;
-  reportType: string;
-  status: string;
-  content: string;
-  attachmentsUrl: string[];
-  reportingDate: string;
-  createdAt: string;
-  feedback?: string;
-  milestoneId: string;
-  milestoneTitle: string;
-}
+import { ReportType } from '@/hooks/api/report'
+import {
+  mapApiReportsToUI,
+  getReportTypeLabel,
+  getReportTypeBadge,
+  getStatusBadge,
+  type ReportVersion,
+} from '@/helpers/report'
+import { Spinner } from '@/components/ui/spinner'
 
 interface Props {
   milestone: {
     id: string;
     projectId: string;
   };
-}
-
-// Helper: Map API status to UI status
-const mapApiStatusToUIStatus = (apiStatus: string): ReportStatus => {
-  const statusMap: Record<string, ReportStatus> = {
-    'SUBMITTED': 'SUBMITTED',
-    'PENDING': 'SUBMITTED',
-    'CHANGES_REQUESTED': 'CHANGES_REQUESTED',
-    'REJECTED': 'CHANGES_REQUESTED',
-    'APPROVED': 'APPROVED',
-    'ACCEPTED': 'APPROVED',
-  };
-  return statusMap[apiStatus] || 'SUBMITTED';
-};
-
-// Helper: Get ReportType label
-const getReportTypeLabel = (reportType: string): string => {
-  const labels: Record<string, string> = {
-    'DAILY_REPORT': 'Báo cáo Hàng ngày',
-    'WEEKLY_REPORT': 'Báo cáo Tuần',
-    'MILESTONE_REPORT': 'Báo cáo Milestone',
-    'DELIVERY_REPORT': 'Báo cáo Giao hàng',
-  };
-  return labels[reportType] || reportType;
-};
-
-// Helper: Get ReportType badge color
-const getReportTypeBadge = (reportType: string) => {
-  const colors: Record<string, string> = {
-    'DAILY_REPORT': 'bg-blue-100 text-blue-700 border-blue-200',
-    'WEEKLY_REPORT': 'bg-purple-100 text-purple-700 border-purple-200',
-    'MILESTONE_REPORT': 'bg-indigo-100 text-indigo-700 border-indigo-200',
-    'DELIVERY_REPORT': 'bg-green-100 text-green-700 border-green-200',
-  };
-  return (
-    <Badge variant="outline" className={colors[reportType] || 'bg-gray-100 text-gray-700 border-gray-200'}>
-      {getReportTypeLabel(reportType)}
-    </Badge>
-  );
-};
-
-// Helper: Map API reports to UI format
-const mapApiReportsToUI = (apiReports: ApiReport[]): ReportVersion[] => {
-  return apiReports.map((report) => ({
-    id: report.id,
-    submittedAt: new Date(report.createdAt).toLocaleString('vi-VN'),
-    submittedBy: report.reporterName,
-    submittedByAvatar: report.reporterAvatar,
-    content: report.content,
-    files: report.attachmentsUrl.map((url) => ({
-      name: url.split('/').pop() || 'file',
-      size: 'N/A',
-    })),
-    status: mapApiStatusToUIStatus(report.status),
-    reportType: report.reportType as ReportType,
-    feedback: report.feedback,
-  }));
-};
-
-const getStatusBadge = (status: ReportStatus) => {
-  switch (status) {
-    case 'SUBMITTED': return <Badge variant="outline" className="bg-blue-100 text-blue-700 border-blue-200">Đang chờ duyệt</Badge>;
-    case 'CHANGES_REQUESTED': return <Badge variant="outline" className="bg-orange-100 text-orange-700 border-orange-200">Yêu cầu sửa</Badge>;
-    case 'APPROVED': return <Badge variant="outline" className="bg-green-100 text-green-700 border-green-200">Đã nghiệm thu</Badge>;
-    default: return null;
-  }
 }
 
 export const MilestoneReportsTab: React.FC<Props> = ({ milestone }) => {
@@ -217,25 +119,6 @@ export const MilestoneReportsTab: React.FC<Props> = ({ milestone }) => {
     setIsSubmitOpen(false);
   };
 
-  // Loading State
-  if (isLoading) {
-    return (
-      <Card>
-        <CardHeader>
-          <Skeleton className="h-6 w-64" />
-          <Skeleton className="h-4 w-96 mt-2" />
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            {[1, 2, 3].map((i) => (
-              <Skeleton key={i} className="h-24 w-full" />
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-    );
-  }
-
   // Error State
   if (isError) {
     return (
@@ -270,7 +153,7 @@ export const MilestoneReportsTab: React.FC<Props> = ({ milestone }) => {
               <Button
                 variant="outline"
                 onClick={() => {
-                  setSelectedTemplateType(selectedReportType !== 'ALL' ? (selectedReportType as ReportType) : 'MILESTONE_REPORT')
+                  setSelectedTemplateType(selectedReportType !== 'ALL' ? (selectedReportType as ReportType) : ReportType.MILESTONE_REPORT)
                   setIsTemplateOpen(true)
                 }}
                 className="border-[#2a9d8f]/30 text-[#2a9d8f] hover:bg-[#2a9d8f]/10"
@@ -286,92 +169,105 @@ export const MilestoneReportsTab: React.FC<Props> = ({ milestone }) => {
           )}
         </CardHeader>
         <CardContent>
-          {/* Recipients Info Section */}
-          {isLoadingRecipients ? (
-            <div className="mb-4 p-3 bg-gray-50 rounded-lg">
-              <Skeleton className="h-4 w-48" />
-            </div>
-          ) : recipients.length > 0 && (
-            <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-              <div className="flex items-center gap-2 mb-2">
-                <span className="text-sm font-semibold text-blue-800">Người nhận báo cáo:</span>
-              </div>
-              <div className="flex flex-wrap gap-2">
-                {recipients.map((recipient: ReportRecipient) => (
-                  <Badge
-                    key={recipient.id}
-                    variant="outline"
-                    className="bg-white text-blue-700 border-blue-300"
-                  >
-                    {recipient.name} ({recipient.roleName})
-                  </Badge>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Filter by Report Type */}
-          <div className="mb-4 flex items-center gap-3">
-            <div className="flex items-center gap-2">
-              <Filter className="h-4 w-4 text-gray-500" />
-              <span className="text-sm font-medium text-gray-700">Loại báo cáo:</span>
-            </div>
-            <Select value={selectedReportType} onValueChange={setSelectedReportType}>
-              <SelectTrigger className="w-[200px]">
-                <SelectValue placeholder="Tất cả loại báo cáo" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="ALL">Tất cả loại báo cáo</SelectItem>
-                <SelectItem value="DAILY_REPORT">{getReportTypeLabel('DAILY_REPORT')}</SelectItem>
-                <SelectItem value="WEEKLY_REPORT">{getReportTypeLabel('WEEKLY_REPORT')}</SelectItem>
-                <SelectItem value="MILESTONE_REPORT">{getReportTypeLabel('MILESTONE_REPORT')}</SelectItem>
-                <SelectItem value="DELIVERY_REPORT">{getReportTypeLabel('DELIVERY_REPORT')}</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          {reports.length === 0 ? (
-            <div className="text-center py-12 text-gray-500 bg-gray-50 rounded-lg border border-dashed">
-              <p>Chưa có báo cáo nào được nộp{selectedReportType !== 'ALL' ? ` cho loại này` : ''}.</p>
-              {isMentorOrTalent && (
-                <Button variant="link" onClick={() => setIsSubmitOpen(true)}>Nộp báo cáo đầu tiên</Button>
-              )}
+          {isLoading ? (
+            <div className="flex justify-center items-center h-full">
+              <Spinner className="w-10 h-10" />
             </div>
           ) : (
-            <div className="space-y-4">
-              {reports.map((report) => (
-                <div key={report.id} className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50 transition-colors bg-white shadow-sm">
-                  <div className="flex items-start gap-4">
-                    <Avatar className="h-10 w-10 flex-shrink-0 mt-1">
-                      <AvatarImage src={report.submittedByAvatar} alt={report.submittedBy} />
-                      <AvatarFallback>
-                        {report.submittedBy.charAt(0).toUpperCase()}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-1 flex-wrap">
-                        {getReportTypeBadge(report.reportType)}
-                        {getStatusBadge(report.status)}
-                      </div>
-                      <div className="text-sm text-gray-500 mb-1">
-                        <span className="font-medium text-gray-700">{report.submittedBy}</span> • {report.submittedAt}
-                      </div>
-                      <p className="text-sm text-gray-600 line-clamp-2">{report.content}</p>
-                      {report.files.length > 0 && (
-                        <div className="flex items-center gap-1 mt-1 text-xs text-gray-500">
-                          <History className="w-3 h-3" />
-                          <span>{report.files.length} tệp đính kèm</span>
-                        </div>
-                      )}
-                    </div>
-                  </div>
+            <>
+              {/* Report Notice for Mentor/Talent */}
+              {isMentorOrTalent && (
+                <ReportNotice />
+              )}
 
-                  <Button variant="outline" size="sm" onClick={() => handleOpenDetail(report)} className="flex-shrink-0">
-                    <Eye className="w-4 h-4 mr-2" /> Xem chi tiết
-                  </Button>
+              {/* Recipients Info Section */}
+              {isLoadingRecipients ? (
+                <div className="mb-4 p-3 bg-gray-50 rounded-lg">
+                  <Skeleton className="h-4 w-48" />
                 </div>
-              ))}
-            </div>
+              ) : recipients.length > 0 && (
+                <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="text-sm font-semibold text-blue-800">Người nhận báo cáo:</span>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {recipients.map((recipient: ReportRecipient) => (
+                      <Badge
+                        key={recipient.id}
+                        variant="outline"
+                        className="bg-white text-blue-700 border-blue-300"
+                      >
+                        {recipient.name} ({recipient.roleName})
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Filter by Report Type */}
+              <div className="mb-4 flex items-center gap-3">
+                <div className="flex items-center gap-2">
+                  <Filter className="h-4 w-4 text-gray-500" />
+                  <span className="text-sm font-medium text-gray-700">Loại báo cáo:</span>
+                </div>
+                <Select value={selectedReportType} onValueChange={setSelectedReportType}>
+                  <SelectTrigger className="w-[200px]">
+                    <SelectValue placeholder="Tất cả loại báo cáo" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="ALL">Tất cả loại báo cáo</SelectItem>
+                    <SelectItem value={ReportType.DAILY_REPORT}>{getReportTypeLabel(ReportType.DAILY_REPORT)}</SelectItem>
+                    <SelectItem value={ReportType.WEEKLY_REPORT}>{getReportTypeLabel(ReportType.WEEKLY_REPORT)}</SelectItem>
+                    <SelectItem value={ReportType.MILESTONE_REPORT}>{getReportTypeLabel(ReportType.MILESTONE_REPORT)}</SelectItem>
+                    <SelectItem value={ReportType.DELIVERY_REPORT}>{getReportTypeLabel(ReportType.DELIVERY_REPORT)}</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {reports.length === 0 ? (
+                <div className="text-center py-12 text-gray-500 bg-gray-50 rounded-lg border border-dashed">
+                  <p>Chưa có báo cáo nào được nộp{selectedReportType !== 'ALL' ? ` cho loại này` : ''}.</p>
+                  {isMentorOrTalent && (
+                    <Button variant="link" onClick={() => setIsSubmitOpen(true)}>Nộp báo cáo đầu tiên</Button>
+                  )}
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {reports.map((report) => (
+                    <div key={report.id} className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50 transition-colors bg-white shadow-sm">
+                      <div className="flex items-start gap-4">
+                        <Avatar className="h-10 w-10 flex-shrink-0 mt-1">
+                          <AvatarImage src={report.submittedByAvatar} alt={report.submittedBy} />
+                          <AvatarFallback>
+                            {report.submittedBy.charAt(0).toUpperCase()}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 mb-1 flex-wrap">
+                            {getReportTypeBadge(report.reportType)}
+                            {getStatusBadge(report.status)}
+                          </div>
+                          <div className="text-sm text-gray-500 mb-1">
+                            <span className="font-medium text-gray-700">{report.submittedBy}</span> • {report.submittedAt}
+                          </div>
+                          <p className="text-sm text-gray-600 line-clamp-2">{report.content}</p>
+                          {report.files.length > 0 && (
+                            <div className="flex items-center gap-1 mt-1 text-xs text-gray-500">
+                              <History className="w-3 h-3" />
+                              <span>{report.files.length} tệp đính kèm</span>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+
+                      <Button variant="outline" size="sm" onClick={() => handleOpenDetail(report)} className="flex-shrink-0">
+                        <Eye className="w-4 h-4 mr-2" /> Xem chi tiết
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </>
           )}
         </CardContent>
       </Card>

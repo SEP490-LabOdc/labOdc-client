@@ -114,9 +114,6 @@ export default function MilestoneMembersPage() {
                     onToggleLeader={(milestoneMemberId: string, currentLeaderStatus: boolean) => {
                         handleToggleMilestoneMemberLeader(milestoneMemberId, currentLeaderStatus)
                     }}
-                    leaderLabel="Đặt làm trưởng nhóm"
-                    removeLeaderLabel="Gỡ trưởng nhóm"
-                    badgeLabel="Trưởng nhóm"
                 />
 
                 {/* Talents Section */}
@@ -130,9 +127,6 @@ export default function MilestoneMembersPage() {
                     onToggleLeader={(milestoneMemberId: string, currentLeaderStatus: boolean) => {
                         handleToggleMilestoneMemberLeader(milestoneMemberId, currentLeaderStatus)
                     }}
-                    leaderLabel="Đặt làm leader"
-                    removeLeaderLabel="Gỡ leader"
-                    badgeLabel="Leader"
                 />
             </div>
         </div>

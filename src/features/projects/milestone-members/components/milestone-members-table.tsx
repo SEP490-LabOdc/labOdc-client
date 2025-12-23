@@ -25,9 +25,6 @@ interface MilestoneMembersTableProps {
     showActionButton?: boolean
     isActionLoading?: boolean
     onToggleLeader?: (milestoneMemberId: string, currentLeaderStatus: boolean) => void
-    leaderLabel?: string
-    removeLeaderLabel?: string
-    badgeLabel?: string
 }
 
 export const MilestoneMembersTable: React.FC<MilestoneMembersTableProps> = ({
@@ -38,9 +35,6 @@ export const MilestoneMembersTable: React.FC<MilestoneMembersTableProps> = ({
     showActionButton = false,
     isActionLoading = false,
     onToggleLeader,
-    leaderLabel = 'Đặt làm leader',
-    removeLeaderLabel = 'Gỡ leader',
-    badgeLabel = 'Leader',
 }) => {
     return (
         <Card className="mb-6">
@@ -60,7 +54,6 @@ export const MilestoneMembersTable: React.FC<MilestoneMembersTableProps> = ({
                                 <TableHead>Trạng thái</TableHead>
                                 <TableHead>Ngày tham gia</TableHead>
                                 <TableHead>Ngày rời</TableHead>
-                                <TableHead>Leader</TableHead>
                                 {showActionButton && <TableHead className="text-right">Thao tác</TableHead>}
                             </TableRow>
                         </TableHeader>
@@ -76,8 +69,14 @@ export const MilestoneMembersTable: React.FC<MilestoneMembersTableProps> = ({
                                                 </AvatarFallback>
                                             </Avatar>
                                             <div className="flex flex-col min-w-0">
-                                                <div className="font-medium text-gray-900 truncate">
+                                                <div className="font-medium text-gray-900 truncate flex items-center gap-2">
                                                     {member.fullName}
+                                                    {member.leader && (
+                                                        <Badge variant="secondary" className="flex-shrink-0 bg-yellow-100 text-yellow-800">
+                                                            <Crown className="h-3 w-3" />
+                                                            <span>Trưởng nhóm</span>
+                                                        </Badge>
+                                                    )}
                                                 </div>
                                                 <div className="text-sm text-gray-500 truncate">
                                                     {member.email}
@@ -108,16 +107,6 @@ export const MilestoneMembersTable: React.FC<MilestoneMembersTableProps> = ({
                                             {formatDateOnly(member.leftAt)}
                                         </span>
                                     </TableCell>
-                                    <TableCell>
-                                        {member.leader ? (
-                                            <Badge className="bg-yellow-100 text-yellow-800 flex items-center gap-1 w-fit">
-                                                <Crown className="h-3 w-3" />
-                                                {badgeLabel}
-                                            </Badge>
-                                        ) : (
-                                            <span className="text-sm text-gray-400">-</span>
-                                        )}
-                                    </TableCell>
                                     {showActionButton && (
                                         <TableCell className="text-right">
                                             <Button
@@ -138,12 +127,12 @@ export const MilestoneMembersTable: React.FC<MilestoneMembersTableProps> = ({
                                                 ) : member.leader ? (
                                                     <>
                                                         <Crown className="h-4 w-4 mr-2" />
-                                                        {removeLeaderLabel}
+                                                        <span>Gỡ trưởng nhóm</span>
                                                     </>
                                                 ) : (
                                                     <>
                                                         <Crown className="h-4 w-4 mr-2" />
-                                                        {leaderLabel}
+                                                        <span>Đặt làm trưởng nhóm</span>
                                                     </>
                                                 )}
                                             </Button>

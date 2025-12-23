@@ -55,20 +55,24 @@ import { Route as AuthenticatedTalentWalletIndexRouteImport } from './routes/_au
 import { Route as AuthenticatedTalentTeamFundDistributionIndexRouteImport } from './routes/_authenticated/talent/team-fund-distribution/index'
 import { Route as AuthenticatedTalentSettingsIndexRouteImport } from './routes/_authenticated/talent/settings/index'
 import { Route as AuthenticatedTalentProjectsIndexRouteImport } from './routes/_authenticated/talent/projects/index'
+import { Route as AuthenticatedTalentMyTransactionsIndexRouteImport } from './routes/_authenticated/talent/my-transactions/index'
 import { Route as AuthenticatedTalentMyApplicationsIndexRouteImport } from './routes/_authenticated/talent/my-applications/index'
 import { Route as AuthenticatedMentorWalletIndexRouteImport } from './routes/_authenticated/mentor/wallet/index'
 import { Route as AuthenticatedMentorTeamFundDistributionIndexRouteImport } from './routes/_authenticated/mentor/team-fund-distribution/index'
 import { Route as AuthenticatedMentorSettingsIndexRouteImport } from './routes/_authenticated/mentor/settings/index'
 import { Route as AuthenticatedMentorProjectsIndexRouteImport } from './routes/_authenticated/mentor/projects/index'
+import { Route as AuthenticatedMentorMyTransactionsIndexRouteImport } from './routes/_authenticated/mentor/my-transactions/index'
 import { Route as AuthenticatedLabAdminUsersIndexRouteImport } from './routes/_authenticated/lab-admin/users/index'
 import { Route as AuthenticatedLabAdminTemplatesIndexRouteImport } from './routes/_authenticated/lab-admin/templates/index'
 import { Route as AuthenticatedLabAdminSkillsIndexRouteImport } from './routes/_authenticated/lab-admin/skills/index'
 import { Route as AuthenticatedLabAdminSettingsIndexRouteImport } from './routes/_authenticated/lab-admin/settings/index'
+import { Route as AuthenticatedLabAdminReportsIndexRouteImport } from './routes/_authenticated/lab-admin/reports/index'
 import { Route as AuthenticatedLabAdminProjectsIndexRouteImport } from './routes/_authenticated/lab-admin/projects/index'
 import { Route as AuthenticatedLabAdminCompaniesIndexRouteImport } from './routes/_authenticated/lab-admin/companies/index'
 import { Route as AuthenticatedCompanyManageWalletIndexRouteImport } from './routes/_authenticated/company-manage/wallet/index'
 import { Route as AuthenticatedCompanyManageSettingsIndexRouteImport } from './routes/_authenticated/company-manage/settings/index'
 import { Route as AuthenticatedCompanyManageProjectsIndexRouteImport } from './routes/_authenticated/company-manage/projects/index'
+import { Route as AuthenticatedCompanyManageMyTransactionsIndexRouteImport } from './routes/_authenticated/company-manage/my-transactions/index'
 import { Route as AuthenticatedAdminWithdrawalIndexRouteImport } from './routes/_authenticated/admin/withdrawal/index'
 import { Route as AuthenticatedAdminUsersIndexRouteImport } from './routes/_authenticated/admin/users/index'
 import { Route as AuthenticatedAdminTasksIndexRouteImport } from './routes/_authenticated/admin/tasks/index'
@@ -364,6 +368,12 @@ const AuthenticatedTalentProjectsIndexRoute =
     path: '/projects/',
     getParentRoute: () => AuthenticatedTalentRouteRoute,
   } as any)
+const AuthenticatedTalentMyTransactionsIndexRoute =
+  AuthenticatedTalentMyTransactionsIndexRouteImport.update({
+    id: '/my-transactions/',
+    path: '/my-transactions/',
+    getParentRoute: () => AuthenticatedTalentRouteRoute,
+  } as any)
 const AuthenticatedTalentMyApplicationsIndexRoute =
   AuthenticatedTalentMyApplicationsIndexRouteImport.update({
     id: '/my-applications/',
@@ -394,6 +404,12 @@ const AuthenticatedMentorProjectsIndexRoute =
     path: '/',
     getParentRoute: () => AuthenticatedMentorProjectsRouteRoute,
   } as any)
+const AuthenticatedMentorMyTransactionsIndexRoute =
+  AuthenticatedMentorMyTransactionsIndexRouteImport.update({
+    id: '/my-transactions/',
+    path: '/my-transactions/',
+    getParentRoute: () => AuthenticatedMentorRouteRoute,
+  } as any)
 const AuthenticatedLabAdminUsersIndexRoute =
   AuthenticatedLabAdminUsersIndexRouteImport.update({
     id: '/users/',
@@ -417,6 +433,12 @@ const AuthenticatedLabAdminSettingsIndexRoute =
     id: '/',
     path: '/',
     getParentRoute: () => AuthenticatedLabAdminSettingsRouteRoute,
+  } as any)
+const AuthenticatedLabAdminReportsIndexRoute =
+  AuthenticatedLabAdminReportsIndexRouteImport.update({
+    id: '/reports/',
+    path: '/reports/',
+    getParentRoute: () => AuthenticatedLabAdminRouteRoute,
   } as any)
 const AuthenticatedLabAdminProjectsIndexRoute =
   AuthenticatedLabAdminProjectsIndexRouteImport.update({
@@ -446,6 +468,12 @@ const AuthenticatedCompanyManageProjectsIndexRoute =
   AuthenticatedCompanyManageProjectsIndexRouteImport.update({
     id: '/projects/',
     path: '/projects/',
+    getParentRoute: () => AuthenticatedCompanyManageRouteRoute,
+  } as any)
+const AuthenticatedCompanyManageMyTransactionsIndexRoute =
+  AuthenticatedCompanyManageMyTransactionsIndexRouteImport.update({
+    id: '/my-transactions/',
+    path: '/my-transactions/',
     getParentRoute: () => AuthenticatedCompanyManageRouteRoute,
   } as any)
 const AuthenticatedAdminWithdrawalIndexRoute =
@@ -787,20 +815,24 @@ export interface FileRoutesByFullPath {
   '/admin/tasks': typeof AuthenticatedAdminTasksIndexRoute
   '/admin/users': typeof AuthenticatedAdminUsersIndexRoute
   '/admin/withdrawal': typeof AuthenticatedAdminWithdrawalIndexRoute
+  '/company-manage/my-transactions': typeof AuthenticatedCompanyManageMyTransactionsIndexRoute
   '/company-manage/projects': typeof AuthenticatedCompanyManageProjectsIndexRoute
   '/company-manage/settings/': typeof AuthenticatedCompanyManageSettingsIndexRoute
   '/company-manage/wallet': typeof AuthenticatedCompanyManageWalletIndexRoute
   '/lab-admin/companies': typeof AuthenticatedLabAdminCompaniesIndexRoute
   '/lab-admin/projects': typeof AuthenticatedLabAdminProjectsIndexRoute
+  '/lab-admin/reports': typeof AuthenticatedLabAdminReportsIndexRoute
   '/lab-admin/settings/': typeof AuthenticatedLabAdminSettingsIndexRoute
   '/lab-admin/skills': typeof AuthenticatedLabAdminSkillsIndexRoute
   '/lab-admin/templates': typeof AuthenticatedLabAdminTemplatesIndexRoute
   '/lab-admin/users': typeof AuthenticatedLabAdminUsersIndexRoute
+  '/mentor/my-transactions': typeof AuthenticatedMentorMyTransactionsIndexRoute
   '/mentor/projects/': typeof AuthenticatedMentorProjectsIndexRoute
   '/mentor/settings/': typeof AuthenticatedMentorSettingsIndexRoute
   '/mentor/team-fund-distribution': typeof AuthenticatedMentorTeamFundDistributionIndexRoute
   '/mentor/wallet': typeof AuthenticatedMentorWalletIndexRoute
   '/talent/my-applications': typeof AuthenticatedTalentMyApplicationsIndexRoute
+  '/talent/my-transactions': typeof AuthenticatedTalentMyTransactionsIndexRoute
   '/talent/projects': typeof AuthenticatedTalentProjectsIndexRoute
   '/talent/settings/': typeof AuthenticatedTalentSettingsIndexRoute
   '/talent/team-fund-distribution': typeof AuthenticatedTalentTeamFundDistributionIndexRoute
@@ -879,20 +911,24 @@ export interface FileRoutesByTo {
   '/admin/tasks': typeof AuthenticatedAdminTasksIndexRoute
   '/admin/users': typeof AuthenticatedAdminUsersIndexRoute
   '/admin/withdrawal': typeof AuthenticatedAdminWithdrawalIndexRoute
+  '/company-manage/my-transactions': typeof AuthenticatedCompanyManageMyTransactionsIndexRoute
   '/company-manage/projects': typeof AuthenticatedCompanyManageProjectsIndexRoute
   '/company-manage/settings': typeof AuthenticatedCompanyManageSettingsIndexRoute
   '/company-manage/wallet': typeof AuthenticatedCompanyManageWalletIndexRoute
   '/lab-admin/companies': typeof AuthenticatedLabAdminCompaniesIndexRoute
   '/lab-admin/projects': typeof AuthenticatedLabAdminProjectsIndexRoute
+  '/lab-admin/reports': typeof AuthenticatedLabAdminReportsIndexRoute
   '/lab-admin/settings': typeof AuthenticatedLabAdminSettingsIndexRoute
   '/lab-admin/skills': typeof AuthenticatedLabAdminSkillsIndexRoute
   '/lab-admin/templates': typeof AuthenticatedLabAdminTemplatesIndexRoute
   '/lab-admin/users': typeof AuthenticatedLabAdminUsersIndexRoute
+  '/mentor/my-transactions': typeof AuthenticatedMentorMyTransactionsIndexRoute
   '/mentor/projects': typeof AuthenticatedMentorProjectsIndexRoute
   '/mentor/settings': typeof AuthenticatedMentorSettingsIndexRoute
   '/mentor/team-fund-distribution': typeof AuthenticatedMentorTeamFundDistributionIndexRoute
   '/mentor/wallet': typeof AuthenticatedMentorWalletIndexRoute
   '/talent/my-applications': typeof AuthenticatedTalentMyApplicationsIndexRoute
+  '/talent/my-transactions': typeof AuthenticatedTalentMyTransactionsIndexRoute
   '/talent/projects': typeof AuthenticatedTalentProjectsIndexRoute
   '/talent/settings': typeof AuthenticatedTalentSettingsIndexRoute
   '/talent/team-fund-distribution': typeof AuthenticatedTalentTeamFundDistributionIndexRoute
@@ -988,20 +1024,24 @@ export interface FileRoutesById {
   '/_authenticated/admin/tasks/': typeof AuthenticatedAdminTasksIndexRoute
   '/_authenticated/admin/users/': typeof AuthenticatedAdminUsersIndexRoute
   '/_authenticated/admin/withdrawal/': typeof AuthenticatedAdminWithdrawalIndexRoute
+  '/_authenticated/company-manage/my-transactions/': typeof AuthenticatedCompanyManageMyTransactionsIndexRoute
   '/_authenticated/company-manage/projects/': typeof AuthenticatedCompanyManageProjectsIndexRoute
   '/_authenticated/company-manage/settings/': typeof AuthenticatedCompanyManageSettingsIndexRoute
   '/_authenticated/company-manage/wallet/': typeof AuthenticatedCompanyManageWalletIndexRoute
   '/_authenticated/lab-admin/companies/': typeof AuthenticatedLabAdminCompaniesIndexRoute
   '/_authenticated/lab-admin/projects/': typeof AuthenticatedLabAdminProjectsIndexRoute
+  '/_authenticated/lab-admin/reports/': typeof AuthenticatedLabAdminReportsIndexRoute
   '/_authenticated/lab-admin/settings/': typeof AuthenticatedLabAdminSettingsIndexRoute
   '/_authenticated/lab-admin/skills/': typeof AuthenticatedLabAdminSkillsIndexRoute
   '/_authenticated/lab-admin/templates/': typeof AuthenticatedLabAdminTemplatesIndexRoute
   '/_authenticated/lab-admin/users/': typeof AuthenticatedLabAdminUsersIndexRoute
+  '/_authenticated/mentor/my-transactions/': typeof AuthenticatedMentorMyTransactionsIndexRoute
   '/_authenticated/mentor/projects/': typeof AuthenticatedMentorProjectsIndexRoute
   '/_authenticated/mentor/settings/': typeof AuthenticatedMentorSettingsIndexRoute
   '/_authenticated/mentor/team-fund-distribution/': typeof AuthenticatedMentorTeamFundDistributionIndexRoute
   '/_authenticated/mentor/wallet/': typeof AuthenticatedMentorWalletIndexRoute
   '/_authenticated/talent/my-applications/': typeof AuthenticatedTalentMyApplicationsIndexRoute
+  '/_authenticated/talent/my-transactions/': typeof AuthenticatedTalentMyTransactionsIndexRoute
   '/_authenticated/talent/projects/': typeof AuthenticatedTalentProjectsIndexRoute
   '/_authenticated/talent/settings/': typeof AuthenticatedTalentSettingsIndexRoute
   '/_authenticated/talent/team-fund-distribution/': typeof AuthenticatedTalentTeamFundDistributionIndexRoute
@@ -1095,20 +1135,24 @@ export interface FileRouteTypes {
     | '/admin/tasks'
     | '/admin/users'
     | '/admin/withdrawal'
+    | '/company-manage/my-transactions'
     | '/company-manage/projects'
     | '/company-manage/settings/'
     | '/company-manage/wallet'
     | '/lab-admin/companies'
     | '/lab-admin/projects'
+    | '/lab-admin/reports'
     | '/lab-admin/settings/'
     | '/lab-admin/skills'
     | '/lab-admin/templates'
     | '/lab-admin/users'
+    | '/mentor/my-transactions'
     | '/mentor/projects/'
     | '/mentor/settings/'
     | '/mentor/team-fund-distribution'
     | '/mentor/wallet'
     | '/talent/my-applications'
+    | '/talent/my-transactions'
     | '/talent/projects'
     | '/talent/settings/'
     | '/talent/team-fund-distribution'
@@ -1187,20 +1231,24 @@ export interface FileRouteTypes {
     | '/admin/tasks'
     | '/admin/users'
     | '/admin/withdrawal'
+    | '/company-manage/my-transactions'
     | '/company-manage/projects'
     | '/company-manage/settings'
     | '/company-manage/wallet'
     | '/lab-admin/companies'
     | '/lab-admin/projects'
+    | '/lab-admin/reports'
     | '/lab-admin/settings'
     | '/lab-admin/skills'
     | '/lab-admin/templates'
     | '/lab-admin/users'
+    | '/mentor/my-transactions'
     | '/mentor/projects'
     | '/mentor/settings'
     | '/mentor/team-fund-distribution'
     | '/mentor/wallet'
     | '/talent/my-applications'
+    | '/talent/my-transactions'
     | '/talent/projects'
     | '/talent/settings'
     | '/talent/team-fund-distribution'
@@ -1295,20 +1343,24 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/tasks/'
     | '/_authenticated/admin/users/'
     | '/_authenticated/admin/withdrawal/'
+    | '/_authenticated/company-manage/my-transactions/'
     | '/_authenticated/company-manage/projects/'
     | '/_authenticated/company-manage/settings/'
     | '/_authenticated/company-manage/wallet/'
     | '/_authenticated/lab-admin/companies/'
     | '/_authenticated/lab-admin/projects/'
+    | '/_authenticated/lab-admin/reports/'
     | '/_authenticated/lab-admin/settings/'
     | '/_authenticated/lab-admin/skills/'
     | '/_authenticated/lab-admin/templates/'
     | '/_authenticated/lab-admin/users/'
+    | '/_authenticated/mentor/my-transactions/'
     | '/_authenticated/mentor/projects/'
     | '/_authenticated/mentor/settings/'
     | '/_authenticated/mentor/team-fund-distribution/'
     | '/_authenticated/mentor/wallet/'
     | '/_authenticated/talent/my-applications/'
+    | '/_authenticated/talent/my-transactions/'
     | '/_authenticated/talent/projects/'
     | '/_authenticated/talent/settings/'
     | '/_authenticated/talent/team-fund-distribution/'
@@ -1686,6 +1738,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedTalentProjectsIndexRouteImport
       parentRoute: typeof AuthenticatedTalentRouteRoute
     }
+    '/_authenticated/talent/my-transactions/': {
+      id: '/_authenticated/talent/my-transactions/'
+      path: '/my-transactions'
+      fullPath: '/talent/my-transactions'
+      preLoaderRoute: typeof AuthenticatedTalentMyTransactionsIndexRouteImport
+      parentRoute: typeof AuthenticatedTalentRouteRoute
+    }
     '/_authenticated/talent/my-applications/': {
       id: '/_authenticated/talent/my-applications/'
       path: '/my-applications'
@@ -1721,6 +1780,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedMentorProjectsIndexRouteImport
       parentRoute: typeof AuthenticatedMentorProjectsRouteRoute
     }
+    '/_authenticated/mentor/my-transactions/': {
+      id: '/_authenticated/mentor/my-transactions/'
+      path: '/my-transactions'
+      fullPath: '/mentor/my-transactions'
+      preLoaderRoute: typeof AuthenticatedMentorMyTransactionsIndexRouteImport
+      parentRoute: typeof AuthenticatedMentorRouteRoute
+    }
     '/_authenticated/lab-admin/users/': {
       id: '/_authenticated/lab-admin/users/'
       path: '/users'
@@ -1748,6 +1814,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/lab-admin/settings/'
       preLoaderRoute: typeof AuthenticatedLabAdminSettingsIndexRouteImport
       parentRoute: typeof AuthenticatedLabAdminSettingsRouteRoute
+    }
+    '/_authenticated/lab-admin/reports/': {
+      id: '/_authenticated/lab-admin/reports/'
+      path: '/reports'
+      fullPath: '/lab-admin/reports'
+      preLoaderRoute: typeof AuthenticatedLabAdminReportsIndexRouteImport
+      parentRoute: typeof AuthenticatedLabAdminRouteRoute
     }
     '/_authenticated/lab-admin/projects/': {
       id: '/_authenticated/lab-admin/projects/'
@@ -1782,6 +1855,13 @@ declare module '@tanstack/react-router' {
       path: '/projects'
       fullPath: '/company-manage/projects'
       preLoaderRoute: typeof AuthenticatedCompanyManageProjectsIndexRouteImport
+      parentRoute: typeof AuthenticatedCompanyManageRouteRoute
+    }
+    '/_authenticated/company-manage/my-transactions/': {
+      id: '/_authenticated/company-manage/my-transactions/'
+      path: '/my-transactions'
+      fullPath: '/company-manage/my-transactions'
+      preLoaderRoute: typeof AuthenticatedCompanyManageMyTransactionsIndexRouteImport
       parentRoute: typeof AuthenticatedCompanyManageRouteRoute
     }
     '/_authenticated/admin/withdrawal/': {
@@ -2243,6 +2323,7 @@ const AuthenticatedCompanyManageSettingsRouteRouteWithChildren =
 interface AuthenticatedCompanyManageRouteRouteChildren {
   AuthenticatedCompanyManageSettingsRouteRoute: typeof AuthenticatedCompanyManageSettingsRouteRouteWithChildren
   AuthenticatedCompanyManageIndexRoute: typeof AuthenticatedCompanyManageIndexRoute
+  AuthenticatedCompanyManageMyTransactionsIndexRoute: typeof AuthenticatedCompanyManageMyTransactionsIndexRoute
   AuthenticatedCompanyManageProjectsIndexRoute: typeof AuthenticatedCompanyManageProjectsIndexRoute
   AuthenticatedCompanyManageWalletIndexRoute: typeof AuthenticatedCompanyManageWalletIndexRoute
   AuthenticatedCompanyManageProjectsProjectIdIndexRoute: typeof AuthenticatedCompanyManageProjectsProjectIdIndexRoute
@@ -2260,6 +2341,8 @@ const AuthenticatedCompanyManageRouteRouteChildren: AuthenticatedCompanyManageRo
     AuthenticatedCompanyManageSettingsRouteRoute:
       AuthenticatedCompanyManageSettingsRouteRouteWithChildren,
     AuthenticatedCompanyManageIndexRoute: AuthenticatedCompanyManageIndexRoute,
+    AuthenticatedCompanyManageMyTransactionsIndexRoute:
+      AuthenticatedCompanyManageMyTransactionsIndexRoute,
     AuthenticatedCompanyManageProjectsIndexRoute:
       AuthenticatedCompanyManageProjectsIndexRoute,
     AuthenticatedCompanyManageWalletIndexRoute:
@@ -2313,6 +2396,7 @@ interface AuthenticatedLabAdminRouteRouteChildren {
   AuthenticatedLabAdminIndexRoute: typeof AuthenticatedLabAdminIndexRoute
   AuthenticatedLabAdminCompaniesIndexRoute: typeof AuthenticatedLabAdminCompaniesIndexRoute
   AuthenticatedLabAdminProjectsIndexRoute: typeof AuthenticatedLabAdminProjectsIndexRoute
+  AuthenticatedLabAdminReportsIndexRoute: typeof AuthenticatedLabAdminReportsIndexRoute
   AuthenticatedLabAdminSkillsIndexRoute: typeof AuthenticatedLabAdminSkillsIndexRoute
   AuthenticatedLabAdminTemplatesIndexRoute: typeof AuthenticatedLabAdminTemplatesIndexRoute
   AuthenticatedLabAdminUsersIndexRoute: typeof AuthenticatedLabAdminUsersIndexRoute
@@ -2333,6 +2417,8 @@ const AuthenticatedLabAdminRouteRouteChildren: AuthenticatedLabAdminRouteRouteCh
       AuthenticatedLabAdminCompaniesIndexRoute,
     AuthenticatedLabAdminProjectsIndexRoute:
       AuthenticatedLabAdminProjectsIndexRoute,
+    AuthenticatedLabAdminReportsIndexRoute:
+      AuthenticatedLabAdminReportsIndexRoute,
     AuthenticatedLabAdminSkillsIndexRoute:
       AuthenticatedLabAdminSkillsIndexRoute,
     AuthenticatedLabAdminTemplatesIndexRoute:
@@ -2421,6 +2507,7 @@ interface AuthenticatedMentorRouteRouteChildren {
   AuthenticatedMentorProjectsRouteRoute: typeof AuthenticatedMentorProjectsRouteRouteWithChildren
   AuthenticatedMentorSettingsRouteRoute: typeof AuthenticatedMentorSettingsRouteRouteWithChildren
   AuthenticatedMentorIndexRoute: typeof AuthenticatedMentorIndexRoute
+  AuthenticatedMentorMyTransactionsIndexRoute: typeof AuthenticatedMentorMyTransactionsIndexRoute
   AuthenticatedMentorTeamFundDistributionIndexRoute: typeof AuthenticatedMentorTeamFundDistributionIndexRoute
   AuthenticatedMentorWalletIndexRoute: typeof AuthenticatedMentorWalletIndexRoute
 }
@@ -2432,6 +2519,8 @@ const AuthenticatedMentorRouteRouteChildren: AuthenticatedMentorRouteRouteChildr
     AuthenticatedMentorSettingsRouteRoute:
       AuthenticatedMentorSettingsRouteRouteWithChildren,
     AuthenticatedMentorIndexRoute: AuthenticatedMentorIndexRoute,
+    AuthenticatedMentorMyTransactionsIndexRoute:
+      AuthenticatedMentorMyTransactionsIndexRoute,
     AuthenticatedMentorTeamFundDistributionIndexRoute:
       AuthenticatedMentorTeamFundDistributionIndexRoute,
     AuthenticatedMentorWalletIndexRoute: AuthenticatedMentorWalletIndexRoute,
@@ -2467,6 +2556,7 @@ interface AuthenticatedTalentRouteRouteChildren {
   AuthenticatedTalentSettingsRouteRoute: typeof AuthenticatedTalentSettingsRouteRouteWithChildren
   AuthenticatedTalentIndexRoute: typeof AuthenticatedTalentIndexRoute
   AuthenticatedTalentMyApplicationsIndexRoute: typeof AuthenticatedTalentMyApplicationsIndexRoute
+  AuthenticatedTalentMyTransactionsIndexRoute: typeof AuthenticatedTalentMyTransactionsIndexRoute
   AuthenticatedTalentProjectsIndexRoute: typeof AuthenticatedTalentProjectsIndexRoute
   AuthenticatedTalentTeamFundDistributionIndexRoute: typeof AuthenticatedTalentTeamFundDistributionIndexRoute
   AuthenticatedTalentWalletIndexRoute: typeof AuthenticatedTalentWalletIndexRoute
@@ -2484,6 +2574,8 @@ const AuthenticatedTalentRouteRouteChildren: AuthenticatedTalentRouteRouteChildr
     AuthenticatedTalentIndexRoute: AuthenticatedTalentIndexRoute,
     AuthenticatedTalentMyApplicationsIndexRoute:
       AuthenticatedTalentMyApplicationsIndexRoute,
+    AuthenticatedTalentMyTransactionsIndexRoute:
+      AuthenticatedTalentMyTransactionsIndexRoute,
     AuthenticatedTalentProjectsIndexRoute:
       AuthenticatedTalentProjectsIndexRoute,
     AuthenticatedTalentTeamFundDistributionIndexRoute:
