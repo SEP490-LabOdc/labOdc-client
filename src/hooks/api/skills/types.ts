@@ -20,3 +20,9 @@ export interface SkillRequest {
     sorts: SkillSort[]
     pagination: SkillPagination
 }
+
+export interface Skill {
+    id: string
+    name: string
+    description: string
+}
