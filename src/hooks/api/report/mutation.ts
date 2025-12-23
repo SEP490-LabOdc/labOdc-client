@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import apiRequest from '@/config/request'
-import { reportKeys } from './queries'
+import { reportKeys } from './query-keys'
 
 export function useApproveReport() {
     const queryClient = useQueryClient()
@@ -50,3 +50,28 @@ export function useRejectReport() {
     })
 }
 
+export function useReviewReportForLabAdmin() {
+    const queryClient = useQueryClient()
+
+    return useMutation({
+        mutationFn: async (payload: {
+            reportId: string
+            milestoneId: string
+            feedback: string
+            status: string
+        }) => {
+            const { data } = await apiRequest.put(
+                `/api/v1/reports/${payload.reportId}/lab-admin-review`,
+                {
+                    milestoneId: payload.milestoneId,
+                    feedback: payload.feedback,
+                    status: payload.status,
+                }
+            )
+            return data
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: reportKeys.all })
+        },
+    })
+}
