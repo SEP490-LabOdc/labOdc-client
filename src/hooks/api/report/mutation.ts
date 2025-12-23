@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import apiRequest from '@/config/request'
 import { reportKeys } from './query-keys'
+import type { CreateReportForLabAdminPayload } from './types'
 
 export function useApproveReport() {
     const queryClient = useQueryClient()
@@ -67,6 +68,23 @@ export function useReviewReportForLabAdmin() {
                     feedback: payload.feedback,
                     status: payload.status,
                 }
+            )
+            return data
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: reportKeys.all })
+        },
+    })
+}
+
+export function useCreateReportForLabAdmin() {
+    const queryClient = useQueryClient()
+
+    return useMutation({
+        mutationFn: async (payload: CreateReportForLabAdminPayload) => {
+            const { data } = await apiRequest.post(
+                `/api/v1/reports/for-lab-admin`,
+                payload
             )
             return data
         },

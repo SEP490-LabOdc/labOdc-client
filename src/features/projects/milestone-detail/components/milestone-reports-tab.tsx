@@ -1,9 +1,7 @@
 import React, { useState, useMemo } from 'react'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
-import { Skeleton } from '@/components/ui/skeleton'
 import {
   Select,
   SelectContent,
@@ -15,8 +13,6 @@ import { History, Eye, Plus, AlertCircle, Filter, FileText } from 'lucide-react'
 import { ReportDetailModal, RejectReportModal, SubmitReportModal, ReportTemplateModal, ReportNotice } from './report'
 import { usePermission } from '@/hooks/usePermission'
 import { useGetProjectMilestoneReports } from '@/hooks/api/projects'
-import { useGetReportRecipients } from '@/hooks/api/projects'
-import type { ReportRecipient } from '@/hooks/api/projects/types'
 import { ROLE } from '@/const.ts'
 import { ReportType } from '@/hooks/api/report'
 import {
@@ -50,10 +46,10 @@ export const MilestoneReportsTab: React.FC<Props> = ({ milestone }) => {
   } = useGetProjectMilestoneReports(milestone.id);
 
   // Get report recipients
-  const { data: recipientsResponse, isLoading: isLoadingRecipients } =
-    useGetReportRecipients(milestone.projectId, milestone.id);
+  // const { data: recipientsResponse, isLoading: isLoadingRecipients } =
+  //   useGetReportRecipients(milestone.projectId, milestone.id);
 
-  const recipients = recipientsResponse?.data || [];
+  // const recipients = recipientsResponse?.data || [];
 
   // Map API data to UI format and filter by reportType
   const reports = useMemo(() => {
@@ -181,7 +177,7 @@ export const MilestoneReportsTab: React.FC<Props> = ({ milestone }) => {
               )}
 
               {/* Recipients Info Section */}
-              {isLoadingRecipients ? (
+              {/* {isLoadingRecipients ? (
                 <div className="mb-4 p-3 bg-gray-50 rounded-lg">
                   <Skeleton className="h-4 w-48" />
                 </div>
@@ -202,7 +198,7 @@ export const MilestoneReportsTab: React.FC<Props> = ({ milestone }) => {
                     ))}
                   </div>
                 </div>
-              )}
+              )} */}
 
               {/* Filter by Report Type */}
               <div className="mb-4 flex items-center gap-3">
@@ -297,7 +293,6 @@ export const MilestoneReportsTab: React.FC<Props> = ({ milestone }) => {
         lastFeedback={isLatestRejected ? reports[0]?.feedback : undefined}
         projectId={milestone.projectId}
         milestoneId={milestone.id}
-        recipients={recipients}
       />
 
       <ReportTemplateModal

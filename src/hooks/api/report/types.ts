@@ -22,4 +22,12 @@ export interface Report {
     userCompanyId: string
     userCompanyEmail: string
     userCompanyAvatar: string
-}   
+}
+
+export interface CreateReportForLabAdminPayload {
+    projectId: string
+    milestoneId: string
+    reportType: string
+    content: string
+    attachmentsUrl: string[]
+}
