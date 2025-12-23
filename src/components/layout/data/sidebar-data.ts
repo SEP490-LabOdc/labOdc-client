@@ -264,6 +264,11 @@ export const labAdminSidebarData: SidebarData = {
           url: '/lab-admin/skills',
           icon: IconPills,
         },
+        {
+          title: 'Quản lý báo cáo',
+          url: '/lab-admin/reports',
+          icon: IconFileText,
+        }
       ]
     },
   ],
