@@ -41,7 +41,6 @@ import { Route as publicTalentPoolIndexRouteImport } from './routes/(public)/tal
 import { Route as publicProjectsIndexRouteImport } from './routes/(public)/projects/index'
 import { Route as publicPrivacyIndexRouteImport } from './routes/(public)/privacy/index'
 import { Route as publicCompaniesIndexRouteImport } from './routes/(public)/companies/index'
-import { Route as authSignUpIndexRouteImport } from './routes/(auth)/sign-up/index'
 import { Route as authSignInIndexRouteImport } from './routes/(auth)/sign-in/index'
 import { Route as authForgotPasswordIndexRouteImport } from './routes/(auth)/forgot-password/index'
 import { Route as publicCompaniesCompanyIdRouteImport } from './routes/(public)/companies/$companyId'
@@ -287,11 +286,6 @@ const publicCompaniesIndexRoute = publicCompaniesIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => publicCompaniesRouteRoute,
-} as any)
-const authSignUpIndexRoute = authSignUpIndexRouteImport.update({
-  id: '/sign-up/',
-  path: '/sign-up/',
-  getParentRoute: () => authRouteRoute,
 } as any)
 const authSignInIndexRoute = authSignInIndexRouteImport.update({
   id: '/sign-in/',
@@ -797,7 +791,6 @@ export interface FileRoutesByFullPath {
   '/companies/$companyId': typeof publicCompaniesCompanyIdRoute
   '/forgot-password': typeof authForgotPasswordIndexRoute
   '/sign-in': typeof authSignInIndexRoute
-  '/sign-up': typeof authSignUpIndexRoute
   '/companies/': typeof publicCompaniesIndexRoute
   '/privacy': typeof publicPrivacyIndexRoute
   '/projects': typeof publicProjectsIndexRoute
@@ -894,7 +887,6 @@ export interface FileRoutesByTo {
   '/companies/$companyId': typeof publicCompaniesCompanyIdRoute
   '/forgot-password': typeof authForgotPasswordIndexRoute
   '/sign-in': typeof authSignInIndexRoute
-  '/sign-up': typeof authSignUpIndexRoute
   '/companies': typeof publicCompaniesIndexRoute
   '/privacy': typeof publicPrivacyIndexRoute
   '/projects': typeof publicProjectsIndexRoute
@@ -1008,7 +1000,6 @@ export interface FileRoutesById {
   '/(public)/companies/$companyId': typeof publicCompaniesCompanyIdRoute
   '/(auth)/forgot-password/': typeof authForgotPasswordIndexRoute
   '/(auth)/sign-in/': typeof authSignInIndexRoute
-  '/(auth)/sign-up/': typeof authSignUpIndexRoute
   '/(public)/companies/': typeof publicCompaniesIndexRoute
   '/(public)/privacy/': typeof publicPrivacyIndexRoute
   '/(public)/projects/': typeof publicProjectsIndexRoute
@@ -1120,7 +1111,6 @@ export interface FileRouteTypes {
     | '/companies/$companyId'
     | '/forgot-password'
     | '/sign-in'
-    | '/sign-up'
     | '/companies/'
     | '/privacy'
     | '/projects'
@@ -1217,7 +1207,6 @@ export interface FileRouteTypes {
     | '/companies/$companyId'
     | '/forgot-password'
     | '/sign-in'
-    | '/sign-up'
     | '/companies'
     | '/privacy'
     | '/projects'
@@ -1330,7 +1319,6 @@ export interface FileRouteTypes {
     | '/(public)/companies/$companyId'
     | '/(auth)/forgot-password/'
     | '/(auth)/sign-in/'
-    | '/(auth)/sign-up/'
     | '/(public)/companies/'
     | '/(public)/privacy/'
     | '/(public)/projects/'
@@ -1654,13 +1642,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/companies/'
       preLoaderRoute: typeof publicCompaniesIndexRouteImport
       parentRoute: typeof publicCompaniesRouteRoute
-    }
-    '/(auth)/sign-up/': {
-      id: '/(auth)/sign-up/'
-      path: '/sign-up'
-      fullPath: '/sign-up'
-      preLoaderRoute: typeof authSignUpIndexRouteImport
-      parentRoute: typeof authRouteRoute
     }
     '/(auth)/sign-in/': {
       id: '/(auth)/sign-in/'
@@ -2214,13 +2195,11 @@ declare module '@tanstack/react-router' {
 interface authRouteRouteChildren {
   authForgotPasswordIndexRoute: typeof authForgotPasswordIndexRoute
   authSignInIndexRoute: typeof authSignInIndexRoute
-  authSignUpIndexRoute: typeof authSignUpIndexRoute
 }
 
 const authRouteRouteChildren: authRouteRouteChildren = {
   authForgotPasswordIndexRoute: authForgotPasswordIndexRoute,
   authSignInIndexRoute: authSignInIndexRoute,
-  authSignUpIndexRoute: authSignUpIndexRoute,
 }
 
 const authRouteRouteWithChildren = authRouteRoute._addFileChildren(

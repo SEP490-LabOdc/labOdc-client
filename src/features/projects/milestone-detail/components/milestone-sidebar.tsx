@@ -291,8 +291,8 @@ export const MilestoneSidebar: React.FC<MilestoneSidebarProps> = ({
         mentorShare={mentorShare}
         teamShare={teamShare}
         isLoading={payMilestone.isPending}
-        title="Xác nhận Nạp tiền vào Escrow"
-        description={`Bạn có chắc chắn muốn nạp ${formatVND(milestone.budget)} vào Escrow cho milestone này?`}
+        title="Xác nhận Nạp tiền vào ví cột mốc"
+        description={`Bạn có chắc chắn muốn nạp ${formatVND(milestone.budget)} vào ví cột mốc?`}
         showDistribution={false}
       />
 
