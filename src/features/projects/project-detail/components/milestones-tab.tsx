@@ -1,10 +1,9 @@
 import React, { useState } from 'react'
 import { Card, CardContent } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
 import { Button } from '@/components/ui/button'
 import { CalendarDays, CheckCircle2, Circle, Clock, Plus, UserPlus, Users } from 'lucide-react'
-import { getRoleBasePath, getStatusColor, getStatusLabel } from '@/lib/utils'
+import { getRoleBasePath } from '@/lib/utils'
 import { useNavigate } from '@tanstack/react-router'
 import type { Milestone } from '@/hooks/api/milestones'
 import type { ProjectDetail } from '@/hooks/api/projects/types'
@@ -14,7 +13,7 @@ import { useAddTalentToMilestone } from '@/hooks/api/projects/mutation'
 import { useGetProjectMembers } from '@/hooks/api/projects/queries'
 import { toast } from 'sonner'
 import { usePermission } from '@/hooks/usePermission'
-import { calculateProgress } from '@/helpers/milestone'
+import { calculateProgress, getMilestoneStatusBadge } from '@/helpers/milestone'
 import { StatusRenderer } from '@/components/status-renderer'
 
 interface MilestonesTabProps {
@@ -123,9 +122,9 @@ export const MilestonesTab: React.FC<MilestonesTabProps> = ({
                       </h3>
                       <p className="text-xs text-gray-600 mt-1 line-clamp-2">{milestone.description}</p>
                     </div>
-                    <Badge className={`${getStatusColor(milestone.status)} rounded-full text-xs flex-shrink-0`}>
-                      {getStatusLabel(milestone.status)}
-                    </Badge>
+                    <div className="flex-shrink-0">
+                      {getMilestoneStatusBadge(milestone.status)}
+                    </div>
                   </div>
 
                   <div className="flex items-center gap-4 text-xs text-gray-600">
