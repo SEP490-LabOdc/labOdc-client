@@ -11,12 +11,14 @@ import {
 import { FileText, CheckCircle, XCircle, AlertTriangle, DollarSign, Download, Loader2 } from 'lucide-react'
 import { useReviewReport } from '@/hooks/api/projects/mutation'
 import { toast } from 'sonner'
-import { getReportTypeLabel, getStatusBadge, type ReportVersion } from '@/helpers/report'
+import { getReportTypeLabel, getStatusBadge } from '@/helpers/report'
+import type { Report } from '@/hooks/api/report'
+import { formatDateOnly } from '@/helpers/datetime'
 
 interface ReportDetailModalProps {
   isOpen: boolean
   onClose: () => void
-  report: ReportVersion | null
+  report: Report | null
   isCompany: boolean
   onApprove: () => void
   onRequestChanges: () => void
@@ -61,7 +63,7 @@ export const ReportDetailModal: React.FC<ReportDetailModalProps> = ({
             <div>
               <DialogTitle>Chi tiết Báo cáo</DialogTitle>
               <DialogDescription className="mt-1">
-                <span className="font-medium">{getReportTypeLabel(report.reportType)}</span> • Người nộp: {report.submittedBy} • {report.submittedAt}
+                <span className="font-medium">{getReportTypeLabel(report.reportType)}</span> • Người nộp: {report.reporterName} • {formatDateOnly(report.createdAt)}
               </DialogDescription>
             </div>
             {getStatusBadge(report.status)}
@@ -79,13 +81,12 @@ export const ReportDetailModal: React.FC<ReportDetailModalProps> = ({
           <div>
             <h4 className="text-sm font-semibold text-gray-900 mb-2">Tài liệu đính kèm:</h4>
             <div className="space-y-2">
-              {report.files.map((file, idx) => (
+              {report.attachmentsUrl.map((attachmentUrl: string, idx: number) => (
                 <div key={idx} className="flex items-center justify-between p-3 border rounded-lg">
                   <div className="flex items-center gap-3">
                     <FileText className="w-8 h-8 text-blue-500" />
                     <div>
-                      <p className="text-sm font-medium">{file.name}</p>
-                      <p className="text-xs text-gray-400">{file.size}</p>
+                      <p className="text-sm font-medium">{attachmentUrl}</p>
                     </div>
                   </div>
                   <Button variant="ghost" size="sm"><Download className="w-4 h-4" /></Button>
