@@ -107,7 +107,7 @@ export const MilestoneMembersTable: React.FC<MilestoneMembersTableProps> = ({
                                             {formatDateOnly(member.leftAt)}
                                         </span>
                                     </TableCell>
-                                    {showActionButton && (
+                                    {(showActionButton && !member.leader) && (
                                         <TableCell className="text-right">
                                             <Button
                                                 size="sm"
@@ -120,20 +120,9 @@ export const MilestoneMembersTable: React.FC<MilestoneMembersTableProps> = ({
                                                 onClick={() => onToggleLeader?.(member.milestoneMemberId, member.leader)}
                                             >
                                                 {isActionLoading ? (
-                                                    <>
-                                                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                                                        Đang xử lý...
-                                                    </>
-                                                ) : member.leader ? (
-                                                    <>
-                                                        <Crown className="h-4 w-4 mr-2" />
-                                                        <span>Gỡ trưởng nhóm</span>
-                                                    </>
+                                                    <Loader2 className="h-4 w-4 animate-spin" />
                                                 ) : (
-                                                    <>
-                                                        <Crown className="h-4 w-4 mr-2" />
-                                                        <span>Đặt làm trưởng nhóm</span>
-                                                    </>
+                                                    <Crown className="h-4 w-4" />
                                                 )}
                                             </Button>
                                         </TableCell>
