@@ -16,7 +16,7 @@ export const PaymentStatusRenderer: React.FC<PaymentStatusRendererProps> = ({
     children,
 }) => {
     switch (status) {
-        case MilestoneStatus.COMPLETED:
+        case MilestoneStatus.PENDING_COMPLETED:
             return <>{children.completed || children.fallback}</>
         case MilestoneStatus.PAID:
             return <>{children.paid || children.fallback}</>

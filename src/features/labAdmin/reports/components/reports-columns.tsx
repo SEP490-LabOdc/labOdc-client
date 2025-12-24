@@ -3,12 +3,12 @@ import { Badge } from '@/components/ui/badge'
 import { Checkbox } from '@/components/ui/checkbox'
 import { DataTableColumnHeader } from '@/components/data-table'
 import { LongText } from '@/components/long-text'
-import { type Report } from '../data/schema'
 import { DataTableRowActions } from './data-table-row-actions'
-import { formatDateOnly, formatDateTime } from '@/helpers/datetime'
+import { formatDateTime } from '@/helpers/datetime'
 import { getReportTypeLabel, getReportStatusBadge } from '@/helpers/report'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { getAvatarUrl } from '@/lib/utils'
+import type { Report } from '@/hooks/api/report'
 
 export const reportsColumns: ColumnDef<Report>[] = [
     {
@@ -47,13 +47,13 @@ export const reportsColumns: ColumnDef<Report>[] = [
         ),
     },
     {
-        accessorKey: 'milestoneName',
+        accessorKey: 'milestoneTitle',
         header: ({ column }) => (
             <DataTableColumnHeader column={column} title="Tên cột mốc" />
         ),
         cell: ({ row }) => (
             <LongText className="max-w-40">
-                {row.getValue('milestoneName')}
+                {row.getValue('milestoneTitle')}
             </LongText>
         ),
     },
@@ -103,7 +103,6 @@ export const reportsColumns: ColumnDef<Report>[] = [
             return (
                 <div className="flex flex-col">
                     <span className="text-sm">{formatDateTime(date)}</span>
-                    <span className="text-xs text-muted-foreground">{formatDateOnly(date)}</span>
                 </div>
             )
         },

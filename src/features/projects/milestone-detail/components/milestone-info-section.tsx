@@ -1,7 +1,6 @@
 import { Badge } from "@/components/ui/badge"
-import { calculateDaysRemaining } from "@/helpers/milestone"
+import { calculateDaysRemaining, getMilestoneStatusBadge } from "@/helpers/milestone"
 import type { Milestone } from "@/hooks/api/milestones"
-import { getStatusColor, getStatusLabel } from "@/lib/utils"
 import { CalendarDays, DollarSign } from "lucide-react"
 
 interface MilestoneInfoSectionProps {
@@ -13,9 +12,7 @@ export const MilestoneInfoSection: React.FC<MilestoneInfoSectionProps> = ({ mile
         <div className="space-y-3 text-sm">
             <div className="flex justify-between items-center">
                 <span className="text-gray-600">Trạng thái:</span>
-                <Badge className={`${getStatusColor(milestone.status)} rounded-full`}>
-                    {getStatusLabel(milestone.status)}
-                </Badge>
+                {getMilestoneStatusBadge(milestone.status)}
             </div>
 
             <div className="flex justify-between items-center">

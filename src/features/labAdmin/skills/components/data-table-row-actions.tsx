@@ -2,15 +2,14 @@ import { type Row } from '@tanstack/react-table'
 import { Pencil, Trash2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { type Skill } from '../data/schema'
-import { useSkills } from './skills-provider'
 
 type DataTableRowActionsProps = {
     row: Row<Skill>
+    onOpenEdit: (skill: Skill) => void
+    onOpenDelete: (skill: Skill) => void
 }
 
-export function DataTableRowActions({ row }: DataTableRowActionsProps) {
-    const { setOpen, setCurrentRow } = useSkills()
-
+export function DataTableRowActions({ row, onOpenEdit, onOpenDelete }: DataTableRowActionsProps) {
     return (
         <div className='flex items-center gap-2'>
             <Button
@@ -18,8 +17,7 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
                 size='icon'
                 className='h-8 w-8'
                 onClick={() => {
-                    setCurrentRow(row.original)
-                    setOpen('edit')
+                    onOpenEdit(row.original)
                 }}
             >
                 <Pencil className='h-4 w-4' />
@@ -30,8 +28,7 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
                 size='icon'
                 className='h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10'
                 onClick={() => {
-                    setCurrentRow(row.original)
-                    setOpen('delete')
+                    onOpenDelete(row.original)
                 }}
             >
                 <Trash2 className='h-4 w-4' />

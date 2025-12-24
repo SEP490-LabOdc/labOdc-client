@@ -15,12 +15,11 @@ import {
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { FileText } from 'lucide-react'
 import { toast } from 'sonner'
 import { FileUpload } from '@/components/file/FileUpload'
-import { getStatusLabel, getStatusColor } from '@/lib/utils'
+import { getMilestoneStatusBadge } from '@/helpers/milestone'
 import type { MilestoneAttachment, MilestoneDetail } from '@/hooks/api/milestones/types'
 
 const updateMilestoneSchema = z.object({
@@ -147,9 +146,7 @@ export const UpdateMilestoneForm: React.FC<UpdateMilestoneFormProps> = ({
             <CardHeader>
                 <div className="flex items-center justify-between gap-2">
                     <CardTitle>Thông tin Milestone</CardTitle>
-                    <Badge className={`${getStatusColor(milestone.status)} rounded-full`}>
-                        {getStatusLabel(milestone.status)}
-                    </Badge>
+                    {getMilestoneStatusBadge(milestone.status)}
                 </div>
             </CardHeader>
             <CardContent>

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import {
     type SortingState,
     type VisibilityState,
@@ -23,7 +23,7 @@ import {
 } from '@/components/ui/table'
 import { DataTablePagination, DataTableToolbar } from '@/components/data-table'
 import { type Skill } from '../data/schema'
-import { skillsColumns as columns } from './skills-columns'
+import { createSkillsColumns } from './skills-columns'
 
 declare module '@tanstack/react-table' {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -36,9 +36,15 @@ type DataTableProps = {
     data: Skill[]
     search: Record<string, unknown>
     navigate: NavigateFn
+    onOpenEdit: (skill: Skill) => void
+    onOpenDelete: (skill: Skill) => void
 }
 
-export function SkillsTable({ data, search, navigate }: DataTableProps) {
+export function SkillsTable({ data, search, navigate, onOpenEdit, onOpenDelete }: DataTableProps) {
+    const columns = useMemo(
+        () => createSkillsColumns(onOpenEdit, onOpenDelete),
+        [onOpenEdit, onOpenDelete]
+    )
     // Local UI-only states
     const [rowSelection, setRowSelection] = useState({})
     const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
