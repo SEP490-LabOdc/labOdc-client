@@ -24,3 +24,37 @@ export const useGetProjectLast6MonthStatistic = () =>
             return data?.data
         },
     })
+
+export const useGetProjectDashboardOverview = () =>
+    useQuery({
+        queryKey: dashboardKey.projectOverview,
+        queryFn: async () => {
+            const { data } = await apiRequest.get(
+                '/api/v1/projects/dashboard/overview'
+            )
+            return data?.data
+        },
+    })
+
+
+export const useGetCompanyDashboardOverview = () =>
+    useQuery({
+        queryKey: dashboardKey.companyOverview,
+        queryFn: async () => {
+            const { data } = await apiRequest.get(
+                '/api/v1/companies/dashboard/overview'
+            )
+            return data?.data
+        },
+    })
+
+export const useGetUserDashboardOverview = () =>
+    useQuery({
+        queryKey: dashboardKey.userOverview,
+        queryFn: async () => {
+            const { data } = await apiRequest.get(
+                '/api/v1/users/dashboard/overview'
+            )
+            return data?.data
+        },
+    })
