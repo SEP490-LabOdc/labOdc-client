@@ -77,10 +77,10 @@ export const DepositDialog: React.FC<DepositDialogProps> = ({
                 <DialogHeader>
                     <DialogTitle className="flex items-center gap-2">
                         <Plus className="h-5 w-5 text-[#264653]" />
-                        Nạp tiền vào Escrow
+                        Nạp tiền vào ví
                     </DialogTitle>
                     <DialogDescription>
-                        Nhập số tiền để tạo link thanh toán và nạp tiền vào ví Escrow
+                        Nhập số tiền để tạo link thanh toán và nạp tiền vào ví
                     </DialogDescription>
                 </DialogHeader>
 
@@ -127,7 +127,7 @@ export const DepositDialog: React.FC<DepositDialogProps> = ({
                         disabled={amountNum < minDeposit || paymentDeposit.isPending}
                         className="bg-[#264653] hover:bg-[#264653]/90"
                     >
-                        {paymentDeposit.isPending ? 'Đang xử lý...' : 'Tạo link thanh toán'}
+                        {paymentDeposit.isPending ? 'Đang xử lý...' : 'Thanh toán'}
                     </Button>
                 </DialogFooter>
             </DialogContent>

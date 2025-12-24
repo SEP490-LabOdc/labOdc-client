@@ -134,7 +134,7 @@ export const MilestoneSidebar: React.FC<MilestoneSidebarProps> = ({
         // Optionally refresh data here
       }
     } catch (error: any) {
-      toast.error(error?.message || 'Có lỗi xảy ra khi nạp tiền vào Escrow')
+      console.error(error)
     }
   }
 
