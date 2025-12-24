@@ -12,7 +12,7 @@ import { FileText, CheckCircle, XCircle, AlertTriangle, DollarSign, Download, Lo
 import { useReviewReport } from '@/hooks/api/projects/mutation'
 import { toast } from 'sonner'
 import { getReportTypeLabel, getStatusBadge } from '@/helpers/report'
-import type { Report } from '@/hooks/api/report'
+import { ReportStatus, type Report } from '@/hooks/api/report'
 import { formatDateOnly } from '@/helpers/datetime'
 
 interface ReportDetailModalProps {
@@ -106,7 +106,7 @@ export const ReportDetailModal: React.FC<ReportDetailModalProps> = ({
         </div>
 
         <DialogFooter className="flex-col sm:flex-row gap-2">
-          {isCompany && report.status === 'SUBMITTED' ? (
+          {isCompany && report.status === ReportStatus.PENDING_COMPANY_REVIEW ? (
             <div className="w-full space-y-4">
               <div className="bg-yellow-50 p-3 rounded text-xs text-yellow-800 border border-yellow-200 flex items-start gap-2">
                 <DollarSign className="w-4 h-4 mt-0.5" />

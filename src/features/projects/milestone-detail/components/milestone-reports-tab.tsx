@@ -10,7 +10,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { History, Eye, Plus, Filter, FileText } from 'lucide-react'
-import { ReportDetailModal, SubmitReportModal, ReportTemplateModal, ReportNotice } from './report'
+import { ReportDetailModal, SubmitReportModal, ReportTemplateModal, ReportNotice, RejectReportModal } from './report'
 import { usePermission } from '@/hooks/usePermission'
 import { useGetProjectMilestoneReports } from '@/hooks/api/projects'
 import { ROLE } from '@/const.ts'
@@ -55,6 +55,11 @@ export const MilestoneReportsTab: React.FC<Props> = ({ milestone }) => {
   const { popUp, handlePopUpOpen, handlePopUpClose } = usePopUp(['reportDetail', 'reportReject', 'reportSubmit', 'reportTemplate'])
 
   const isMentorOrTalent = hasRole(ROLE.MENTOR, ROLE.USER);
+
+  const handleOpenReject = (report: Report) => {
+    handlePopUpOpen('reportReject', report.id)
+    handlePopUpClose('reportDetail')
+  }
 
   return (
     <>
@@ -193,7 +198,7 @@ export const MilestoneReportsTab: React.FC<Props> = ({ milestone }) => {
         report={popUp.reportDetail.data?.report}
         isCompany={isCompany}
         onApprove={() => handlePopUpClose('reportDetail')}
-        onRequestChanges={() => handlePopUpOpen('reportReject', { report: popUp.reportDetail.data.report })}
+        onRequestChanges={() => handleOpenReject(popUp.reportDetail.data.report)}
         milestoneId={milestone.id}
       />
 
@@ -203,6 +208,14 @@ export const MilestoneReportsTab: React.FC<Props> = ({ milestone }) => {
         onSuccess={() => handlePopUpClose('reportSubmit')}
         lastFeedback={popUp.reportSubmit?.data?.report?.feedback}
         projectId={milestone.projectId}
+        milestoneId={milestone.id}
+      />
+
+      <RejectReportModal
+        isOpen={popUp.reportReject.isOpen}
+        onClose={() => handlePopUpClose('reportReject')}
+        onConfirm={() => handlePopUpClose('reportReject')}
+        reportId={popUp.reportReject.data?.reportId}
         milestoneId={milestone.id}
       />
 
