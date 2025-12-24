@@ -21,6 +21,7 @@ import { useUser } from '@/context/UserContext'
 import { useGetUserNotifications } from '@/hooks/api/notifications'
 import { Bar, BarChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { formatVND } from '@/helpers/currency'
+import { useGetCompanyLast6MonthStatistic, useGetProjectLast6MonthStatistic } from '@/hooks/api/dashboard'
 
 /* =======================
    MOCK DATA – LABODC
@@ -39,24 +40,6 @@ const systemOverview = {
     totalBudget: 12500000,
 }
 
-const projectCreatedByMonth = [
-    { month: '2025-11', total: 18 },
-    { month: '2025-12', total: 24 },
-    { month: '2026-01', total: 15 },
-    { month: '2026-02', total: 21 },
-    { month: '2026-03', total: 19 },
-    { month: '2026-04', total: 26 },
-]
-
-const companyCreatedByMonth = [
-    { month: '2025-11', total: 6 },
-    { month: '2025-12', total: 9 },
-    { month: '2026-01', total: 7 },
-    { month: '2026-02', total: 10 },
-    { month: '2026-03', total: 8 },
-    { month: '2026-04', total: 11 },
-]
-
 const formatMonthLabel = (month: string) => {
     const [year, m] = month.split('-')
     return `${m}/${year}`
@@ -68,6 +51,16 @@ const formatMonthLabel = (month: string) => {
 
 export default function Dashboard() {
     const { user } = useUser()
+
+    const {
+        data: projectStatistic,
+        isLoading: projectLoading,
+    } = useGetProjectLast6MonthStatistic();
+
+    const {
+        data: companyStatistic,
+        isLoading: companyLoading,
+    } = useGetCompanyLast6MonthStatistic();
 
     const {
         data: notifications = [],
@@ -87,15 +80,18 @@ export default function Dashboard() {
 
     }
 
-    const projectChartData = projectCreatedByMonth.map(item => ({
-        label: formatMonthLabel(item.month), // 11/2025
-        total: item.total,
-    }))
 
-    const companyChartData = companyCreatedByMonth.map(item => ({
-        label: formatMonthLabel(item.month),
-        total: item.total,
-    }))
+    const projectChartData =
+        projectStatistic?.map((item: { month: string; total: number }) => ({
+            label: formatMonthLabel(item.month),
+            total: item.total,
+        })) ?? []
+
+    const companyChartData =
+        companyStatistic?.map((item: { month: string; total: number }) => ({
+            label: formatMonthLabel(item.month),
+            total: item.total,
+        })) ?? []
 
 
     return (
@@ -280,21 +276,25 @@ export default function Dashboard() {
                             <CardDescription>Số dự án được tạo trong 6 tháng gần nhất</CardDescription>
                         </CardHeader>
                         <CardContent className="h-[220px]">
-                            <ResponsiveContainer width="100%" height="100%">
-                                <BarChart data={projectChartData}>
-                                    <XAxis dataKey="label" />
-                                    <YAxis allowDecimals={false} />
-                                    <Tooltip
-                                        formatter={(value: number) => [`${value} dự án`, 'Số lượng']}
-                                        labelFormatter={(label) => `Tháng ${label}`}
-                                    />
-                                    <Bar
-                                        dataKey="total"
-                                        radius={[4, 4, 0, 0]}
-                                        className="fill-primary"
-                                    />
-                                </BarChart>
-                            </ResponsiveContainer>
+                            {projectLoading ? (
+                                <p className="text-sm text-muted-foreground">Đang tải dữ liệu...</p>
+                            ) : (
+                                <ResponsiveContainer width="100%" height="100%">
+                                    <BarChart data={projectChartData}>
+                                        <XAxis dataKey="label" />
+                                        <YAxis allowDecimals={false} />
+                                        <Tooltip
+                                            formatter={(value: number) => [`${value} dự án`, 'Số lượng']}
+                                            labelFormatter={(label) => `Tháng ${label}`}
+                                        />
+                                        <Bar
+                                            dataKey="total"
+                                            radius={[4, 4, 0, 0]}
+                                            className="fill-primary"
+                                        />
+                                    </BarChart>
+                                </ResponsiveContainer>
+                            )}
                         </CardContent>
                     </Card>
                     <Card>
@@ -303,21 +303,28 @@ export default function Dashboard() {
                             <CardDescription>Số doanh nghiệp đăng ký trong 6 tháng gần nhất</CardDescription>
                         </CardHeader>
                         <CardContent className="h-[220px]">
-                            <ResponsiveContainer width="100%" height="100%">
-                                <BarChart data={companyChartData}>
-                                    <XAxis dataKey="label" />
-                                    <YAxis allowDecimals={false} />
-                                    <Tooltip
-                                        formatter={(value: number) => [`${value} doanh nghiệp`, 'Đăng ký mới']}
-                                        labelFormatter={(label) => `Tháng ${label}`}
-                                    />
-                                    <Bar
-                                        dataKey="total"
-                                        radius={[4, 4, 0, 0]}
-                                        className="fill-primary"
-                                    />
-                                </BarChart>
-                            </ResponsiveContainer>
+                            {companyLoading ? (
+                                <p className="text-sm text-muted-foreground">Đang tải dữ liệu...</p>
+                            ) : (
+                                <ResponsiveContainer width="100%" height="100%">
+                                    <BarChart data={companyChartData}>
+                                        <XAxis dataKey="label" />
+                                        <YAxis allowDecimals={false} />
+                                        <Tooltip
+                                            formatter={(value: number) => [
+                                                `${value} doanh nghiệp`,
+                                                'Đăng ký mới',
+                                            ]}
+                                            labelFormatter={(label) => `Tháng ${label}`}
+                                        />
+                                        <Bar
+                                            dataKey="total"
+                                            radius={[4, 4, 0, 0]}
+                                            className="fill-primary"
+                                        />
+                                    </BarChart>
+                                </ResponsiveContainer>
+                            )}
                         </CardContent>
                     </Card>
                 </div>
