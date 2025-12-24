@@ -14,13 +14,11 @@ import { ReportDetailModal, RejectReportModal, SubmitReportModal, ReportTemplate
 import { usePermission } from '@/hooks/usePermission'
 import { useGetProjectMilestoneReports } from '@/hooks/api/projects'
 import { ROLE } from '@/const.ts'
-import { ReportType } from '@/hooks/api/report'
+import { ReportType, type Report } from '@/hooks/api/report'
 import {
-  mapApiReportsToUI,
   getReportTypeLabel,
   getReportTypeBadge,
   getStatusBadge,
-  type ReportVersion,
 } from '@/helpers/report'
 import { Spinner } from '@/components/ui/spinner'
 
@@ -58,13 +56,12 @@ export const MilestoneReportsTab: React.FC<Props> = ({ milestone }) => {
     const sortedReports = [...apiResponse.data.data].sort(
       (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
     );
-    const mappedReports = mapApiReportsToUI(sortedReports);
 
     // Filter by reportType if selected
     if (selectedReportType === 'ALL') {
-      return mappedReports;
+      return sortedReports;
     }
-    return mappedReports.filter((report) => report.reportType === selectedReportType);
+    return sortedReports.filter((report) => report.reportType === selectedReportType);
   }, [apiResponse, selectedReportType]);
 
   // States quản lý hiển thị Modal
@@ -72,7 +69,7 @@ export const MilestoneReportsTab: React.FC<Props> = ({ milestone }) => {
   const [isRejectOpen, setIsRejectOpen] = useState(false);
   const [isSubmitOpen, setIsSubmitOpen] = useState(false);
   const [isTemplateOpen, setIsTemplateOpen] = useState(false);
-  const [selectedReport, setSelectedReport] = useState<ReportVersion | null>(null);
+  const [selectedReport, setSelectedReport] = useState<Report | null>(null);
   const [selectedTemplateType, setSelectedTemplateType] = useState<ReportType | undefined>(undefined);
 
   // Checks logic
@@ -80,7 +77,7 @@ export const MilestoneReportsTab: React.FC<Props> = ({ milestone }) => {
   const isMentorOrTalent = hasRole(ROLE.MENTOR, ROLE.USER);
 
   // --- HANDLERS ---
-  const handleOpenDetail = (report: ReportVersion) => {
+  const handleOpenDetail = (report: Report) => {
     setSelectedReport(report);
     setIsDetailOpen(true);
   };

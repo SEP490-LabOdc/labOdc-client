@@ -22,9 +22,8 @@ import {
     TableRow,
 } from '@/components/ui/table'
 import { DataTablePagination, DataTableToolbar } from '@/components/data-table'
-import { type Report, REPORT_STATUS_OPTIONS } from '../data/schema'
-import { ReportType } from '@/hooks/api/report'
-import { REPORT_TYPE_LABEL } from '@/helpers/report'
+import type { Report } from '@/hooks/api/report'
+import { REPORT_STATUS_LABEL, REPORT_TYPE_LABEL } from '@/helpers/report'
 import { reportsColumns as columns } from './reports-columns'
 
 declare module '@tanstack/react-table' {
@@ -100,14 +99,17 @@ export function ReportsTable({ data, search, navigate }: DataTableProps) {
                     {
                         columnId: 'status',
                         title: 'Trạng thái',
-                        options: REPORT_STATUS_OPTIONS,
+                        options: Object.values(REPORT_STATUS_LABEL).map((status) => ({
+                            value: status,
+                            label: status,
+                        })),
                     },
                     {
                         columnId: 'reportType',
                         title: 'Loại báo cáo',
-                        options: Object.values(ReportType).map((type) => ({
+                        options: Object.values(REPORT_TYPE_LABEL).map((type: string) => ({
                             value: type,
-                            label: REPORT_TYPE_LABEL[type],
+                            label: type,
                         })),
                     },
                 ]}

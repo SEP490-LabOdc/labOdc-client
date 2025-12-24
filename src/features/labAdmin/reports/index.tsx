@@ -3,38 +3,9 @@ import { useGetReportsForLabAdmin } from '@/hooks/api/report/queries'
 import { getRouteApi } from '@tanstack/react-router'
 import { Main } from '@/components/layout/main'
 import { ReportsTable } from './components/reports-table'
-import { type Report } from './data/schema'
-import { ReportType, ReportStatus } from '@/hooks/api/report'
-import type { Report as ApiReport } from '@/hooks/api/report/types'
+import type { Report } from '@/hooks/api/report'
 
 const route = getRouteApi('/_authenticated/lab-admin/reports/')
-
-/**
- * Map API report response to UI Report schema
- */
-function mapApiReportToUI(apiReport: ApiReport): Report {
-    return {
-        id: apiReport.id,
-        projectId: apiReport.projectId,
-        projectName: apiReport.projectName,
-        milestoneId: apiReport.milestoneId,
-        milestoneName: apiReport.milestoneTitle || '',
-        reporterId: apiReport.reporterId,
-        reporterName: apiReport.reporterName,
-        reporterEmail: apiReport.reporterEmail,
-        reporterAvatar: apiReport.reporterAvatar,
-        companyId: apiReport.companyId,
-        companyName: apiReport.companyName,
-        reportType: apiReport.reportType as ReportType,
-        status: apiReport.status as ReportStatus,
-        content: apiReport.content,
-        attachmentsUrl: apiReport.attachmentsUrl || [],
-        reportingDate: apiReport.reportingDate,
-        createdAt: apiReport.createdAt,
-        updatedAt: apiReport.createdAt, // Use createdAt as fallback if updatedAt not available
-        feedback: apiReport.feedback,
-    }
-}
 
 export default function Reports() {
     const search = route.useSearch()
@@ -57,13 +28,11 @@ export default function Reports() {
 
     // Map API response to UI schema
     // Handle both data.data (nested) and data (direct array) structures
-    const apiReports: ApiReport[] = data?.data?.data
-        ? (data.data.data as ApiReport[])
+    const reports: Report[] = data?.data?.data
+        ? (data.data.data as Report[])
         : data?.data
-            ? (Array.isArray(data.data) ? (data.data as ApiReport[]) : [])
+            ? (Array.isArray(data.data) ? (data.data as Report[]) : [])
             : []
-
-    const reports: Report[] = apiReports.map(mapApiReportToUI)
 
     return (
         <Main>

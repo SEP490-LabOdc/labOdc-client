@@ -93,3 +93,22 @@ export function useCreateReportForLabAdmin() {
         },
     })
 }
+
+export function usePublishReportToCompany() {
+    const queryClient = useQueryClient()
+
+    return useMutation({
+        mutationFn: async (payload: {
+            reportId: string
+            userCompanyId: string
+        }) => {
+            const { data } = await apiRequest.put(
+                `/api/v1/reports/${payload.reportId}/publish-to-company/${payload.userCompanyId}`
+            )
+            return data
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: reportKeys.all })
+        },
+    })
+} 
