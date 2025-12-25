@@ -6,54 +6,19 @@ import {
     CardTitle,
     CardDescription,
 } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
 import {
     Building2,
     FolderKanban,
-    AlertTriangle,
     GraduationCap,
     UserCheck,
     Wallet,
     Briefcase,
 } from 'lucide-react'
-import { Link } from '@tanstack/react-router'
 import { useUser } from '@/context/UserContext'
 import { useGetUserNotifications } from '@/hooks/api/notifications'
 import { Bar, BarChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { formatVND } from '@/helpers/currency'
-
-/* =======================
-   MOCK DATA – LABODC
-======================= */
-
-const systemOverview = {
-    activeCompanies: 88,
-    activeProjects: 44,
-    recruitingProjects: 17,
-    totalMentors: 100,
-    availableMentors: 30,
-    totalStudents: 500,
-    joinedStudents: 100,
-    totalBudget: 12500000,
-}
-
-const projectCreatedByMonth = [
-    { month: '2025-11', total: 18 },
-    { month: '2025-12', total: 24 },
-    { month: '2026-01', total: 15 },
-    { month: '2026-02', total: 21 },
-    { month: '2026-03', total: 19 },
-    { month: '2026-04', total: 26 },
-]
-
-const companyCreatedByMonth = [
-    { month: '2025-11', total: 6 },
-    { month: '2025-12', total: 9 },
-    { month: '2026-01', total: 7 },
-    { month: '2026-02', total: 10 },
-    { month: '2026-03', total: 8 },
-    { month: '2026-04', total: 11 },
-]
+import { useGetCompanyDashboardOverview, useGetCompanyLast6MonthStatistic, useGetMyWallet, useGetProjectDashboardOverview, useGetProjectLast6MonthStatistic, useGetUserDashboardOverview } from '@/hooks/api/dashboard'
 
 const formatMonthLabel = (month: string) => {
     const [year, m] = month.split('-')
@@ -68,9 +33,27 @@ export default function Dashboard() {
     const { user } = useUser()
 
     const {
+        data: projectStatistic,
+        isLoading: projectLoading,
+    } = useGetProjectLast6MonthStatistic();
+
+    const {
+        data: companyStatistic,
+        isLoading: companyLoading,
+    } = useGetCompanyLast6MonthStatistic();
+
+    const {
         data: notifications = [],
         isLoading,
     } = useGetUserNotifications(user?.id);
+
+    const { data: projectOverview } = useGetProjectDashboardOverview();
+    const { data: companyOverview } = useGetCompanyDashboardOverview();
+    const { data: userOverview } = useGetUserDashboardOverview();
+    const { data: wallet, isLoading: walletLoading } = useGetMyWallet()
+
+    const overviewLoading =
+        !projectOverview || !companyOverview || !userOverview || walletLoading
 
     let latestNotifications = [];
 
@@ -81,20 +64,47 @@ export default function Dashboard() {
                     new Date(b.sentAt).getTime() -
                     new Date(a.sentAt).getTime()
             )
-            .slice(0, 10)
+            .slice(0, 8)
 
     }
 
-    const projectChartData = projectCreatedByMonth.map(item => ({
-        label: formatMonthLabel(item.month), // 11/2025
-        total: item.total,
-    }))
 
-    const companyChartData = companyCreatedByMonth.map(item => ({
-        label: formatMonthLabel(item.month),
-        total: item.total,
-    }))
+    const projectChartData =
+        projectStatistic?.map((item: { month: string; total: number }) => ({
+            label: formatMonthLabel(item.month),
+            total: item.total,
+        })) ?? []
 
+    const companyChartData =
+        companyStatistic?.map((item: { month: string; total: number }) => ({
+            label: formatMonthLabel(item.month),
+            total: item.total,
+        })) ?? []
+
+    const systemOverview = {
+        // Company
+        pendingCompanies: companyOverview?.pendingCompanies ?? 0,
+        activeCompanies: companyOverview?.activeCompanies ?? 0,
+
+        // Project
+        pendingProjects: projectOverview?.pendingProjects ?? 0,
+        activeProjects: projectOverview?.activeProjects ?? 0,
+        recruitingProjects: projectOverview?.recruitingProjects ?? 0,
+        joinedStudents: projectOverview?.joinedStudents ?? 0,
+        availableMentors: projectOverview?.availableMentors ?? 0,
+
+        // User
+        totalMentors: userOverview?.totalMentors ?? 0,
+        totalStudents: userOverview?.totalStudents ?? 0,
+
+        totalBudget:
+            (wallet?.heldBalance ?? 0),
+    }
+
+    const renderValue = (
+        loading: boolean,
+        value: string | number
+    ) => (loading ? 'Đang tải dữ liệu...' : value)
 
     return (
         <Main>
@@ -112,9 +122,7 @@ export default function Dashboard() {
                 {/* =======================
                     LEFT COLUMN (7)
                 ======================= */}
-                <div className="space-y-6 lg:col-span-6">
-
-                    {/* ===== RECENT ACTIVITIES ===== */}
+                <div className="space-y-6 lg:col-span-7">
                     <Card>
                         <CardHeader>
                             <CardTitle>
@@ -128,33 +136,57 @@ export default function Dashboard() {
                             <OverviewItem
                                 icon={<Wallet size={16} />}
                                 label="Tổng số vốn"
-                                value={`${formatVND(systemOverview.totalBudget)}`}
+                                value={renderValue(
+                                    overviewLoading,
+                                    formatVND(systemOverview.totalBudget)
+                                )}
                             />
+
                             <OverviewItem
                                 icon={<Building2 size={16} />}
                                 label="Doanh nghiệp đang hoạt động"
-                                value={systemOverview.activeCompanies}
+                                value={renderValue(
+                                    overviewLoading,
+                                    systemOverview.activeCompanies
+                                )}
                             />
+
                             <OverviewItem
                                 icon={<FolderKanban size={16} />}
                                 label="Dự án đang triển khai"
-                                value={systemOverview.activeProjects}
+                                value={renderValue(
+                                    overviewLoading,
+                                    systemOverview.activeProjects
+                                )}
                             />
+
                             <OverviewItem
                                 icon={<Briefcase size={16} />}
                                 label="Dự án đang tuyển dụng"
-                                value={systemOverview.recruitingProjects}
+                                value={renderValue(
+                                    overviewLoading,
+                                    systemOverview.recruitingProjects
+                                )}
                             />
+
                             <OverviewItem
                                 icon={<UserCheck size={16} />}
                                 label="Mentor khả dụng"
-                                value={`${systemOverview.availableMentors} / ${systemOverview.totalMentors}`}
+                                value={renderValue(
+                                    overviewLoading,
+                                    `${systemOverview.availableMentors} / ${systemOverview.totalMentors}`
+                                )}
                             />
+
                             <OverviewItem
                                 icon={<GraduationCap size={16} />}
                                 label="Sinh viên tham gia dự án"
-                                value={`${systemOverview.joinedStudents} / ${systemOverview.totalStudents}`}
+                                value={renderValue(
+                                    overviewLoading,
+                                    `${systemOverview.joinedStudents} / ${systemOverview.totalStudents}`
+                                )}
                             />
+
                         </CardContent>
                     </Card>
                 </div>
@@ -162,29 +194,32 @@ export default function Dashboard() {
                 {/* =======================
                     RIGHT COLUMN (5)
                 ======================= */}
-                <div className="space-y-6 lg:col-span-6">
-
+                <div className="space-y-6 lg:col-span-5">
                     <Card>
                         <CardHeader>
                             <CardTitle>Dự án mới theo tháng</CardTitle>
                             <CardDescription>Số dự án được tạo trong 6 tháng gần nhất</CardDescription>
                         </CardHeader>
                         <CardContent className="h-[220px]">
-                            <ResponsiveContainer width="100%" height="100%">
-                                <BarChart data={projectChartData}>
-                                    <XAxis dataKey="label" />
-                                    <YAxis allowDecimals={false} />
-                                    <Tooltip
-                                        formatter={(value: number) => [`${value} dự án`, 'Số lượng']}
-                                        labelFormatter={(label) => `Tháng ${label}`}
-                                    />
-                                    <Bar
-                                        dataKey="total"
-                                        radius={[4, 4, 0, 0]}
-                                        className="fill-primary"
-                                    />
-                                </BarChart>
-                            </ResponsiveContainer>
+                            {projectLoading ? (
+                                <p className="text-sm text-muted-foreground">Đang tải dữ liệu...</p>
+                            ) : (
+                                <ResponsiveContainer width="100%" height="100%">
+                                    <BarChart data={projectChartData}>
+                                        <XAxis dataKey="label" />
+                                        <YAxis allowDecimals={false} />
+                                        <Tooltip
+                                            formatter={(value: number) => [`${value} dự án`, 'Số lượng']}
+                                            labelFormatter={(label) => `Tháng ${label}`}
+                                        />
+                                        <Bar
+                                            dataKey="total"
+                                            radius={[4, 4, 0, 0]}
+                                            className="fill-primary"
+                                        />
+                                    </BarChart>
+                                </ResponsiveContainer>
+                            )}
                         </CardContent>
                     </Card>
                     <Card>
@@ -193,21 +228,28 @@ export default function Dashboard() {
                             <CardDescription>Số doanh nghiệp đăng ký trong 6 tháng gần nhất</CardDescription>
                         </CardHeader>
                         <CardContent className="h-[220px]">
-                            <ResponsiveContainer width="100%" height="100%">
-                                <BarChart data={companyChartData}>
-                                    <XAxis dataKey="label" />
-                                    <YAxis allowDecimals={false} />
-                                    <Tooltip
-                                        formatter={(value: number) => [`${value} doanh nghiệp`, 'Đăng ký mới']}
-                                        labelFormatter={(label) => `Tháng ${label}`}
-                                    />
-                                    <Bar
-                                        dataKey="total"
-                                        radius={[4, 4, 0, 0]}
-                                        className="fill-primary"
-                                    />
-                                </BarChart>
-                            </ResponsiveContainer>
+                            {companyLoading ? (
+                                <p className="text-sm text-muted-foreground">Đang tải dữ liệu...</p>
+                            ) : (
+                                <ResponsiveContainer width="100%" height="100%">
+                                    <BarChart data={companyChartData}>
+                                        <XAxis dataKey="label" />
+                                        <YAxis allowDecimals={false} />
+                                        <Tooltip
+                                            formatter={(value: number) => [
+                                                `${value} doanh nghiệp`,
+                                                'Đăng ký mới',
+                                            ]}
+                                            labelFormatter={(label) => `Tháng ${label}`}
+                                        />
+                                        <Bar
+                                            dataKey="total"
+                                            radius={[4, 4, 0, 0]}
+                                            className="fill-primary"
+                                        />
+                                    </BarChart>
+                                </ResponsiveContainer>
+                            )}
                         </CardContent>
                     </Card>
                 </div>
@@ -215,76 +257,6 @@ export default function Dashboard() {
         </Main>
     )
 }
-
-/* =======================
-   INLINE UI BLOCKS
-======================= */
-function ApprovalBox({
-    icon,
-    label,
-    value,
-    variant,
-}: {
-    icon: React.ReactNode
-    label: string
-    value: number
-    variant: 'company' | 'project'
-}) {
-    const styles =
-        variant === 'company'
-            ? {
-                border: 'border-amber-200',
-                bg: 'bg-amber-50',
-                iconBg: 'bg-amber-100',
-                iconText: 'text-amber-700',
-                accent: 'bg-amber-400',
-                text: 'text-amber-900',
-            }
-            : {
-                border: 'border-blue-200',
-                bg: 'bg-blue-50',
-                iconBg: 'bg-blue-100',
-                iconText: 'text-blue-700',
-                accent: 'bg-blue-400',
-                text: 'text-blue-900',
-            }
-
-    return (
-        <div
-            className={`relative rounded-lg border ${styles.border} ${styles.bg} p-4 transition hover:shadow-md`}
-        >
-            {/* Accent strip */}
-            <div
-                className={`absolute left-0 top-0 h-full w-1 rounded-l-lg ${styles.accent}`}
-            />
-
-            <div className="mb-2 flex items-center gap-2">
-                <div
-                    className={`flex h-8 w-8 items-center justify-center rounded-full ${styles.iconBg} ${styles.iconText}`}
-                >
-                    {icon}
-                </div>
-                <span className={`text-sm font-medium ${styles.text}`}>
-                    {label}
-                </span>
-            </div>
-
-            <p className={`text-3xl font-bold ${styles.text}`}>
-                {value}
-            </p>
-
-            <span className="absolute bottom-3 right-3 text-xs text-muted-foreground">
-                Xem chi tiết →
-            </span>
-
-            <AlertTriangle
-                size={16}
-                className={`absolute right-3 top-3 ${styles.iconText}`}
-            />
-        </div>
-    )
-}
-
 
 function OverviewItem({
     icon,
@@ -303,7 +275,7 @@ function OverviewItem({
                 </div>
                 <span>{label}</span>
             </div>
-            <span className="text-lg font-semibold">
+            <span className="font-semibold">
                 {value}
             </span>
         </div>
