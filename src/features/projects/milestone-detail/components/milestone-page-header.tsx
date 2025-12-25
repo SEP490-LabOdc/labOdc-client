@@ -7,9 +7,11 @@ import { toast } from 'sonner'
 import { usePermission } from '@/hooks/usePermission'
 import { ProjectStatus } from '@/hooks/api/projects'
 import { RejectMilestoneModal } from './reject-milestone-modal'
+import { ExtensionRequestModal } from './extension-request'
 import { useQueryClient } from '@tanstack/react-query'
 import { milestoneKeys } from '@/hooks/api/milestones/query-keys'
 import { useNavigate } from '@tanstack/react-router'
+import { usePopUp } from '@/hooks/usePopUp'
 
 interface MilestonePageHeaderProps {
   milestone: MilestoneDetail
@@ -18,6 +20,7 @@ interface MilestonePageHeaderProps {
 export const MilestonePageHeader: React.FC<MilestonePageHeaderProps> = ({ milestone }) => {
   const { isCompany, isMentor } = usePermission()
   const [rejectModalOpen, setRejectModalOpen] = useState(false)
+  const { popUp, handlePopUpOpen, handlePopUpClose } = usePopUp(['extensionRequest'] as const)
   const queryClient = useQueryClient()
   const navigate = useNavigate()
   const approveMutation = useApproveMilestone()
@@ -47,6 +50,10 @@ export const MilestonePageHeader: React.FC<MilestonePageHeaderProps> = ({ milest
 
   const handleRejectSuccess = async () => {
     toast.success('Milestone đã bị từ chối')
+    await queryClient.invalidateQueries({ queryKey: milestoneKeys.detail(milestone.id) })
+  }
+
+  const handleExtensionRequestSuccess = async () => {
     await queryClient.invalidateQueries({ queryKey: milestoneKeys.detail(milestone.id) })
   }
 
@@ -107,6 +114,16 @@ export const MilestonePageHeader: React.FC<MilestonePageHeaderProps> = ({ milest
                   </Button>
                 </>
               )}
+              {isMentor && milestone.status === ProjectStatus.ON_GOING && (
+                <>
+                  <Button
+                    variant="outline"
+                    className='text-yellow-600 border-yellow-600 hover:bg-yellow-50'
+                    onClick={() => handlePopUpOpen('extensionRequest')}>
+                    Gia hạn cột mốc
+                  </Button>
+                </>
+              )}
             </div>
           </div>
         </div>
@@ -117,6 +134,17 @@ export const MilestonePageHeader: React.FC<MilestonePageHeaderProps> = ({ milest
         onOpenChange={setRejectModalOpen}
         milestoneId={milestone.id}
         onSuccess={handleRejectSuccess}
+      />
+
+      <ExtensionRequestModal
+        open={popUp.extensionRequest.isOpen}
+        onOpenChange={(open) => {
+          if (!open) {
+            handlePopUpClose('extensionRequest')
+          }
+        }}
+        milestone={milestone}
+        onSuccess={handleExtensionRequestSuccess}
       />
     </>
   )

@@ -1,4 +1,7 @@
-
+export enum Timezone {
+    VIETNAM = 'vi',
+    UTC = 'UTC',
+}
 
 // Format ngày đẹp (có cả giờ)
 export const formatDate = (dateStr: string | Date | null | undefined): string => {
