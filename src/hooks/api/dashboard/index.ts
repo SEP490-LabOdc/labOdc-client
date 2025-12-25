@@ -1,2 +1,2 @@
-export { dashboardKey } from './query-keys.ts'
-export { useGetCompanyLast6MonthStatistic, useGetProjectLast6MonthStatistic, useGetProjectDashboardOverview, useGetCompanyDashboardOverview, useGetUserDashboardOverview } from './queries.ts'
+export { dashboardKey, walletKeys } from './query-keys.ts'
+export { useGetCompanyLast6MonthStatistic, useGetProjectLast6MonthStatistic, useGetProjectDashboardOverview, useGetCompanyDashboardOverview, useGetUserDashboardOverview, useGetMyWallet } from './queries.ts'

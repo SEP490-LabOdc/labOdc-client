@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { dashboardKey } from './query-keys'
+import { dashboardKey, walletKeys } from './query-keys'
 import apiRequest from '@/config/request';
 
 export const useGetCompanyLast6MonthStatistic = () =>
@@ -56,5 +56,14 @@ export const useGetUserDashboardOverview = () =>
                 '/api/v1/users/dashboard/overview'
             )
             return data?.data
+        },
+    })
+
+export const useGetMyWallet = () =>
+    useQuery({
+        queryKey: walletKeys.me(),
+        queryFn: async () => {
+            const { data } = await apiRequest.get('/api/v1/wallets/me')
+            return data.data
         },
     })

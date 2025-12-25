@@ -21,24 +21,7 @@ import { useUser } from '@/context/UserContext'
 import { useGetUserNotifications } from '@/hooks/api/notifications'
 import { Bar, BarChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { formatVND } from '@/helpers/currency'
-import { useGetCompanyLast6MonthStatistic, useGetProjectLast6MonthStatistic } from '@/hooks/api/dashboard'
-
-/* =======================
-   MOCK DATA – LABODC
-======================= */
-
-const systemOverview = {
-    pendingCompanies: 42,
-    pendingProjects: 42,
-    activeCompanies: 88,
-    activeProjects: 44,
-    recruitingProjects: 17,
-    totalMentors: 100,
-    availableMentors: 30,
-    totalStudents: 500,
-    joinedStudents: 100,
-    totalBudget: 12500000,
-}
+import { useGetCompanyDashboardOverview, useGetCompanyLast6MonthStatistic, useGetMyWallet, useGetProjectDashboardOverview, useGetProjectLast6MonthStatistic, useGetUserDashboardOverview } from '@/hooks/api/dashboard'
 
 const formatMonthLabel = (month: string) => {
     const [year, m] = month.split('-')
@@ -67,6 +50,14 @@ export default function Dashboard() {
         isLoading,
     } = useGetUserNotifications(user?.id);
 
+    const { data: projectOverview } = useGetProjectDashboardOverview();
+    const { data: companyOverview } = useGetCompanyDashboardOverview();
+    const { data: userOverview } = useGetUserDashboardOverview();
+    const { data: wallet, isLoading: walletLoading } = useGetMyWallet()
+
+    const overviewLoading =
+        !projectOverview || !companyOverview || !userOverview || walletLoading
+
     let latestNotifications = [];
 
     if (!isLoading) {
@@ -93,6 +84,30 @@ export default function Dashboard() {
             total: item.total,
         })) ?? []
 
+    const systemOverview = {
+        // Company
+        pendingCompanies: companyOverview?.pendingCompanies ?? 0,
+        activeCompanies: companyOverview?.activeCompanies ?? 0,
+
+        // Project
+        pendingProjects: projectOverview?.pendingProjects ?? 0,
+        activeProjects: projectOverview?.activeProjects ?? 0,
+        recruitingProjects: projectOverview?.recruitingProjects ?? 0,
+        joinedStudents: projectOverview?.joinedStudents ?? 0,
+        availableMentors: projectOverview?.availableMentors ?? 0,
+
+        // User
+        totalMentors: userOverview?.totalMentors ?? 0,
+        totalStudents: userOverview?.totalStudents ?? 0,
+
+        totalBudget:
+            (wallet?.heldBalance ?? 0),
+    }
+
+    const renderValue = (
+        loading: boolean,
+        value: string | number
+    ) => (loading ? 'Đang tải dữ liệu...' : value)
 
     return (
         <Main>
@@ -241,33 +256,57 @@ export default function Dashboard() {
                             <OverviewItem
                                 icon={<Wallet size={16} />}
                                 label="Tổng số vốn"
-                                value={`${formatVND(systemOverview.totalBudget)}`}
+                                value={renderValue(
+                                    overviewLoading,
+                                    formatVND(systemOverview.totalBudget)
+                                )}
                             />
+
                             <OverviewItem
                                 icon={<Building2 size={16} />}
                                 label="Doanh nghiệp đang hoạt động"
-                                value={systemOverview.activeCompanies}
+                                value={renderValue(
+                                    overviewLoading,
+                                    systemOverview.activeCompanies
+                                )}
                             />
+
                             <OverviewItem
                                 icon={<FolderKanban size={16} />}
                                 label="Dự án đang triển khai"
-                                value={systemOverview.activeProjects}
+                                value={renderValue(
+                                    overviewLoading,
+                                    systemOverview.activeProjects
+                                )}
                             />
+
                             <OverviewItem
                                 icon={<Briefcase size={16} />}
                                 label="Dự án đang tuyển dụng"
-                                value={systemOverview.recruitingProjects}
+                                value={renderValue(
+                                    overviewLoading,
+                                    systemOverview.recruitingProjects
+                                )}
                             />
+
                             <OverviewItem
                                 icon={<UserCheck size={16} />}
                                 label="Mentor khả dụng"
-                                value={`${systemOverview.availableMentors} / ${systemOverview.totalMentors}`}
+                                value={renderValue(
+                                    overviewLoading,
+                                    `${systemOverview.availableMentors} / ${systemOverview.totalMentors}`
+                                )}
                             />
+
                             <OverviewItem
                                 icon={<GraduationCap size={16} />}
                                 label="Sinh viên tham gia dự án"
-                                value={`${systemOverview.joinedStudents} / ${systemOverview.totalStudents}`}
+                                value={renderValue(
+                                    overviewLoading,
+                                    `${systemOverview.joinedStudents} / ${systemOverview.totalStudents}`
+                                )}
                             />
+
                         </CardContent>
                     </Card>
                     <Card>
@@ -420,7 +459,7 @@ function OverviewItem({
                 </div>
                 <span>{label}</span>
             </div>
-            <span className="text-lg font-semibold">
+            <span className="font-semibold">
                 {value}
             </span>
         </div>

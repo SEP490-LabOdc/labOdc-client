@@ -6,3 +6,8 @@ export const dashboardKey = {
     companyOverview: ['dashboard', 'company', 'overview'] as const,
     userOverview: ['dashboard', 'user', 'overview'] as const,
 }
+
+export const walletKeys = {
+    all: ['wallets'] as const,
+    me: () => [...walletKeys.all, 'me'] as const,
+}
