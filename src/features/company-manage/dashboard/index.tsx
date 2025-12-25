@@ -10,141 +10,59 @@ import { Badge } from '@/components/ui/badge'
 import {
     Building2,
     FolderKanban,
-    Users,
-    Wallet,
-    Calendar,
     Mail,
-    User,
     Phone,
     Globe,
     MapPin,
     Briefcase,
 } from 'lucide-react'
-
-/* =======================
-   FAKE DATA – COMPANY
-======================= */
-
-const companyInfo = {
-    name: 'Công ty SoftWave',
-    status: 'ACTIVE',
-    field: 'Software & IT Services',
-    phone: '0901 234 567',
-    address: 'Tầng 8, Tòa nhà ABC, Quận 1, TP. Hồ Chí Minh',
-    website: 'https://softwave.vn',
-    email: 'contact@softwave.vn',
-    description:
-        'SoftWave là doanh nghiệp hoạt động trong lĩnh vực phát triển phần mềm, cung cấp các giải pháp công nghệ cho doanh nghiệp và hệ thống quy mô lớn.',
-    totalProjects: 4,
-}
-
-const companyProjects = [
-    {
-        id: 'p-001',
-        title: 'Hệ thống Microservices E-commerce',
-        description:
-            'Thiết kế và triển khai hệ thống E-commerce theo kiến trúc Microservices, tích hợp CI/CD và hệ thống thanh toán.',
-        status: 'ACTIVE',
-        startDate: '2025-10-01',
-        endDate: '2025-12-30',
-        budget: 350_000_000,
-        skills: [
-            { name: 'Java' },
-            { name: 'Spring Boot' },
-            { name: 'Docker' },
-            { name: 'Kubernetes' },
-            { name: 'SQL' },
-            { name: 'Redis' },
-        ],
-    },
-    {
-        id: 'p-002',
-        title: 'Admin Dashboard cho Logistics',
-        description:
-            'Xây dựng dashboard quản lý đơn hàng, kho vận và báo cáo real-time cho hệ thống logistics.',
-        status: 'RECRUITING',
-        startDate: '2025-11-15',
-        endDate: '2026-02-15',
-        budget: 250_000_000,
-        skills: [
-            { name: 'React' },
-            { name: 'TypeScript' },
-            { name: 'Node.js' },
-            { name: 'Chart.js' },
-            { name: 'REST API' },
-        ],
-    },
-    {
-        id: 'p-003',
-        title: 'Real-time Chat Service',
-        description:
-            'Phát triển dịch vụ chat thời gian thực sử dụng WebSocket, hỗ trợ scale lớn và bảo mật cao.',
-        status: 'ACTIVE',
-        startDate: '2025-09-20',
-        endDate: '2025-12-20',
-        budget: 180_000_000,
-        skills: [
-            { name: 'Node.js' },
-            { name: 'WebSocket' },
-            { name: 'Redis' },
-            { name: 'MongoDB' },
-        ],
-    },
-    {
-        id: 'p-004',
-        title: 'AI Recommendation Engine',
-        description:
-            'Xây dựng hệ thống gợi ý sản phẩm dựa trên hành vi người dùng và machine learning.',
-        status: 'PLANNING',
-        startDate: '2026-01-05',
-        endDate: '2026-04-30',
-        budget: 420_000_000,
-        skills: [
-            { name: 'Python' },
-            { name: 'Machine Learning' },
-            { name: 'TensorFlow' },
-            { name: 'Data Analysis' },
-        ],
-    },
-    {
-        id: 'p-005',
-        title: 'Hệ thống quản lý tài liệu nội bộ',
-        description:
-            'Phát triển hệ thống quản lý tài liệu nội bộ với phân quyền, versioning và audit log.',
-        status: 'COMPLETED',
-        startDate: '2025-06-01',
-        endDate: '2025-08-30',
-        budget: 150_000_000,
-        skills: [
-            { name: 'Java' },
-            { name: 'Spring Boot' },
-            { name: 'PostgreSQL' },
-            { name: 'Security' },
-        ],
-    },
-    {
-        id: 'p-006',
-        title: 'Ứng dụng quản lý sinh viên thực tập',
-        description:
-            'Xây dựng nền tảng kết nối sinh viên thực tập với doanh nghiệp, hỗ trợ quản lý tiến độ và đánh giá. Xây dựng nền tảng kết nối sinh viên thực tập với doanh nghiệp, hỗ trợ quản lý tiến độ và đánh giá.Xây dựng nền tảng kết nối sinh viên thực tập với doanh nghiệp, hỗ trợ quản lý tiến độ và đánh giá.Xây dựng nền tảng kết nối sinh viên thực tập với doanh nghiệp, hỗ trợ quản lý tiến độ và đánh giá.',
-        status: 'RECRUITING',
-        startDate: '2025-12-01',
-        endDate: '2026-03-01',
-        budget: 300_000_000,
-        skills: [
-            { name: 'Flutter' },
-            { name: 'Firebase' },
-            { name: 'REST API' },
-        ],
-    },
-]
-
+import { useGetMyCompanyInfo } from '@/hooks/api/companies'
+import { useGetMyCompanyProjects } from '@/hooks/api/projects'
+import { ErrorView } from '@/components/admin/ErrorView'
+import { PROJECT_STATUS_LABEL, type ProjectStatus } from '../project/data/schema'
+import { callTypes } from '../project/data/data'
 
 /* =======================
    COMPANY DASHBOARD
 ======================= */
 
 export default function CompanyDashboard() {
+    const {
+        data: company,
+        isLoading: isLoadingCompanyInfo,
+        isError: isCompanyError,
+    } = useGetMyCompanyInfo()
+
+    const {
+        data: projectsData,
+        isLoading: isLoadingCompanyProjects,
+        isError: isProjectError,
+    } = useGetMyCompanyProjects()
+
+    const isLoading =
+        isLoadingCompanyInfo || isLoadingCompanyProjects
+
+    const isError =
+        isCompanyError || isProjectError
+
+    if (isError) {
+        return (
+            <ErrorView details='Có lỗi khi tải dữ liệu dashboard' />
+        )
+    }
+
+    if (isLoading) {
+        return (
+            <Main>
+                <p className="text-sm text-muted-foreground">
+                    Đang tải dữ liệu dashboard...
+                </p>
+            </Main>
+        )
+    }
+
+    const projects = projectsData.data.projectResponses.slice(0, 4);
+
     return (
         <Main>
             {/* ===== HEADER ===== */}
@@ -171,49 +89,56 @@ export default function CompanyDashboard() {
                         </CardHeader>
 
                         <CardContent className="space-y-4">
-                            {companyProjects.map(project => (
-                                <div
-                                    key={project.id}
-                                    className="rounded-lg border p-4 hover:shadow-sm transition"
-                                >
-                                    {/* Header */}
-                                    <div className="mb-2 flex items-center justify-between">
-                                        <h3 className="font-semibold">
-                                            {project.title}
-                                        </h3>
-                                        <ProjectStatusBadge status={project.status} />
-                                    </div>
+                            {isLoadingCompanyProjects && (
+                                <p className="text-sm text-muted-foreground">
+                                    Đang tải danh sách dự án...
+                                </p>
+                            )}
 
-                                    {/* Meta */}
-                                    <div className="mb-3 flex flex-wrap gap-4 text-sm text-muted-foreground">
-                                        <div className="flex items-center gap-1">
-                                            📅 {project.startDate}
+                            {!isLoadingCompanyProjects && projects.length === 0 && (
+                                <p className="text-sm text-muted-foreground">
+                                    Công ty chưa có dự án nào
+                                </p>
+                            )}
+
+                            {!isLoadingCompanyProjects &&
+                                projects.map((project: any) => (
+                                    <div
+                                        key={project.id}
+                                        className="rounded-lg border p-4 transition hover:shadow-sm"
+                                    >
+                                        {/* Header */}
+                                        <div className="mb-2 flex items-center justify-between">
+                                            <h3 className="font-semibold">{project.title}</h3>
+                                            <ProjectStatusBadge status={project.status} />
                                         </div>
-                                        <div className="flex items-center gap-1">
-                                            💰 {project.budget.toLocaleString()} VND
+
+                                        {/* Meta */}
+                                        <div className="mb-3 flex flex-wrap gap-4 text-sm text-muted-foreground">
+                                            <div>📅 {project.startDate}</div>
+                                            <div>💰 {project.budget.toLocaleString()} VND</div>
                                         </div>
-                                    </div>
 
-                                    {/* Skills */}
-                                    <div className="mb-3 flex flex-wrap gap-2">
-                                        {project.skills.slice(0, 4).map((s, idx) => (
-                                            <Badge key={idx} variant="secondary">
-                                                {s.name}
-                                            </Badge>
-                                        ))}
-                                        {project.skills.length > 4 && (
-                                            <Badge variant="outline">
-                                                +{project.skills.length - 4}
-                                            </Badge>
-                                        )}
-                                    </div>
+                                        {/* Skills */}
+                                        <div className="mb-3 flex flex-wrap gap-2">
+                                            {project.skills?.slice(0, 4).map((s: any) => (
+                                                <Badge variant="secondary">
+                                                    {s.name}
+                                                </Badge>
+                                            ))}
+                                            {project.skills?.length > 4 && (
+                                                <Badge variant="outline">
+                                                    +{project.skills.length - 4}
+                                                </Badge>
+                                            )}
+                                        </div>
 
-                                    {/* Description */}
-                                    <p className="line-clamp-2 text-sm text-muted-foreground">
-                                        {project.description}
-                                    </p>
-                                </div>
-                            ))}
+                                        {/* Description */}
+                                        <p className="line-clamp-2 text-sm text-muted-foreground">
+                                            {project.description || 'Không có mô tả'}
+                                        </p>
+                                    </div>
+                                ))}
                         </CardContent>
                     </Card>
                 </div>
@@ -234,55 +159,69 @@ export default function CompanyDashboard() {
                             <OverviewItem
                                 icon={<Building2 size={16} />}
                                 label="Tên công ty"
-                                value={companyInfo.name}
+                                value={isLoadingCompanyInfo ? 'Đang tải...' : company?.name ?? '-'}
                             />
 
                             <OverviewItem
                                 icon={<FolderKanban size={16} />}
                                 label="Tổng số dự án"
-                                value={companyInfo.totalProjects}
+                                value={isLoadingCompanyInfo
+                                    ? 'Đang tải...'
+                                    : projects.length}
                             />
 
                             <OverviewItem
                                 icon={<Briefcase size={16} />}
                                 label="Lĩnh vực"
-                                value={companyInfo.field}
+                                value={isLoadingCompanyInfo
+                                    ? 'Đang tải...'
+                                    : (company?.domain || 'Chưa cập nhật')}
                             />
 
                             <OverviewItem
                                 icon={<Phone size={16} />}
                                 label="Điện thoại"
-                                value={companyInfo.phone}
+                                value={isLoadingCompanyInfo
+                                    ? 'Đang tải...'
+                                    : (company?.phone || '-')}
                             />
 
                             <OverviewItem
                                 icon={<Mail size={16} />}
                                 label="Email"
-                                value={companyInfo.email}
+                                value={isLoadingCompanyInfo
+                                    ? 'Đang tải...'
+                                    : (company?.email || '-')}
                             />
 
                             <OverviewItem
                                 icon={<Globe size={16} />}
                                 label="Website"
-                                value={companyInfo.website}
+                                value={isLoadingCompanyInfo
+                                    ? 'Đang tải...'
+                                    : (company?.website || 'Chưa cập nhật')}
                             />
 
                             <OverviewItem
                                 icon={<MapPin size={16} />}
                                 label="Địa chỉ"
-                                value={companyInfo.address}
+                                value={isLoadingCompanyInfo
+                                    ? 'Đang tải...'
+                                    : (company?.address || '-')}
                             />
 
-                            {/* Description block */}
                             <div className="rounded-md border p-3">
                                 <div className="mb-1 text-sm text-muted-foreground">
                                     Mô tả công ty
                                 </div>
                                 <p className="text-sm leading-relaxed">
-                                    {companyInfo.description}
+                                    {isLoadingCompanyInfo
+                                        ? 'Đang tải...'
+                                        : (company?.description || 'Chưa có mô tả')}
                                 </p>
                             </div>
                         </CardContent>
+
                     </Card>
                 </div>
             </div>
@@ -294,43 +233,21 @@ export default function CompanyDashboard() {
    SMALL COMPONENTS
 ======================= */
 
-function ProjectStatusBadge({ status }: { status: string }) {
-    const map: Record<string, string> = {
-        PENDING: 'bg-amber-100 text-amber-700',
-        ACTIVE: 'bg-green-100 text-green-700',
-        RECRUITING: 'bg-blue-100 text-blue-700',
-        COMPLETED: 'bg-gray-200 text-gray-700',
-    }
+function ProjectStatusBadge({ status }: { status: ProjectStatus }) {
+    const className =
+        callTypes.get(status) ??
+        'bg-muted text-muted-foreground border-border'
 
-    const labelMap: Record<string, string> = {
-        PENDING: 'Chờ duyệt',
-        ACTIVE: 'Đang triển khai',
-        RECRUITING: 'Đang tuyển',
-        COMPLETED: 'Hoàn thành',
-    }
+    const label =
+        PROJECT_STATUS_LABEL[status] ?? status
 
     return (
-        <Badge className={map[status]}>
-            {labelMap[status]}
+        <Badge
+            variant="outline"
+            className={className}
+        >
+            {label}
         </Badge>
-    )
-}
-
-function InfoRow({
-    icon,
-    label,
-    value,
-}: {
-    icon: React.ReactNode
-    label: string
-    value: string
-}) {
-    return (
-        <div className="flex items-center gap-2">
-            <span className="text-muted-foreground">{icon}</span>
-            <span>{label}: </span>
-            <span className="font-medium">{value}</span>
-        </div>
     )
 }
 

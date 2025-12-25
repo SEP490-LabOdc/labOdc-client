@@ -145,12 +145,11 @@ export interface MyCompanyInfo {
 }
 
 
-export const useGetMyCompany = () =>
+export const useGetMyCompanyInfo = () =>
     useQuery({
         queryKey: companyKeys.me(),
         queryFn: async (): Promise<MyCompanyInfo> => {
             const { data } = await apiRequest.get('/api/v1/companies/me')
             return data.data
         },
-        staleTime: 60 * 1000, // 1 phút
     })
