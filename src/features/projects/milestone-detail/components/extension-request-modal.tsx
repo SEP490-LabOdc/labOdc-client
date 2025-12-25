@@ -108,7 +108,6 @@ export function ExtensionRequestModal({
             onSuccess?.()
         } catch (error) {
             console.error(error)
-            toast.error('Không thể gửi yêu cầu gia hạn')
         }
     }
 

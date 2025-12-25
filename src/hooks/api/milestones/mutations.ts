@@ -51,7 +51,10 @@ export function useCreateExtensionRequest() {
         },
         onSuccess: (_, variables) => {
             queryClient.invalidateQueries({
-                queryKey: milestoneKeys.detail(variables.milestoneId)
+                queryKey: [
+                    milestoneKeys.detail(variables.milestoneId),
+                    milestoneKeys.milestoneExtensionRequests(variables.milestoneId)
+                ]
             })
         }
     })

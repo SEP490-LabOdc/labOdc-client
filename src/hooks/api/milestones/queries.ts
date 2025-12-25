@@ -80,3 +80,16 @@ export function useGetMilestonesFeedbacks(milestoneId: string) {
         enabled: !!milestoneId,
     });
 }
+
+export function useGetMyMilestoneExtensionRequests(milestoneId: string) {
+    return useQuery({
+        queryKey: milestoneKeys.milestoneExtensionRequests(milestoneId),
+        queryFn: async () => {
+            const { data } = await apiRequest.get(
+                `/api/v1/project-milestones/${milestoneId}/extension-requests/my`
+            );
+            return data;
+        },
+        enabled: !!milestoneId,
+    });
+}
