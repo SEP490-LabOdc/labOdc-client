@@ -132,7 +132,7 @@ export function FeeDistributionConfigEditor({ config }: FeeDistributionConfigEdi
             <Separator />
 
             {/* Total Rate Validation */}
-            <div className="p-4 rounded-lg border">
+            <div className="p-4 rounded-md border">
                 <div className="flex items-center justify-between mb-2">
                     <span className="font-medium">Tổng tỷ lệ:</span>
                     <span

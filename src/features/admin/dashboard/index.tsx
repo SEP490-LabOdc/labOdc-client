@@ -251,7 +251,7 @@ function ApprovalBox({
 
     return (
         <div
-            className={`relative rounded-lg border ${styles.border} ${styles.bg} p-4 transition hover:shadow-md`}
+            className={`relative rounded-md border ${styles.border} ${styles.bg} p-4 transition hover:shadow-md`}
         >
             {/* Accent strip */}
             <div

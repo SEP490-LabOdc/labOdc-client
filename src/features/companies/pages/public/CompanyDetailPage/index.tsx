@@ -25,7 +25,7 @@ export default function CompanyDetailPage() {
     return (
         <div className="mx-auto max-w-6xl">
             {/* HERO */}
-            <div className="relative w-full h-120 overflow-hidden rounded-xl">
+            <div className="relative w-full h-120 overflow-hidden rounded-md">
                 <img
                     src={company.coverUrl || "/placeholder-banner.jpg"}
                     alt={`${company.name} cover`}
@@ -176,7 +176,7 @@ export default function CompanyDetailPage() {
                     <Card>
                         <CardContent className="p-0">
                             {/* Map placeholder / ảnh trụ sở */}
-                            <div className="h-48 w-full rounded-lg overflow-hidden">
+                            <div className="h-48 w-full rounded-md overflow-hidden">
                                 <img src="/placeholder-map.png" alt="Map" className="w-full h-full object-cover" />
                             </div>
                         </CardContent>

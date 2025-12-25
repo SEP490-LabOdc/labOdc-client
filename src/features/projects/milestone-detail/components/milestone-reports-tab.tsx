@@ -103,11 +103,11 @@ export const MilestoneReportsTab: React.FC<Props> = ({ milestone }) => {
 
               {/* Recipients Info Section */}
               {/* {isLoadingRecipients ? (
-                <div className="mb-4 p-3 bg-gray-50 rounded-lg">
+                <div className="mb-4 p-3 bg-gray-50 rounded-md">
                   <Skeleton className="h-4 w-48" />
                 </div>
               ) : recipients.length > 0 && (
-                <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-md">
                   <div className="flex items-center gap-2 mb-2">
                     <span className="text-sm font-semibold text-blue-800">Người nhận báo cáo:</span>
                   </div>
@@ -146,7 +146,7 @@ export const MilestoneReportsTab: React.FC<Props> = ({ milestone }) => {
               </div>
 
               {reports.length === 0 ? (
-                <div className="text-center py-12 text-gray-500 bg-gray-50 rounded-lg border border-dashed">
+                <div className="text-center py-12 text-gray-500 bg-gray-50 rounded-md border border-dashed">
                   <p>Chưa có báo cáo nào được nộp{selectedReportType !== 'ALL' ? ` cho loại này` : ''}.</p>
                   {isMentorOrTalent && (
                     <Button variant="link" onClick={() => handlePopUpOpen('reportSubmit')}>Nộp báo cáo đầu tiên</Button>
@@ -155,7 +155,7 @@ export const MilestoneReportsTab: React.FC<Props> = ({ milestone }) => {
               ) : (
                 <div className="space-y-4">
                   {reports.map((report: Report) => (
-                    <div key={report.id} className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50 transition-colors bg-white shadow-sm">
+                    <div key={report.id} className="flex items-center justify-between p-4 border rounded-md hover:bg-gray-50 transition-colors bg-white shadow-sm">
                       <div className="flex items-start gap-4">
                         <Avatar className="h-10 w-10 flex-shrink-0 mt-1">
                           <AvatarImage src={report.reporterAvatar} alt={report.reporterName} />

@@ -92,7 +92,7 @@ export const MilestoneDocumentsTab: React.FC<MilestoneDocumentsTabProps> = ({ mi
               {documents.map((document: MilestoneDocument) => (
                 <div
                   key={document.id}
-                  className="flex items-center justify-between p-4 border rounded-lg bg-white hover:bg-gray-50 transition-colors"
+                  className="flex items-center justify-between p-4 border rounded-md bg-white hover:bg-gray-50 transition-colors"
                 >
                   <div className="flex items-center gap-3 flex-1 min-w-0">
                     <FileText className="h-8 w-8 text-gray-500 flex-shrink-0" />

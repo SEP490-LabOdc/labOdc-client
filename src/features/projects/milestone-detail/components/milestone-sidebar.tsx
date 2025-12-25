@@ -192,7 +192,7 @@ export const MilestoneSidebar: React.FC<MilestoneSidebarProps> = ({
           {/* Mentors Section */}
           {mentors.length > 0 && (
             <div>
-              <div className="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-3">
+              <div className="flex items-center gap-2 text-sm font-semibold mb-3">
                 <Users className="h-4 w-4" />
                 <span>Mentors ({mentors.length})</span>
               </div>
@@ -208,7 +208,7 @@ export const MilestoneSidebar: React.FC<MilestoneSidebarProps> = ({
 
           {/* Talents Section */}
           <div>
-            <div className="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-3">
+            <div className="flex items-center gap-2 text-sm font-semibold mb-3">
               <Users className="h-4 w-4" />
               <span>Talents ({talents.length})</span>
             </div>

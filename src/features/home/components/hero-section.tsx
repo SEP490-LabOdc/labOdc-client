@@ -84,7 +84,7 @@ export function HeroSection() {
                                         {[1, 2, 3, 4, 5, 6].map((i) => (
                                             <div
                                                 key={i}
-                                                className="aspect-square bg-gradient-to-br from-accent/20 to-brand-orange/20 rounded-lg flex items-center justify-center"
+                                                className="aspect-square bg-gradient-to-br from-accent/20 to-brand-orange/20 rounded-md flex items-center justify-center"
                                             >
                                                 <Users className="h-4 w-4 text-primary" />
                                             </div>

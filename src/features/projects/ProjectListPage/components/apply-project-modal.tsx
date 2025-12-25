@@ -139,7 +139,7 @@ export function ApplyProjectModal({ project, isOpen, onClose }: ApplyProjectModa
                       <div
                         key={`${cv.fileLink}-${index}`}
                         className={cn(
-                          "border rounded-lg p-4 cursor-pointer transition-colors",
+                          "border rounded-md p-4 cursor-pointer transition-colors",
                           selectedExistingCv === cv.fileLink
                             ? "border-[#2a9d8f] bg-[#e9f5f3]"
                             : "border-gray-200 hover:border-[#2a9d8f]"
@@ -186,7 +186,7 @@ export function ApplyProjectModal({ project, isOpen, onClose }: ApplyProjectModa
             )}
           </div>
 
-          <div className="bg-blue-50 p-4 rounded-lg">
+          <div className="bg-blue-50 p-4 rounded-md">
             <h4 className="font-semibold text-[#264653] mb-2">💡 Lưu ý quan trọng</h4>
             <ul className="text-sm text-gray-700 space-y-1">
               <li>• Đảm bảo CV có thông tin liên hệ đầy đủ</li>

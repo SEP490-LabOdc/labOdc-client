@@ -40,7 +40,7 @@ export const MilestoneFeedbackCard: React.FC<MilestoneFeedbackCardProps> = ({
             <CardContent className="space-y-4">
                 {feedback.map((feedback: MilestoneFeedback) => (
                     <>
-                        <div className="bg-white p-4 rounded-lg border border-orange-200">
+                        <div className="bg-white p-4 rounded-md border border-orange-200">
                             <p className="text-sm text-gray-700 whitespace-pre-wrap">
                                 {feedback.content}
                             </p>
@@ -51,7 +51,7 @@ export const MilestoneFeedbackCard: React.FC<MilestoneFeedbackCardProps> = ({
                                 <h4 className="text-sm font-semibold text-gray-900 mb-2">Tài liệu đính kèm:</h4>
                                 <div className="space-y-2">
                                     {feedback.attachments.map((file, idx) => (
-                                        <div key={idx} className="flex items-center justify-between p-3 bg-white border border-orange-200 rounded-lg">
+                                        <div key={idx} className="flex items-center justify-between p-3 bg-white border border-orange-200 rounded-md">
                                             <div className="flex items-center gap-3">
                                                 <FileText className="w-8 h-8 text-orange-500" />
                                                 <div>

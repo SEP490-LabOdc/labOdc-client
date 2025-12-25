@@ -45,22 +45,22 @@ export default function CompanySigninPage() {
                             Đăng nhập để quản trị tuyển dụng, đăng tin và theo dõi ứng viên — tất cả trong một bảng điều khiển
                         </p>
                         <div className="grid grid-cols-2 gap-4 mt-8 text-sm">
-                            <div className="bg-primary-foreground/10 rounded-lg p-4 backdrop-blur-sm">
+                            <div className="bg-primary-foreground/10 rounded-md p-4 backdrop-blur-sm">
                                 <FileText className="h-6 w-6 mb-2 text-accent" />
                                 <div className="font-semibold">Quy trình đơn giản</div>
                                 <div className="text-primary-foreground/80">Xét duyệt trong 24h</div>
                             </div>
-                            <div className="bg-primary-foreground/10 rounded-lg p-4 backdrop-blur-sm">
+                            <div className="bg-primary-foreground/10 rounded-md p-4 backdrop-blur-sm">
                                 <Users2 className="h-6 w-6 mb-2 text-accent" />
                                 <div className="font-semibold">Talent chất lượng</div>
                                 <div className="text-primary-foreground/80">Đã được xác thực</div>
                             </div>
-                            <div className="bg-primary-foreground/10 rounded-lg p-4 backdrop-blur-sm">
+                            <div className="bg-primary-foreground/10 rounded-md p-4 backdrop-blur-sm">
                                 <ShieldCheck className="h-6 w-6 mb-2 text-accent" />
                                 <div className="font-semibold">Bảo mật & tin cậy</div>
                                 <div className="text-primary-foreground/80">Mã hóa & kiểm duyệt dữ liệu</div>
                             </div>
-                            <div className="bg-primary-foreground/10 rounded-lg p-4 backdrop-blur-sm">
+                            <div className="bg-primary-foreground/10 rounded-md p-4 backdrop-blur-sm">
                                 <Clock className="h-6 w-6 mb-2 text-accent" />
                                 <div className="font-semibold">Hỗ trợ nhanh</div>
                                 <div className="text-primary-foreground/80">Sẵn sàng 24/7</div>

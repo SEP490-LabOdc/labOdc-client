@@ -1,4 +1,3 @@
-import React from 'react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
@@ -17,7 +16,7 @@ interface ProjectActivityTabProps {
   activities: Activity[];
 }
 
-export const ProjectActivityTab: React.FC<ProjectActivityTabProps> = ({ notes, activities }) => {
+export const ProjectActivityTab = ({ notes, activities }: ProjectActivityTabProps) => {
   return (
     <Card>
       <CardContent className="p-6 space-y-6">
@@ -32,9 +31,9 @@ export const ProjectActivityTab: React.FC<ProjectActivityTabProps> = ({ notes, a
           </div>
           <div className="space-y-4">
             {notes.map((note) => (
-              <div key={note.id} className="p-4 border rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors">
+              <div key={note.id} className="p-4 border border-border rounded-md bg-muted hover:bg-muted/80 transition-colors">
                 <div className="flex justify-between items-start">
-                  <h4 className="font-medium text-gray-800">{note.title}</h4>
+                  <h4 className="font-medium text-foreground">{note.title}</h4>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button variant="ghost" size="icon" className="h-8 w-8 -mt-2 -mr-2">
@@ -47,8 +46,8 @@ export const ProjectActivityTab: React.FC<ProjectActivityTabProps> = ({ notes, a
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </div>
-                <p className="text-sm text-gray-600 mt-1 leading-relaxed">{note.content}</p>
-                <p className="text-xs text-gray-500 mt-2">{note.date}</p>
+                <p className="text-sm text-foreground/80 mt-1 leading-relaxed">{note.content}</p>
+                <p className="text-xs text-muted-foreground mt-2">{note.date}</p>
               </div>
             ))}
           </div>
@@ -70,12 +69,12 @@ export const ProjectActivityTab: React.FC<ProjectActivityTabProps> = ({ notes, a
                   <AvatarFallback>{activity.user.name[0]}</AvatarFallback>
                 </Avatar>
                 <div className="flex-1">
-                  <p className="text-sm text-gray-800">
+                  <p className="text-sm text-foreground">
                     <span className="font-medium">{activity.user.name}</span>{' '}
                     {activity.action}
                     {activity.detail && <span className="ml-2 flex items-center gap-1">{activity.detail}</span>}
                   </p>
-                  <p className="text-xs text-gray-500 mt-1">{activity.timestamp}</p>
+                  <p className="text-xs text-muted-foreground mt-1">{activity.timestamp}</p>
                 </div>
               </div>
             ))}

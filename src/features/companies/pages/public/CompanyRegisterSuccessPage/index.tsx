@@ -36,22 +36,22 @@ export default function CompanyRegisterSuccessPage() {
                             Bạn đã sẵn sàng để khám phá và tận dụng tối đa các tính năng tuyệt vời của nền tảng
                         </p>
                         <div className="grid grid-cols-2 gap-4 mt-8 text-sm">
-                            <div className="bg-primary-foreground/10 rounded-lg p-4 backdrop-blur-sm">
+                            <div className="bg-primary-foreground/10 rounded-md p-4 backdrop-blur-sm">
                                 <FileText className="h-6 w-6 mb-2 text-accent" />
                                 <div className="font-semibold">Đăng tin tuyển dụng</div>
                                 <div className="text-primary-foreground/80">Tạo job posting dễ dàng</div>
                             </div>
-                            <div className="bg-primary-foreground/10 rounded-lg p-4 backdrop-blur-sm">
+                            <div className="bg-primary-foreground/10 rounded-md p-4 backdrop-blur-sm">
                                 <Users2 className="h-6 w-6 mb-2 text-accent" />
                                 <div className="font-semibold">Quản lý ứng viên</div>
                                 <div className="text-primary-foreground/80">Theo dõi & đánh giá CV</div>
                             </div>
-                            <div className="bg-primary-foreground/10 rounded-lg p-4 backdrop-blur-sm">
+                            <div className="bg-primary-foreground/10 rounded-md p-4 backdrop-blur-sm">
                                 <ShieldCheck className="h-6 w-6 mb-2 text-accent" />
                                 <div className="font-semibold">Bảo mật cao</div>
                                 <div className="text-primary-foreground/80">Dữ liệu được mã hóa</div>
                             </div>
-                            <div className="bg-primary-foreground/10 rounded-lg p-4 backdrop-blur-sm">
+                            <div className="bg-primary-foreground/10 rounded-md p-4 backdrop-blur-sm">
                                 <Clock className="h-6 w-6 mb-2 text-accent" />
                                 <div className="font-semibold">Hỗ trợ 24/7</div>
                                 <div className="text-primary-foreground/80">Luôn sẵn sàng giúp đỡ</div>

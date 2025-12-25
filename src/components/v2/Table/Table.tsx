@@ -16,7 +16,7 @@ export const TableContainer = forwardRef<HTMLDivElement, TableContainerProps>(
       ref={ref}
       className={twMerge(
         "relative w-full overflow-x-auto border border-solid border-mineshaft-700 bg-mineshaft-800 font-inter",
-        isRounded && "rounded-lg",
+        isRounded && "rounded-md",
         className
       )}
       {...props}

@@ -17,20 +17,20 @@ export function ProjectCard({ project, onSelect, isSelected }: ProjectCardProps)
   return (
     <Card
       className={cn(
-        "transition-all duration-300 border-l-4 border-l-[#2a9d8f] hover:shadow-lg",
+        "transition-all duration-300 border-l-4 border-l-secondary hover:shadow-lg",
         isSelected
-          ? "bg-slate-50 border-2 border-[#2a9d8f] shadow-md"
-          : "bg-white",
+          ? "bg-muted border-2 border-secondary shadow-md"
+          : "bg-card",
         "cursor-pointer"
       )}
       onClick={() => onSelect(project)}
     >
       <CardHeader className="pb-4">
         <div className="flex justify-between items-start mb-2">
-          <Badge className="bg-green-100 text-green-800 text-sm">
+          <Badge className="bg-secondary/20 text-secondary text-sm border-secondary/30">
             Đang Mở
           </Badge>
-          <div className="flex items-center text-sm text-gray-500">
+          <div className="flex items-center text-sm text-muted-foreground">
             <Users className="h-4 w-4 mr-1" />
             {project.currentApplicants} ứng viên
           </div>
@@ -38,7 +38,7 @@ export function ProjectCard({ project, onSelect, isSelected }: ProjectCardProps)
 
         {/* Title */}
         <CardTitle
-          className="text-[#264653] text-lg font-semibold hover:text-[#2a9d8f] transition-colors"
+          className="text-foreground text-lg font-semibold hover:text-secondary transition-colors"
         >
           {project.projectName}
         </CardTitle>
@@ -50,12 +50,12 @@ export function ProjectCard({ project, onSelect, isSelected }: ProjectCardProps)
         {/* Skills */}
         <div className="flex flex-wrap gap-1">
           {project.skills.slice(0, 3).map((skill) => (
-            <Badge key={skill.id} variant="outline" className="text-xs bg-[#e9f5f3] text-[#2a9d8f] border-[#2a9d8f]">
+            <Badge key={skill.id} variant="outline" className="text-xs bg-secondary/10 text-secondary border-secondary/30">
               {skill.name}
             </Badge>
           ))}
           {project.skills.length > 3 && (
-            <Badge variant="outline" className="text-xs bg-gray-50">
+            <Badge variant="outline" className="text-xs bg-muted text-muted-foreground">
               +{project.skills.length - 3} kỹ năng
             </Badge>
           )}
@@ -63,11 +63,11 @@ export function ProjectCard({ project, onSelect, isSelected }: ProjectCardProps)
 
         {/* Meta (Dates) */}
         <div className="space-y-2">
-          <div className="flex items-center text-sm text-gray-600">
+          <div className="flex items-center text-sm text-foreground/80">
             <Clock className="h-4 w-4 mr-1" />
             <span>Bắt đầu: {project.startDate ? new Date(project.startDate).toLocaleDateString('vi-VN') : 'Không xác định'}</span>
           </div>
-          <div className="flex items-center text-sm text-gray-600">
+          <div className="flex items-center text-sm text-foreground/80">
             <Clock className="h-4 w-4 mr-1" />
             <span>Kết thúc: {project.endDate ? new Date(project.endDate).toLocaleDateString('vi-VN') : 'Không xác định'}</span>
           </div>

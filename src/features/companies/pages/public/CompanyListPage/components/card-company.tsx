@@ -63,12 +63,12 @@ export function CardCompany({ company, onToggleFollow }: { company: Company; onT
                 </p>
 
                 <div className="grid grid-cols-2 gap-3 mb-4">
-                    <div className="flex items-center gap-2 p-2 bg-muted/50 rounded-lg">
+                    <div className="flex items-center gap-2 p-2 bg-muted/50 rounded-md">
                         <Briefcase className="h-4 w-4 text-primary" />
                         <div className="text-sm font-medium">{company.openProjects}</div>
                         <div className="text-xs text-muted-foreground">Projects</div>
                     </div>
-                    <div className="flex items-center gap-2 p-2 bg-muted/50 rounded-lg">
+                    <div className="flex items-center gap-2 p-2 bg-muted/50 rounded-md">
                         <Users className="h-4 w-4 text-primary" />
                         <div className="text-sm font-medium">{company.collaboratedTalents}</div>
                         <div className="text-xs text-muted-foreground">Talents</div>

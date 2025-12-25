@@ -36,7 +36,7 @@ const ApprovingTableSkeleton = () => (
 
         {/* Right column */}
         <div className="px-12">
-            <div className="rounded-lg border bg-card p-6 shadow-sm space-y-4">
+            <div className="rounded-md border bg-card p-6 shadow-sm space-y-4">
                 <div className="h-5 w-1/2 bg-muted rounded"></div>
                 <div className="space-y-4">
                     {Array.from({ length: 9 }).map((_, i) => (

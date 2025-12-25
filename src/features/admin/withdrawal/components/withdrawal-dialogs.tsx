@@ -117,7 +117,7 @@ export function WithdrawalDialogs() {
 
                         <div>
                             <Label className='text-muted-foreground'>Thông tin ngân hàng</Label>
-                            <div className='mt-2 rounded-lg border p-4 space-y-2'>
+                            <div className='mt-2 rounded-md border p-4 space-y-2'>
                                 {currentRow.bankInfo?.bankName && (
                                     <p className='font-medium'>{currentRow.bankInfo.bankName}</p>
                                 )}
@@ -153,7 +153,7 @@ export function WithdrawalDialogs() {
                         {currentRow.adminNote && (
                             <div>
                                 <Label className='text-muted-foreground'>Ghi chú</Label>
-                                <p className='text-sm mt-2 p-3 rounded-lg bg-muted'>{currentRow.adminNote}</p>
+                                <p className='text-sm mt-2 p-3 rounded-md bg-muted'>{currentRow.adminNote}</p>
                             </div>
                         )}
                     </div>

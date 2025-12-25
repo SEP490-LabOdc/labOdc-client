@@ -4,7 +4,7 @@ import { Layers } from 'lucide-react'
 
 export const EmptyMilestoneState: React.FC = () => {
     return (
-        <Card className="h-full shadow-md rounded-lg border-2 border-dashed flex items-center justify-center">
+        <Card className="h-full shadow-md rounded-md border-2 border-dashed flex items-center justify-center">
             <CardContent className="py-16">
                 <div className="text-center space-y-3">
                     <div className="inline-flex p-4 bg-gray-100 rounded-full">

@@ -36,7 +36,7 @@ export function StatusAlert({
     return (
         <div
             className={cn(
-                'flex items-center gap-3 rounded-xl border p-3 transition-colors duration-200',
+                'flex items-center gap-3 rounded-md border p-3 transition-colors duration-200',
                 colorMap,
                 className
             )}

@@ -26,7 +26,7 @@ export const CompanyProjects: React.FC<CompanyProjectsProps> = ({ projects = [] 
                         {projects.map((project, index) => (
                             <div
                                 key={index}
-                                className="p-4 border rounded-lg hover:bg-gray-50 cursor-pointer transition"
+                                className="p-4 border rounded-md hover:bg-gray-50 cursor-pointer transition"
                             >
                                 <h3 className="font-semibold text-gray-800">{project.title}</h3>
                                 <p className="text-xs text-gray-500">Mã dự án: {project.id}</p>

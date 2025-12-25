@@ -129,7 +129,7 @@ export function Footer() {
                                         to={social.href}
                                         className="
                                             w-10 h-10 bg-secondary/20 hover:bg-secondary
-                                            rounded-lg flex items-center justify-center
+                                            rounded-md flex items-center justify-center
                                             transition-colors group
                                         "
                                         aria-label={social.name}

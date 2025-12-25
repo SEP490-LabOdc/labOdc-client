@@ -97,7 +97,7 @@ export const WithdrawDialog: React.FC<WithdrawDialogProps> = ({
 
                 <div className="space-y-4 py-4">
                     {/* Balance Info */}
-                    <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                    <div className="p-4 bg-blue-50 border border-blue-200 rounded-md">
                         <p className="text-sm text-blue-800 mb-1">
                             <strong>Số dư khả dụng:</strong> {formatVND(availableBalance)}
                         </p>
@@ -108,7 +108,7 @@ export const WithdrawDialog: React.FC<WithdrawDialogProps> = ({
 
                     {/* Bank Account Info */}
                     {bankAccount ? (
-                        <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
+                        <div className="p-4 bg-green-50 border border-green-200 rounded-md">
                             <div className="flex items-start gap-3">
                                 <CreditCard className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
                                 <div className="flex-1">
@@ -125,7 +125,7 @@ export const WithdrawDialog: React.FC<WithdrawDialogProps> = ({
                             </div>
                         </div>
                     ) : (
-                        <div className="p-4 bg-orange-50 border border-orange-200 rounded-lg">
+                        <div className="p-4 bg-orange-50 border border-orange-200 rounded-md">
                             <div className="flex items-start gap-3">
                                 <AlertTriangle className="h-5 w-5 text-orange-600 flex-shrink-0" />
                                 <div>
@@ -201,7 +201,7 @@ export const WithdrawDialog: React.FC<WithdrawDialogProps> = ({
 
                     {/* Fee Calculation */}
                     {amountNum > 0 && (
-                        <div className="p-4 bg-gray-50 border border-gray-200 rounded-lg space-y-2">
+                        <div className="p-4 bg-gray-50 border border-gray-200 rounded-md space-y-2">
                             <div className="flex justify-between text-sm">
                                 <span className="text-gray-600">Số tiền rút:</span>
                                 <span className="font-semibold text-gray-900">{formatVND(amountNum)}</span>
@@ -218,7 +218,7 @@ export const WithdrawDialog: React.FC<WithdrawDialogProps> = ({
                     )}
 
                     {/* Warning */}
-                    <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+                    <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-md">
                         <div className="flex items-start gap-2">
                             <AlertTriangle className="h-4 w-4 text-yellow-600 flex-shrink-0 mt-0.5" />
                             <div className="text-xs text-yellow-800">

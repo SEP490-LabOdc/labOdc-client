@@ -103,7 +103,7 @@ export const DepositDialog: React.FC<DepositDialogProps> = ({
 
                     {/* Info */}
                     {amountNum >= minDeposit && (
-                        <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                        <div className="p-3 bg-blue-50 border border-blue-200 rounded-md">
                             <div className="flex items-start gap-2">
                                 <Wallet className="h-4 w-4 text-blue-600 mt-0.5 flex-shrink-0" />
                                 <div className="text-sm text-blue-800">

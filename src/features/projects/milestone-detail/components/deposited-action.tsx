@@ -21,7 +21,7 @@ export const DepositedAction: React.FC<DepositedActionProps> = ({
 }) => {
     return (
         <div className="space-y-2">
-            <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+            <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-md">
                 <div className="flex items-start gap-2">
                     <Info className="w-4 h-4 text-yellow-600 flex-shrink-0 mt-0.5" />
                     <div className="text-xs text-yellow-800 space-y-1">

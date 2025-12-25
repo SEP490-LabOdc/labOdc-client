@@ -151,7 +151,7 @@ export default function Home() {
                         ].map((advantage, index) => (
                             <Card key={index} className="text-center hover:shadow-lg transition-shadow">
                                 <CardContent className="p-8 space-y-6">
-                                    <div className="w-16 h-16 bg-primary/10 rounded-lg flex items-center justify-center mx-auto">
+                                    <div className="w-16 h-16 bg-primary/10 rounded-md flex items-center justify-center mx-auto">
                                         <advantage.icon className="h-8 w-8 text-primary" />
                                     </div>
                                     <h3 className="font-semibold text-xl">{advantage.title}</h3>

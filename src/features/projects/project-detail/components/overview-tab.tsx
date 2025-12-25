@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react'
+import { useState, useMemo } from 'react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
@@ -32,7 +32,7 @@ interface ProjectOverviewTabProps {
   projectData: ProjectDetail;
 }
 
-export const ProjectOverviewTab: React.FC<ProjectOverviewTabProps> = ({ projectData }) => {
+export const ProjectOverviewTab = ({ projectData }: ProjectOverviewTabProps) => {
   const navigate = useNavigate()
   const [isHiring, setIsHiring] = useState(projectData.isOpenForApplications)
   const { isMentor } = usePermission()
@@ -93,16 +93,16 @@ export const ProjectOverviewTab: React.FC<ProjectOverviewTabProps> = ({ projectD
       <Card>
         <CardContent className="p-6 space-y-6">
           <div className="flex items-start gap-4">
-            <CircleDotDashed className="h-10 w-10 text-[#2a9d8f] flex-shrink-0" />
+            <CircleDotDashed className="h-10 w-10 text-secondary flex-shrink-0" />
             <div>
-              <h2 className="text-2xl font-bold">{projectData.title}</h2>
-              <p className="text-sm text-gray-500">Mã dự án: {projectData.id.slice(0, 8)}</p>
+              <h2 className="text-2xl font-bold text-foreground">{projectData.title}</h2>
+              <p className="text-sm text-muted-foreground">Mã dự án: {projectData.id.slice(0, 8)}</p>
             </div>
           </div>
 
-          <div className="space-y-5 pt-4 border-t">
+          <div className="space-y-5 pt-4 border-t border-border">
             <div className="flex items-start">
-              <div className="w-40 flex-shrink-0 flex items-center gap-3 text-sm text-gray-600">
+              <div className="w-40 flex-shrink-0 flex items-center gap-3 text-sm text-muted-foreground">
                 <CheckSquare className="h-4 w-4" />
                 <span>Trạng thái</span>
               </div>
@@ -114,7 +114,7 @@ export const ProjectOverviewTab: React.FC<ProjectOverviewTabProps> = ({ projectD
             </div>
 
             <div className="flex items-start">
-              <div className="w-40 flex-shrink-0 flex items-center gap-3 text-sm text-gray-600">
+              <div className="w-40 flex-shrink-0 flex items-center gap-3 text-sm text-muted-foreground">
                 <Briefcase className="h-4 w-4" />
                 <span>Tuyển dụng</span>
               </div>
@@ -129,37 +129,37 @@ export const ProjectOverviewTab: React.FC<ProjectOverviewTabProps> = ({ projectD
                     />
                     {isHiring ? (
                       <span className="relative flex h-3 w-3">
-                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                        <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500 dark:bg-green-400 opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500 dark:bg-green-400"></span>
                       </span>
                     ) : (
-                      <Circle className="h-3 w-3 text-red-500 fill-red-500" />
+                      <Circle className="h-3 w-3 text-destructive fill-destructive" />
                     )}
                   </>
                 ) : (
                   <>
                     {isHiring ? (
                       <span className="relative flex h-3 w-3">
-                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                        <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500 dark:bg-green-400 opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500 dark:bg-green-400"></span>
                       </span>
                     ) : (
-                      <Circle className="h-3 w-3 text-red-500 fill-red-500" />
+                      <Circle className="h-3 w-3 text-destructive fill-destructive" />
                     )}
                   </>
                 )}
                 <Label
-                  className={`text-sm font-bold ${isHiring ? 'text-green-700' : 'text-red-700'}`}
+                  className={`text-sm font-bold ${isHiring ? 'text-green-600 dark:text-green-500' : 'text-destructive'}`}
                 >
                   {isHiring ? 'Dự án đang tuyển' : 'Dự án đã đóng tuyển'}
                 </Label>
 
                 {isMentor && (
                   <>
-                    <span className="text-gray-300 mx-1">•</span>
+                    <span className="text-muted-foreground/50 mx-1">•</span>
                     <button
                       onClick={() => navigate({ to: `${getRoleBasePath(user.role)}/projects/${projectData.id}/candidates` })}
-                      className="text-sm text-[#2a9d8f] hover:text-[#238d7f] hover:underline transition-colors flex items-center gap-1"
+                      className="text-sm text-secondary hover:text-secondary/80 hover:underline transition-colors flex items-center gap-1"
                     >
                       Xem {applicantsCount} Ứng viên
                       <ArrowRight className="h-3 w-3" />
@@ -171,7 +171,7 @@ export const ProjectOverviewTab: React.FC<ProjectOverviewTabProps> = ({ projectD
 
             {/* Section Đội ngũ */}
             <div className="flex items-start">
-              <div className="w-40 flex-shrink-0 flex items-center gap-3 text-sm text-gray-600">
+              <div className="w-40 flex-shrink-0 flex items-center gap-3 text-sm text-muted-foreground">
                 <Users className="h-4 w-4" />
                 <span>Đội ngũ</span>
               </div>
@@ -188,7 +188,7 @@ export const ProjectOverviewTab: React.FC<ProjectOverviewTabProps> = ({ projectD
                       />
                       <button
                         onClick={() => navigate({ to: `${getRoleBasePath(user.role)}/projects/${projectData.id}/members` })}
-                        className="h-8 px-3 rounded-full bg-[#2a9d8f]/10 hover:bg-[#2a9d8f]/20 text-[#2a9d8f] text-xs font-medium flex items-center gap-1 transition-colors border border-[#2a9d8f]/30"
+                        className="h-8 px-3 rounded-full bg-secondary/10 hover:bg-secondary/20 text-secondary text-xs font-medium flex items-center gap-1 transition-colors border border-secondary/30"
                       >
                         <Plus className="h-3 w-3" />
                         Thêm/Sửa
@@ -196,10 +196,10 @@ export const ProjectOverviewTab: React.FC<ProjectOverviewTabProps> = ({ projectD
                     </>
                   ) : (
                     <div className="flex items-center gap-2">
-                      <span className="text-sm text-gray-500">Chưa có thành viên trong đội ngũ</span>
+                      <span className="text-sm text-muted-foreground">Chưa có thành viên trong đội ngũ</span>
                       <button
                         onClick={() => navigate({ to: `${getRoleBasePath(user.role)}/projects/${projectData.id}/members` })}
-                        className="h-8 px-3 rounded-full bg-[#2a9d8f]/10 hover:bg-[#2a9d8f]/20 text-[#2a9d8f] text-xs font-medium flex items-center gap-1 transition-colors border border-[#2a9d8f]/30"
+                        className="h-8 px-3 rounded-full bg-secondary/10 hover:bg-secondary/20 text-secondary text-xs font-medium flex items-center gap-1 transition-colors border border-secondary/30"
                       >
                         <Plus className="h-3 w-3" />
                         Thêm thành viên
@@ -211,43 +211,43 @@ export const ProjectOverviewTab: React.FC<ProjectOverviewTabProps> = ({ projectD
             </div>
 
             <div className="flex items-start">
-              <div className="w-40 flex-shrink-0 flex items-center gap-3 text-sm text-gray-600">
+              <div className="w-40 flex-shrink-0 flex items-center gap-3 text-sm text-muted-foreground">
                 <User className="h-4 w-4" />
                 <span>Giảng viên</span>
               </div>
               <div className="flex-1 flex flex-wrap items-center gap-2">
                 {projectData.mentors ? projectData.mentors.map((mentor: ProjectMentor) => (
-                  <div key={mentor.id} className="inline-flex items-center gap-2 bg-gray-100 rounded-full px-2 py-1">
+                  <div key={mentor.id} className="inline-flex items-center gap-2 bg-muted rounded-full px-2 py-1">
                     <Avatar className="h-6 w-6">
                       <AvatarImage src={mentor.avatar} />
                       <AvatarFallback>{mentor.name[0]}</AvatarFallback>
                     </Avatar>
-                    <span className="font-medium text-sm text-gray-800">{mentor.name}</span>
+                    <span className="font-medium text-sm text-foreground">{mentor.name}</span>
                   </div>
                 )) : (
-                  <span className="text-sm text-gray-500">Chưa có giảng viên phụ trách</span>
+                  <span className="text-sm text-muted-foreground">Chưa có giảng viên phụ trách</span>
                 )}
               </div>
             </div>
 
             <div className="flex items-start">
-              <div className="w-40 flex-shrink-0 flex items-center gap-3 text-sm text-gray-600">
+              <div className="w-40 flex-shrink-0 flex items-center gap-3 text-sm text-muted-foreground">
                 <User className="h-4 w-4" />
                 <span>Quản lý dự án</span>
               </div>
               <div className="flex-1 flex flex-wrap items-center gap-2">
-                <div className="inline-flex items-center gap-2 bg-gray-100 rounded-full px-2 py-1">
+                <div className="inline-flex items-center gap-2 bg-muted rounded-full px-2 py-1">
                   <Avatar className="h-6 w-6">
                     <AvatarImage src={projectData.createdByAvatar} />
                     <AvatarFallback>{projectData.createdByName[0]}</AvatarFallback>
                   </Avatar>
-                  <span className="font-medium text-sm text-gray-800">{projectData.createdByName}</span>
+                  <span className="font-medium text-sm text-foreground">{projectData.createdByName}</span>
                 </div>
               </div>
             </div>
 
             <div className="flex items-start">
-              <div className="w-40 flex-shrink-0 flex items-center gap-3 text-sm text-gray-600">
+              <div className="w-40 flex-shrink-0 flex items-center gap-3 text-sm text-muted-foreground">
                 <Tag className="h-4 w-4" />
                 <span>Nhãn</span>
               </div>
@@ -261,12 +261,12 @@ export const ProjectOverviewTab: React.FC<ProjectOverviewTabProps> = ({ projectD
             </div>
 
             <div className="flex items-start">
-              <div className="w-40 flex-shrink-0 flex items-center gap-3 text-sm text-gray-600">
+              <div className="w-40 flex-shrink-0 flex items-center gap-3 text-sm text-muted-foreground">
                 <FileText className="h-4 w-4" />
                 <span>Mô tả</span>
               </div>
               <div className="flex-1">
-                <p className="text-sm text-gray-600 leading-relaxed">{projectData.description}</p>
+                <p className="text-sm text-foreground/80 leading-relaxed">{projectData.description}</p>
               </div>
             </div>
           </div>

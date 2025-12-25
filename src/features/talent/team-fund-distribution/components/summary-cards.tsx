@@ -15,7 +15,7 @@ export const SummaryCards: React.FC<SummaryCardsProps> = ({
     return (
         <div className="grid grid-cols-2 gap-3">
             {/* Total Held Amount Card */}
-            <Card className="border-2 border-indigo-200 shadow-md rounded-lg overflow-hidden">
+            <Card className="border-2 border-indigo-200 shadow-md rounded-md overflow-hidden">
                 <CardContent className="p-0">
                     <div className="bg-gradient-to-br from-indigo-500 to-indigo-600 p-3 text-white">
                         <div className="flex items-center gap-1.5 mb-1">
@@ -30,7 +30,7 @@ export const SummaryCards: React.FC<SummaryCardsProps> = ({
             </Card>
 
             {/* Lifetime Distributed Card */}
-            <Card className="border-2 border-green-200 shadow-md rounded-lg overflow-hidden">
+            <Card className="border-2 border-green-200 shadow-md rounded-md overflow-hidden">
                 <CardContent className="p-0">
                     <div className="bg-gradient-to-br from-green-500 to-green-600 p-3 text-white">
                         <div className="flex items-center gap-1.5 mb-1">

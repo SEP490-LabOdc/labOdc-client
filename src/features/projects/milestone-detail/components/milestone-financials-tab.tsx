@@ -110,7 +110,7 @@ export const MilestoneFinancialsTab: React.FC<MilestoneFinancialsTabProps> = ({
         <CardContent>
           <div className="space-y-4">
             {/* Giá trị Milestone */}
-            <div className="flex items-center justify-between p-4 bg-gradient-to-r from-[#2a9d8f]/10 to-[#264653]/10 rounded-lg border-2 border-[#2a9d8f]/20">
+            <div className="flex items-center justify-between p-4 bg-gradient-to-r from-[#2a9d8f]/10 to-[#264653]/10 rounded-md border-2 border-[#2a9d8f]/20">
               <div>
                 <p className="text-sm text-gray-600 font-medium">Tổng giá trị Milestone</p>
                 <p className="text-3xl font-bold text-[#2a9d8f] mt-1">{formatVND(amount)}</p>
@@ -134,7 +134,7 @@ export const MilestoneFinancialsTab: React.FC<MilestoneFinancialsTabProps> = ({
         </CardHeader>
         <CardContent className="space-y-6">
           {/* Info Note */}
-          <div className="flex gap-3 p-4 bg-blue-50 text-blue-800 text-sm rounded-lg border border-blue-200">
+          <div className="flex gap-3 p-4 bg-blue-50 text-blue-800 text-sm rounded-md border border-blue-200">
             <Info className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" />
             <div>
               <p className="font-semibold mb-1">Lưu ý về phân bổ tự động:</p>
@@ -152,7 +152,7 @@ export const MilestoneFinancialsTab: React.FC<MilestoneFinancialsTabProps> = ({
               <span>Phân bổ tự động</span>
               <span className="text-gray-500">100%</span>
             </div>
-            <div className="flex h-8 w-full overflow-hidden rounded-lg border-2 border-gray-200">
+            <div className="flex h-8 w-full overflow-hidden rounded-md border-2 border-gray-200">
               <div
                 className="bg-gray-400 flex items-center justify-center text-white text-xs font-bold"
                 style={{ width: `${(systemFee / amount) * 100}%` }}
@@ -182,7 +182,7 @@ export const MilestoneFinancialsTab: React.FC<MilestoneFinancialsTabProps> = ({
           {/* Breakdown Details */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {/* System */}
-            <div className="p-4 bg-gray-50 rounded-lg border-2 border-gray-200 relative overflow-hidden">
+            <div className="p-4 bg-gray-50 rounded-md border-2 border-gray-200 relative overflow-hidden">
               <div className="absolute top-0 left-0 w-full h-1 bg-gray-400"></div>
               <div className="flex items-center gap-2 mb-2">
                 <div className="p-2 bg-gray-100 rounded-full">
@@ -200,7 +200,7 @@ export const MilestoneFinancialsTab: React.FC<MilestoneFinancialsTabProps> = ({
             </div>
 
             {/* Mentor */}
-            <div className={`p-4 rounded-lg border-2 relative overflow-hidden ${userRole === 'MENTOR'
+            <div className={`p-4 rounded-md border-2 relative overflow-hidden ${userRole === 'MENTOR'
               ? 'bg-blue-50 border-blue-300 ring-2 ring-blue-200'
               : 'bg-blue-50 border-blue-200'
               }`}>
@@ -251,7 +251,7 @@ export const MilestoneFinancialsTab: React.FC<MilestoneFinancialsTabProps> = ({
             </div>
 
             {/* Team */}
-            <div className={`p-4 rounded-lg border-2 relative overflow-hidden ${userRole === 'USER' || userRole === 'TALENT'
+            <div className={`p-4 rounded-md border-2 relative overflow-hidden ${userRole === 'USER' || userRole === 'TALENT'
               ? 'bg-green-50 border-green-300 ring-2 ring-green-200'
               : 'bg-green-50 border-green-200'
               }`}>

@@ -60,7 +60,7 @@ export const ModalContent = forwardRef<HTMLDivElement, ModalContentProps>(
             <IconButton
               variant="plain"
               ariaLabel="close"
-              className="absolute top-4 right-6 rounded-sm text-bunker-400 hover:text-bunker-50"
+              className="absolute top-4 right-6 rounded-md text-bunker-400 hover:text-bunker-50"
             >
               <IconBrandNytimes size="lg" className="cursor-pointer"/>
             </IconButton>

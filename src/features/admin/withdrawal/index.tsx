@@ -75,7 +75,7 @@ export default function Withdrawal() {
                     </div>
 
                     {/* Filter Section */}
-                    <div className='mb-4 rounded-lg border bg-card p-4'>
+                    <div className='mb-4 rounded-md border bg-card p-4'>
                         <div className='grid grid-cols-1 gap-4 md:grid-cols-3'>
                             {/* Status Filter */}
                             <div className='space-y-2'>
