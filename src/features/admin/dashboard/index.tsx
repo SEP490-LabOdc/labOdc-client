@@ -14,8 +14,6 @@ import {
     Wallet,
     Briefcase,
 } from 'lucide-react'
-import { useUser } from '@/context/UserContext'
-import { useGetUserNotifications } from '@/hooks/api/notifications'
 import { Bar, BarChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { formatVND } from '@/helpers/currency'
 import { useGetCompanyDashboardOverview, useGetCompanyLast6MonthStatistic, useGetMyWallet, useGetProjectDashboardOverview, useGetProjectLast6MonthStatistic, useGetUserDashboardOverview } from '@/hooks/api/dashboard'
@@ -30,8 +28,6 @@ const formatMonthLabel = (month: string) => {
 ======================= */
 
 export default function Dashboard() {
-    const { user } = useUser()
-
     const {
         data: projectStatistic,
         isLoading: projectLoading,
@@ -42,11 +38,6 @@ export default function Dashboard() {
         isLoading: companyLoading,
     } = useGetCompanyLast6MonthStatistic();
 
-    const {
-        data: notifications = [],
-        isLoading,
-    } = useGetUserNotifications(user?.id);
-
     const { data: projectOverview } = useGetProjectDashboardOverview();
     const { data: companyOverview } = useGetCompanyDashboardOverview();
     const { data: userOverview } = useGetUserDashboardOverview();
@@ -54,19 +45,6 @@ export default function Dashboard() {
 
     const overviewLoading =
         !projectOverview || !companyOverview || !userOverview || walletLoading
-
-    let latestNotifications = [];
-
-    if (!isLoading) {
-        latestNotifications = [...notifications?.data]
-            .sort(
-                (a, b) =>
-                    new Date(b.sentAt).getTime() -
-                    new Date(a.sentAt).getTime()
-            )
-            .slice(0, 8)
-
-    }
 
 
     const projectChartData =
