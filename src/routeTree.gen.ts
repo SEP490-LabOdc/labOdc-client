@@ -36,10 +36,9 @@ import { Route as AuthenticatedMentorIndexRouteImport } from './routes/_authenti
 import { Route as AuthenticatedLabAdminIndexRouteImport } from './routes/_authenticated/lab-admin/index'
 import { Route as AuthenticatedCompanyManageIndexRouteImport } from './routes/_authenticated/company-manage/index'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin/index'
-import { Route as publicTermsIndexRouteImport } from './routes/(public)/terms/index'
+import { Route as publicTermsAndPrivacyIndexRouteImport } from './routes/(public)/terms-and-privacy/index'
 import { Route as publicTalentPoolIndexRouteImport } from './routes/(public)/talent-pool/index'
 import { Route as publicProjectsIndexRouteImport } from './routes/(public)/projects/index'
-import { Route as publicPrivacyIndexRouteImport } from './routes/(public)/privacy/index'
 import { Route as publicCompaniesIndexRouteImport } from './routes/(public)/companies/index'
 import { Route as authSignInIndexRouteImport } from './routes/(auth)/sign-in/index'
 import { Route as authForgotPasswordIndexRouteImport } from './routes/(auth)/forgot-password/index'
@@ -262,11 +261,12 @@ const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AuthenticatedAdminRouteRoute,
 } as any)
-const publicTermsIndexRoute = publicTermsIndexRouteImport.update({
-  id: '/terms/',
-  path: '/terms/',
-  getParentRoute: () => publicRouteRoute,
-} as any)
+const publicTermsAndPrivacyIndexRoute =
+  publicTermsAndPrivacyIndexRouteImport.update({
+    id: '/terms-and-privacy/',
+    path: '/terms-and-privacy/',
+    getParentRoute: () => publicRouteRoute,
+  } as any)
 const publicTalentPoolIndexRoute = publicTalentPoolIndexRouteImport.update({
   id: '/talent-pool/',
   path: '/talent-pool/',
@@ -275,11 +275,6 @@ const publicTalentPoolIndexRoute = publicTalentPoolIndexRouteImport.update({
 const publicProjectsIndexRoute = publicProjectsIndexRouteImport.update({
   id: '/projects/',
   path: '/projects/',
-  getParentRoute: () => publicRouteRoute,
-} as any)
-const publicPrivacyIndexRoute = publicPrivacyIndexRouteImport.update({
-  id: '/privacy/',
-  path: '/privacy/',
   getParentRoute: () => publicRouteRoute,
 } as any)
 const publicCompaniesIndexRoute = publicCompaniesIndexRouteImport.update({
@@ -792,10 +787,9 @@ export interface FileRoutesByFullPath {
   '/forgot-password': typeof authForgotPasswordIndexRoute
   '/sign-in': typeof authSignInIndexRoute
   '/companies/': typeof publicCompaniesIndexRoute
-  '/privacy': typeof publicPrivacyIndexRoute
   '/projects': typeof publicProjectsIndexRoute
   '/talent-pool': typeof publicTalentPoolIndexRoute
-  '/terms': typeof publicTermsIndexRoute
+  '/terms-and-privacy': typeof publicTermsAndPrivacyIndexRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
   '/company-manage/': typeof AuthenticatedCompanyManageIndexRoute
   '/lab-admin/': typeof AuthenticatedLabAdminIndexRoute
@@ -888,10 +882,9 @@ export interface FileRoutesByTo {
   '/forgot-password': typeof authForgotPasswordIndexRoute
   '/sign-in': typeof authSignInIndexRoute
   '/companies': typeof publicCompaniesIndexRoute
-  '/privacy': typeof publicPrivacyIndexRoute
   '/projects': typeof publicProjectsIndexRoute
   '/talent-pool': typeof publicTalentPoolIndexRoute
-  '/terms': typeof publicTermsIndexRoute
+  '/terms-and-privacy': typeof publicTermsAndPrivacyIndexRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
   '/company-manage': typeof AuthenticatedCompanyManageIndexRoute
   '/lab-admin': typeof AuthenticatedLabAdminIndexRoute
@@ -1001,10 +994,9 @@ export interface FileRoutesById {
   '/(auth)/forgot-password/': typeof authForgotPasswordIndexRoute
   '/(auth)/sign-in/': typeof authSignInIndexRoute
   '/(public)/companies/': typeof publicCompaniesIndexRoute
-  '/(public)/privacy/': typeof publicPrivacyIndexRoute
   '/(public)/projects/': typeof publicProjectsIndexRoute
   '/(public)/talent-pool/': typeof publicTalentPoolIndexRoute
-  '/(public)/terms/': typeof publicTermsIndexRoute
+  '/(public)/terms-and-privacy/': typeof publicTermsAndPrivacyIndexRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/_authenticated/company-manage/': typeof AuthenticatedCompanyManageIndexRoute
   '/_authenticated/lab-admin/': typeof AuthenticatedLabAdminIndexRoute
@@ -1112,10 +1104,9 @@ export interface FileRouteTypes {
     | '/forgot-password'
     | '/sign-in'
     | '/companies/'
-    | '/privacy'
     | '/projects'
     | '/talent-pool'
-    | '/terms'
+    | '/terms-and-privacy'
     | '/admin/'
     | '/company-manage/'
     | '/lab-admin/'
@@ -1208,10 +1199,9 @@ export interface FileRouteTypes {
     | '/forgot-password'
     | '/sign-in'
     | '/companies'
-    | '/privacy'
     | '/projects'
     | '/talent-pool'
-    | '/terms'
+    | '/terms-and-privacy'
     | '/admin'
     | '/company-manage'
     | '/lab-admin'
@@ -1320,10 +1310,9 @@ export interface FileRouteTypes {
     | '/(auth)/forgot-password/'
     | '/(auth)/sign-in/'
     | '/(public)/companies/'
-    | '/(public)/privacy/'
     | '/(public)/projects/'
     | '/(public)/talent-pool/'
-    | '/(public)/terms/'
+    | '/(public)/terms-and-privacy/'
     | '/_authenticated/admin/'
     | '/_authenticated/company-manage/'
     | '/_authenticated/lab-admin/'
@@ -1608,11 +1597,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
     }
-    '/(public)/terms/': {
-      id: '/(public)/terms/'
-      path: '/terms'
-      fullPath: '/terms'
-      preLoaderRoute: typeof publicTermsIndexRouteImport
+    '/(public)/terms-and-privacy/': {
+      id: '/(public)/terms-and-privacy/'
+      path: '/terms-and-privacy'
+      fullPath: '/terms-and-privacy'
+      preLoaderRoute: typeof publicTermsAndPrivacyIndexRouteImport
       parentRoute: typeof publicRouteRoute
     }
     '/(public)/talent-pool/': {
@@ -1627,13 +1616,6 @@ declare module '@tanstack/react-router' {
       path: '/projects'
       fullPath: '/projects'
       preLoaderRoute: typeof publicProjectsIndexRouteImport
-      parentRoute: typeof publicRouteRoute
-    }
-    '/(public)/privacy/': {
-      id: '/(public)/privacy/'
-      path: '/privacy'
-      fullPath: '/privacy'
-      preLoaderRoute: typeof publicPrivacyIndexRouteImport
       parentRoute: typeof publicRouteRoute
     }
     '/(public)/companies/': {
@@ -2222,19 +2204,17 @@ const publicCompaniesRouteRouteWithChildren =
 interface publicRouteRouteChildren {
   publicCompaniesRouteRoute: typeof publicCompaniesRouteRouteWithChildren
   publicIndexRoute: typeof publicIndexRoute
-  publicPrivacyIndexRoute: typeof publicPrivacyIndexRoute
   publicProjectsIndexRoute: typeof publicProjectsIndexRoute
   publicTalentPoolIndexRoute: typeof publicTalentPoolIndexRoute
-  publicTermsIndexRoute: typeof publicTermsIndexRoute
+  publicTermsAndPrivacyIndexRoute: typeof publicTermsAndPrivacyIndexRoute
 }
 
 const publicRouteRouteChildren: publicRouteRouteChildren = {
   publicCompaniesRouteRoute: publicCompaniesRouteRouteWithChildren,
   publicIndexRoute: publicIndexRoute,
-  publicPrivacyIndexRoute: publicPrivacyIndexRoute,
   publicProjectsIndexRoute: publicProjectsIndexRoute,
   publicTalentPoolIndexRoute: publicTalentPoolIndexRoute,
-  publicTermsIndexRoute: publicTermsIndexRoute,
+  publicTermsAndPrivacyIndexRoute: publicTermsAndPrivacyIndexRoute,
 }
 
 const publicRouteRouteWithChildren = publicRouteRoute._addFileChildren(

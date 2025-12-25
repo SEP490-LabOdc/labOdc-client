@@ -59,3 +59,29 @@ export function useCreateExtensionRequest() {
         }
     })
 }
+
+export function useUpdateExtensionRequest() {
+    const queryClient = useQueryClient()
+    return useMutation({
+        mutationFn: async (payload: {
+            milestoneId: string,
+            id: string,
+            status: string
+            reason: string
+        }) => {
+            const { data } = await apiRequest.patch(`/api/v1/project-milestones/${payload.milestoneId}/extension-requests/${payload.id}`, {
+                status: payload.status,
+                reason: payload.reason
+            })
+            return data
+        },
+        onSuccess: (_, variables) => {
+            queryClient.invalidateQueries({
+                queryKey: [
+                    milestoneKeys.detail(variables.milestoneId),
+                    milestoneKeys.milestoneExtensionRequests(variables.milestoneId)
+                ]
+            })
+        }
+    })
+}
