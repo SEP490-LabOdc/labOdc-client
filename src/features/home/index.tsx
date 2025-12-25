@@ -225,49 +225,6 @@ export default function Home() {
                     </div>
                 </div>
             </section>
-
-            {/* CTA Section */}
-            <section id="contact" className="py-20 bg-primary text-primary-foreground">
-                <div className="container mx-auto px-4">
-                    <div className="grid lg:grid-cols-2 gap-12 items-center">
-                        <div className="space-y-6">
-                            <h2 className="text-3xl lg:text-4xl font-bold text-balance">
-                                Ready to Elevate Your Team? Start Building Today!
-                            </h2>
-                            <p className="text-primary-foreground/80 text-lg">
-                                Connect with our experts to discover how our Lab-based ODC Platform can take solutions for your specific
-                                enterprise needs. Fill out the form below or reach out today!
-                            </p>
-                        </div>
-
-                        <Card className="bg-background text-foreground">
-                            <CardContent className="p-6 space-y-4">
-                                <div className="space-y-4">
-                                    <div>
-                                        <label className="text-sm font-medium">Your Name</label>
-                                        <Input placeholder="Enter your name" className="mt-1" />
-                                    </div>
-                                    <div>
-                                        <label className="text-sm font-medium">Your Work Email</label>
-                                        <Input type="email" placeholder="Enter your email" className="mt-1" />
-                                    </div>
-                                    <div>
-                                        <label className="text-sm font-medium">Your Company Name</label>
-                                        <Input placeholder="Enter company name" className="mt-1" />
-                                    </div>
-                                    <div>
-                                        <label className="text-sm font-medium">Tell us about your project needs</label>
-                                        <Textarea placeholder="Describe your requirements..." className="mt-1" rows={4} />
-                                    </div>
-                                    <Button className="w-full bg-[oklch(0.7_0.16_45)] hover:bg-[oklch(0.65_0.16_45)] text-white">
-                                        Submit Inquiry
-                                    </Button>
-                                </div>
-                            </CardContent>
-                        </Card>
-                    </div>
-                </div>
-            </section>
         </div>
     )
 }
