@@ -12,9 +12,10 @@ import {
 type DatePickerProps = {
   selected: Date | undefined
   onSelect: (date: Date | undefined) => void
-  placeholder?: string,
+  placeholder?: string
   disabled?: boolean
   minDate?: Date
+  buttonClassName?: string
 }
 
 export function DatePicker({
@@ -23,6 +24,7 @@ export function DatePicker({
   placeholder = 'Chọn ngày',
   disabled,
   minDate,
+  buttonClassName,
 }: DatePickerProps) {
   return (
     <Popover>
@@ -30,7 +32,7 @@ export function DatePicker({
         <Button
           variant='outline'
           data-empty={!selected}
-          className='data-[empty=true]:text-muted-foreground w-full max-w-[300px] justify-start text-start font-normal'
+          className={buttonClassName}
           disabled={disabled}
         >
           {selected ? (
@@ -48,17 +50,15 @@ export function DatePicker({
           selected={selected}
           onSelect={onSelect}
           locale={vi}
-          disabled={(date: Date) => {
-            if (disabled) return true
-            if (minDate) {
-              const min = new Date(minDate)
-              min.setHours(0, 0, 0, 0)
-              const checkDate = new Date(date)
-              checkDate.setHours(0, 0, 0, 0)
-              return checkDate < min
+          startMonth={new Date(1900, 0)}
+          endMonth={new Date(2100, 11)}
+          disabled={minDate
+            ? (date: Date) => {
+              if (disabled) return true
+              return date < minDate
             }
-            return false
-          }}
+            : disabled
+          }
         />
       </PopoverContent>
     </Popover>

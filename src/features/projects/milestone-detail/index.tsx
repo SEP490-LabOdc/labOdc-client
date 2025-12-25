@@ -13,11 +13,12 @@ import {
 } from './components'
 import { MilestoneStatus } from '@/hooks/api/milestones'
 import { Spinner } from '@/components/ui/spinner'
+import { ExtensionTab } from './components/extension-tab'
 
 const MilestoneDetailPage: React.FC = () => {
   const { milestoneId, projectId } = useParams({ strict: false })
   const { data: milestoneData, isLoading, error } = useGetMilestoneById(milestoneId as string)
-  const { user } = usePermission()
+  const { user, isMentor } = usePermission()
 
   // Get user role for display (used by MilestoneFinancialsTab)
   const userRole = user?.role || 'USER'
@@ -44,15 +45,16 @@ const MilestoneDetailPage: React.FC = () => {
 
         <div className="col-span-12 lg:col-span-8">
           <Tabs defaultValue="overview" className="w-full">
-            <TabsList className="grid w-full grid-cols-4 h-auto bg-gray-100 p-1 rounded-lg">
+            <TabsList className={`grid w-full ${isMentor ? 'grid-cols-5' : 'grid-cols-4'} h-auto bg-gray-100 p-1 rounded-lg`}>
               <TabsTrigger value="overview" className="py-2">Tổng quan</TabsTrigger>
-              <TabsTrigger value="reports" className="py-2">Báo cáo & Nghiệm thu</TabsTrigger>
+              <TabsTrigger value="reports" className="py-2">Báo cáo</TabsTrigger>
               <TabsTrigger value="documents" className="py-2">Tài liệu</TabsTrigger>
-
-              {/* TAB MỚI: TÀI CHÍNH */}
               <TabsTrigger value="financials" className="py-2 flex items-center gap-2">
                 Phân bổ
               </TabsTrigger>
+              {isMentor && (
+                <TabsTrigger value="extension" className="py-2">Yêu cầu gia hạn</TabsTrigger>
+              )}
             </TabsList>
 
             <TabsContent value="overview" className="mt-6">
@@ -60,7 +62,6 @@ const MilestoneDetailPage: React.FC = () => {
             </TabsContent>
 
             <TabsContent value="reports" className="mt-6">
-              {/* Tab này cần chứa nút Action cho Mentor (Gửi duyệt) và Doanh nghiệp (Phê duyệt) */}
               <MilestoneReportsTab milestone={milestone} />
             </TabsContent>
 
@@ -68,7 +69,6 @@ const MilestoneDetailPage: React.FC = () => {
               <MilestoneDocumentsTab milestoneId={milestoneId as string} />
             </TabsContent>
 
-            {/* CONTENT TAB TÀI CHÍNH */}
             <TabsContent value="financials" className="mt-6">
               <MilestoneFinancialsTab
                 amount={milestone.budget}
@@ -77,6 +77,14 @@ const MilestoneDetailPage: React.FC = () => {
                 milestoneId={milestone.id}
               />
             </TabsContent>
+
+            {isMentor && (
+              <TabsContent value="extension" className="mt-6">
+                <ExtensionTab
+                  milestone={milestone}
+                />
+              </TabsContent>
+            )}
           </Tabs>
         </div>
       </div>
