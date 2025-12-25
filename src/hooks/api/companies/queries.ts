@@ -23,21 +23,21 @@ export const useGetCompanyById = (id?: string) =>
     });
 
 export const useUpdateCompanyRegistration = (token: string) =>
-  useQuery({
-    queryKey: companyKeys.updateCompanyRegistration(token),
-    queryFn: async () => {
-      const url = '/api/v1/companies/for-update';
+    useQuery({
+        queryKey: companyKeys.updateCompanyRegistration(token),
+        queryFn: async () => {
+            const url = '/api/v1/companies/for-update';
 
-      const config = {
-        params: {
-          token: token
-        }
-      };
+            const config = {
+                params: {
+                    token: token
+                }
+            };
 
-      const { data } = await apiRequest.get(url, config);
-      return data;
-    },
-  });
+            const { data } = await apiRequest.get(url, config);
+            return data;
+        },
+    });
 
 
 export const useGetCheckList = () =>
@@ -129,4 +129,28 @@ export const useGetCompanyChecklists = (id?: string) =>
             return data?.data
         },
         enabled: !!id,
+    })
+
+export interface MyCompanyInfo {
+    id: string
+    name: string
+    email: string
+    phone: string
+    taxCode: string
+    address: string
+    description: string
+    website: string
+    domain: string
+    status: string
+}
+
+
+export const useGetMyCompany = () =>
+    useQuery({
+        queryKey: companyKeys.me(),
+        queryFn: async (): Promise<MyCompanyInfo> => {
+            const { data } = await apiRequest.get('/api/v1/companies/me')
+            return data.data
+        },
+        staleTime: 60 * 1000, // 1 phút
     })

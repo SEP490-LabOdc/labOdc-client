@@ -122,7 +122,7 @@ export default function Dashboard() {
                 {/* =======================
                     LEFT COLUMN (7)
                 ======================= */}
-                <div className="space-y-6 lg:col-span-7">
+                <div className="space-y-6 lg:col-span-6">
                     <Card>
                         <CardHeader>
                             <CardTitle>
@@ -194,7 +194,7 @@ export default function Dashboard() {
                 {/* =======================
                     RIGHT COLUMN (5)
                 ======================= */}
-                <div className="space-y-6 lg:col-span-5">
+                <div className="space-y-6 lg:col-span-6">
                     <Card>
                         <CardHeader>
                             <CardTitle>Dự án mới theo tháng</CardTitle>
