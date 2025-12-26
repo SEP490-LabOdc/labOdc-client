@@ -81,11 +81,11 @@ const ProjectFinancialPage: React.FC = () => {
         {/* Có thể thêm các section khác bên dưới nếu cần, ví dụ: Biểu đồ dòng tiền theo thời gian */}
         <div className="mt-8 grid grid-cols-1 gap-6">
           {/* Placeholder cho biểu đồ */}
-          <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+          <div className="bg-white p-6 rounded-md shadow-sm border border-gray-200">
             <h3 className="font-bold text-gray-800 mb-4 flex items-center gap-2">
               <Filter className="w-4 h-4" /> Phân tích dòng tiền (Coming Soon)
             </h3>
-            <div className="h-64 bg-gray-50 rounded-lg flex items-center justify-center text-gray-400">
+            <div className="h-64 bg-gray-50 rounded-md flex items-center justify-center text-gray-400">
               Biểu đồ xu hướng thu chi sẽ hiển thị ở đây
             </div>
           </div>

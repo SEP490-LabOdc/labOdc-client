@@ -92,12 +92,12 @@ export function CompanyRegisterUpdatePage() {
             </p>
 
             <div className="grid grid-cols-2 gap-4 mt-8 text-sm">
-              <div className="bg-white/10 rounded-lg p-4 backdrop-blur-sm">
+              <div className="bg-white/10 rounded-md p-4 backdrop-blur-sm">
                 <FileText className="h-6 w-6 mb-2 text-[#e9c46a]" />
                 <div className="font-semibold">Quy trình đơn giản</div>
                 <div className="text-white/80">Xét duyệt trong 24h</div>
               </div>
-              <div className="bg-white/10 rounded-lg p-4 backdrop-blur-sm">
+              <div className="bg-white/10 rounded-md p-4 backdrop-blur-sm">
                 <Users2 className="h-6 w-6 mb-2 text-[#e9c46a]" />
                 <div className="font-semibold">Talent chất lượng</div>
                 <div className="text-white/80">Đã được xác thực</div>

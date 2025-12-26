@@ -22,7 +22,7 @@ export const MilestoneList: React.FC<MilestoneListProps> = ({
     onMilestoneSelect
 }) => {
     return (
-        <Card className="flex-1 shadow-md rounded-lg border-2 overflow-hidden flex flex-col">
+        <Card className="flex-1 shadow-md rounded-md border-2 overflow-hidden flex flex-col">
             <CardHeader className="pb-3">
                 <CardTitle className="text-base flex items-center gap-2">
                     <Layers className="h-5 w-5 text-[#2a9d8f]" />
@@ -49,7 +49,7 @@ export const MilestoneList: React.FC<MilestoneListProps> = ({
                                         key={milestone.id}
                                         onClick={() => onMilestoneSelect(milestone.id)}
                                         className={cn(
-                                            "w-full text-left p-4 rounded-lg border-2 transition-all",
+                                            "w-full text-left p-4 rounded-md border-2 transition-all",
                                             "hover:shadow-md hover:border-[#2a9d8f]/50",
                                             isSelected
                                                 ? "border-indigo-500 bg-indigo-50 shadow-md"

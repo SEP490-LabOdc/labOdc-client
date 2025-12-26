@@ -15,7 +15,7 @@ export default function EditCompany({ company }: { company: any }) {
 
                     <div className="col-span-12 lg:col-span-8">
                         <Tabs defaultValue="overview" className="w-full">
-                            <TabsList className="grid w-full grid-cols-4 h-auto bg-gray-100 p-1 rounded-lg">
+                            <TabsList className="grid w-full grid-cols-4 h-auto bg-gray-100 p-1 rounded-md">
                                 <TabsTrigger value="overview" className="data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-md py-2">Tổng quan</TabsTrigger>
                                 <TabsTrigger value="projects" className="data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-md py-2">Dự án</TabsTrigger>
                             </TabsList>

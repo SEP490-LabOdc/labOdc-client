@@ -158,9 +158,9 @@ export function RegisterCompanyForm({
       <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-8">
         {/* Section 1: Company Information */}
         <div className="space-y-6">
-          <div className="flex items-center gap-2 pb-2 border-b border-gray-200">
-            <Building2 className="h-5 w-5 text-[#2a9d8f]" />
-            <h3 className="text-lg font-semibold text-[#264653]">Thông tin doanh nghiệp</h3>
+          <div className="flex items-center gap-2 pb-2 border-b border-primary/20">
+            <Building2 className="h-5 w-5 text-secondary" />
+            <h3 className="text-lg font-semibold text-primary">Thông tin doanh nghiệp</h3>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -169,12 +169,12 @@ export function RegisterCompanyForm({
               name='name'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-sm font-medium text-[#264653]">Tên công ty *</FormLabel>
+                  <FormLabel className="text-sm font-medium text-primary">Tên công ty *</FormLabel>
                   <FormControl>
                     <div className='relative'>
-                      <Building2 className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                      <Building2 className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                       <Input
-                        className="pl-10 border-gray-300 focus:border-[#2a9d8f] focus:ring-[#2a9d8f]"
+                        className="pl-10 focus:border-secondary focus:ring-secondary"
                         placeholder='Nhập tên công ty'
                         {...field}
                       />
@@ -190,12 +190,12 @@ export function RegisterCompanyForm({
               name='taxCode'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-sm font-medium text-[#264653]">Mã số thuế *</FormLabel>
+                  <FormLabel className="text-sm font-medium text-primary">Mã số thuế *</FormLabel>
                   <FormControl>
                     <div className='relative'>
-                      <FileText className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                      <FileText className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                       <Input
-                        className="pl-10 border-gray-300 focus:border-[#2a9d8f] focus:ring-[#2a9d8f]"
+                        className="pl-10 focus:border-secondary focus:ring-secondary"
                         placeholder='Nhập mã số thuế'
                         {...field}
                       />
@@ -211,13 +211,13 @@ export function RegisterCompanyForm({
               name='email'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-sm font-medium text-[#264653]">Email công ty *</FormLabel>
+                  <FormLabel className="text-sm font-medium text-primary">Email công ty *</FormLabel>
                   <FormControl>
                     <div className='relative'>
-                      <Mail className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                      <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                       <Input
                         type="email"
-                        className="pl-10  border-gray-300 focus:border-[#2a9d8f] focus:ring-[#2a9d8f]"
+                        className="pl-10 focus:border-secondary focus:ring-secondary"
                         placeholder='company@domain.com'
                         disabled={!!initialData?.companyEmail}
                         {...field}
@@ -234,13 +234,13 @@ export function RegisterCompanyForm({
               name='phone'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-sm font-medium text-[#264653]">Số điện thoại công ty *</FormLabel>
+                  <FormLabel className="text-sm font-medium text-primary">Số điện thoại công ty *</FormLabel>
                   <FormControl>
                     <div className='relative'>
-                      <Phone className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                      <Phone className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                       <Input
                         type="tel"
-                        className="pl-10  border-gray-300 focus:border-[#2a9d8f] focus:ring-[#2a9d8f]"
+                        className="pl-10 focus:border-secondary focus:ring-secondary"
                         placeholder='(+84) xxx xxx xxx'
                         {...field}
                       />
@@ -256,7 +256,7 @@ export function RegisterCompanyForm({
               name='businessLicenseLink'
               render={({ field }) => (
                 <FormItem className="md:col-span-2">
-                  <FormLabel className="text-sm font-medium text-[#264653]">
+                  <FormLabel className="text-sm font-medium text-primary">
                     Giấy phép kinh doanh *
                   </FormLabel>
                   <FormControl>
@@ -285,10 +285,10 @@ export function RegisterCompanyForm({
               name="provinceCode"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-sm font-medium text-[#264653]">Tỉnh/Thành phố *</FormLabel>
+                  <FormLabel className="text-sm font-medium text-primary">Tỉnh/Thành phố *</FormLabel>
                   <FormControl>
                     <div className="relative">
-                      <MapPin className="absolute left-3 top-3 h-4 w-4 text-gray-400 z-10" />
+                      <MapPin className="absolute left-3 top-3 h-4 w-4 text-muted-foreground z-10" />
                       <LocationSelect
                         data={provinces.data || []}
                         value={field.value}
@@ -308,10 +308,10 @@ export function RegisterCompanyForm({
               name="wardCode"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-sm font-medium text-[#264653]">Phường/Xã *</FormLabel>
+                  <FormLabel className="text-sm font-medium text-primary">Phường/Xã *</FormLabel>
                   <FormControl>
                     <div className="relative">
-                      <MapPin className="absolute left-3 top-3 h-4 w-4 text-gray-400 z-10" />
+                      <MapPin className="absolute left-3 top-3 h-4 w-4 text-muted-foreground z-10" />
                       <LocationSelect
                         data={wards.data?.wards || []}
                         value={field.value}
@@ -331,12 +331,12 @@ export function RegisterCompanyForm({
               name='address'
               render={({ field }) => (
                 <FormItem className="md:col-span-2">
-                  <FormLabel className="text-sm font-medium text-[#264653]">Địa chỉ cụ thể *</FormLabel>
+                  <FormLabel className="text-sm font-medium text-primary">Địa chỉ cụ thể *</FormLabel>
                   <FormControl>
                     <div className='relative'>
-                      <MapPin className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                      <MapPin className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                       <Input
-                        className="pl-10 border-gray-300 focus:border-[#2a9d8f] focus:ring-[#2a9d8f]"
+                        className="pl-10 focus:border-secondary focus:ring-secondary"
                         placeholder='Số nhà, tên đường...'
                         {...field}
                       />
@@ -351,9 +351,9 @@ export function RegisterCompanyForm({
 
         {/* Section 2: Representative Information */}
         <div className="space-y-6">
-          <div className="flex items-center gap-2 pb-2 border-b border-gray-200">
-            <User className="h-5 w-5 text-[#2a9d8f]" />
-            <h3 className="text-lg font-semibold text-[#264653]">Thông tin người đại diện</h3>
+          <div className="flex items-center gap-2 pb-2 border-b border-primary/20">
+            <User className="h-5 w-5 text-secondary" />
+            <h3 className="text-lg font-semibold text-primary">Thông tin người đại diện</h3>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -362,12 +362,12 @@ export function RegisterCompanyForm({
               name='contactPersonName'
               render={({ field }) => (
                 <FormItem className="md:col-span-2">
-                  <FormLabel className="text-sm font-medium text-[#264653]">Họ và tên *</FormLabel>
+                  <FormLabel className="text-sm font-medium text-primary">Họ và tên *</FormLabel>
                   <FormControl>
                     <div className='relative'>
-                      <User className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                      <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                       <Input
-                        className="pl-10  border-gray-300 focus:border-[#2a9d8f] focus:ring-[#2a9d8f]"
+                        className="pl-10 focus:border-secondary focus:ring-secondary"
                         placeholder='Nhập họ và tên đầy đủ'
                         {...field}
                       />
@@ -383,13 +383,13 @@ export function RegisterCompanyForm({
               name='contactPersonEmail'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-sm font-medium text-[#264653]">Email cá nhân *</FormLabel>
+                  <FormLabel className="text-sm font-medium text-primary">Email cá nhân *</FormLabel>
                   <FormControl>
                     <div className='relative'>
-                      <Mail className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                      <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                       <Input
                         type="contactPersonEmail"
-                        className="pl-10  border-gray-300 focus:border-[#2a9d8f] focus:ring-[#2a9d8f]"
+                        className="pl-10 focus:border-secondary focus:ring-secondary"
                         placeholder='your.email@domain.com'
                         {...field}
                       />
@@ -405,13 +405,13 @@ export function RegisterCompanyForm({
               name='contactPersonPhone'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-sm font-medium text-[#264653]">Số điện thoại *</FormLabel>
+                  <FormLabel className="text-sm font-medium text-primary">Số điện thoại *</FormLabel>
                   <FormControl>
                     <div className='relative'>
-                      <Phone className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                      <Phone className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                       <Input
                         type="tel"
-                        className="pl-10  border-gray-300 focus:border-[#2a9d8f] focus:ring-[#2a9d8f]"
+                        className="pl-10 focus:border-secondary focus:ring-secondary"
                         placeholder='(+84) xxx xxx xxx'
                         {...field}
                       />
@@ -439,11 +439,11 @@ export function RegisterCompanyForm({
                   />
                 </FormControl>
                 <div className="space-y-1 leading-none">
-                  <FormLabel className="text-sm leading-relaxed text-gray-600">
+                  <FormLabel className="text-sm leading-relaxed text-muted-foreground">
                     Tôi đồng ý với{' '}
-                    <Link to="/terms-and-privacy" className="text-[#2a9d8f] hover:underline font-medium">Điều khoản sử dụng</Link>
+                    <Link to="/terms-and-privacy" className="text-secondary hover:underline font-medium">Điều khoản sử dụng</Link>
                     {' '}và{' '}
-                    <Link to="/terms-and-privacy" className="text-[#2a9d8f] hover:underline font-medium">Chính sách bảo mật</Link>
+                    <Link to="/terms-and-privacy" className="text-secondary hover:underline font-medium">Chính sách bảo mật</Link>
                     {' '}của LabOdc
                   </FormLabel>
                   <FormMessage />
@@ -454,14 +454,14 @@ export function RegisterCompanyForm({
 
           <Button
             type="submit"
-            className="w-full bg-[#f4a261] hover:bg-[#e76f51] text-white font-semibold py-3  transition-colors duration-200 shadow-lg"
+            className="w-full bg-brand-orange hover:bg-brand-orange/90 text-white font-semibold py-3 transition-colors duration-200 shadow-lg"
             disabled={isLoading}
             size="lg"
           >
             {isLoading ? "Đang gửi…" : `${submitButtonText}`}
             <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
-          <p className='text-center'>Đã có tài khoản <Link to='/company-login' className='text-[#2a9d8f] font-semibold hover:underline'>Đăng nhập ngay</Link></p>
+          <p className='text-center text-foreground'>Đã có tài khoản <Link to='/company-login' className='text-secondary font-semibold hover:underline'>Đăng nhập ngay</Link></p>
 
         </div>
       </form>

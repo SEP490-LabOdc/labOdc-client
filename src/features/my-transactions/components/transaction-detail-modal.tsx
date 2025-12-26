@@ -147,7 +147,7 @@ export function TransactionDetailModal() {
 
                     <div>
                         <Label className="text-muted-foreground">Mô tả</Label>
-                        <p className="text-sm mt-2 p-3 rounded-lg bg-muted">
+                        <p className="text-sm mt-2 p-3 rounded-md bg-muted">
                             {currentRow.description}
                         </p>
                     </div>
@@ -155,7 +155,7 @@ export function TransactionDetailModal() {
                     {currentRow.metadata && (
                         <div>
                             <Label className="text-muted-foreground">Thông tin bổ sung</Label>
-                            <div className="mt-2 rounded-lg border p-4 space-y-2">
+                            <div className="mt-2 rounded-md border p-4 space-y-2">
                                 {currentRow.metadata.milestoneName && (
                                     <div className="text-sm">
                                         <span className="font-medium">Milestone: </span>

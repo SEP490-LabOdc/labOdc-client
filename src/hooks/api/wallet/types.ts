@@ -12,3 +12,10 @@ export interface WalletData {
 
 export type WalletResponse = ApiResponse<WalletData>
 
+export interface WithdrawPayload {
+    amount: number
+    bankName: string
+    accountNumber: string
+    accountName: string
+}
+

@@ -196,7 +196,7 @@ export function UsersImportDialog({ open, onOpenChange }: any) {
                     </div>
                 )}
                 {/* Preview Table */}
-                <div className="flex-1 rounded-lg border overflow-auto mt-4" style={{ marginTop: "-1px" }}>
+                <div className="flex-1 rounded-md border overflow-auto mt-4" style={{ marginTop: "-1px" }}>
                     {rows.length === 0 ? (
                         <div className="flex items-center justify-center h-full text-muted-foreground">
                             Chưa có dữ liệu để hiển thị

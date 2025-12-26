@@ -12,8 +12,6 @@ import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { useApproveWithdrawal, useRejectWithdrawal } from '@/hooks/api/withdrawal/mutations'
-import { useQueryClient } from '@tanstack/react-query'
-import { withdrawalKeys } from '@/hooks/api/withdrawal/query-keys'
 import { toast } from 'sonner'
 import { formatVND } from '@/helpers/currency'
 import { formatDate } from '@/helpers/datetime'
@@ -25,7 +23,6 @@ import { WITHDRAWAL_STATUS_LABEL } from '../data/schema'
 export function WithdrawalDialogs() {
     const { open, setOpen, currentRow } = useWithdrawal()
     const [note, setNote] = useState('')
-    const queryClient = useQueryClient()
 
     const approveMutation = useApproveWithdrawal()
     const rejectMutation = useRejectWithdrawal()
@@ -39,7 +36,6 @@ export function WithdrawalDialogs() {
                 adminNote: note.trim() || undefined,
             })
             toast.success('Đã duyệt yêu cầu rút tiền thành công')
-            queryClient.invalidateQueries({ queryKey: withdrawalKeys.getWithdrawalRequests })
             setOpen(null)
             setNote('')
         } catch (error) {
@@ -61,7 +57,6 @@ export function WithdrawalDialogs() {
                 adminNote: note.trim(),
             })
             toast.success('Đã từ chối yêu cầu rút tiền thành công')
-            queryClient.invalidateQueries({ queryKey: withdrawalKeys.getWithdrawalRequests })
             setOpen(null)
             setNote('')
         } catch (error) {
@@ -117,7 +112,7 @@ export function WithdrawalDialogs() {
 
                         <div>
                             <Label className='text-muted-foreground'>Thông tin ngân hàng</Label>
-                            <div className='mt-2 rounded-lg border p-4 space-y-2'>
+                            <div className='mt-2 rounded-md border p-4 space-y-2'>
                                 {currentRow.bankInfo?.bankName && (
                                     <p className='font-medium'>{currentRow.bankInfo.bankName}</p>
                                 )}
@@ -153,7 +148,7 @@ export function WithdrawalDialogs() {
                         {currentRow.adminNote && (
                             <div>
                                 <Label className='text-muted-foreground'>Ghi chú</Label>
-                                <p className='text-sm mt-2 p-3 rounded-lg bg-muted'>{currentRow.adminNote}</p>
+                                <p className='text-sm mt-2 p-3 rounded-md bg-muted'>{currentRow.adminNote}</p>
                             </div>
                         )}
                     </div>

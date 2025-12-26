@@ -123,7 +123,7 @@ export const BankAccountDialog: React.FC<BankAccountDialogProps> = ({
 
                 <div className="space-y-4 py-4">
                     {/* Info Note */}
-                    <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                    <div className="p-3 bg-blue-50 border border-blue-200 rounded-md">
                         <div className="flex items-start gap-2">
                             <Info className="h-4 w-4 text-blue-600 flex-shrink-0 mt-0.5" />
                             <div className="text-xs text-blue-800">
@@ -189,7 +189,7 @@ export const BankAccountDialog: React.FC<BankAccountDialogProps> = ({
 
                     {/* Preview */}
                     {bankName && accountNumber && accountHolder && (
-                        <div className="p-4 bg-green-50 border-2 border-green-200 rounded-lg">
+                        <div className="p-4 bg-green-50 border-2 border-green-200 rounded-md">
                             <p className="text-xs font-semibold text-green-800 mb-2">
                                 🔍 Xem trước thông tin:
                             </p>
@@ -208,7 +208,7 @@ export const BankAccountDialog: React.FC<BankAccountDialogProps> = ({
                     )}
 
                     {/* Warning */}
-                    <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+                    <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-md">
                         <p className="text-xs text-yellow-800">
                             ⚠️ <strong>Lưu ý:</strong> Vui lòng kiểm tra kỹ thông tin.
                             Nếu sai số tài khoản hoặc tên chủ TK, tiền có thể bị mất hoặc hoàn trả chậm.

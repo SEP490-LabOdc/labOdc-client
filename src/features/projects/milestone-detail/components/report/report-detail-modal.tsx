@@ -82,7 +82,7 @@ export const ReportDetailModal: React.FC<ReportDetailModalProps> = ({
             <h4 className="text-sm font-semibold text-gray-900 mb-2">Tài liệu đính kèm:</h4>
             <div className="space-y-2">
               {report.attachmentsUrl.map((attachmentUrl: string, idx: number) => (
-                <div key={idx} className="flex items-center justify-between p-3 border rounded-lg">
+                <div key={idx} className="flex items-center justify-between p-3 border rounded-md">
                   <div className="flex items-center gap-3">
                     <FileText className="w-8 h-8 text-blue-500" />
                     <div>
@@ -96,7 +96,7 @@ export const ReportDetailModal: React.FC<ReportDetailModalProps> = ({
           </div>
 
           {report.feedback && (
-            <div className="bg-orange-50 border border-orange-200 p-4 rounded-lg">
+            <div className="bg-orange-50 border border-orange-200 p-4 rounded-md">
               <h4 className="text-sm font-bold text-orange-800 mb-1 flex items-center gap-2">
                 <AlertTriangle className="w-4 h-4" /> Phản hồi từ Doanh nghiệp:
               </h4>

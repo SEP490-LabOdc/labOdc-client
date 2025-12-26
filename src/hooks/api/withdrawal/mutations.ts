@@ -1,6 +1,5 @@
 import apiRequest from "@/config/request"
 import { useMutation } from "@tanstack/react-query"
-
 export interface ApproveWithdrawalPayload {
     withdrawalId: string
     adminNote?: string
@@ -20,7 +19,7 @@ export const useApproveWithdrawal = () => {
                 body
             )
             return data
-        }
+        },
     })
 }
 

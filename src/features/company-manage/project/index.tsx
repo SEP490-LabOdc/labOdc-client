@@ -9,7 +9,7 @@ import { ProjectPrimaryButtons } from "./components/project-primary-buttons"
 const route = getRouteApi('/_authenticated/company-manage/projects/')
 
 const ProjectTableSkeleton = () => (
-    <div className="space-y-3 p-4 border rounded-lg bg-background shadow">
+    <div className="space-y-3 p-4 border rounded-md bg-background shadow">
         <div className="flex justify-between space-x-4 mb-4">
             <div className="h-9 w-64 animate-pulse rounded-md bg-gray-200 dark:bg-gray-600" />
             <div className="h-9 w-24 animate-pulse rounded-md bg-gray-200 dark:bg-gray-600" />
@@ -17,21 +17,21 @@ const ProjectTableSkeleton = () => (
 
         {Array.from({ length: 10 }).map((_, index) => (
             <div key={index} className="flex items-center space-x-2 py-2 border-b border-gray-100 dark:border-gray-700">
-                <div className="h-4 w-4 animate-pulse rounded-sm bg-gray-200 dark:bg-gray-500" />
-                <div className="h-4 w-[12%] animate-pulse rounded-sm bg-gray-200 dark:bg-gray-500" />
-                <div className="h-4 w-[10%] animate-pulse rounded-sm bg-gray-200 dark:bg-gray-500" />
-                <div className="h-4 w-[15%] animate-pulse rounded-sm bg-gray-200 dark:bg-gray-500" />
-                <div className="h-4 w-[10%] animate-pulse rounded-sm bg-gray-200 dark:bg-gray-500" />
-                <div className="h-4 w-[12%] animate-pulse rounded-sm bg-gray-200 dark:bg-gray-500" />
-                <div className="h-4 w-[8%] animate-pulse rounded-sm bg-gray-200 dark:bg-gray-500" />
+                <div className="h-4 w-4 animate-pulse rounded-md bg-gray-200 dark:bg-gray-500" />
+                <div className="h-4 w-[12%] animate-pulse rounded-md bg-gray-200 dark:bg-gray-500" />
+                <div className="h-4 w-[10%] animate-pulse rounded-md bg-gray-200 dark:bg-gray-500" />
+                <div className="h-4 w-[15%] animate-pulse rounded-md bg-gray-200 dark:bg-gray-500" />
+                <div className="h-4 w-[10%] animate-pulse rounded-md bg-gray-200 dark:bg-gray-500" />
+                <div className="h-4 w-[12%] animate-pulse rounded-md bg-gray-200 dark:bg-gray-500" />
                 <div className="h-4 w-[8%] animate-pulse rounded-md bg-gray-200 dark:bg-gray-500" />
-                <div className="h-4 w-[8%] animate-pulse rounded-sm bg-gray-200 dark:bg-gray-500" />
+                <div className="h-4 w-[8%] animate-pulse rounded-md bg-gray-200 dark:bg-gray-500" />
+                <div className="h-4 w-[8%] animate-pulse rounded-md bg-gray-200 dark:bg-gray-500" />
                 <div className="h-4 w-4 ms-auto animate-pulse rounded-full bg-gray-200 dark:bg-gray-500" />
             </div>
         ))}
         <div className="flex justify-between pt-2">
-            <div className="h-6 w-24 animate-pulse rounded-sm bg-gray-200 dark:bg-gray-600" />
-            <div className="h-6 w-32 animate-pulse rounded-sm bg-gray-200 dark:bg-gray-600" />
+            <div className="h-6 w-24 animate-pulse rounded-md bg-gray-200 dark:bg-gray-600" />
+            <div className="h-6 w-32 animate-pulse rounded-md bg-gray-200 dark:bg-gray-600" />
         </div>
     </div>
 )

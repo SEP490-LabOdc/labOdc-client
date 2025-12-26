@@ -82,7 +82,7 @@ export const ExtensionTab: React.FC<Props> = ({ milestone }) => {
                 ) : (
                     <>
                         {extensionRequests.length === 0 ? (
-                            <div className="text-center py-12 text-gray-500 bg-gray-50 rounded-lg border border-dashed">
+                            <div className="text-center py-12 text-gray-500 bg-gray-50 rounded-md border border-dashed">
                                 <FileText className="h-12 w-12 mx-auto mb-4 text-gray-400" />
                                 <p>Chưa có yêu cầu gia hạn nào được tạo.</p>
                             </div>
@@ -91,7 +91,7 @@ export const ExtensionTab: React.FC<Props> = ({ milestone }) => {
                                 {extensionRequests.map((request: ExtensionRequest) => (
                                     <div
                                         key={request.id}
-                                        className="flex flex-col gap-4 p-4 border rounded-lg hover:bg-gray-50 transition-colors bg-white shadow-sm"
+                                        className="flex flex-col gap-4 p-4 border rounded-md hover:bg-gray-50 transition-colors bg-white shadow-sm"
                                     >
                                         <div className="flex items-start justify-between">
                                             <div className="flex-1 min-w-0">

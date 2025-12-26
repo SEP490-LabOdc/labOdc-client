@@ -60,7 +60,7 @@ export default function PrivacyPage() {
                     </ul>
                 </section>
 
-                <section className="bg-primary/5 p-6 rounded-xl border border-primary/10">
+                <section className="bg-primary/5 p-6 rounded-md border border-primary/10">
                     <h2 className="text-xl font-bold text-primary mb-4 flex items-center">
                         <span className="bg-primary text-primary-foreground text-sm font-bold mr-3 px-2.5 py-0.5 rounded">4</span>
                         Quy trình Báo cáo và Nghiệm thu (Quan trọng)
@@ -96,11 +96,11 @@ export default function PrivacyPage() {
                         Chính sách Tài chính và Thanh toán
                     </h2>
                     <div className="grid md:grid-cols-2 gap-6">
-                        <div className="bg-muted p-4 rounded-lg">
+                        <div className="bg-muted p-4 rounded-md">
                             <h3 className="font-bold text-foreground mb-2">Cơ chế Thanh toán</h3>
                             <p className="text-sm text-foreground/80">Áp dụng mô hình "Nghiệm thu trước - Thanh toán sau". Khi Company bấm "Accept Result", trạng thái là <span className="font-mono text-xs bg-brand-orange/20 text-brand-orange px-1 rounded">Waiting for Payment</span>. Company phải thanh toán ngay để hoàn tất.</p>
                         </div>
-                        <div className="bg-muted p-4 rounded-lg">
+                        <div className="bg-muted p-4 rounded-md">
                             <h3 className="font-bold text-foreground mb-2">Nạp / Rút tiền</h3>
                             <p className="text-sm text-foreground/80">Rút tiền tối thiểu <strong className="text-foreground">500,000 VND</strong>. Duyệt thủ công từ 1-3 ngày làm việc. Nạp tiền qua chuyển khoản hoặc cổng thanh toán.</p>
                         </div>

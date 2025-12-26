@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Progress } from '@/components/ui/progress'
 import { Button } from '@/components/ui/button'
@@ -29,20 +29,20 @@ const getStatusIcon = (status: string) => {
     <StatusRenderer
       status={status.toUpperCase()}
       renderers={{
-        COMPLETE: <CheckCircle2 className="h-4 w-4 text-green-600" />,
-        ON_GOING: <Clock className="h-4 w-4 text-[#2a9d8f]" />,
+        COMPLETE: <CheckCircle2 className="h-4 w-4 text-secondary" />,
+        ON_GOING: <Clock className="h-4 w-4 text-secondary" />,
       }}
-      fallback={<Circle className="h-4 w-4 text-gray-400" />}
+      fallback={<Circle className="h-4 w-4 text-muted-foreground" />}
     />
   )
 }
 
-export const MilestonesTab: React.FC<MilestonesTabProps> = ({
+export const MilestonesTab = ({
   milestones,
   projectId,
   projectData,
   onRefresh,
-}) => {
+}: MilestonesTabProps) => {
   const navigate = useNavigate()
   const { user, isMentor } = usePermission()
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
@@ -99,7 +99,7 @@ export const MilestonesTab: React.FC<MilestonesTabProps> = ({
         )}
       </div>
 
-      {milestones.map((milestone) => {
+      {milestones.map((milestone: Milestone) => {
         const talents = milestone.talents || []
         const progress = calculateProgress(milestone.startDate, milestone.endDate)
 
@@ -115,19 +115,19 @@ export const MilestonesTab: React.FC<MilestonesTabProps> = ({
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex-1 min-w-0">
                       <h3
-                        className="font-semibold text-sm truncate hover:text-[#2a9d8f] cursor-pointer"
+                        className="font-semibold text-sm truncate hover:text-secondary cursor-pointer text-foreground"
                         onClick={() => handleNavigateToMilestone(milestone.id)}
                       >
                         {milestone.title}
                       </h3>
-                      <p className="text-xs text-gray-600 mt-1 line-clamp-2">{milestone.description}</p>
+                      <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{milestone.description}</p>
                     </div>
                     <div className="flex-shrink-0">
                       {getMilestoneStatusBadge(milestone.status)}
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-4 text-xs text-gray-600">
+                  <div className="flex items-center gap-4 text-xs text-muted-foreground">
                     <div className="flex items-center gap-1.5">
                       <CalendarDays className="h-3.5 w-3.5" />
                       <span>
@@ -137,13 +137,13 @@ export const MilestonesTab: React.FC<MilestonesTabProps> = ({
                     </div>
 
                     <div className="flex items-center gap-1.5">
-                      <span className="text-gray-600">Ngân sách:</span>
-                      <span className="font-medium text-gray-800">
+                      <span className="text-muted-foreground">Ngân sách:</span>
+                      <span className="font-medium text-foreground">
                         {(milestone.budget ?? 0).toLocaleString('vi-VN')} VNĐ
                       </span>
                     </div>
 
-                    <span className="font-medium text-gray-800">{progress}%</span>
+                    <span className="font-medium text-foreground">{progress}%</span>
                   </div>
 
                   <Progress value={progress} className="h-1.5" />
@@ -151,15 +151,15 @@ export const MilestonesTab: React.FC<MilestonesTabProps> = ({
                   <div className="flex items-center justify-between pt-2">
                     <div className="flex items-center gap-6">
                       <div className="flex items-center gap-2">
-                        <div className="flex items-center gap-1.5 text-xs text-gray-600">
+                        <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
                           <Users className="h-3.5 w-3.5" />
                           <span>Talents</span>
                         </div>
                         <div className="flex -space-x-2">
                           {talents.length > 0 ? (
-                            <span className="text-xs text-gray-400">{talents.length}</span>
+                            <span className="text-xs text-muted-foreground/70">{talents.length}</span>
                           ) : (
-                            <span className="text-xs text-gray-400">Chưa có</span>
+                            <span className="text-xs text-muted-foreground/70">Chưa có</span>
                           )}
                         </div>
                       </div>
@@ -201,8 +201,8 @@ export const MilestonesTab: React.FC<MilestonesTabProps> = ({
       {milestones.length === 0 && (
         <Card>
           <CardContent className="py-12">
-            <div className="text-center text-gray-500">
-              <Clock className="h-12 w-12 mx-auto mb-4 text-gray-400" />
+            <div className="text-center text-muted-foreground">
+              <Clock className="h-12 w-12 mx-auto mb-4 text-muted-foreground/50" />
               <p className="text-sm">Chưa có milestone nào được tạo</p>
             </div>
           </CardContent>

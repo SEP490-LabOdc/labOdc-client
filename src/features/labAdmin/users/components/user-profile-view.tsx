@@ -77,7 +77,7 @@ export default function UserProfileView({ user }: any) {
                     <div className="md:col-span-2 pl-6">
                         <Tabs defaultValue="about" className="w-full">
 
-                            <TabsList className="grid w-full grid-cols-2 h-auto bg-gray-100 p-1 rounded-lg">
+                            <TabsList className="grid w-full grid-cols-2 h-auto bg-gray-100 p-1 rounded-md">
                                 <TabsTrigger
                                     value="about"
                                     className="data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-md py-2"

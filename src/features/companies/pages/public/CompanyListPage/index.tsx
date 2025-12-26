@@ -1,51 +1,17 @@
-import { useState } from "react"
-import { Briefcase, Filter, Search } from 'lucide-react'
+import { useState, useEffect } from "react"
+import { Briefcase, Filter, Search, Loader2 } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { FiltersBar, type Filters } from "./components/filters-bar"
 import { PaginationBar } from "./components/pagination-bar"
 import { CardCompany } from "./components/card-company"
-import type { Company } from "@/features/companies/types"
-import { fetchCompanies } from "@/features/companies/api/fetchCompanies"
+import { useSearchCompanies } from "@/hooks/api/companies/mutations"
+import type { SearchCompaniesPayload, Company } from "@/hooks/api/companies/types"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet.tsx'
 import { Input } from '@/components/ui/input.tsx'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select.tsx'
-// import { FiltersMobile } from "./components/filters-mobile"
-
-// function applyFiltersSort(companies: Company[], filters: Filters): Company[] {
-//     const filtered = companies.filter((company) => {
-//         const matchesSearch =
-//             !filters.search ||
-//             company.name.toLowerCase().includes(filters.search.toLowerCase()) ||
-//             company.industry.toLowerCase().includes(filters.search.toLowerCase())
-//
-//         const matchesIndustry = !filters.industry || company.industry === filters.industry
-//         const matchesLocation = !filters.location || company.location.includes(filters.location)
-//
-//         return matchesSearch && matchesIndustry && matchesLocation
-//     })
-//
-//     // Sort
-//     switch (filters.sort) {
-//         case "rating":
-//             filtered.sort((a, b) => b.rating - a.rating)
-//             break
-//         case "projects":
-//             filtered.sort((a, b) => b.openProjects - a.openProjects)
-//             break
-//         case "newest":
-//             // Mock newest sort by id
-//             filtered.sort((a, b) => Number.parseInt(b.id) - Number.parseInt(a.id))
-//             break
-//         default:
-//             // Most relevant - keep original order
-//             break
-//     }
-//
-//     return filtered
-// }
 
 export default function CompanyListPage() {
-    const [companies, setCompanies] = useState<Company[]>(fetchCompanies)
+    const [companies, setCompanies] = useState<Company[]>([])
     const [filters, setFilters] = useState<Filters>({
         search: "",
         industry: "all",
@@ -53,21 +19,107 @@ export default function CompanyListPage() {
         sort: "relevant",
     })
     const [currentPage, setCurrentPage] = useState(1)
+    const [totalItems, setTotalItems] = useState(0)
 
     const pageSize = 8
+    const searchCompaniesMutation = useSearchCompanies()
 
-    // const filteredCompanies = useMemo(() => {
-    //     return applyFiltersSort(companies, filters)
-    // }, [companies, filters])
+    // Build search payload from filters
+    const buildSearchPayload = (filters: Filters, page: number): SearchCompaniesPayload => {
+        const payloadFilters: Array<{ key: string; operator: string; value: string; valueTo: Object }> = []
 
-    const totalPages = Math.ceil(companies.length / pageSize)
-    const paginatedCompanies = companies.slice((currentPage - 1) * pageSize, currentPage * pageSize)
+        // Add search filter if exists
+        if (filters.search) {
+            payloadFilters.push({
+                key: "name",
+                operator: "CONTAINS",
+                value: filters.search,
+                valueTo: {}
+            })
+        }
 
-    const handleToggleFollow = (id: string) => {
-        setCompanies((prev) =>
-            prev.map((company) => (company.id === id ? { ...company, isFollowed: !company.isFollowed } : company)),
-        )
+        // Add industry filter if not "all"
+        if (filters.industry !== "all") {
+            payloadFilters.push({
+                key: "industry",
+                operator: "EQUAL",
+                value: filters.industry,
+                valueTo: {}
+            })
+        }
+
+        // Add location filter if not "all"
+        if (filters.location !== "all") {
+            payloadFilters.push({
+                key: "address",
+                operator: "CONTAINS",
+                value: filters.location,
+                valueTo: {}
+            })
+        }
+
+        // Build sort
+        const sorts: Array<{ key: string; direction: string }> = []
+        switch (filters.sort) {
+            case "rating":
+                sorts.push({ key: "rating", direction: "DESC" })
+                break
+            case "projects":
+                sorts.push({ key: "openProjects", direction: "DESC" })
+                break
+            case "newest":
+                sorts.push({ key: "createdAt", direction: "DESC" })
+                break
+            default:
+                // Most relevant - no sort
+                break
+        }
+
+        return {
+            filters: payloadFilters.length > 0 ? payloadFilters as any : [{ key: "status", operator: "EQUAL", value: "ACTIVE", valueTo: {} }],
+            sorts: sorts.length > 0 ? sorts as any : [{ key: "createdAt", direction: "ASC" }],
+            page: page,
+            size: pageSize
+        }
     }
+
+    // Search companies when filters or page changes
+    useEffect(() => {
+        const payload = buildSearchPayload(filters, currentPage)
+        searchCompaniesMutation.mutate(payload, {
+            onSuccess: (response) => {
+                // Map API response to Company type
+                // API response structure: data.data.content
+                const companiesData = response?.data?.data || []
+
+                const mappedCompanies: Company[] = (Array.isArray(companiesData) ? companiesData : []).map((item: any) => ({
+                    id: item.id || '',
+                    name: item.name || '',
+                    email: item.email || '',
+                    phone: item.phone || '',
+                    taxCode: item.taxCode || '',
+                    address: item.address || '',
+                    logo: item.logo || '',
+                    description: item.description || '',
+                    website: item.website || '',
+                    status: item.status || '',
+                    domain: item.domain || '',
+                    contactPersonName: item.contactPersonName || '',
+                    contactPersonEmail: item.contactPersonEmail || '',
+                    contactPersonPhone: item.contactPersonPhone || ''
+                }))
+                setCompanies(mappedCompanies)
+                setTotalItems(response?.data?.data?.totalElements || response?.data?.totalElements || response?.totalElements || response?.total || 0)
+            },
+            onError: (error) => {
+                console.error('Error searching companies:', error)
+                setCompanies([])
+                setTotalItems(0)
+            }
+        })
+    }, [filters, currentPage])
+
+    const totalPages = Math.ceil(totalItems / pageSize)
 
     const handleFiltersChange = (newFilters: Filters) => {
         setFilters(newFilters)
@@ -95,7 +147,7 @@ export default function CompanyListPage() {
 
                 {/* Filters - Desktop */}
                 <div className="hidden md:block mb-8">
-                    <div className="bg-card p-6 rounded-2xl shadow-sm border">
+                    <div className="">
                         <FiltersBar filters={filters} onFiltersChange={handleFiltersChange} />
                     </div>
                 </div>
@@ -117,16 +169,16 @@ export default function CompanyListPage() {
                                 <div className="relative">
                                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                                     <Input
-                                      placeholder="Tìm kiếm theo tên công ty, ngành..."
-                                      value={filters.search}
-                                      onChange={(e) => handleFiltersChange({ ...filters, search: e.target.value })}
-                                      className="pl-10"
+                                        placeholder="Tìm kiếm theo tên công ty, ngành..."
+                                        value={filters.search}
+                                        onChange={(e) => handleFiltersChange({ ...filters, search: e.target.value })}
+                                        className="pl-10"
                                     />
                                 </div>
 
                                 <Select
-                                  value={filters.industry}
-                                  onValueChange={(value) => handleFiltersChange({ ...filters, industry: value })}
+                                    value={filters.industry}
+                                    onValueChange={(value) => handleFiltersChange({ ...filters, industry: value })}
                                 >
                                     <SelectTrigger>
                                         <SelectValue placeholder="Chọn ngành" />
@@ -143,8 +195,8 @@ export default function CompanyListPage() {
                                 </Select>
 
                                 <Select
-                                  value={filters.location}
-                                  onValueChange={(value) => handleFiltersChange({ ...filters, location: value })}
+                                    value={filters.location}
+                                    onValueChange={(value) => handleFiltersChange({ ...filters, location: value })}
                                 >
                                     <SelectTrigger>
                                         <SelectValue placeholder="Chọn địa điểm" />
@@ -160,8 +212,8 @@ export default function CompanyListPage() {
                                 </Select>
 
                                 <Select
-                                  value={filters.sort}
-                                  onValueChange={(value) => handleFiltersChange({ ...filters, sort: value })}
+                                    value={filters.sort}
+                                    onValueChange={(value) => handleFiltersChange({ ...filters, sort: value })}
                                 >
                                     <SelectTrigger>
                                         <SelectValue placeholder="Sắp xếp theo" />
@@ -180,16 +232,47 @@ export default function CompanyListPage() {
 
                 {/* Results count */}
                 <div className="flex items-center justify-between mb-6">
-                    <p className="text-sm text-muted-foreground">Tìm thấy {companies.length} công ty</p>
+                    <p className="text-sm text-muted-foreground">
+                        {searchCompaniesMutation.isPending ? (
+                            "Đang tìm kiếm..."
+                        ) : (
+                            `Tìm thấy ${totalItems} công ty`
+                        )}
+                    </p>
                     {(filters.search || filters.industry !== "all" || filters.location !== "all") && (
-                        <Button variant="ghost" size="sm" onClick={clearFilters}>
+                        <Button variant="ghost" size="sm" onClick={clearFilters} disabled={searchCompaniesMutation.isPending}>
                             Xóa bộ lọc
                         </Button>
                     )}
                 </div>
 
+                {/* Loading state */}
+                {searchCompaniesMutation.isPending && (
+                    <div className="text-center py-16">
+                        <Loader2 className="h-12 w-12 mx-auto animate-spin text-muted-foreground mb-4" />
+                        <p className="text-muted-foreground">Đang tải danh sách công ty...</p>
+                    </div>
+                )}
+
+                {/* Error state */}
+                {searchCompaniesMutation.isError && !searchCompaniesMutation.isPending && (
+                    <div className="text-center py-16">
+                        <div className="mb-4">
+                            <Briefcase className="h-16 w-16 mx-auto text-muted-foreground/50" />
+                        </div>
+                        <h3 className="text-lg font-semibold mb-2">Lỗi khi tải dữ liệu</h3>
+                        <p className="text-muted-foreground mb-4">Vui lòng thử lại sau</p>
+                        <Button onClick={() => {
+                            const payload = buildSearchPayload(filters, currentPage)
+                            searchCompaniesMutation.mutate(payload)
+                        }}>
+                            Thử lại
+                        </Button>
+                    </div>
+                )}
+
                 {/* Empty state */}
-                {companies.length === 0 && (
+                {!searchCompaniesMutation.isPending && !searchCompaniesMutation.isError && companies.length === 0 && (
                     <div className="text-center py-16">
                         <div className="mb-4">
                             <Briefcase className="h-16 w-16 mx-auto text-muted-foreground/50" />
@@ -201,11 +284,11 @@ export default function CompanyListPage() {
                 )}
 
                 {/* Company grid */}
-                {paginatedCompanies.length > 0 && (
+                {!searchCompaniesMutation.isPending && !searchCompaniesMutation.isError && companies.length > 0 && (
                     <>
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
-                            {paginatedCompanies.map((company) => (
-                                <CardCompany key={company.id} company={company} onToggleFollow={handleToggleFollow} />
+                            {companies.map((company) => (
+                                <CardCompany key={company.id} company={company} />
                             ))}
                         </div>
 

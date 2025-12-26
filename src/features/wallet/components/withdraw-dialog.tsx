@@ -12,6 +12,7 @@ import {
 } from '@/components/ui/dialog'
 import { Wallet, AlertTriangle, CheckCircle, CreditCard } from 'lucide-react'
 import { toast } from 'sonner'
+import { formatVND } from '@/helpers/currency'
 
 interface WithdrawDialogProps {
     isOpen: boolean
@@ -25,8 +26,6 @@ interface WithdrawDialogProps {
     onConfirm: (amount: number) => void
 }
 
-const formatVND = (v: number) => new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(v)
-
 export const WithdrawDialog: React.FC<WithdrawDialogProps> = ({
     isOpen,
     onClose,
@@ -38,10 +37,8 @@ export const WithdrawDialog: React.FC<WithdrawDialogProps> = ({
     const [isProcessing, setIsProcessing] = useState(false)
 
     const amountNum = parseFloat(amount) || 0
-    const minWithdraw = 50000 // Tối thiểu 50k
+    const minWithdraw = 50000
     const maxWithdraw = availableBalance
-    const fee = amountNum * 0.01 // Phí 1%
-    const finalAmount = amountNum - fee
 
     const handleSubmit = async () => {
         if (!bankAccount) {
@@ -97,7 +94,7 @@ export const WithdrawDialog: React.FC<WithdrawDialogProps> = ({
 
                 <div className="space-y-4 py-4">
                     {/* Balance Info */}
-                    <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                    <div className="p-4 bg-blue-50 border border-blue-200 rounded-md">
                         <p className="text-sm text-blue-800 mb-1">
                             <strong>Số dư khả dụng:</strong> {formatVND(availableBalance)}
                         </p>
@@ -108,7 +105,7 @@ export const WithdrawDialog: React.FC<WithdrawDialogProps> = ({
 
                     {/* Bank Account Info */}
                     {bankAccount ? (
-                        <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
+                        <div className="p-4 bg-green-50 border border-green-200 rounded-md">
                             <div className="flex items-start gap-3">
                                 <CreditCard className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
                                 <div className="flex-1">
@@ -125,7 +122,7 @@ export const WithdrawDialog: React.FC<WithdrawDialogProps> = ({
                             </div>
                         </div>
                     ) : (
-                        <div className="p-4 bg-orange-50 border border-orange-200 rounded-lg">
+                        <div className="p-4 bg-orange-50 border border-orange-200 rounded-md">
                             <div className="flex items-start gap-3">
                                 <AlertTriangle className="h-5 w-5 text-orange-600 flex-shrink-0" />
                                 <div>
@@ -201,31 +198,22 @@ export const WithdrawDialog: React.FC<WithdrawDialogProps> = ({
 
                     {/* Fee Calculation */}
                     {amountNum > 0 && (
-                        <div className="p-4 bg-gray-50 border border-gray-200 rounded-lg space-y-2">
+                        <div className="p-4 bg-gray-50 border border-gray-200 rounded-md space-y-2">
                             <div className="flex justify-between text-sm">
                                 <span className="text-gray-600">Số tiền rút:</span>
                                 <span className="font-semibold text-gray-900">{formatVND(amountNum)}</span>
-                            </div>
-                            <div className="flex justify-between text-sm">
-                                <span className="text-gray-600">Phí giao dịch (1%):</span>
-                                <span className="font-semibold text-red-600">-{formatVND(fee)}</span>
-                            </div>
-                            <div className="border-t pt-2 flex justify-between">
-                                <span className="font-semibold text-gray-900">Số tiền nhận:</span>
-                                <span className="font-bold text-green-600 text-lg">{formatVND(finalAmount)}</span>
                             </div>
                         </div>
                     )}
 
                     {/* Warning */}
-                    <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+                    <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-md">
                         <div className="flex items-start gap-2">
                             <AlertTriangle className="h-4 w-4 text-yellow-600 flex-shrink-0 mt-0.5" />
                             <div className="text-xs text-yellow-800">
                                 <p className="font-semibold mb-1">⚠️ Lưu ý quan trọng:</p>
                                 <ul className="space-y-0.5 ml-4">
                                     <li>• Thời gian xử lý: 1-3 ngày làm việc</li>
-                                    <li>• Phí giao dịch: 1% số tiền rút</li>
                                     <li>• Yêu cầu không thể hủy sau khi gửi</li>
                                     <li>• Kiểm tra kỹ thông tin trước khi xác nhận</li>
                                 </ul>

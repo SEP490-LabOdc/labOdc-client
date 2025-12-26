@@ -33,7 +33,7 @@ export const FundSummaryCards: React.FC<FundSummaryCardsProps> = ({
     return (
         <div className="grid grid-cols-3 gap-4">
             {/* Tổng quỹ */}
-            <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
+            <div className="p-3 bg-blue-50 border border-blue-200 rounded-md">
                 <div className="flex items-center gap-2 text-sm text-blue-700 mb-1">
                     <DollarSign className="h-4 w-4" />
                     <span className="font-medium">Tổng quỹ</span>
@@ -43,7 +43,7 @@ export const FundSummaryCards: React.FC<FundSummaryCardsProps> = ({
 
             {/* Đã phân bổ */}
             <div className={cn(
-                "p-3 border rounded-lg",
+                "p-3 border rounded-md",
                 isOverAllocated
                     ? "bg-red-50 border-red-200"
                     : "bg-green-50 border-green-200"
@@ -65,7 +65,7 @@ export const FundSummaryCards: React.FC<FundSummaryCardsProps> = ({
 
             {/* Còn lại */}
             <div className={cn(
-                "p-3 border rounded-lg",
+                "p-3 border rounded-md",
                 remaining < 0
                     ? "bg-red-50 border-red-200"
                     : remaining === 0

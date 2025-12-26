@@ -42,7 +42,7 @@ const iconButtonVariants = cva(
         false: ""
       },
       size: {
-        xs: ["text-xs", "rounded-xs", "py-1.5", "px-2"],
+        xs: ["text-xs", "rounded-md", "py-1.5", "px-2"],
         sm: ["text-sm", "py-3", "px-3"],
         md: ["text-md", "py-4", "px-4"],
         lg: ["text-lg", "py-6", "px-6"]

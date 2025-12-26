@@ -110,7 +110,6 @@ export const MilestoneSidebar: React.FC<MilestoneSidebarProps> = ({
   const teamShare = disbursementInfo.teamShare
   const canRelease = isCompany && milestone.status === MilestoneStatus.PAID
 
-  // Handle nạp tiền vào Escrow
   const handleDepositToEscrow = async () => {
     if (!projectId) {
       toast.error('Không tìm thấy thông tin dự án')
@@ -188,11 +187,11 @@ export const MilestoneSidebar: React.FC<MilestoneSidebarProps> = ({
       <CardContent className="space-y-4">
         <MilestoneInfoSection milestone={milestone} />
 
-        <div className="border-t pt-4 space-y-4">
+        <div className="border-t border-border pt-4 space-y-4">
           {/* Mentors Section */}
           {mentors.length > 0 && (
             <div>
-              <div className="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-3">
+              <div className="flex items-center gap-2 text-sm font-semibold mb-3">
                 <Users className="h-4 w-4" />
                 <span>Mentors ({mentors.length})</span>
               </div>
@@ -208,7 +207,7 @@ export const MilestoneSidebar: React.FC<MilestoneSidebarProps> = ({
 
           {/* Talents Section */}
           <div>
-            <div className="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-3">
+            <div className="flex items-center gap-2 text-sm font-semibold mb-3">
               <Users className="h-4 w-4" />
               <span>Talents ({talents.length})</span>
             </div>
@@ -230,7 +229,7 @@ export const MilestoneSidebar: React.FC<MilestoneSidebarProps> = ({
                   to: `${basePath}/projects/${milestone.projectId}/${milestone.id}/members`,
                 })
               }}
-              className="flex items-center gap-2 text-sm text-[#2a9d8f] hover:text-[#1e7a6e] transition-colors w-full justify-center py-2 hover:bg-gray-50 rounded-md"
+              className="flex items-center gap-2 text-sm text-secondary hover:text-secondary/90 transition-colors w-full justify-center py-2 hover:bg-muted rounded-md"
             >
               <span>Xem tất cả thành viên</span>
               <ArrowRight className="h-4 w-4" />
@@ -240,9 +239,9 @@ export const MilestoneSidebar: React.FC<MilestoneSidebarProps> = ({
 
         {/* Action Section - Giải ngân */}
         {isCompany && (
-          <div className="border-t pt-4 space-y-3">
-            <div className="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-2">
-              <Unlock className="h-4 w-4 text-[#2a9d8f]" />
+          <div className="border-t border-border pt-4 space-y-3">
+            <div className="flex items-center gap-2 text-sm font-semibold text-foreground mb-2">
+              <Unlock className="h-4 w-4 text-secondary" />
               <span>Hành động giải ngân</span>
             </div>
 

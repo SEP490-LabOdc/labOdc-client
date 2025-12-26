@@ -99,7 +99,7 @@ export const WalletTransactionHistory: React.FC<WalletTransactionHistoryProps> =
                             return (
                                 <div
                                     key={transaction.id}
-                                    className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50 transition-colors"
+                                    className="flex items-center justify-between p-4 border rounded-md hover:bg-gray-50 transition-colors"
                                 >
                                     <div className="flex items-center gap-3">
                                         <div className={`p-2 ${typeConfig.bgColor} rounded-full`}>

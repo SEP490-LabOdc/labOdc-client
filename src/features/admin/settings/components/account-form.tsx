@@ -86,7 +86,7 @@ export function AccountForm() {
                     {showPasswordForm && (
                         <div
                             className="
-            rounded-xl shadow-sm p-6 space-y-5
+            rounded-md shadow-sm p-6 space-y-5
             bg-white dark:bg-neutral-900
             border border-gray-200 dark:border-neutral-700
         "
