@@ -187,7 +187,7 @@ export default function Dashboard() {
                                         <XAxis dataKey="label" />
                                         <YAxis allowDecimals={false} />
                                         <Tooltip
-                                            formatter={(value: number) => [`${value} dự án`, 'Số lượng']}
+                                            formatter={(value: number | undefined) => [`${value} dự án`, 'Số lượng']}
                                             labelFormatter={(label) => `Tháng ${label}`}
                                         />
                                         <Bar
@@ -214,7 +214,7 @@ export default function Dashboard() {
                                         <XAxis dataKey="label" />
                                         <YAxis allowDecimals={false} />
                                         <Tooltip
-                                            formatter={(value: number) => [
+                                            formatter={(value: number | undefined) => [
                                                 `${value} doanh nghiệp`,
                                                 'Đăng ký mới',
                                             ]}

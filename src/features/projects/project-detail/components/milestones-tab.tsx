@@ -42,7 +42,7 @@ export const MilestonesTab = ({
   projectId,
   projectData,
   onRefresh,
-}) => {
+}: MilestonesTabProps) => {
   const navigate = useNavigate()
   const { user, isMentor } = usePermission()
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
@@ -99,7 +99,7 @@ export const MilestonesTab = ({
         )}
       </div>
 
-      {milestones.map((milestone) => {
+      {milestones.map((milestone: Milestone) => {
         const talents = milestone.talents || []
         const progress = calculateProgress(milestone.startDate, milestone.endDate)
 

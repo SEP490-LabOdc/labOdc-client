@@ -37,7 +37,6 @@ import { Route as AuthenticatedLabAdminIndexRouteImport } from './routes/_authen
 import { Route as AuthenticatedCompanyManageIndexRouteImport } from './routes/_authenticated/company-manage/index'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin/index'
 import { Route as publicTermsAndPrivacyIndexRouteImport } from './routes/(public)/terms-and-privacy/index'
-import { Route as publicTalentPoolIndexRouteImport } from './routes/(public)/talent-pool/index'
 import { Route as publicProjectsIndexRouteImport } from './routes/(public)/projects/index'
 import { Route as publicCompaniesIndexRouteImport } from './routes/(public)/companies/index'
 import { Route as authSignInIndexRouteImport } from './routes/(auth)/sign-in/index'
@@ -267,11 +266,6 @@ const publicTermsAndPrivacyIndexRoute =
     path: '/terms-and-privacy/',
     getParentRoute: () => publicRouteRoute,
   } as any)
-const publicTalentPoolIndexRoute = publicTalentPoolIndexRouteImport.update({
-  id: '/talent-pool/',
-  path: '/talent-pool/',
-  getParentRoute: () => publicRouteRoute,
-} as any)
 const publicProjectsIndexRoute = publicProjectsIndexRouteImport.update({
   id: '/projects/',
   path: '/projects/',
@@ -788,7 +782,6 @@ export interface FileRoutesByFullPath {
   '/sign-in': typeof authSignInIndexRoute
   '/companies/': typeof publicCompaniesIndexRoute
   '/projects': typeof publicProjectsIndexRoute
-  '/talent-pool': typeof publicTalentPoolIndexRoute
   '/terms-and-privacy': typeof publicTermsAndPrivacyIndexRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
   '/company-manage/': typeof AuthenticatedCompanyManageIndexRoute
@@ -883,7 +876,6 @@ export interface FileRoutesByTo {
   '/sign-in': typeof authSignInIndexRoute
   '/companies': typeof publicCompaniesIndexRoute
   '/projects': typeof publicProjectsIndexRoute
-  '/talent-pool': typeof publicTalentPoolIndexRoute
   '/terms-and-privacy': typeof publicTermsAndPrivacyIndexRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
   '/company-manage': typeof AuthenticatedCompanyManageIndexRoute
@@ -995,7 +987,6 @@ export interface FileRoutesById {
   '/(auth)/sign-in/': typeof authSignInIndexRoute
   '/(public)/companies/': typeof publicCompaniesIndexRoute
   '/(public)/projects/': typeof publicProjectsIndexRoute
-  '/(public)/talent-pool/': typeof publicTalentPoolIndexRoute
   '/(public)/terms-and-privacy/': typeof publicTermsAndPrivacyIndexRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/_authenticated/company-manage/': typeof AuthenticatedCompanyManageIndexRoute
@@ -1105,7 +1096,6 @@ export interface FileRouteTypes {
     | '/sign-in'
     | '/companies/'
     | '/projects'
-    | '/talent-pool'
     | '/terms-and-privacy'
     | '/admin/'
     | '/company-manage/'
@@ -1200,7 +1190,6 @@ export interface FileRouteTypes {
     | '/sign-in'
     | '/companies'
     | '/projects'
-    | '/talent-pool'
     | '/terms-and-privacy'
     | '/admin'
     | '/company-manage'
@@ -1311,7 +1300,6 @@ export interface FileRouteTypes {
     | '/(auth)/sign-in/'
     | '/(public)/companies/'
     | '/(public)/projects/'
-    | '/(public)/talent-pool/'
     | '/(public)/terms-and-privacy/'
     | '/_authenticated/admin/'
     | '/_authenticated/company-manage/'
@@ -1602,13 +1590,6 @@ declare module '@tanstack/react-router' {
       path: '/terms-and-privacy'
       fullPath: '/terms-and-privacy'
       preLoaderRoute: typeof publicTermsAndPrivacyIndexRouteImport
-      parentRoute: typeof publicRouteRoute
-    }
-    '/(public)/talent-pool/': {
-      id: '/(public)/talent-pool/'
-      path: '/talent-pool'
-      fullPath: '/talent-pool'
-      preLoaderRoute: typeof publicTalentPoolIndexRouteImport
       parentRoute: typeof publicRouteRoute
     }
     '/(public)/projects/': {
@@ -2205,7 +2186,6 @@ interface publicRouteRouteChildren {
   publicCompaniesRouteRoute: typeof publicCompaniesRouteRouteWithChildren
   publicIndexRoute: typeof publicIndexRoute
   publicProjectsIndexRoute: typeof publicProjectsIndexRoute
-  publicTalentPoolIndexRoute: typeof publicTalentPoolIndexRoute
   publicTermsAndPrivacyIndexRoute: typeof publicTermsAndPrivacyIndexRoute
 }
 
@@ -2213,7 +2193,6 @@ const publicRouteRouteChildren: publicRouteRouteChildren = {
   publicCompaniesRouteRoute: publicCompaniesRouteRouteWithChildren,
   publicIndexRoute: publicIndexRoute,
   publicProjectsIndexRoute: publicProjectsIndexRoute,
-  publicTalentPoolIndexRoute: publicTalentPoolIndexRoute,
   publicTermsAndPrivacyIndexRoute: publicTermsAndPrivacyIndexRoute,
 }
 

@@ -118,7 +118,7 @@ const ProjectDetailPage = () => {
             </TabsContent>
 
             <TabsContent value="files" className="mt-6">
-              <ProjectFilesTab projectId={projectId as string} projectImages={projectData.images || []} />
+              <ProjectFilesTab projectId={projectId as string} />
             </TabsContent>
 
             <TabsContent value="activity" className="mt-6">

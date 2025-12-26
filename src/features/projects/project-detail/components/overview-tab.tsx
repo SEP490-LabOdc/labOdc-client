@@ -15,7 +15,7 @@ import {
   Circle,
   ArrowRight,
 } from 'lucide-react'
-import { getRoleBasePath, getStatusColor, getStatusLabel, getTagColor } from '@/lib/utils'
+import { getRoleBasePath, getStatusColor, getStatusLabel } from '@/lib/utils'
 import { useNavigate } from '@tanstack/react-router'
 import type { ProjectDetail, ProjectMentor } from '@/hooks/api/projects/types'
 import { toast } from 'sonner'

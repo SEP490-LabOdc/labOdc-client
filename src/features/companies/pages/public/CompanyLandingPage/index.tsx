@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
     Building2,
     Users,
@@ -7,40 +7,11 @@ import {
     CheckCircle,
     ArrowRight,
     Star,
-    Mail,
-    Phone,
 } from 'lucide-react';
 import fpt_banner from '@/assets/FPT-HCM-Campus.jpg'
 import { Link } from '@tanstack/react-router';
 
-interface CompanyRegistrationForm {
-    companyName: string;
-    email: string;
-    contactPerson: string;
-    note: string;
-}
-
 const CompanyLandingPage: React.FC = () => {
-    const [formData, setFormData] = useState<CompanyRegistrationForm>({
-        companyName: '',
-        email: '',
-        contactPerson: '',
-        note: ''
-    });
-
-    const handleFormSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        // Handle form submission
-        console.log('Form submitted:', formData);
-    };
-
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        setFormData(prev => ({
-            ...prev,
-            [e.target.name]: e.target.value
-        }));
-    };
-
     return (
         <div className="min-h-screen bg-background">
             {/* Hero Section */}
