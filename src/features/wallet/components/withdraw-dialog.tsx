@@ -12,6 +12,7 @@ import {
 } from '@/components/ui/dialog'
 import { Wallet, AlertTriangle, CheckCircle, CreditCard } from 'lucide-react'
 import { toast } from 'sonner'
+import { formatVND } from '@/helpers/currency'
 
 interface WithdrawDialogProps {
     isOpen: boolean
@@ -25,8 +26,6 @@ interface WithdrawDialogProps {
     onConfirm: (amount: number) => void
 }
 
-const formatVND = (v: number) => new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(v)
-
 export const WithdrawDialog: React.FC<WithdrawDialogProps> = ({
     isOpen,
     onClose,
@@ -38,10 +37,8 @@ export const WithdrawDialog: React.FC<WithdrawDialogProps> = ({
     const [isProcessing, setIsProcessing] = useState(false)
 
     const amountNum = parseFloat(amount) || 0
-    const minWithdraw = 50000 // Tối thiểu 50k
+    const minWithdraw = 50000
     const maxWithdraw = availableBalance
-    const fee = amountNum * 0.01 // Phí 1%
-    const finalAmount = amountNum - fee
 
     const handleSubmit = async () => {
         if (!bankAccount) {
@@ -206,14 +203,6 @@ export const WithdrawDialog: React.FC<WithdrawDialogProps> = ({
                                 <span className="text-gray-600">Số tiền rút:</span>
                                 <span className="font-semibold text-gray-900">{formatVND(amountNum)}</span>
                             </div>
-                            <div className="flex justify-between text-sm">
-                                <span className="text-gray-600">Phí giao dịch (1%):</span>
-                                <span className="font-semibold text-red-600">-{formatVND(fee)}</span>
-                            </div>
-                            <div className="border-t pt-2 flex justify-between">
-                                <span className="font-semibold text-gray-900">Số tiền nhận:</span>
-                                <span className="font-bold text-green-600 text-lg">{formatVND(finalAmount)}</span>
-                            </div>
                         </div>
                     )}
 
@@ -225,7 +214,6 @@ export const WithdrawDialog: React.FC<WithdrawDialogProps> = ({
                                 <p className="font-semibold mb-1">⚠️ Lưu ý quan trọng:</p>
                                 <ul className="space-y-0.5 ml-4">
                                     <li>• Thời gian xử lý: 1-3 ngày làm việc</li>
-                                    <li>• Phí giao dịch: 1% số tiền rút</li>
                                     <li>• Yêu cầu không thể hủy sau khi gửi</li>
                                     <li>• Kiểm tra kỹ thông tin trước khi xác nhận</li>
                                 </ul>
