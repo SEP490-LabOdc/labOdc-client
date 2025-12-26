@@ -9,8 +9,6 @@ import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Link } from '@tanstack/react-router';
 
-// Schema validation cho form đăng nhập
-// (Đặt rememberMe là bắt buộc để input = output, tránh lỗi TS2322)
 const schema = z.object({
     email: z.string().email("Địa chỉ email không hợp lệ"),
     password: z.string().min(1, "Mật khẩu không được để trống"),
@@ -35,7 +33,6 @@ export function LoginCompanyForm() {
         setIsLoading(true);
         console.log("Company login:", data);
 
-        // TODO: Thay thế bằng lời gọi API đăng nhập thật
         setTimeout(() => {
             alert("Đăng nhập thành công!");
             setIsLoading(false);
@@ -102,7 +99,6 @@ export function LoginCompanyForm() {
                                 <FormControl>
                                     <Checkbox
                                         checked={!!field.value}
-                                        // Radix Checkbox trả về CheckedState (boolean | "indeterminate")
                                         onCheckedChange={(checked) => field.onChange(checked === true)}
                                         onBlur={field.onBlur}
                                         ref={field.ref}

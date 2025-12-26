@@ -1,5 +1,24 @@
+/**
+ * Lab ODC Platform Theme Configuration
+ * 
+ * This file defines the design system's color palette, typography, and spacing tokens.
+ * All colors use OKLCH color space for better perceptual uniformity and gamut coverage.
+ * 
+ * Structure:
+ * 1. Typography (Font Families)
+ * 2. Brand Colors (Core brand identity)
+ * 3. Semantic Colors (Theme-aware system colors)
+ * 4. Component-Specific Colors (Sidebar, Charts, etc.)
+ * 5. Spacing & Layout (Radius, Shadows, etc.)
+ * 6. Tailwind Theme Integration (@theme inline)
+ */
+
+/* ============================================================================
+   TYPOGRAPHY
+   ============================================================================ */
+
 :root {
-  /* Add fonts here */
+  /* Font Families */
   --font-inter: "Inter", sans-serif;
   --font-manrope: "Manrope", sans-serif;
   --font-system: system-ui, sans-serif;
@@ -7,104 +26,179 @@
   --font-roboto: "Roboto", sans-serif;
   --font-jetbrains: "JetBrains Mono", sans-serif;
 
-  /* Added Lab ODC Platform brand colors */
+  /* ============================================================================
+     BRAND COLORS
+     Core brand identity colors - used across the platform
+     ============================================================================ */
+  
   --color-brand-dark-teal: #264653;
   --color-brand-green-teal: #2a9d8f;
   --color-brand-warm-yellow: #e9c46a;
   --color-brand-orange: #f4a261;
   --color-brand-light-cream: #f1faee;
-  
-  /* Template type colors - using brand palette */
-  --color-template-weekly: #2a9d8f;
-  --color-template-milestone: #264653;
-  --color-template-delivery: #2a9d8f;
-  --color-template-task: #f4a261;
-  --color-template-planning: #264653;
 
-  /* Updated primary colors to use brand palette */
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
+  /* Template Type Colors - Semantic mapping to brand palette */
+  --color-template-weekly: var(--color-brand-green-teal);
+  --color-template-milestone: var(--color-brand-dark-teal);
+  --color-template-delivery: var(--color-brand-green-teal);
+  --color-template-task: var(--color-brand-orange);
+  --color-template-planning: var(--color-brand-dark-teal);
+
+  /* ============================================================================
+     SEMANTIC COLORS - LIGHT MODE
+     Theme-aware colors that adapt to light/dark mode
+     ============================================================================ */
+
+  /* Base Colors */
+  --background: oklch(1 0 0); /* Pure white */
+  --foreground: oklch(0.145 0 0); /* Near black for text */
+
+  /* Surface Colors */
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
-  --primary: #264653;
-  /* Dark Teal */
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: #2a9d8f;
-  /* Green Teal */
+
+  /* Primary Action Colors - Dark Teal */
+  --primary: var(--color-brand-dark-teal);
+  --primary-foreground: oklch(0.985 0 0); /* High contrast white */
+
+  /* Secondary Action Colors - Green Teal */
+  --secondary: var(--color-brand-green-teal);
   --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: #e9c46a;
-  /* Warm Yellow */
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: #2a9d8f;
-  /* Green Teal for focus rings */
-  --chart-1: #264653;
-  --chart-2: #2a9d8f;
-  --chart-3: #e9c46a;
-  --chart-4: #f4a261;
-  --chart-5: #f1faee;
-  --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
+
+  /* Muted/Subtle Colors */
+  --muted: oklch(0.97 0 0); /* Very light gray for backgrounds */
+  --muted-foreground: oklch(0.556 0 0); /* Medium gray for secondary text */
+
+  /* Accent Colors - Warm Yellow */
+  --accent: var(--color-brand-warm-yellow);
+  --accent-foreground: oklch(0.205 0 0); /* Dark text for readability */
+
+  /* Destructive/Error Colors */
+  --destructive: oklch(0.577 0.245 27.325); /* Red for errors */
+  --destructive-foreground: oklch(0.985 0 0);
+
+  /* Border & Input Colors - Primary color with opacity for blur effect in light mode */
+  /* Using oklch with higher lightness to simulate primary color at 20% opacity on white background */
+  --border: oklch(0.922 0.02 200); /* Light teal-gray, simulating primary color blur */
+  --input: oklch(0.922 0.02 200);
+
+  /* Focus Ring Color */
+  --ring: var(--color-brand-green-teal);
+
+  /* ============================================================================
+     CHART COLORS
+     Color palette for data visualization
+     ============================================================================ */
+  
+  --chart-1: var(--color-brand-dark-teal);
+  --chart-2: var(--color-brand-green-teal);
+  --chart-3: var(--color-brand-warm-yellow);
+  --chart-4: var(--color-brand-orange);
+  --chart-5: var(--color-brand-light-cream);
+
+  /* ============================================================================
+     SPACING & LAYOUT
+     ============================================================================ */
+  
+  --radius: 0.625rem; /* Base border radius (10px) - used for rounded-md */
+
+  /* ============================================================================
+     SIDEBAR COLORS - LIGHT MODE
+     ============================================================================ */
+  
+  --sidebar: oklch(0.985 0 0); /* Off-white sidebar background */
   --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: #264653;
+  --sidebar-primary: var(--color-brand-dark-teal);
   --sidebar-primary-foreground: oklch(0.985 0 0);
   --sidebar-accent: oklch(0.97 0 0);
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: #2a9d8f;
+  --sidebar-ring: var(--color-brand-green-teal);
 }
 
+/* ============================================================================
+   DARK MODE OVERRIDES
+   ============================================================================ */
+
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
+  /* Base Colors - Inverted */
+  --background: oklch(0.145 0 0); /* Dark background */
+  --foreground: oklch(0.985 0 0); /* Light text */
+
+  /* Surface Colors */
   --card: oklch(0.145 0 0);
   --card-foreground: oklch(0.985 0 0);
   --popover: oklch(0.145 0 0);
   --popover-foreground: oklch(0.985 0 0);
-  --primary: #2a9d8f;
-  /* Lighter brand color for dark mode */
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: #264653;
+
+  /* Primary Action Colors - Lighter brand color for better visibility */
+  --primary: var(--color-brand-green-teal); /* Switched to lighter teal */
+  --primary-foreground: oklch(0.205 0 0); /* Dark text for contrast */
+
+  /* Secondary Action Colors - Darker teal */
+  --secondary: var(--color-brand-dark-teal);
   --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: #e9c46a;
+
+  /* Muted/Subtle Colors - Darker backgrounds */
+  --muted: oklch(0.269 0 0); /* Dark gray for backgrounds */
+  --muted-foreground: oklch(0.708 0 0); /* Lighter gray for secondary text */
+
+  /* Accent Colors */
+  --accent: var(--color-brand-warm-yellow);
   --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.396 0.141 25.723);
-  --destructive-foreground: oklch(0.637 0.237 25.331);
+
+  /* Destructive/Error Colors - Adjusted for dark mode */
+  --destructive: oklch(0.396 0.141 25.723); /* Darker red */
+  --destructive-foreground: oklch(0.637 0.237 25.331); /* Lighter red text */
+
+  /* Border & Input Colors - Darker borders */
   --border: oklch(0.269 0 0);
   --input: oklch(0.269 0 0);
-  --ring: #e9c46a;
-  --chart-1: #2a9d8f;
-  --chart-2: #e9c46a;
-  --chart-3: #f4a261;
-  --chart-4: #264653;
-  --chart-5: #f1faee;
-  --sidebar: oklch(0.205 0 0);
+
+  /* Focus Ring Color - Warmer for dark mode */
+  --ring: var(--color-brand-warm-yellow);
+
+  /* Chart Colors - Reordered for better contrast in dark mode */
+  --chart-1: var(--color-brand-green-teal);
+  --chart-2: var(--color-brand-warm-yellow);
+  --chart-3: var(--color-brand-orange);
+  --chart-4: var(--color-brand-dark-teal);
+  --chart-5: var(--color-brand-light-cream);
+
+  /* Sidebar Colors - Dark theme */
+  --sidebar: oklch(0.205 0 0); /* Slightly lighter than background */
   --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: #2a9d8f;
+  --sidebar-primary: var(--color-brand-green-teal);
   --sidebar-primary-foreground: oklch(0.985 0 0);
   --sidebar-accent: oklch(0.269 0 0);
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(0.269 0 0);
-  --sidebar-ring: #e9c46a;
+  --sidebar-ring: var(--color-brand-warm-yellow);
 }
 
+/* ============================================================================
+   TAILWIND THEME INTEGRATION
+   Exposes CSS variables to Tailwind's theme system
+   ============================================================================ */
+
 @theme inline {
-  /* Added brand color utilities */
+  /* Brand Color Utilities */
   --color-brand-dark-teal: var(--color-brand-dark-teal);
   --color-brand-green-teal: var(--color-brand-green-teal);
   --color-brand-warm-yellow: var(--color-brand-warm-yellow);
   --color-brand-orange: var(--color-brand-orange);
   --color-brand-light-cream: var(--color-brand-light-cream);
 
+  /* Template Color Utilities */
+  --color-template-weekly: var(--color-template-weekly);
+  --color-template-milestone: var(--color-template-milestone);
+  --color-template-delivery: var(--color-template-delivery);
+  --color-template-task: var(--color-template-task);
+  --color-template-planning: var(--color-template-planning);
+
+  /* Semantic Color Utilities */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -124,15 +218,21 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
+
+  /* Chart Color Utilities */
   --color-chart-1: var(--chart-1);
   --color-chart-2: var(--chart-2);
   --color-chart-3: var(--chart-3);
   --color-chart-4: var(--chart-4);
   --color-chart-5: var(--chart-5);
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
+
+  /* Border Radius Utilities */
+  --radius-sm: calc(var(--radius) - 4px);   /* 6px */
+  --radius-md: calc(var(--radius) - 2px);    /* 8px - matches rounded-md */
+  --radius-lg: var(--radius);                /* 10px */
+  --radius-xl: calc(var(--radius) + 4px);    /* 14px */
+
+  /* Sidebar Color Utilities */
   --color-sidebar: var(--sidebar);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar-primary: var(--sidebar-primary);

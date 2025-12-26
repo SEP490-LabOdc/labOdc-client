@@ -8,7 +8,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { Separator } from '@/components/ui/separator'
 import { UploadFileModal } from './upload-file-modal'
 import { useGetProjectDocuments } from '@/hooks/api/projects/queries'
 import { formatDateOnly } from '@/helpers/datetime'
@@ -23,14 +22,12 @@ export interface ProjectDocument {
 }
 
 interface ProjectFilesTabProps {
-  projectImages: string[]
   projectId: string
 }
 
 export const ProjectFilesTab = ({
-  projectImages,
   projectId,
-}) => {
+}: ProjectFilesTabProps) => {
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false)
 
   // Sử dụng hook đã có để fetch documents
@@ -59,30 +56,7 @@ export const ProjectFilesTab = ({
   return (
     <Card>
       <CardContent className="p-6 space-y-6">
-        {/* Phần Images */}
-        <div>
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold">Images</h3>
-            <Button size="sm">
-              <Plus className="h-4 w-4 mr-2" />
-              Add New
-            </Button>
-          </div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-            {projectImages.map((src, index) => (
-              <div key={index} className="relative aspect-square rounded-md overflow-hidden group">
-                <img src={src} alt={`Project Image ${index + 1}`} className="w-full h-full object-cover" />
-                <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                  <Button variant="secondary" size="sm" onClick={() => handleViewFile(src)}>
-                    View
-                  </Button>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
 
-        <Separator />
 
         {/* Phần Files */}
         <div>
@@ -108,7 +82,7 @@ export const ProjectFilesTab = ({
                 files.map((file: ProjectDocument) => (
                   <div
                     key={file.id}
-                    className="flex items-center justify-between p-3 border border-border rounded-md bg-muted hover:bg-muted/80 transition-colors"
+                    className="flex items-center justify-between p-3 border border-primary/20 rounded-md bg-muted hover:bg-muted/80 transition-colors"
                   >
                     <div className="flex items-center gap-3 flex-1 min-w-0">
                       <FileText className="h-8 w-8 text-muted-foreground flex-shrink-0" />

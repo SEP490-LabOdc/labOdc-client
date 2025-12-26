@@ -15,7 +15,6 @@ interface ProjectPageHeaderProps {
 
 export const ProjectPageHeader = ({ projectData }: ProjectPageHeaderProps) => {
   const navigate = useNavigate()
-  const { history } = useRouter()
   const { user } = useUser()
   const { isCompany, isLabAdmin } = usePermission()
 
@@ -24,12 +23,7 @@ export const ProjectPageHeader = ({ projectData }: ProjectPageHeaderProps) => {
   const [isCompleteDialogOpen, setIsCompleteDialogOpen] = useState(false)
 
   const handleGoBack = () => {
-    // Try to go back in history, if no history, navigate to projects list
-    if (window.history.length > 1) {
-      history.go(-1)
-    } else {
-      navigate({ to: `${getRoleBasePath(user?.role)}/projects` })
-    }
+    navigate({ to: `${getRoleBasePath(user?.role)}/projects` })
   }
 
   const handleCompleteProject = async (projectId: string) => {
@@ -52,7 +46,7 @@ export const ProjectPageHeader = ({ projectData }: ProjectPageHeaderProps) => {
   const showCloseButton = (isOngoing || isPaused) && isLabAdmin
 
   return (
-    <div className="bg-card px-6 lg:px-18 py-4 border-b border-border flex items-center justify-between">
+    <div className="bg-card px-6 lg:px-18 py-4 border-b border-primary/20 flex items-center justify-between">
       <Button
         variant="ghost"
         size="sm"

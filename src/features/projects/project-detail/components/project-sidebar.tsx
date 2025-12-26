@@ -1,9 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { ChevronDown } from 'lucide-react'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
-import { getStatusColor } from '@/lib/utils'
 import type { ProjectDetail } from '@/hooks/api/projects/types'
 import { getAvatarFallback } from '@/helpers/stringUtils.ts'
 
@@ -50,22 +46,6 @@ export const ProjectSidebar = ({ projectData }: ProjectSidebarProps) => {
               </Avatar>
               <span className="font-medium text-foreground">{projectData.createdByName}</span>
             </div>
-          </div>
-
-          <div className="flex justify-between items-center">
-            <span className="text-gray-600">Độ ưu tiên:</span>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Badge className={`${getStatusColor('Medium')} cursor-pointer flex items-center gap-1`}>
-                  Trung bình <ChevronDown className="h-3 w-3" />
-                </Badge>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                <DropdownMenuItem>Cao</DropdownMenuItem>
-                <DropdownMenuItem>Trung bình</DropdownMenuItem>
-                <DropdownMenuItem>Thấp</DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
           </div>
         </div>
       </CardContent>

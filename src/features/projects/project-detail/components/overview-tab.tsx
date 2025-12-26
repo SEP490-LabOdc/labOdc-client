@@ -100,7 +100,7 @@ export const ProjectOverviewTab = ({ projectData }: ProjectOverviewTabProps) => 
             </div>
           </div>
 
-          <div className="space-y-5 pt-4 border-t border-border">
+          <div className="space-y-5 pt-4 border-t border-primary/20">
             <div className="flex items-start">
               <div className="w-40 flex-shrink-0 flex items-center gap-3 text-sm text-muted-foreground">
                 <CheckSquare className="h-4 w-4" />
@@ -253,7 +253,7 @@ export const ProjectOverviewTab = ({ projectData }: ProjectOverviewTabProps) => 
               </div>
               <div className="flex-1 flex flex-wrap items-center gap-2">
                 {projectData.skills.map((skill) => (
-                  <Badge key={skill.id} className={`px-3 py-1 text-sm rounded ${getTagColor(skill.name)}`}>
+                  <Badge key={skill.id} className={`px-3 py-1 text-sm rounded-xl`}>
                     {skill.name}
                   </Badge>
                 ))}

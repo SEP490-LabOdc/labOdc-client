@@ -206,7 +206,7 @@ export const CreateMilestoneModal: React.FC<CreateMilestoneModalProps> = ({
                         {budgetInfo.allocatedBudget.toLocaleString('vi-VN')} VND
                       </span>
                     </div>
-                    <div className="flex justify-between text-muted-foreground pt-1 border-t border-border">
+                    <div className="flex justify-between text-muted-foreground pt-1 border-t border-primary/20">
                       <span>Còn lại sau phân bổ:</span>
                       <span className={`font-bold ${budgetInfo.isValid ? 'text-secondary' : 'text-destructive'}`}>
                         {budgetInfo.budgetAfterAllocation.toLocaleString('vi-VN')} VND

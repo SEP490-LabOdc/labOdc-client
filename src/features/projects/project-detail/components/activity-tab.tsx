@@ -31,7 +31,7 @@ export const ProjectActivityTab = ({ notes, activities }: ProjectActivityTabProp
           </div>
           <div className="space-y-4">
             {notes.map((note) => (
-              <div key={note.id} className="p-4 border border-border rounded-md bg-muted hover:bg-muted/80 transition-colors">
+              <div key={note.id} className="p-4 border border-primary/20 rounded-md bg-muted hover:bg-muted/80 transition-colors">
                 <div className="flex justify-between items-start">
                   <h4 className="font-medium text-foreground">{note.title}</h4>
                   <DropdownMenu>
