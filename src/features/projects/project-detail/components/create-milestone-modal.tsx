@@ -188,27 +188,27 @@ export const CreateMilestoneModal: React.FC<CreateMilestoneModalProps> = ({
                   </FormControl>
                   <FormMessage />
                   <div className="mt-2 space-y-1 text-sm">
-                    <div className="flex justify-between text-gray-600">
+                    <div className="flex justify-between text-muted-foreground">
                       <span>Ngân sách dự án:</span>
-                      <span className="font-medium">
+                      <span className="font-medium text-foreground">
                         {budgetInfo.projectBudget.toLocaleString('vi-VN')} VND
                       </span>
                     </div>
-                    <div className="flex justify-between text-gray-600">
+                    <div className="flex justify-between text-muted-foreground">
                       <span>Ngân sách còn lại:</span>
-                      <span className="font-medium text-gray-700">
+                      <span className="font-medium text-foreground">
                         {budgetInfo.remainingBudget.toLocaleString('vi-VN')} VND
                       </span>
                     </div>
-                    <div className="flex justify-between text-gray-600">
+                    <div className="flex justify-between text-muted-foreground">
                       <span>Ngân sách phân bổ:</span>
-                      <span className="font-medium text-[#2a9d8f]">
+                      <span className="font-medium text-secondary">
                         {budgetInfo.allocatedBudget.toLocaleString('vi-VN')} VND
                       </span>
                     </div>
-                    <div className="flex justify-between text-gray-600 pt-1 border-t">
+                    <div className="flex justify-between text-muted-foreground pt-1 border-t border-primary/20">
                       <span>Còn lại sau phân bổ:</span>
-                      <span className={`font-bold ${budgetInfo.isValid ? 'text-green-600' : 'text-red-600'}`}>
+                      <span className={`font-bold ${budgetInfo.isValid ? 'text-secondary' : 'text-destructive'}`}>
                         {budgetInfo.budgetAfterAllocation.toLocaleString('vi-VN')} VND
                       </span>
                     </div>

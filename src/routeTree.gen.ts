@@ -36,12 +36,9 @@ import { Route as AuthenticatedMentorIndexRouteImport } from './routes/_authenti
 import { Route as AuthenticatedLabAdminIndexRouteImport } from './routes/_authenticated/lab-admin/index'
 import { Route as AuthenticatedCompanyManageIndexRouteImport } from './routes/_authenticated/company-manage/index'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin/index'
-import { Route as publicTermsIndexRouteImport } from './routes/(public)/terms/index'
-import { Route as publicTalentPoolIndexRouteImport } from './routes/(public)/talent-pool/index'
+import { Route as publicTermsAndPrivacyIndexRouteImport } from './routes/(public)/terms-and-privacy/index'
 import { Route as publicProjectsIndexRouteImport } from './routes/(public)/projects/index'
-import { Route as publicPrivacyIndexRouteImport } from './routes/(public)/privacy/index'
 import { Route as publicCompaniesIndexRouteImport } from './routes/(public)/companies/index'
-import { Route as authSignUpIndexRouteImport } from './routes/(auth)/sign-up/index'
 import { Route as authSignInIndexRouteImport } from './routes/(auth)/sign-in/index'
 import { Route as authForgotPasswordIndexRouteImport } from './routes/(auth)/forgot-password/index'
 import { Route as publicCompaniesCompanyIdRouteImport } from './routes/(public)/companies/$companyId'
@@ -55,19 +52,25 @@ import { Route as AuthenticatedTalentWalletIndexRouteImport } from './routes/_au
 import { Route as AuthenticatedTalentTeamFundDistributionIndexRouteImport } from './routes/_authenticated/talent/team-fund-distribution/index'
 import { Route as AuthenticatedTalentSettingsIndexRouteImport } from './routes/_authenticated/talent/settings/index'
 import { Route as AuthenticatedTalentProjectsIndexRouteImport } from './routes/_authenticated/talent/projects/index'
+import { Route as AuthenticatedTalentMyTransactionsIndexRouteImport } from './routes/_authenticated/talent/my-transactions/index'
 import { Route as AuthenticatedTalentMyApplicationsIndexRouteImport } from './routes/_authenticated/talent/my-applications/index'
 import { Route as AuthenticatedMentorWalletIndexRouteImport } from './routes/_authenticated/mentor/wallet/index'
 import { Route as AuthenticatedMentorTeamFundDistributionIndexRouteImport } from './routes/_authenticated/mentor/team-fund-distribution/index'
 import { Route as AuthenticatedMentorSettingsIndexRouteImport } from './routes/_authenticated/mentor/settings/index'
 import { Route as AuthenticatedMentorProjectsIndexRouteImport } from './routes/_authenticated/mentor/projects/index'
+import { Route as AuthenticatedMentorMyTransactionsIndexRouteImport } from './routes/_authenticated/mentor/my-transactions/index'
 import { Route as AuthenticatedLabAdminUsersIndexRouteImport } from './routes/_authenticated/lab-admin/users/index'
 import { Route as AuthenticatedLabAdminTemplatesIndexRouteImport } from './routes/_authenticated/lab-admin/templates/index'
+import { Route as AuthenticatedLabAdminSkillsIndexRouteImport } from './routes/_authenticated/lab-admin/skills/index'
 import { Route as AuthenticatedLabAdminSettingsIndexRouteImport } from './routes/_authenticated/lab-admin/settings/index'
+import { Route as AuthenticatedLabAdminReportsIndexRouteImport } from './routes/_authenticated/lab-admin/reports/index'
 import { Route as AuthenticatedLabAdminProjectsIndexRouteImport } from './routes/_authenticated/lab-admin/projects/index'
 import { Route as AuthenticatedLabAdminCompaniesIndexRouteImport } from './routes/_authenticated/lab-admin/companies/index'
 import { Route as AuthenticatedCompanyManageWalletIndexRouteImport } from './routes/_authenticated/company-manage/wallet/index'
 import { Route as AuthenticatedCompanyManageSettingsIndexRouteImport } from './routes/_authenticated/company-manage/settings/index'
 import { Route as AuthenticatedCompanyManageProjectsIndexRouteImport } from './routes/_authenticated/company-manage/projects/index'
+import { Route as AuthenticatedCompanyManageMyTransactionsIndexRouteImport } from './routes/_authenticated/company-manage/my-transactions/index'
+import { Route as AuthenticatedAdminWithdrawalIndexRouteImport } from './routes/_authenticated/admin/withdrawal/index'
 import { Route as AuthenticatedAdminUsersIndexRouteImport } from './routes/_authenticated/admin/users/index'
 import { Route as AuthenticatedAdminTasksIndexRouteImport } from './routes/_authenticated/admin/tasks/index'
 import { Route as AuthenticatedAdminSystemConfigIndexRouteImport } from './routes/_authenticated/admin/system-config/index'
@@ -112,6 +115,7 @@ import { Route as AuthenticatedCompanyManageProjectsProjectIdEditIndexRouteImpor
 import { Route as AuthenticatedCompanyManageProjectsProjectIdMilestoneIdIndexRouteImport } from './routes/_authenticated/company-manage/projects/$projectId/$milestoneId/index'
 import { Route as AuthenticatedMentorProjectsProjectIdMilestoneIdUpdateIndexRouteImport } from './routes/_authenticated/mentor/projects/$projectId/$milestoneId/update/index'
 import { Route as AuthenticatedMentorProjectsProjectIdMilestoneIdMembersIndexRouteImport } from './routes/_authenticated/mentor/projects/$projectId/$milestoneId/members/index'
+import { Route as AuthenticatedLabAdminProjectsProjectIdMilestoneIdMembersIndexRouteImport } from './routes/_authenticated/lab-admin/projects/$projectId/$milestoneId/members/index'
 import { Route as AuthenticatedCompanyManageProjectsProjectIdMilestoneIdMembersIndexRouteImport } from './routes/_authenticated/company-manage/projects/$projectId/$milestoneId/members/index'
 
 const VerifyOtpRouteRoute = VerifyOtpRouteRouteImport.update({
@@ -256,35 +260,21 @@ const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AuthenticatedAdminRouteRoute,
 } as any)
-const publicTermsIndexRoute = publicTermsIndexRouteImport.update({
-  id: '/terms/',
-  path: '/terms/',
-  getParentRoute: () => publicRouteRoute,
-} as any)
-const publicTalentPoolIndexRoute = publicTalentPoolIndexRouteImport.update({
-  id: '/talent-pool/',
-  path: '/talent-pool/',
-  getParentRoute: () => publicRouteRoute,
-} as any)
+const publicTermsAndPrivacyIndexRoute =
+  publicTermsAndPrivacyIndexRouteImport.update({
+    id: '/terms-and-privacy/',
+    path: '/terms-and-privacy/',
+    getParentRoute: () => publicRouteRoute,
+  } as any)
 const publicProjectsIndexRoute = publicProjectsIndexRouteImport.update({
   id: '/projects/',
   path: '/projects/',
-  getParentRoute: () => publicRouteRoute,
-} as any)
-const publicPrivacyIndexRoute = publicPrivacyIndexRouteImport.update({
-  id: '/privacy/',
-  path: '/privacy/',
   getParentRoute: () => publicRouteRoute,
 } as any)
 const publicCompaniesIndexRoute = publicCompaniesIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => publicCompaniesRouteRoute,
-} as any)
-const authSignUpIndexRoute = authSignUpIndexRouteImport.update({
-  id: '/sign-up/',
-  path: '/sign-up/',
-  getParentRoute: () => authRouteRoute,
 } as any)
 const authSignInIndexRoute = authSignInIndexRouteImport.update({
   id: '/sign-in/',
@@ -362,6 +352,12 @@ const AuthenticatedTalentProjectsIndexRoute =
     path: '/projects/',
     getParentRoute: () => AuthenticatedTalentRouteRoute,
   } as any)
+const AuthenticatedTalentMyTransactionsIndexRoute =
+  AuthenticatedTalentMyTransactionsIndexRouteImport.update({
+    id: '/my-transactions/',
+    path: '/my-transactions/',
+    getParentRoute: () => AuthenticatedTalentRouteRoute,
+  } as any)
 const AuthenticatedTalentMyApplicationsIndexRoute =
   AuthenticatedTalentMyApplicationsIndexRouteImport.update({
     id: '/my-applications/',
@@ -392,6 +388,12 @@ const AuthenticatedMentorProjectsIndexRoute =
     path: '/',
     getParentRoute: () => AuthenticatedMentorProjectsRouteRoute,
   } as any)
+const AuthenticatedMentorMyTransactionsIndexRoute =
+  AuthenticatedMentorMyTransactionsIndexRouteImport.update({
+    id: '/my-transactions/',
+    path: '/my-transactions/',
+    getParentRoute: () => AuthenticatedMentorRouteRoute,
+  } as any)
 const AuthenticatedLabAdminUsersIndexRoute =
   AuthenticatedLabAdminUsersIndexRouteImport.update({
     id: '/users/',
@@ -404,11 +406,23 @@ const AuthenticatedLabAdminTemplatesIndexRoute =
     path: '/templates/',
     getParentRoute: () => AuthenticatedLabAdminRouteRoute,
   } as any)
+const AuthenticatedLabAdminSkillsIndexRoute =
+  AuthenticatedLabAdminSkillsIndexRouteImport.update({
+    id: '/skills/',
+    path: '/skills/',
+    getParentRoute: () => AuthenticatedLabAdminRouteRoute,
+  } as any)
 const AuthenticatedLabAdminSettingsIndexRoute =
   AuthenticatedLabAdminSettingsIndexRouteImport.update({
     id: '/',
     path: '/',
     getParentRoute: () => AuthenticatedLabAdminSettingsRouteRoute,
+  } as any)
+const AuthenticatedLabAdminReportsIndexRoute =
+  AuthenticatedLabAdminReportsIndexRouteImport.update({
+    id: '/reports/',
+    path: '/reports/',
+    getParentRoute: () => AuthenticatedLabAdminRouteRoute,
   } as any)
 const AuthenticatedLabAdminProjectsIndexRoute =
   AuthenticatedLabAdminProjectsIndexRouteImport.update({
@@ -439,6 +453,18 @@ const AuthenticatedCompanyManageProjectsIndexRoute =
     id: '/projects/',
     path: '/projects/',
     getParentRoute: () => AuthenticatedCompanyManageRouteRoute,
+  } as any)
+const AuthenticatedCompanyManageMyTransactionsIndexRoute =
+  AuthenticatedCompanyManageMyTransactionsIndexRouteImport.update({
+    id: '/my-transactions/',
+    path: '/my-transactions/',
+    getParentRoute: () => AuthenticatedCompanyManageRouteRoute,
+  } as any)
+const AuthenticatedAdminWithdrawalIndexRoute =
+  AuthenticatedAdminWithdrawalIndexRouteImport.update({
+    id: '/withdrawal/',
+    path: '/withdrawal/',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
   } as any)
 const AuthenticatedAdminUsersIndexRoute =
   AuthenticatedAdminUsersIndexRouteImport.update({
@@ -708,6 +734,14 @@ const AuthenticatedMentorProjectsProjectIdMilestoneIdMembersIndexRoute =
       getParentRoute: () => AuthenticatedMentorProjectsRouteRoute,
     } as any,
   )
+const AuthenticatedLabAdminProjectsProjectIdMilestoneIdMembersIndexRoute =
+  AuthenticatedLabAdminProjectsProjectIdMilestoneIdMembersIndexRouteImport.update(
+    {
+      id: '/projects/$projectId/$milestoneId/members/',
+      path: '/projects/$projectId/$milestoneId/members/',
+      getParentRoute: () => AuthenticatedLabAdminRouteRoute,
+    } as any,
+  )
 const AuthenticatedCompanyManageProjectsProjectIdMilestoneIdMembersIndexRoute =
   AuthenticatedCompanyManageProjectsProjectIdMilestoneIdMembersIndexRouteImport.update(
     {
@@ -746,12 +780,9 @@ export interface FileRoutesByFullPath {
   '/companies/$companyId': typeof publicCompaniesCompanyIdRoute
   '/forgot-password': typeof authForgotPasswordIndexRoute
   '/sign-in': typeof authSignInIndexRoute
-  '/sign-up': typeof authSignUpIndexRoute
   '/companies/': typeof publicCompaniesIndexRoute
-  '/privacy': typeof publicPrivacyIndexRoute
   '/projects': typeof publicProjectsIndexRoute
-  '/talent-pool': typeof publicTalentPoolIndexRoute
-  '/terms': typeof publicTermsIndexRoute
+  '/terms-and-privacy': typeof publicTermsAndPrivacyIndexRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
   '/company-manage/': typeof AuthenticatedCompanyManageIndexRoute
   '/lab-admin/': typeof AuthenticatedLabAdminIndexRoute
@@ -772,19 +803,25 @@ export interface FileRoutesByFullPath {
   '/admin/system-config': typeof AuthenticatedAdminSystemConfigIndexRoute
   '/admin/tasks': typeof AuthenticatedAdminTasksIndexRoute
   '/admin/users': typeof AuthenticatedAdminUsersIndexRoute
+  '/admin/withdrawal': typeof AuthenticatedAdminWithdrawalIndexRoute
+  '/company-manage/my-transactions': typeof AuthenticatedCompanyManageMyTransactionsIndexRoute
   '/company-manage/projects': typeof AuthenticatedCompanyManageProjectsIndexRoute
   '/company-manage/settings/': typeof AuthenticatedCompanyManageSettingsIndexRoute
   '/company-manage/wallet': typeof AuthenticatedCompanyManageWalletIndexRoute
   '/lab-admin/companies': typeof AuthenticatedLabAdminCompaniesIndexRoute
   '/lab-admin/projects': typeof AuthenticatedLabAdminProjectsIndexRoute
+  '/lab-admin/reports': typeof AuthenticatedLabAdminReportsIndexRoute
   '/lab-admin/settings/': typeof AuthenticatedLabAdminSettingsIndexRoute
+  '/lab-admin/skills': typeof AuthenticatedLabAdminSkillsIndexRoute
   '/lab-admin/templates': typeof AuthenticatedLabAdminTemplatesIndexRoute
   '/lab-admin/users': typeof AuthenticatedLabAdminUsersIndexRoute
+  '/mentor/my-transactions': typeof AuthenticatedMentorMyTransactionsIndexRoute
   '/mentor/projects/': typeof AuthenticatedMentorProjectsIndexRoute
   '/mentor/settings/': typeof AuthenticatedMentorSettingsIndexRoute
   '/mentor/team-fund-distribution': typeof AuthenticatedMentorTeamFundDistributionIndexRoute
   '/mentor/wallet': typeof AuthenticatedMentorWalletIndexRoute
   '/talent/my-applications': typeof AuthenticatedTalentMyApplicationsIndexRoute
+  '/talent/my-transactions': typeof AuthenticatedTalentMyTransactionsIndexRoute
   '/talent/projects': typeof AuthenticatedTalentProjectsIndexRoute
   '/talent/settings/': typeof AuthenticatedTalentSettingsIndexRoute
   '/talent/team-fund-distribution': typeof AuthenticatedTalentTeamFundDistributionIndexRoute
@@ -817,6 +854,7 @@ export interface FileRoutesByFullPath {
   '/talent/projects/$projectId/members': typeof AuthenticatedTalentProjectsProjectIdMembersIndexRoute
   '/talent/projects/$projectId/templates': typeof AuthenticatedTalentProjectsProjectIdTemplatesIndexRoute
   '/company-manage/projects/$projectId/$milestoneId/members': typeof AuthenticatedCompanyManageProjectsProjectIdMilestoneIdMembersIndexRoute
+  '/lab-admin/projects/$projectId/$milestoneId/members': typeof AuthenticatedLabAdminProjectsProjectIdMilestoneIdMembersIndexRoute
   '/mentor/projects/$projectId/$milestoneId/members': typeof AuthenticatedMentorProjectsProjectIdMilestoneIdMembersIndexRoute
   '/mentor/projects/$projectId/$milestoneId/update': typeof AuthenticatedMentorProjectsProjectIdMilestoneIdUpdateIndexRoute
 }
@@ -836,12 +874,9 @@ export interface FileRoutesByTo {
   '/companies/$companyId': typeof publicCompaniesCompanyIdRoute
   '/forgot-password': typeof authForgotPasswordIndexRoute
   '/sign-in': typeof authSignInIndexRoute
-  '/sign-up': typeof authSignUpIndexRoute
   '/companies': typeof publicCompaniesIndexRoute
-  '/privacy': typeof publicPrivacyIndexRoute
   '/projects': typeof publicProjectsIndexRoute
-  '/talent-pool': typeof publicTalentPoolIndexRoute
-  '/terms': typeof publicTermsIndexRoute
+  '/terms-and-privacy': typeof publicTermsAndPrivacyIndexRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
   '/company-manage': typeof AuthenticatedCompanyManageIndexRoute
   '/lab-admin': typeof AuthenticatedLabAdminIndexRoute
@@ -862,19 +897,25 @@ export interface FileRoutesByTo {
   '/admin/system-config': typeof AuthenticatedAdminSystemConfigIndexRoute
   '/admin/tasks': typeof AuthenticatedAdminTasksIndexRoute
   '/admin/users': typeof AuthenticatedAdminUsersIndexRoute
+  '/admin/withdrawal': typeof AuthenticatedAdminWithdrawalIndexRoute
+  '/company-manage/my-transactions': typeof AuthenticatedCompanyManageMyTransactionsIndexRoute
   '/company-manage/projects': typeof AuthenticatedCompanyManageProjectsIndexRoute
   '/company-manage/settings': typeof AuthenticatedCompanyManageSettingsIndexRoute
   '/company-manage/wallet': typeof AuthenticatedCompanyManageWalletIndexRoute
   '/lab-admin/companies': typeof AuthenticatedLabAdminCompaniesIndexRoute
   '/lab-admin/projects': typeof AuthenticatedLabAdminProjectsIndexRoute
+  '/lab-admin/reports': typeof AuthenticatedLabAdminReportsIndexRoute
   '/lab-admin/settings': typeof AuthenticatedLabAdminSettingsIndexRoute
+  '/lab-admin/skills': typeof AuthenticatedLabAdminSkillsIndexRoute
   '/lab-admin/templates': typeof AuthenticatedLabAdminTemplatesIndexRoute
   '/lab-admin/users': typeof AuthenticatedLabAdminUsersIndexRoute
+  '/mentor/my-transactions': typeof AuthenticatedMentorMyTransactionsIndexRoute
   '/mentor/projects': typeof AuthenticatedMentorProjectsIndexRoute
   '/mentor/settings': typeof AuthenticatedMentorSettingsIndexRoute
   '/mentor/team-fund-distribution': typeof AuthenticatedMentorTeamFundDistributionIndexRoute
   '/mentor/wallet': typeof AuthenticatedMentorWalletIndexRoute
   '/talent/my-applications': typeof AuthenticatedTalentMyApplicationsIndexRoute
+  '/talent/my-transactions': typeof AuthenticatedTalentMyTransactionsIndexRoute
   '/talent/projects': typeof AuthenticatedTalentProjectsIndexRoute
   '/talent/settings': typeof AuthenticatedTalentSettingsIndexRoute
   '/talent/team-fund-distribution': typeof AuthenticatedTalentTeamFundDistributionIndexRoute
@@ -907,6 +948,7 @@ export interface FileRoutesByTo {
   '/talent/projects/$projectId/members': typeof AuthenticatedTalentProjectsProjectIdMembersIndexRoute
   '/talent/projects/$projectId/templates': typeof AuthenticatedTalentProjectsProjectIdTemplatesIndexRoute
   '/company-manage/projects/$projectId/$milestoneId/members': typeof AuthenticatedCompanyManageProjectsProjectIdMilestoneIdMembersIndexRoute
+  '/lab-admin/projects/$projectId/$milestoneId/members': typeof AuthenticatedLabAdminProjectsProjectIdMilestoneIdMembersIndexRoute
   '/mentor/projects/$projectId/$milestoneId/members': typeof AuthenticatedMentorProjectsProjectIdMilestoneIdMembersIndexRoute
   '/mentor/projects/$projectId/$milestoneId/update': typeof AuthenticatedMentorProjectsProjectIdMilestoneIdUpdateIndexRoute
 }
@@ -943,12 +985,9 @@ export interface FileRoutesById {
   '/(public)/companies/$companyId': typeof publicCompaniesCompanyIdRoute
   '/(auth)/forgot-password/': typeof authForgotPasswordIndexRoute
   '/(auth)/sign-in/': typeof authSignInIndexRoute
-  '/(auth)/sign-up/': typeof authSignUpIndexRoute
   '/(public)/companies/': typeof publicCompaniesIndexRoute
-  '/(public)/privacy/': typeof publicPrivacyIndexRoute
   '/(public)/projects/': typeof publicProjectsIndexRoute
-  '/(public)/talent-pool/': typeof publicTalentPoolIndexRoute
-  '/(public)/terms/': typeof publicTermsIndexRoute
+  '/(public)/terms-and-privacy/': typeof publicTermsAndPrivacyIndexRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/_authenticated/company-manage/': typeof AuthenticatedCompanyManageIndexRoute
   '/_authenticated/lab-admin/': typeof AuthenticatedLabAdminIndexRoute
@@ -969,19 +1008,25 @@ export interface FileRoutesById {
   '/_authenticated/admin/system-config/': typeof AuthenticatedAdminSystemConfigIndexRoute
   '/_authenticated/admin/tasks/': typeof AuthenticatedAdminTasksIndexRoute
   '/_authenticated/admin/users/': typeof AuthenticatedAdminUsersIndexRoute
+  '/_authenticated/admin/withdrawal/': typeof AuthenticatedAdminWithdrawalIndexRoute
+  '/_authenticated/company-manage/my-transactions/': typeof AuthenticatedCompanyManageMyTransactionsIndexRoute
   '/_authenticated/company-manage/projects/': typeof AuthenticatedCompanyManageProjectsIndexRoute
   '/_authenticated/company-manage/settings/': typeof AuthenticatedCompanyManageSettingsIndexRoute
   '/_authenticated/company-manage/wallet/': typeof AuthenticatedCompanyManageWalletIndexRoute
   '/_authenticated/lab-admin/companies/': typeof AuthenticatedLabAdminCompaniesIndexRoute
   '/_authenticated/lab-admin/projects/': typeof AuthenticatedLabAdminProjectsIndexRoute
+  '/_authenticated/lab-admin/reports/': typeof AuthenticatedLabAdminReportsIndexRoute
   '/_authenticated/lab-admin/settings/': typeof AuthenticatedLabAdminSettingsIndexRoute
+  '/_authenticated/lab-admin/skills/': typeof AuthenticatedLabAdminSkillsIndexRoute
   '/_authenticated/lab-admin/templates/': typeof AuthenticatedLabAdminTemplatesIndexRoute
   '/_authenticated/lab-admin/users/': typeof AuthenticatedLabAdminUsersIndexRoute
+  '/_authenticated/mentor/my-transactions/': typeof AuthenticatedMentorMyTransactionsIndexRoute
   '/_authenticated/mentor/projects/': typeof AuthenticatedMentorProjectsIndexRoute
   '/_authenticated/mentor/settings/': typeof AuthenticatedMentorSettingsIndexRoute
   '/_authenticated/mentor/team-fund-distribution/': typeof AuthenticatedMentorTeamFundDistributionIndexRoute
   '/_authenticated/mentor/wallet/': typeof AuthenticatedMentorWalletIndexRoute
   '/_authenticated/talent/my-applications/': typeof AuthenticatedTalentMyApplicationsIndexRoute
+  '/_authenticated/talent/my-transactions/': typeof AuthenticatedTalentMyTransactionsIndexRoute
   '/_authenticated/talent/projects/': typeof AuthenticatedTalentProjectsIndexRoute
   '/_authenticated/talent/settings/': typeof AuthenticatedTalentSettingsIndexRoute
   '/_authenticated/talent/team-fund-distribution/': typeof AuthenticatedTalentTeamFundDistributionIndexRoute
@@ -1014,6 +1059,7 @@ export interface FileRoutesById {
   '/_authenticated/talent/projects/$projectId/members/': typeof AuthenticatedTalentProjectsProjectIdMembersIndexRoute
   '/_authenticated/talent/projects/$projectId/templates/': typeof AuthenticatedTalentProjectsProjectIdTemplatesIndexRoute
   '/_authenticated/company-manage/projects/$projectId/$milestoneId/members/': typeof AuthenticatedCompanyManageProjectsProjectIdMilestoneIdMembersIndexRoute
+  '/_authenticated/lab-admin/projects/$projectId/$milestoneId/members/': typeof AuthenticatedLabAdminProjectsProjectIdMilestoneIdMembersIndexRoute
   '/_authenticated/mentor/projects/$projectId/$milestoneId/members/': typeof AuthenticatedMentorProjectsProjectIdMilestoneIdMembersIndexRoute
   '/_authenticated/mentor/projects/$projectId/$milestoneId/update/': typeof AuthenticatedMentorProjectsProjectIdMilestoneIdUpdateIndexRoute
 }
@@ -1048,12 +1094,9 @@ export interface FileRouteTypes {
     | '/companies/$companyId'
     | '/forgot-password'
     | '/sign-in'
-    | '/sign-up'
     | '/companies/'
-    | '/privacy'
     | '/projects'
-    | '/talent-pool'
-    | '/terms'
+    | '/terms-and-privacy'
     | '/admin/'
     | '/company-manage/'
     | '/lab-admin/'
@@ -1074,19 +1117,25 @@ export interface FileRouteTypes {
     | '/admin/system-config'
     | '/admin/tasks'
     | '/admin/users'
+    | '/admin/withdrawal'
+    | '/company-manage/my-transactions'
     | '/company-manage/projects'
     | '/company-manage/settings/'
     | '/company-manage/wallet'
     | '/lab-admin/companies'
     | '/lab-admin/projects'
+    | '/lab-admin/reports'
     | '/lab-admin/settings/'
+    | '/lab-admin/skills'
     | '/lab-admin/templates'
     | '/lab-admin/users'
+    | '/mentor/my-transactions'
     | '/mentor/projects/'
     | '/mentor/settings/'
     | '/mentor/team-fund-distribution'
     | '/mentor/wallet'
     | '/talent/my-applications'
+    | '/talent/my-transactions'
     | '/talent/projects'
     | '/talent/settings/'
     | '/talent/team-fund-distribution'
@@ -1119,6 +1168,7 @@ export interface FileRouteTypes {
     | '/talent/projects/$projectId/members'
     | '/talent/projects/$projectId/templates'
     | '/company-manage/projects/$projectId/$milestoneId/members'
+    | '/lab-admin/projects/$projectId/$milestoneId/members'
     | '/mentor/projects/$projectId/$milestoneId/members'
     | '/mentor/projects/$projectId/$milestoneId/update'
   fileRoutesByTo: FileRoutesByTo
@@ -1138,12 +1188,9 @@ export interface FileRouteTypes {
     | '/companies/$companyId'
     | '/forgot-password'
     | '/sign-in'
-    | '/sign-up'
     | '/companies'
-    | '/privacy'
     | '/projects'
-    | '/talent-pool'
-    | '/terms'
+    | '/terms-and-privacy'
     | '/admin'
     | '/company-manage'
     | '/lab-admin'
@@ -1164,19 +1211,25 @@ export interface FileRouteTypes {
     | '/admin/system-config'
     | '/admin/tasks'
     | '/admin/users'
+    | '/admin/withdrawal'
+    | '/company-manage/my-transactions'
     | '/company-manage/projects'
     | '/company-manage/settings'
     | '/company-manage/wallet'
     | '/lab-admin/companies'
     | '/lab-admin/projects'
+    | '/lab-admin/reports'
     | '/lab-admin/settings'
+    | '/lab-admin/skills'
     | '/lab-admin/templates'
     | '/lab-admin/users'
+    | '/mentor/my-transactions'
     | '/mentor/projects'
     | '/mentor/settings'
     | '/mentor/team-fund-distribution'
     | '/mentor/wallet'
     | '/talent/my-applications'
+    | '/talent/my-transactions'
     | '/talent/projects'
     | '/talent/settings'
     | '/talent/team-fund-distribution'
@@ -1209,6 +1262,7 @@ export interface FileRouteTypes {
     | '/talent/projects/$projectId/members'
     | '/talent/projects/$projectId/templates'
     | '/company-manage/projects/$projectId/$milestoneId/members'
+    | '/lab-admin/projects/$projectId/$milestoneId/members'
     | '/mentor/projects/$projectId/$milestoneId/members'
     | '/mentor/projects/$projectId/$milestoneId/update'
   id:
@@ -1244,12 +1298,9 @@ export interface FileRouteTypes {
     | '/(public)/companies/$companyId'
     | '/(auth)/forgot-password/'
     | '/(auth)/sign-in/'
-    | '/(auth)/sign-up/'
     | '/(public)/companies/'
-    | '/(public)/privacy/'
     | '/(public)/projects/'
-    | '/(public)/talent-pool/'
-    | '/(public)/terms/'
+    | '/(public)/terms-and-privacy/'
     | '/_authenticated/admin/'
     | '/_authenticated/company-manage/'
     | '/_authenticated/lab-admin/'
@@ -1270,19 +1321,25 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/system-config/'
     | '/_authenticated/admin/tasks/'
     | '/_authenticated/admin/users/'
+    | '/_authenticated/admin/withdrawal/'
+    | '/_authenticated/company-manage/my-transactions/'
     | '/_authenticated/company-manage/projects/'
     | '/_authenticated/company-manage/settings/'
     | '/_authenticated/company-manage/wallet/'
     | '/_authenticated/lab-admin/companies/'
     | '/_authenticated/lab-admin/projects/'
+    | '/_authenticated/lab-admin/reports/'
     | '/_authenticated/lab-admin/settings/'
+    | '/_authenticated/lab-admin/skills/'
     | '/_authenticated/lab-admin/templates/'
     | '/_authenticated/lab-admin/users/'
+    | '/_authenticated/mentor/my-transactions/'
     | '/_authenticated/mentor/projects/'
     | '/_authenticated/mentor/settings/'
     | '/_authenticated/mentor/team-fund-distribution/'
     | '/_authenticated/mentor/wallet/'
     | '/_authenticated/talent/my-applications/'
+    | '/_authenticated/talent/my-transactions/'
     | '/_authenticated/talent/projects/'
     | '/_authenticated/talent/settings/'
     | '/_authenticated/talent/team-fund-distribution/'
@@ -1315,6 +1372,7 @@ export interface FileRouteTypes {
     | '/_authenticated/talent/projects/$projectId/members/'
     | '/_authenticated/talent/projects/$projectId/templates/'
     | '/_authenticated/company-manage/projects/$projectId/$milestoneId/members/'
+    | '/_authenticated/lab-admin/projects/$projectId/$milestoneId/members/'
     | '/_authenticated/mentor/projects/$projectId/$milestoneId/members/'
     | '/_authenticated/mentor/projects/$projectId/$milestoneId/update/'
   fileRoutesById: FileRoutesById
@@ -1527,18 +1585,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
     }
-    '/(public)/terms/': {
-      id: '/(public)/terms/'
-      path: '/terms'
-      fullPath: '/terms'
-      preLoaderRoute: typeof publicTermsIndexRouteImport
-      parentRoute: typeof publicRouteRoute
-    }
-    '/(public)/talent-pool/': {
-      id: '/(public)/talent-pool/'
-      path: '/talent-pool'
-      fullPath: '/talent-pool'
-      preLoaderRoute: typeof publicTalentPoolIndexRouteImport
+    '/(public)/terms-and-privacy/': {
+      id: '/(public)/terms-and-privacy/'
+      path: '/terms-and-privacy'
+      fullPath: '/terms-and-privacy'
+      preLoaderRoute: typeof publicTermsAndPrivacyIndexRouteImport
       parentRoute: typeof publicRouteRoute
     }
     '/(public)/projects/': {
@@ -1548,26 +1599,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof publicProjectsIndexRouteImport
       parentRoute: typeof publicRouteRoute
     }
-    '/(public)/privacy/': {
-      id: '/(public)/privacy/'
-      path: '/privacy'
-      fullPath: '/privacy'
-      preLoaderRoute: typeof publicPrivacyIndexRouteImport
-      parentRoute: typeof publicRouteRoute
-    }
     '/(public)/companies/': {
       id: '/(public)/companies/'
       path: '/'
       fullPath: '/companies/'
       preLoaderRoute: typeof publicCompaniesIndexRouteImport
       parentRoute: typeof publicCompaniesRouteRoute
-    }
-    '/(auth)/sign-up/': {
-      id: '/(auth)/sign-up/'
-      path: '/sign-up'
-      fullPath: '/sign-up'
-      preLoaderRoute: typeof authSignUpIndexRouteImport
-      parentRoute: typeof authRouteRoute
     }
     '/(auth)/sign-in/': {
       id: '/(auth)/sign-in/'
@@ -1660,6 +1697,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedTalentProjectsIndexRouteImport
       parentRoute: typeof AuthenticatedTalentRouteRoute
     }
+    '/_authenticated/talent/my-transactions/': {
+      id: '/_authenticated/talent/my-transactions/'
+      path: '/my-transactions'
+      fullPath: '/talent/my-transactions'
+      preLoaderRoute: typeof AuthenticatedTalentMyTransactionsIndexRouteImport
+      parentRoute: typeof AuthenticatedTalentRouteRoute
+    }
     '/_authenticated/talent/my-applications/': {
       id: '/_authenticated/talent/my-applications/'
       path: '/my-applications'
@@ -1695,6 +1739,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedMentorProjectsIndexRouteImport
       parentRoute: typeof AuthenticatedMentorProjectsRouteRoute
     }
+    '/_authenticated/mentor/my-transactions/': {
+      id: '/_authenticated/mentor/my-transactions/'
+      path: '/my-transactions'
+      fullPath: '/mentor/my-transactions'
+      preLoaderRoute: typeof AuthenticatedMentorMyTransactionsIndexRouteImport
+      parentRoute: typeof AuthenticatedMentorRouteRoute
+    }
     '/_authenticated/lab-admin/users/': {
       id: '/_authenticated/lab-admin/users/'
       path: '/users'
@@ -1709,12 +1760,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedLabAdminTemplatesIndexRouteImport
       parentRoute: typeof AuthenticatedLabAdminRouteRoute
     }
+    '/_authenticated/lab-admin/skills/': {
+      id: '/_authenticated/lab-admin/skills/'
+      path: '/skills'
+      fullPath: '/lab-admin/skills'
+      preLoaderRoute: typeof AuthenticatedLabAdminSkillsIndexRouteImport
+      parentRoute: typeof AuthenticatedLabAdminRouteRoute
+    }
     '/_authenticated/lab-admin/settings/': {
       id: '/_authenticated/lab-admin/settings/'
       path: '/'
       fullPath: '/lab-admin/settings/'
       preLoaderRoute: typeof AuthenticatedLabAdminSettingsIndexRouteImport
       parentRoute: typeof AuthenticatedLabAdminSettingsRouteRoute
+    }
+    '/_authenticated/lab-admin/reports/': {
+      id: '/_authenticated/lab-admin/reports/'
+      path: '/reports'
+      fullPath: '/lab-admin/reports'
+      preLoaderRoute: typeof AuthenticatedLabAdminReportsIndexRouteImport
+      parentRoute: typeof AuthenticatedLabAdminRouteRoute
     }
     '/_authenticated/lab-admin/projects/': {
       id: '/_authenticated/lab-admin/projects/'
@@ -1750,6 +1815,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/company-manage/projects'
       preLoaderRoute: typeof AuthenticatedCompanyManageProjectsIndexRouteImport
       parentRoute: typeof AuthenticatedCompanyManageRouteRoute
+    }
+    '/_authenticated/company-manage/my-transactions/': {
+      id: '/_authenticated/company-manage/my-transactions/'
+      path: '/my-transactions'
+      fullPath: '/company-manage/my-transactions'
+      preLoaderRoute: typeof AuthenticatedCompanyManageMyTransactionsIndexRouteImport
+      parentRoute: typeof AuthenticatedCompanyManageRouteRoute
+    }
+    '/_authenticated/admin/withdrawal/': {
+      id: '/_authenticated/admin/withdrawal/'
+      path: '/withdrawal'
+      fullPath: '/admin/withdrawal'
+      preLoaderRoute: typeof AuthenticatedAdminWithdrawalIndexRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
     }
     '/_authenticated/admin/users/': {
       id: '/_authenticated/admin/users/'
@@ -2059,6 +2138,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedMentorProjectsProjectIdMilestoneIdMembersIndexRouteImport
       parentRoute: typeof AuthenticatedMentorProjectsRouteRoute
     }
+    '/_authenticated/lab-admin/projects/$projectId/$milestoneId/members/': {
+      id: '/_authenticated/lab-admin/projects/$projectId/$milestoneId/members/'
+      path: '/projects/$projectId/$milestoneId/members'
+      fullPath: '/lab-admin/projects/$projectId/$milestoneId/members'
+      preLoaderRoute: typeof AuthenticatedLabAdminProjectsProjectIdMilestoneIdMembersIndexRouteImport
+      parentRoute: typeof AuthenticatedLabAdminRouteRoute
+    }
     '/_authenticated/company-manage/projects/$projectId/$milestoneId/members/': {
       id: '/_authenticated/company-manage/projects/$projectId/$milestoneId/members/'
       path: '/projects/$projectId/$milestoneId/members'
@@ -2072,13 +2158,11 @@ declare module '@tanstack/react-router' {
 interface authRouteRouteChildren {
   authForgotPasswordIndexRoute: typeof authForgotPasswordIndexRoute
   authSignInIndexRoute: typeof authSignInIndexRoute
-  authSignUpIndexRoute: typeof authSignUpIndexRoute
 }
 
 const authRouteRouteChildren: authRouteRouteChildren = {
   authForgotPasswordIndexRoute: authForgotPasswordIndexRoute,
   authSignInIndexRoute: authSignInIndexRoute,
-  authSignUpIndexRoute: authSignUpIndexRoute,
 }
 
 const authRouteRouteWithChildren = authRouteRoute._addFileChildren(
@@ -2101,19 +2185,15 @@ const publicCompaniesRouteRouteWithChildren =
 interface publicRouteRouteChildren {
   publicCompaniesRouteRoute: typeof publicCompaniesRouteRouteWithChildren
   publicIndexRoute: typeof publicIndexRoute
-  publicPrivacyIndexRoute: typeof publicPrivacyIndexRoute
   publicProjectsIndexRoute: typeof publicProjectsIndexRoute
-  publicTalentPoolIndexRoute: typeof publicTalentPoolIndexRoute
-  publicTermsIndexRoute: typeof publicTermsIndexRoute
+  publicTermsAndPrivacyIndexRoute: typeof publicTermsAndPrivacyIndexRoute
 }
 
 const publicRouteRouteChildren: publicRouteRouteChildren = {
   publicCompaniesRouteRoute: publicCompaniesRouteRouteWithChildren,
   publicIndexRoute: publicIndexRoute,
-  publicPrivacyIndexRoute: publicPrivacyIndexRoute,
   publicProjectsIndexRoute: publicProjectsIndexRoute,
-  publicTalentPoolIndexRoute: publicTalentPoolIndexRoute,
-  publicTermsIndexRoute: publicTermsIndexRoute,
+  publicTermsAndPrivacyIndexRoute: publicTermsAndPrivacyIndexRoute,
 }
 
 const publicRouteRouteWithChildren = publicRouteRoute._addFileChildren(
@@ -2147,6 +2227,7 @@ interface AuthenticatedAdminRouteRouteChildren {
   AuthenticatedAdminSystemConfigIndexRoute: typeof AuthenticatedAdminSystemConfigIndexRoute
   AuthenticatedAdminTasksIndexRoute: typeof AuthenticatedAdminTasksIndexRoute
   AuthenticatedAdminUsersIndexRoute: typeof AuthenticatedAdminUsersIndexRoute
+  AuthenticatedAdminWithdrawalIndexRoute: typeof AuthenticatedAdminWithdrawalIndexRoute
   AuthenticatedAdminCompaniesCompanyIdIndexRoute: typeof AuthenticatedAdminCompaniesCompanyIdIndexRoute
   AuthenticatedAdminUsersCreateIndexRoute: typeof AuthenticatedAdminUsersCreateIndexRoute
   AuthenticatedAdminUsersInfoIndexRoute: typeof AuthenticatedAdminUsersInfoIndexRoute
@@ -2163,6 +2244,8 @@ const AuthenticatedAdminRouteRouteChildren: AuthenticatedAdminRouteRouteChildren
       AuthenticatedAdminSystemConfigIndexRoute,
     AuthenticatedAdminTasksIndexRoute: AuthenticatedAdminTasksIndexRoute,
     AuthenticatedAdminUsersIndexRoute: AuthenticatedAdminUsersIndexRoute,
+    AuthenticatedAdminWithdrawalIndexRoute:
+      AuthenticatedAdminWithdrawalIndexRoute,
     AuthenticatedAdminCompaniesCompanyIdIndexRoute:
       AuthenticatedAdminCompaniesCompanyIdIndexRoute,
     AuthenticatedAdminUsersCreateIndexRoute:
@@ -2200,6 +2283,7 @@ const AuthenticatedCompanyManageSettingsRouteRouteWithChildren =
 interface AuthenticatedCompanyManageRouteRouteChildren {
   AuthenticatedCompanyManageSettingsRouteRoute: typeof AuthenticatedCompanyManageSettingsRouteRouteWithChildren
   AuthenticatedCompanyManageIndexRoute: typeof AuthenticatedCompanyManageIndexRoute
+  AuthenticatedCompanyManageMyTransactionsIndexRoute: typeof AuthenticatedCompanyManageMyTransactionsIndexRoute
   AuthenticatedCompanyManageProjectsIndexRoute: typeof AuthenticatedCompanyManageProjectsIndexRoute
   AuthenticatedCompanyManageWalletIndexRoute: typeof AuthenticatedCompanyManageWalletIndexRoute
   AuthenticatedCompanyManageProjectsProjectIdIndexRoute: typeof AuthenticatedCompanyManageProjectsProjectIdIndexRoute
@@ -2217,6 +2301,8 @@ const AuthenticatedCompanyManageRouteRouteChildren: AuthenticatedCompanyManageRo
     AuthenticatedCompanyManageSettingsRouteRoute:
       AuthenticatedCompanyManageSettingsRouteRouteWithChildren,
     AuthenticatedCompanyManageIndexRoute: AuthenticatedCompanyManageIndexRoute,
+    AuthenticatedCompanyManageMyTransactionsIndexRoute:
+      AuthenticatedCompanyManageMyTransactionsIndexRoute,
     AuthenticatedCompanyManageProjectsIndexRoute:
       AuthenticatedCompanyManageProjectsIndexRoute,
     AuthenticatedCompanyManageWalletIndexRoute:
@@ -2270,6 +2356,8 @@ interface AuthenticatedLabAdminRouteRouteChildren {
   AuthenticatedLabAdminIndexRoute: typeof AuthenticatedLabAdminIndexRoute
   AuthenticatedLabAdminCompaniesIndexRoute: typeof AuthenticatedLabAdminCompaniesIndexRoute
   AuthenticatedLabAdminProjectsIndexRoute: typeof AuthenticatedLabAdminProjectsIndexRoute
+  AuthenticatedLabAdminReportsIndexRoute: typeof AuthenticatedLabAdminReportsIndexRoute
+  AuthenticatedLabAdminSkillsIndexRoute: typeof AuthenticatedLabAdminSkillsIndexRoute
   AuthenticatedLabAdminTemplatesIndexRoute: typeof AuthenticatedLabAdminTemplatesIndexRoute
   AuthenticatedLabAdminUsersIndexRoute: typeof AuthenticatedLabAdminUsersIndexRoute
   AuthenticatedLabAdminCompaniesCompanyIdIndexRoute: typeof AuthenticatedLabAdminCompaniesCompanyIdIndexRoute
@@ -2278,6 +2366,7 @@ interface AuthenticatedLabAdminRouteRouteChildren {
   AuthenticatedLabAdminProjectsProjectIdMilestoneIdIndexRoute: typeof AuthenticatedLabAdminProjectsProjectIdMilestoneIdIndexRoute
   AuthenticatedLabAdminProjectsProjectIdMembersIndexRoute: typeof AuthenticatedLabAdminProjectsProjectIdMembersIndexRoute
   AuthenticatedLabAdminProjectsProjectIdTemplatesIndexRoute: typeof AuthenticatedLabAdminProjectsProjectIdTemplatesIndexRoute
+  AuthenticatedLabAdminProjectsProjectIdMilestoneIdMembersIndexRoute: typeof AuthenticatedLabAdminProjectsProjectIdMilestoneIdMembersIndexRoute
 }
 
 const AuthenticatedLabAdminRouteRouteChildren: AuthenticatedLabAdminRouteRouteChildren =
@@ -2289,6 +2378,10 @@ const AuthenticatedLabAdminRouteRouteChildren: AuthenticatedLabAdminRouteRouteCh
       AuthenticatedLabAdminCompaniesIndexRoute,
     AuthenticatedLabAdminProjectsIndexRoute:
       AuthenticatedLabAdminProjectsIndexRoute,
+    AuthenticatedLabAdminReportsIndexRoute:
+      AuthenticatedLabAdminReportsIndexRoute,
+    AuthenticatedLabAdminSkillsIndexRoute:
+      AuthenticatedLabAdminSkillsIndexRoute,
     AuthenticatedLabAdminTemplatesIndexRoute:
       AuthenticatedLabAdminTemplatesIndexRoute,
     AuthenticatedLabAdminUsersIndexRoute: AuthenticatedLabAdminUsersIndexRoute,
@@ -2304,6 +2397,8 @@ const AuthenticatedLabAdminRouteRouteChildren: AuthenticatedLabAdminRouteRouteCh
       AuthenticatedLabAdminProjectsProjectIdMembersIndexRoute,
     AuthenticatedLabAdminProjectsProjectIdTemplatesIndexRoute:
       AuthenticatedLabAdminProjectsProjectIdTemplatesIndexRoute,
+    AuthenticatedLabAdminProjectsProjectIdMilestoneIdMembersIndexRoute:
+      AuthenticatedLabAdminProjectsProjectIdMilestoneIdMembersIndexRoute,
   }
 
 const AuthenticatedLabAdminRouteRouteWithChildren =
@@ -2375,6 +2470,7 @@ interface AuthenticatedMentorRouteRouteChildren {
   AuthenticatedMentorProjectsRouteRoute: typeof AuthenticatedMentorProjectsRouteRouteWithChildren
   AuthenticatedMentorSettingsRouteRoute: typeof AuthenticatedMentorSettingsRouteRouteWithChildren
   AuthenticatedMentorIndexRoute: typeof AuthenticatedMentorIndexRoute
+  AuthenticatedMentorMyTransactionsIndexRoute: typeof AuthenticatedMentorMyTransactionsIndexRoute
   AuthenticatedMentorTeamFundDistributionIndexRoute: typeof AuthenticatedMentorTeamFundDistributionIndexRoute
   AuthenticatedMentorWalletIndexRoute: typeof AuthenticatedMentorWalletIndexRoute
 }
@@ -2386,6 +2482,8 @@ const AuthenticatedMentorRouteRouteChildren: AuthenticatedMentorRouteRouteChildr
     AuthenticatedMentorSettingsRouteRoute:
       AuthenticatedMentorSettingsRouteRouteWithChildren,
     AuthenticatedMentorIndexRoute: AuthenticatedMentorIndexRoute,
+    AuthenticatedMentorMyTransactionsIndexRoute:
+      AuthenticatedMentorMyTransactionsIndexRoute,
     AuthenticatedMentorTeamFundDistributionIndexRoute:
       AuthenticatedMentorTeamFundDistributionIndexRoute,
     AuthenticatedMentorWalletIndexRoute: AuthenticatedMentorWalletIndexRoute,
@@ -2421,6 +2519,7 @@ interface AuthenticatedTalentRouteRouteChildren {
   AuthenticatedTalentSettingsRouteRoute: typeof AuthenticatedTalentSettingsRouteRouteWithChildren
   AuthenticatedTalentIndexRoute: typeof AuthenticatedTalentIndexRoute
   AuthenticatedTalentMyApplicationsIndexRoute: typeof AuthenticatedTalentMyApplicationsIndexRoute
+  AuthenticatedTalentMyTransactionsIndexRoute: typeof AuthenticatedTalentMyTransactionsIndexRoute
   AuthenticatedTalentProjectsIndexRoute: typeof AuthenticatedTalentProjectsIndexRoute
   AuthenticatedTalentTeamFundDistributionIndexRoute: typeof AuthenticatedTalentTeamFundDistributionIndexRoute
   AuthenticatedTalentWalletIndexRoute: typeof AuthenticatedTalentWalletIndexRoute
@@ -2438,6 +2537,8 @@ const AuthenticatedTalentRouteRouteChildren: AuthenticatedTalentRouteRouteChildr
     AuthenticatedTalentIndexRoute: AuthenticatedTalentIndexRoute,
     AuthenticatedTalentMyApplicationsIndexRoute:
       AuthenticatedTalentMyApplicationsIndexRoute,
+    AuthenticatedTalentMyTransactionsIndexRoute:
+      AuthenticatedTalentMyTransactionsIndexRoute,
     AuthenticatedTalentProjectsIndexRoute:
       AuthenticatedTalentProjectsIndexRoute,
     AuthenticatedTalentTeamFundDistributionIndexRoute:

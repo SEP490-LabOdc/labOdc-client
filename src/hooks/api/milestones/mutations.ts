@@ -1,6 +1,6 @@
 import apiRequest from '@/config/request.ts'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import type { UpdateMilestonePayload } from './types'
+import type { ExtensionRequestPayload, UpdateMilestonePayload } from './types'
 import { milestoneKeys } from './query-keys'
 
 /**
@@ -37,6 +37,50 @@ export function useUpdateMilestone() {
         onSuccess: (_, variables) => {
             queryClient.invalidateQueries({
                 queryKey: milestoneKeys.detail(variables.milestoneId)
+            })
+        }
+    })
+}
+
+export function useCreateExtensionRequest() {
+    const queryClient = useQueryClient()
+    return useMutation({
+        mutationFn: async (payload: ExtensionRequestPayload) => {
+            const { data } = await apiRequest.post(`/api/v1/project-milestones/${payload.milestoneId}/extension-requests`, payload)
+            return data
+        },
+        onSuccess: (_, variables) => {
+            queryClient.invalidateQueries({
+                queryKey: [
+                    milestoneKeys.detail(variables.milestoneId),
+                    milestoneKeys.milestoneExtensionRequests(variables.milestoneId)
+                ]
+            })
+        }
+    })
+}
+
+export function useUpdateExtensionRequest() {
+    const queryClient = useQueryClient()
+    return useMutation({
+        mutationFn: async (payload: {
+            milestoneId: string,
+            id: string,
+            status: string
+            reason: string
+        }) => {
+            const { data } = await apiRequest.patch(`/api/v1/project-milestones/${payload.milestoneId}/extension-requests/${payload.id}`, {
+                status: payload.status,
+                reason: payload.reason
+            })
+            return data
+        },
+        onSuccess: (_, variables) => {
+            queryClient.invalidateQueries({
+                queryKey: [
+                    milestoneKeys.detail(variables.milestoneId),
+                    milestoneKeys.milestoneExtensionRequests(variables.milestoneId)
+                ]
             })
         }
     })

@@ -44,7 +44,7 @@ export const PaymentSuccessDialog: React.FC<PaymentSuccessDialogProps> = ({
 
                 <div className="space-y-4 py-4">
                     {amount && (
-                        <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
+                        <div className="p-4 bg-green-50 border border-green-200 rounded-md">
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-2">
                                     <Wallet className="h-5 w-5 text-green-600" />
@@ -58,7 +58,7 @@ export const PaymentSuccessDialog: React.FC<PaymentSuccessDialogProps> = ({
                     )}
 
                     {orderCode && (
-                        <div className="p-3 bg-gray-50 rounded-lg">
+                        <div className="p-3 bg-gray-50 rounded-md">
                             <div className="flex justify-between items-center text-sm">
                                 <span className="text-gray-600">Mã đơn hàng:</span>
                                 <span className="font-mono font-semibold text-gray-900">{orderCode}</span>
@@ -66,7 +66,7 @@ export const PaymentSuccessDialog: React.FC<PaymentSuccessDialogProps> = ({
                         </div>
                     )}
 
-                    <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                    <div className="p-3 bg-blue-50 border border-blue-200 rounded-md">
                         <p className="text-sm text-blue-800">
                             💡 <strong>Lưu ý:</strong> Số dư ví của bạn sẽ được cập nhật trong vài giây.
                         </p>

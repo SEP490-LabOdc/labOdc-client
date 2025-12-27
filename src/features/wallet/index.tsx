@@ -193,7 +193,7 @@ export const MyWalletPage: React.FC = () => {
                 </div>
                 {/* Info Cards */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div className="p-4 bg-white border rounded-lg">
+                    <div className="p-4 bg-white border rounded-md">
                         <div className="flex items-center gap-3">
                             <div className="p-2 bg-green-100 rounded-full">
                                 <Wallet className="h-5 w-5 text-green-600" />
@@ -211,7 +211,7 @@ export const MyWalletPage: React.FC = () => {
                         </div>
                     </div>
 
-                    <div className="p-4 bg-white border rounded-lg">
+                    <div className="p-4 bg-white border rounded-md">
                         <div className="flex items-center gap-3">
                             <div className="p-2 bg-blue-100 rounded-full">
                                 <Wallet className="h-5 w-5 text-blue-600" />
@@ -229,7 +229,7 @@ export const MyWalletPage: React.FC = () => {
                         </div>
                     </div>
 
-                    <div className="p-4 bg-white border rounded-lg">
+                    <div className="p-4 bg-white border rounded-md">
                         <div className="flex items-center gap-3">
                             <div className="p-2 bg-orange-100 rounded-full">
                                 <Wallet className="h-5 w-5 text-orange-600" />

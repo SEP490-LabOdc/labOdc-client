@@ -15,12 +15,11 @@ import {
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { FileText } from 'lucide-react'
 import { toast } from 'sonner'
 import { FileUpload } from '@/components/file/FileUpload'
-import { getStatusLabel, getStatusColor } from '@/lib/utils'
+import { getMilestoneStatusBadge } from '@/helpers/milestone'
 import type { MilestoneAttachment, MilestoneDetail } from '@/hooks/api/milestones/types'
 
 const updateMilestoneSchema = z.object({
@@ -147,9 +146,7 @@ export const UpdateMilestoneForm: React.FC<UpdateMilestoneFormProps> = ({
             <CardHeader>
                 <div className="flex items-center justify-between gap-2">
                     <CardTitle>Thông tin Milestone</CardTitle>
-                    <Badge className={`${getStatusColor(milestone.status)} rounded-full`}>
-                        {getStatusLabel(milestone.status)}
-                    </Badge>
+                    {getMilestoneStatusBadge(milestone.status)}
                 </div>
             </CardHeader>
             <CardContent>
@@ -235,7 +232,7 @@ export const UpdateMilestoneForm: React.FC<UpdateMilestoneFormProps> = ({
                                 <div className="space-y-2 mt-4">
                                     <p className="text-sm font-medium text-gray-700">Danh sách tệp đính kèm:</p>
                                     {attachments.map((attachment, index) => (
-                                        <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
+                                        <div key={index} className="flex items-center justify-between p-3 border rounded-md">
                                             <div className="flex items-center gap-3">
                                                 <FileText className="w-5 h-5 text-blue-500" />
                                                 <div>

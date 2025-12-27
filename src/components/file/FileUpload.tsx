@@ -190,7 +190,7 @@ export function FileUpload({
           onDragOver={!isUploading ? handleDragOver : undefined}
           onDragLeave={!isUploading ? handleDragLeave : undefined}
           className={cn(
-            'relative border-2 border-dashed rounded-lg p-6 text-center transition-colors',
+            'relative border-2 border-dashed rounded-md p-6 text-center transition-colors',
             !isUploading && 'cursor-pointer',
             isDragOver && !isUploading
               ? 'border-[#2a9d8f] bg-[#2a9d8f]/5'
@@ -226,7 +226,7 @@ export function FileUpload({
           </div>
         </div>
       ) : (
-        <div className="border border-gray-300 rounded-lg p-4">
+        <div className="border border-gray-300 rounded-md p-4">
           <div className="flex items-center gap-3">
             <div className="flex-shrink-0">
               {showLoading ? (

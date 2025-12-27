@@ -77,10 +77,10 @@ export const DepositDialog: React.FC<DepositDialogProps> = ({
                 <DialogHeader>
                     <DialogTitle className="flex items-center gap-2">
                         <Plus className="h-5 w-5 text-[#264653]" />
-                        Nạp tiền vào Escrow
+                        Nạp tiền vào ví
                     </DialogTitle>
                     <DialogDescription>
-                        Nhập số tiền để tạo link thanh toán và nạp tiền vào ví Escrow
+                        Nhập số tiền để tạo link thanh toán và nạp tiền vào ví
                     </DialogDescription>
                 </DialogHeader>
 
@@ -103,7 +103,7 @@ export const DepositDialog: React.FC<DepositDialogProps> = ({
 
                     {/* Info */}
                     {amountNum >= minDeposit && (
-                        <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                        <div className="p-3 bg-blue-50 border border-blue-200 rounded-md">
                             <div className="flex items-start gap-2">
                                 <Wallet className="h-4 w-4 text-blue-600 mt-0.5 flex-shrink-0" />
                                 <div className="text-sm text-blue-800">
@@ -127,7 +127,7 @@ export const DepositDialog: React.FC<DepositDialogProps> = ({
                         disabled={amountNum < minDeposit || paymentDeposit.isPending}
                         className="bg-[#264653] hover:bg-[#264653]/90"
                     >
-                        {paymentDeposit.isPending ? 'Đang xử lý...' : 'Tạo link thanh toán'}
+                        {paymentDeposit.isPending ? 'Đang xử lý...' : 'Thanh toán'}
                     </Button>
                 </DialogFooter>
             </DialogContent>

@@ -21,32 +21,24 @@ interface MilestoneMembersTableProps {
     members: MilestoneMember[]
     title: string
     emptyMessage: string
-    iconColor?: string
     showActionButton?: boolean
     isActionLoading?: boolean
     onToggleLeader?: (milestoneMemberId: string, currentLeaderStatus: boolean) => void
-    leaderLabel?: string
-    removeLeaderLabel?: string
-    badgeLabel?: string
 }
 
 export const MilestoneMembersTable: React.FC<MilestoneMembersTableProps> = ({
     members,
     title,
     emptyMessage,
-    iconColor = '#2a9d8f',
     showActionButton = false,
     isActionLoading = false,
     onToggleLeader,
-    leaderLabel = 'Đặt làm leader',
-    removeLeaderLabel = 'Gỡ leader',
-    badgeLabel = 'Leader',
 }) => {
     return (
         <Card className="mb-6">
             <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                    <Users className="h-5 w-5" style={{ color: iconColor }} />
+                    <Users className="h-5 w-5 text-secondary" />
                     {title} ({members.length})
                 </CardTitle>
             </CardHeader>
@@ -60,7 +52,6 @@ export const MilestoneMembersTable: React.FC<MilestoneMembersTableProps> = ({
                                 <TableHead>Trạng thái</TableHead>
                                 <TableHead>Ngày tham gia</TableHead>
                                 <TableHead>Ngày rời</TableHead>
-                                <TableHead>Leader</TableHead>
                                 {showActionButton && <TableHead className="text-right">Thao tác</TableHead>}
                             </TableRow>
                         </TableHeader>
@@ -76,17 +67,23 @@ export const MilestoneMembersTable: React.FC<MilestoneMembersTableProps> = ({
                                                 </AvatarFallback>
                                             </Avatar>
                                             <div className="flex flex-col min-w-0">
-                                                <div className="font-medium text-gray-900 truncate">
+                                                <div className="font-medium text-foreground truncate flex items-center gap-2">
                                                     {member.fullName}
+                                                    {member.leader && (
+                                                        <Badge variant="secondary" className="flex-shrink-0 bg-yellow-100 text-yellow-800">
+                                                            <Crown className="h-3 w-3" />
+                                                            <span>Trưởng nhóm</span>
+                                                        </Badge>
+                                                    )}
                                                 </div>
-                                                <div className="text-sm text-gray-500 truncate">
+                                                <div className="text-sm text-muted-foreground truncate">
                                                     {member.email}
                                                 </div>
                                             </div>
                                         </div>
                                     </TableCell>
                                     <TableCell>
-                                        <span className="text-sm text-gray-700">
+                                        <span className="text-sm text-foreground">
                                             {member.phone || '-'}
                                         </span>
                                     </TableCell>
@@ -99,52 +96,31 @@ export const MilestoneMembersTable: React.FC<MilestoneMembersTableProps> = ({
                                         </Badge>
                                     </TableCell>
                                     <TableCell>
-                                        <span className="text-sm text-gray-700">
+                                        <span className="text-sm text-foreground">
                                             {formatDateOnly(member.joinedAt)}
                                         </span>
                                     </TableCell>
                                     <TableCell>
-                                        <span className="text-sm text-gray-700">
+                                        <span className="text-sm text-foreground">
                                             {formatDateOnly(member.leftAt)}
                                         </span>
                                     </TableCell>
-                                    <TableCell>
-                                        {member.leader ? (
-                                            <Badge className="bg-yellow-100 text-yellow-800 flex items-center gap-1 w-fit">
-                                                <Crown className="h-3 w-3" />
-                                                {badgeLabel}
-                                            </Badge>
-                                        ) : (
-                                            <span className="text-sm text-gray-400">-</span>
-                                        )}
-                                    </TableCell>
-                                    {showActionButton && (
+                                    {(showActionButton && !member.leader) && (
                                         <TableCell className="text-right">
                                             <Button
                                                 size="sm"
                                                 variant={member.leader ? "default" : "outline"}
                                                 className={member.leader
-                                                    ? 'bg-yellow-500 hover:bg-yellow-600 text-white'
-                                                    : 'border-yellow-500 text-yellow-600 hover:bg-yellow-50'
+                                                    ? 'bg-brand-orange hover:bg-brand-orange/90 text-white'
+                                                    : 'border-brand-orange text-brand-orange hover:bg-brand-orange/10'
                                                 }
                                                 disabled={isActionLoading}
                                                 onClick={() => onToggleLeader?.(member.milestoneMemberId, member.leader)}
                                             >
                                                 {isActionLoading ? (
-                                                    <>
-                                                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                                                        Đang xử lý...
-                                                    </>
-                                                ) : member.leader ? (
-                                                    <>
-                                                        <Crown className="h-4 w-4 mr-2" />
-                                                        {removeLeaderLabel}
-                                                    </>
+                                                    <Loader2 className="h-4 w-4 animate-spin" />
                                                 ) : (
-                                                    <>
-                                                        <Crown className="h-4 w-4 mr-2" />
-                                                        {leaderLabel}
-                                                    </>
+                                                    <Crown className="h-4 w-4" />
                                                 )}
                                             </Button>
                                         </TableCell>

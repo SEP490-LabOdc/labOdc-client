@@ -26,7 +26,7 @@ export default function LandingHeader() {
             {landingHeaderData.map((item) => (
               <Link
                 to={item.url}
-                className={`${checkIsActive(href, item) ? "text-brand-orange font-bold" : "text-brand-dark-teal hover:text-brand-green-teal"} transition-colors font-semibold`}
+                className={`${checkIsActive(href, item) ? "text-brand-orange font-bold" : "text-primary hover:text-secondary"} transition-colors font-semibold`}
                 key={item.title}
               >
                 {item.title}
@@ -36,7 +36,7 @@ export default function LandingHeader() {
         </div>
 
         <div className="flex items-center space-x-4">
-          <Button className="bg-[#e76f51] hover:bg-[#f4a261] text-white font-bold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+          <Button className="bg-brand-orange hover:bg-brand-orange/90 text-white font-bold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
             <Link to='/company' className='font-bold'>Tạo dự án ngay</Link>
           </Button>
 
@@ -47,7 +47,7 @@ export default function LandingHeader() {
             </>
           ) : (
             <div>
-              <Link to='/sign-in' className='font-bold hover:text-[#2a9d8f] font-semibold hover:underline'>
+              <Link to='/sign-in' className='font-bold hover:text-secondary font-semibold hover:underline'>
                 Đăng nhập
               </Link>
             </div>

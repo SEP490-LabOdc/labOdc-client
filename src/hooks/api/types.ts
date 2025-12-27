@@ -7,6 +7,11 @@ export enum ApiErrorTypes {
     CustomForbiddenError = "ForbiddenError"
 }
 
+export enum Sort {
+    ASC = 'ASC',
+    DESC = 'DESC',
+}
+
 export type TApiErrors =
     | {
         success: boolean;

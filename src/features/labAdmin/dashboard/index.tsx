@@ -1,178 +1,467 @@
-﻿// import { getRouteApi } from '@tanstack/react-router'
-import { Button } from '@/components/ui/button'
+﻿import { Main } from '@/components/layout/main'
 import {
     Card,
     CardContent,
-    CardDescription,
     CardHeader,
     CardTitle,
+    CardDescription,
 } from '@/components/ui/card'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Main } from '@/components/layout/main'
-import { Overview } from './components/overview'
-import { RecentSales } from './components/recent-sales'
+import { Badge } from '@/components/ui/badge'
+import {
+    Building2,
+    FolderKanban,
+    AlertTriangle,
+    GraduationCap,
+    UserCheck,
+    Wallet,
+    Briefcase,
+} from 'lucide-react'
+import { Link } from '@tanstack/react-router'
+import { useUser } from '@/context/UserContext'
+import { useGetUserNotifications } from '@/hooks/api/notifications'
+import { Bar, BarChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
+import { formatVND } from '@/helpers/currency'
+import { useGetCompanyDashboardOverview, useGetCompanyLast6MonthStatistic, useGetMyWallet, useGetProjectDashboardOverview, useGetProjectLast6MonthStatistic, useGetUserDashboardOverview } from '@/hooks/api/dashboard'
 
-// const route = getRouteApi('/_authenticated/admin/')
+const formatMonthLabel = (month: string) => {
+    const [year, m] = month.split('-')
+    return `${m}/${year}`
+}
+
+/* =======================
+   DASHBOARD
+======================= */
 
 export default function Dashboard() {
+    const { user } = useUser()
+
+    const {
+        data: projectStatistic,
+        isLoading: projectLoading,
+    } = useGetProjectLast6MonthStatistic();
+
+    const {
+        data: companyStatistic,
+        isLoading: companyLoading,
+    } = useGetCompanyLast6MonthStatistic();
+
+    const {
+        data: notifications = [],
+        isLoading,
+    } = useGetUserNotifications(user?.id);
+
+    const { data: projectOverview } = useGetProjectDashboardOverview();
+    const { data: companyOverview } = useGetCompanyDashboardOverview();
+    const { data: userOverview } = useGetUserDashboardOverview();
+    const { data: wallet, isLoading: walletLoading } = useGetMyWallet()
+
+    const overviewLoading =
+        !projectOverview || !companyOverview || !userOverview || walletLoading
+
+    let latestNotifications = [];
+
+    if (!isLoading) {
+        latestNotifications = [...notifications?.data]
+            .sort(
+                (a, b) =>
+                    new Date(b.sentAt).getTime() -
+                    new Date(a.sentAt).getTime()
+            )
+            .slice(0, 8)
+
+    }
+
+
+    const projectChartData =
+        projectStatistic?.map((item: { month: string; total: number }) => ({
+            label: formatMonthLabel(item.month),
+            total: item.total,
+        })) ?? []
+
+    const companyChartData =
+        companyStatistic?.map((item: { month: string; total: number }) => ({
+            label: formatMonthLabel(item.month),
+            total: item.total,
+        })) ?? []
+
+    const systemOverview = {
+        // Company
+        pendingCompanies: companyOverview?.pendingCompanies ?? 0,
+        activeCompanies: companyOverview?.activeCompanies ?? 0,
+
+        // Project
+        pendingProjects: projectOverview?.pendingProjects ?? 0,
+        activeProjects: projectOverview?.activeProjects ?? 0,
+        recruitingProjects: projectOverview?.recruitingProjects ?? 0,
+        joinedStudents: projectOverview?.joinedStudents ?? 0,
+        availableMentors: projectOverview?.availableMentors ?? 0,
+
+        // User
+        totalMentors: userOverview?.totalMentors ?? 0,
+        totalStudents: userOverview?.totalStudents ?? 0,
+
+        totalBudget:
+            (wallet?.heldBalance ?? 0),
+    }
+
+    const renderValue = (
+        loading: boolean,
+        value: string | number
+    ) => (loading ? 'Đang tải dữ liệu...' : value)
+
     return (
-        <>
-            {/* ===== Main ===== */}
-            <Main>
-                <div className='mb-2 flex items-center justify-between space-y-2'>
-                    <h1 className='text-2xl font-bold tracking-tight'>Dashboard</h1>
-                    <div className='flex items-center space-x-2'>
-                        <Button>Tải xuống</Button>
-                    </div>
+        <Main>
+            {/* ===== HEADER ===== */}
+            <div className="mb-6">
+                <h1 className="text-2xl font-bold tracking-tight">
+                    Dashboard
+                </h1>
+                <p className="text-muted-foreground text-sm">
+                    Tổng quan vận hành và nguồn lực của hệ thống LabODC
+                </p>
+            </div>
+
+            <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
+                {/* =======================
+                    LEFT COLUMN (7)
+                ======================= */}
+                <div className="space-y-6 lg:col-span-7">
+                    {/* ===== APPROVAL REQUIRED ===== */}
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>
+                                Yêu cầu chờ phê duyệt
+                            </CardTitle>
+                            <CardDescription>
+                                Các yêu cầu cần quản trị viên xử lý
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent className="space-y-4">
+                            <div className="grid grid-cols-2 gap-4">
+                                <Link
+                                    to="/lab-admin/companies"
+                                    search={{ status: ['PENDING'] }}
+                                    className="block"
+                                >
+                                    <ApprovalBox
+                                        icon={<Building2 size={16} />}
+                                        label="Doanh nghiệp chờ phê duyệt"
+                                        value={systemOverview.pendingCompanies}
+                                        variant="company"
+                                    />
+                                </Link>
+
+                                <Link
+                                    to="/lab-admin/projects"
+                                    search={{ status: ['PENDING'] }}
+                                    className="block"
+                                >
+                                    <ApprovalBox
+                                        icon={<FolderKanban size={16} />}
+                                        label="Dự án chờ phê duyệt"
+                                        value={systemOverview.pendingProjects}
+                                        variant="project"
+                                    />
+                                </Link>
+                            </div>
+
+                            <p className="text-sm text-muted-foreground">
+                                ⚠️ Hiện có{' '}
+                                <strong>
+                                    {systemOverview.pendingCompanies} doanh nghiệp
+                                </strong>{' '}
+                                và{' '}
+                                <strong>
+                                    {systemOverview.pendingProjects} dự án
+                                </strong>{' '}
+                                đang chờ phê duyệt.
+                            </p>
+                        </CardContent>
+                    </Card>
+
+                    {/* ===== RECENT ACTIVITIES ===== */}
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Hoạt động gần đây</CardTitle>
+                            <CardDescription>
+                                8 thông báo mới nhất cần quản trị viên xử lý
+                            </CardDescription>
+                        </CardHeader>
+
+                        <CardContent className="space-y-3">
+                            {isLoading && (
+                                <p className="text-sm text-muted-foreground">
+                                    Đang tải thông báo...
+                                </p>
+                            )}
+
+                            {!isLoading && latestNotifications.length === 0 && (
+                                <p className="text-sm text-muted-foreground">
+                                    Không có thông báo mới
+                                </p>
+                            )}
+
+                            {!isLoading &&
+                                latestNotifications.map((item) => (
+                                    <Link
+                                        key={item.notificationRecipientId}
+                                        to={item.deepLink}
+                                        className="block rounded-md border p-4 transition hover:bg-muted"
+                                    >
+                                        <div className="mb-1 flex items-center gap-2">
+                                            <Badge>
+                                                {item.category === 'PROJECT_MANAGEMENT'
+                                                    ? 'Dự án'
+                                                    : 'Doanh nghiệp'}
+                                            </Badge>
+
+                                            {!item.readStatus && (
+                                                <span className="text-xs font-semibold text-red-500">
+                                                    ●
+                                                </span>
+                                            )}
+
+                                            <span className="text-sm font-medium">
+                                                {item.title}
+                                            </span>
+                                        </div>
+
+                                        <p className="text-muted-foreground text-sm">
+                                            {item.content}
+                                        </p>
+
+                                        <p className="mt-1 text-xs text-muted-foreground">
+                                            {new Date(item.sentAt).toLocaleString('vi-VN')}
+                                        </p>
+                                    </Link>
+                                ))}
+                        </CardContent>
+                    </Card>
                 </div>
-                <Tabs
-                    orientation='vertical'
-                    defaultValue='overview'
-                    className='space-y-4'
+
+                {/* =======================
+                    RIGHT COLUMN (5)
+                ======================= */}
+                <div className="space-y-6 lg:col-span-5">
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>
+                                Tổng quan hệ thống
+                            </CardTitle>
+                            <CardDescription>
+                                Tình trạng vận hành & nguồn lực
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent className="space-y-3 text-sm">
+                            <OverviewItem
+                                icon={<Wallet size={16} />}
+                                label="Tổng số vốn"
+                                value={renderValue(
+                                    overviewLoading,
+                                    formatVND(systemOverview.totalBudget)
+                                )}
+                            />
+
+                            <OverviewItem
+                                icon={<Building2 size={16} />}
+                                label="Doanh nghiệp đang hoạt động"
+                                value={renderValue(
+                                    overviewLoading,
+                                    systemOverview.activeCompanies
+                                )}
+                            />
+
+                            <OverviewItem
+                                icon={<FolderKanban size={16} />}
+                                label="Dự án đang triển khai"
+                                value={renderValue(
+                                    overviewLoading,
+                                    systemOverview.activeProjects
+                                )}
+                            />
+
+                            <OverviewItem
+                                icon={<Briefcase size={16} />}
+                                label="Dự án đang tuyển dụng"
+                                value={renderValue(
+                                    overviewLoading,
+                                    systemOverview.recruitingProjects
+                                )}
+                            />
+
+                            <OverviewItem
+                                icon={<UserCheck size={16} />}
+                                label="Mentor khả dụng"
+                                value={renderValue(
+                                    overviewLoading,
+                                    `${systemOverview.availableMentors} / ${systemOverview.totalMentors}`
+                                )}
+                            />
+
+                            <OverviewItem
+                                icon={<GraduationCap size={16} />}
+                                label="Sinh viên tham gia dự án"
+                                value={renderValue(
+                                    overviewLoading,
+                                    `${systemOverview.joinedStudents} / ${systemOverview.totalStudents}`
+                                )}
+                            />
+
+                        </CardContent>
+                    </Card>
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Dự án mới theo tháng</CardTitle>
+                            <CardDescription>Số dự án được tạo trong 6 tháng gần nhất</CardDescription>
+                        </CardHeader>
+                        <CardContent className="h-[220px]">
+                            {projectLoading ? (
+                                <p className="text-sm text-muted-foreground">Đang tải dữ liệu...</p>
+                            ) : (
+                                <ResponsiveContainer width="100%" height="100%">
+                                    <BarChart data={projectChartData}>
+                                        <XAxis dataKey="label" />
+                                        <YAxis allowDecimals={false} />
+                                        <Tooltip
+                                            formatter={(value: number | undefined) => [`${value} dự án`, 'Số lượng']}
+                                            labelFormatter={(label) => `Tháng ${label}`}
+                                        />
+                                        <Bar
+                                            dataKey="total"
+                                            radius={[4, 4, 0, 0]}
+                                            className="fill-primary"
+                                        />
+                                    </BarChart>
+                                </ResponsiveContainer>
+                            )}
+                        </CardContent>
+                    </Card>
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Doanh nghiệp mới theo tháng</CardTitle>
+                            <CardDescription>Số doanh nghiệp đăng ký trong 6 tháng gần nhất</CardDescription>
+                        </CardHeader>
+                        <CardContent className="h-[220px]">
+                            {companyLoading ? (
+                                <p className="text-sm text-muted-foreground">Đang tải dữ liệu...</p>
+                            ) : (
+                                <ResponsiveContainer width="100%" height="100%">
+                                    <BarChart data={companyChartData}>
+                                        <XAxis dataKey="label" />
+                                        <YAxis allowDecimals={false} />
+                                        <Tooltip
+                                            formatter={(value: number | undefined) => [
+                                                `${value} doanh nghiệp`,
+                                                'Đăng ký mới',
+                                            ]}
+                                            labelFormatter={(label) => `Tháng ${label}`}
+                                        />
+                                        <Bar
+                                            dataKey="total"
+                                            radius={[4, 4, 0, 0]}
+                                            className="fill-primary"
+                                        />
+                                    </BarChart>
+                                </ResponsiveContainer>
+                            )}
+                        </CardContent>
+                    </Card>
+                </div>
+            </div>
+        </Main>
+    )
+}
+
+/* =======================
+   INLINE UI BLOCKS
+======================= */
+function ApprovalBox({
+    icon,
+    label,
+    value,
+    variant,
+}: {
+    icon: React.ReactNode
+    label: string
+    value: number
+    variant: 'company' | 'project'
+}) {
+    const styles =
+        variant === 'company'
+            ? {
+                border: 'border-amber-200',
+                bg: 'bg-amber-50',
+                iconBg: 'bg-amber-100',
+                iconText: 'text-amber-700',
+                accent: 'bg-amber-400',
+                text: 'text-amber-900',
+            }
+            : {
+                border: 'border-blue-200',
+                bg: 'bg-blue-50',
+                iconBg: 'bg-blue-100',
+                iconText: 'text-blue-700',
+                accent: 'bg-blue-400',
+                text: 'text-blue-900',
+            }
+
+    return (
+        <div
+            className={`relative rounded-md border ${styles.border} ${styles.bg} p-4 transition hover:shadow-md`}
+        >
+            {/* Accent strip */}
+            <div
+                className={`absolute left-0 top-0 h-full w-1 rounded-l-lg ${styles.accent}`}
+            />
+
+            <div className="mb-2 flex items-center gap-2">
+                <div
+                    className={`flex h-8 w-8 items-center justify-center rounded-full ${styles.iconBg} ${styles.iconText}`}
                 >
-                    <div className='w-full overflow-x-auto pb-2'>
-                        <TabsList>
-                            <TabsTrigger value='overview'>Tổng quan</TabsTrigger>
-                            <TabsTrigger value='analytics' disabled>
-                                Phân tích
-                            </TabsTrigger>
-                            <TabsTrigger value='reports' disabled>
-                                Báo cáo
-                            </TabsTrigger>
-                            <TabsTrigger value='notifications' disabled>
-                                Thông báo
-                            </TabsTrigger>
-                        </TabsList>
-                    </div>
-                    <TabsContent value='overview' className='space-y-4'>
-                        <div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-4'>
-                            <Card>
-                                <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-                                    <CardTitle className='text-sm font-medium'>
-                                        Tổng doanh thu
-                                    </CardTitle>
-                                    <svg
-                                        xmlns='http://www.w3.org/2000/svg'
-                                        viewBox='0 0 24 24'
-                                        fill='none'
-                                        stroke='currentColor'
-                                        strokeLinecap='round'
-                                        strokeLinejoin='round'
-                                        strokeWidth='2'
-                                        className='text-muted-foreground h-4 w-4'
-                                    >
-                                        <path d='M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6' />
-                                    </svg>
-                                </CardHeader>
-                                <CardContent>
-                                    <div className='text-2xl font-bold'>$45,231.89</div>
-                                    <p className='text-muted-foreground text-xs'>
-                                        +20.1% so với tháng trước
-                                    </p>
-                                </CardContent>
-                            </Card>
-                            <Card>
-                                <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-                                    <CardTitle className='text-sm font-medium'>
-                                        Người dùng mới
-                                    </CardTitle>
-                                    <svg
-                                        xmlns='http://www.w3.org/2000/svg'
-                                        viewBox='0 0 24 24'
-                                        fill='none'
-                                        stroke='currentColor'
-                                        strokeLinecap='round'
-                                        strokeLinejoin='round'
-                                        strokeWidth='2'
-                                        className='text-muted-foreground h-4 w-4'
-                                    >
-                                        <path d='M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2' />
-                                        <circle cx='9' cy='7' r='4' />
-                                        <path d='M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75' />
-                                    </svg>
-                                </CardHeader>
-                                <CardContent>
-                                    <div className='text-2xl font-bold'>+2350</div>
-                                    <p className='text-muted-foreground text-xs'>
-                                        +180.1% so với tháng trước
-                                    </p>
-                                </CardContent>
-                            </Card>
-                            <Card>
-                                <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-                                    <CardTitle className='text-sm font-medium'>Tổng công ty</CardTitle>
-                                    <svg
-                                        xmlns='http://www.w3.org/2000/svg'
-                                        viewBox='0 0 24 24'
-                                        fill='none'
-                                        stroke='currentColor'
-                                        strokeLinecap='round'
-                                        strokeLinejoin='round'
-                                        strokeWidth='2'
-                                        className='text-muted-foreground h-4 w-4'
-                                    >
-                                        <path d="M3 21V7a2 2 0 0 1 2-2h4v16H3z" />
-                                        <path d="M9 21V3h6v18H9z" />
-                                        <path d="M15 21V9h4a2 2 0 0 1 2 2v10h-6z" />
-                                    </svg>
-                                </CardHeader>
-                                <CardContent>
-                                    <div className='text-2xl font-bold'>+12,234</div>
-                                    <p className='text-muted-foreground text-xs'>
-                                        +19% so với tháng trước
-                                    </p>
-                                </CardContent>
-                            </Card>
-                            <Card>
-                                <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-                                    <CardTitle className='text-sm font-medium'>
-                                        Đang hoạt động
-                                    </CardTitle>
-                                    <svg
-                                        xmlns='http://www.w3.org/2000/svg'
-                                        viewBox='0 0 24 24'
-                                        fill='none'
-                                        stroke='currentColor'
-                                        strokeLinecap='round'
-                                        strokeLinejoin='round'
-                                        strokeWidth='2'
-                                        className='text-muted-foreground h-4 w-4'
-                                    >
-                                        <path d='M22 12h-4l-3 9L9 3l-3 9H2' />
-                                    </svg>
-                                </CardHeader>
-                                <CardContent>
-                                    <div className='text-2xl font-bold'>+573</div>
-                                    <p className='text-muted-foreground text-xs'>
-                                        +201 so với giờ trước
-                                    </p>
-                                </CardContent>
-                            </Card>
-                        </div>
-                        <div className='grid grid-cols-1 gap-4 lg:grid-cols-7'>
-                            <Card className='col-span-1 lg:col-span-4'>
-                                <CardHeader>
-                                    <CardTitle>Tổng quan</CardTitle>
-                                </CardHeader>
-                                <CardContent className='ps-2'>
-                                    <Overview />
-                                </CardContent>
-                            </Card>
-                            <Card className='col-span-1 lg:col-span-3'>
-                                <CardHeader>
-                                    <CardTitle>Giao dịch gần đây</CardTitle>
-                                    <CardDescription>
-                                        Bạn đã thực hiện 265 giao dịch trong tháng này.
-                                    </CardDescription>
-                                </CardHeader>
-                                <CardContent>
-                                    <RecentSales />
-                                </CardContent>
-                            </Card>
-                        </div>
-                    </TabsContent>
-                </Tabs>
-            </Main>
-        </>
+                    {icon}
+                </div>
+                <span className={`text-sm font-medium ${styles.text}`}>
+                    {label}
+                </span>
+            </div>
+
+            <p className={`text-3xl font-bold ${styles.text}`}>
+                {value}
+            </p>
+
+            <span className="absolute bottom-3 right-3 text-xs text-muted-foreground">
+                Xem chi tiết →
+            </span>
+
+            <AlertTriangle
+                size={16}
+                className={`absolute right-3 top-3 ${styles.iconText}`}
+            />
+        </div>
+    )
+}
+
+
+function OverviewItem({
+    icon,
+    label,
+    value,
+}: {
+    icon: React.ReactNode
+    label: string
+    value: string | number
+}) {
+    return (
+        <div className="flex items-center justify-between rounded-md border p-3">
+            <div className="flex items-center gap-3 text-muted-foreground">
+                <div className="flex h-9 w-9 items-center justify-center rounded-full bg-muted">
+                    {icon}
+                </div>
+                <span>{label}</span>
+            </div>
+            <span className="font-semibold">
+                {value}
+            </span>
+        </div>
     )
 }

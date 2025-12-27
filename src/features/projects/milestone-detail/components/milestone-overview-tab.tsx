@@ -17,7 +17,7 @@ export const MilestoneOverviewTab: React.FC<MilestoneOverviewTabProps> = ({ mile
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <p className="text-sm text-gray-600 leading-relaxed whitespace-pre-wrap">
+        <p className="text-sm leading-relaxed whitespace-pre-wrap">
           {milestone.description || 'Chưa có mô tả'}
         </p>
       </CardContent>

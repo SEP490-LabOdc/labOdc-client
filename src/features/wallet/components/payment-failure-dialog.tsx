@@ -52,7 +52,7 @@ export const PaymentFailureDialog: React.FC<PaymentFailureDialogProps> = ({
 
                 <div className="space-y-4 py-4">
                     {orderCode && (
-                        <div className="p-3 bg-gray-50 rounded-lg">
+                        <div className="p-3 bg-gray-50 rounded-md">
                             <div className="flex justify-between items-center text-sm">
                                 <span className="text-gray-600">Mã đơn hàng:</span>
                                 <span className="font-mono font-semibold text-gray-900">{orderCode}</span>
@@ -61,7 +61,7 @@ export const PaymentFailureDialog: React.FC<PaymentFailureDialogProps> = ({
                     )}
 
                     {errorCode && errorCode !== '00' && (
-                        <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
+                        <div className="p-3 bg-red-50 border border-red-200 rounded-md">
                             <div className="flex justify-between items-center text-sm">
                                 <span className="text-red-700">Mã lỗi:</span>
                                 <span className="font-mono font-semibold text-red-900">{errorCode}</span>
@@ -69,7 +69,7 @@ export const PaymentFailureDialog: React.FC<PaymentFailureDialogProps> = ({
                         </div>
                     )}
 
-                    <div className={`p-3 rounded-lg ${isCancelled ? 'bg-orange-50 border border-orange-200' : 'bg-red-50 border border-red-200'}`}>
+                    <div className={`p-3 rounded-md ${isCancelled ? 'bg-orange-50 border border-orange-200' : 'bg-red-50 border border-red-200'}`}>
                         <p className={`text-sm ${isCancelled ? 'text-orange-800' : 'text-red-800'}`}>
                             {isCancelled ? (
                                 <>⚠️ <strong>Thông báo:</strong> Bạn có thể thử nạp tiền lại bất cứ lúc nào.</>

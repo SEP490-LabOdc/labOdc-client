@@ -187,7 +187,7 @@ export const CandidateDetailModal: React.FC<CandidateDetailModalProps> = ({
                                     <h3 className="text-base font-semibold text-gray-900 mb-3">
                                         Tóm tắt
                                     </h3>
-                                    <div className="p-4 bg-white rounded-lg border border-slate-200">
+                                    <div className="p-4 bg-white rounded-md border border-slate-200">
                                         <p className="text-sm text-gray-700 leading-relaxed">
                                             {aiScanResult.summary}
                                         </p>
@@ -208,7 +208,7 @@ export const CandidateDetailModal: React.FC<CandidateDetailModalProps> = ({
                                             {aiScanResult.pros.map((pro, index) => (
                                                 <div
                                                     key={index}
-                                                    className="flex items-start gap-3 p-3 bg-white rounded-lg border border-green-200"
+                                                    className="flex items-start gap-3 p-3 bg-white rounded-md border border-green-200"
                                                 >
                                                     <CheckCircle2 className="h-4 w-4 text-green-600 mt-0.5 flex-shrink-0" />
                                                     <p className="text-sm text-gray-700 flex-1">
@@ -231,7 +231,7 @@ export const CandidateDetailModal: React.FC<CandidateDetailModalProps> = ({
                                             {aiScanResult.cons.map((con, index) => (
                                                 <div
                                                     key={index}
-                                                    className="flex items-start gap-3 p-3 bg-white rounded-lg border border-red-200"
+                                                    className="flex items-start gap-3 p-3 bg-white rounded-md border border-red-200"
                                                 >
                                                     <XCircle className="h-4 w-4 text-red-600 mt-0.5 flex-shrink-0" />
                                                     <p className="text-sm text-gray-700 flex-1">
@@ -245,7 +245,7 @@ export const CandidateDetailModal: React.FC<CandidateDetailModalProps> = ({
                             </div>
 
                             {/* Match Score with Circular Progress */}
-                            <div className="flex flex-col sm:flex-row items-center gap-6 p-6 bg-white rounded-lg border border-slate-200">
+                            <div className="flex flex-col sm:flex-row items-center gap-6 p-6 bg-white rounded-md border border-slate-200">
                                 <div className="flex-shrink-0">
                                     <CircularProgress
                                         value={aiScanResult.matchScore}
@@ -277,7 +277,7 @@ export const CandidateDetailModal: React.FC<CandidateDetailModalProps> = ({
                             </div>
 
                             {/* Is CV Check */}
-                            <div className="flex items-start gap-3 p-4 rounded-lg bg-white border border-slate-200">
+                            <div className="flex items-start gap-3 p-4 rounded-md bg-white border border-slate-200">
                                 <div
                                     className={`p-2 rounded-full ${aiScanResult.isCv ? 'bg-green-100' : 'bg-red-100'
                                         }`}

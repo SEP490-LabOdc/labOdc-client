@@ -95,3 +95,10 @@ export interface UpdateMilestonePayload {
   status: MilestoneStatus
   attachments: MilestoneAttachment[]
 }
+
+export interface ExtensionRequestPayload {
+  milestoneId: string
+  requestedEndDate: string
+  currentEndDate: string
+  requestReason: string
+}

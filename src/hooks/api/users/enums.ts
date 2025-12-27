@@ -6,3 +6,8 @@ export enum UserRole {
     USER = 'USER',
     TALENT = 'TALENT',
 }
+
+export enum UserStatus {
+    ACTIVE = 'ACTIVE',
+    INACTIVE = 'INACTIVE',
+}

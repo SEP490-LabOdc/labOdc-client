@@ -119,7 +119,7 @@ export function ImageUpload({
                     }}
                     onDragLeave={() => setIsDragOver(false)}
                     className={cn(
-                        "border-2 border-dashed rounded-lg p-6 text-center transition-colors",
+                        "border-2 border-dashed rounded-md p-6 text-center transition-colors",
                         !isUploading && "cursor-pointer",
                         isDragOver ? "border-blue-500 bg-blue-50" : "border-gray-300",
                         disabled && "opacity-50 cursor-not-allowed",
@@ -142,7 +142,7 @@ export function ImageUpload({
                 </div>
             ) : (
                 <div
-                    className="relative border rounded-lg overflow-hidden bg-gray-50 flex items-center justify-center"
+                    className="relative border rounded-md overflow-hidden bg-gray-50 flex items-center justify-center"
                     style={{
                         aspectRatio: aspectRatio ? `${aspectRatio}` : "1/1",
                         maxHeight: "350px", // giới hạn kích thước hiển thị tối đa

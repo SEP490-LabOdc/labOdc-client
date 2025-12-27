@@ -45,7 +45,7 @@ export const MilestoneDetailCard: React.FC<MilestoneDetailCardProps> = ({
     isDisbursementCompleted = false
 }) => {
     return (
-        <Card className="h-full shadow-lg rounded-lg border-2 flex flex-col overflow-hidden">
+        <Card className="h-full shadow-lg rounded-md border-2 flex flex-col overflow-hidden">
             <CardHeader className="border-b bg-white">
                 <div className="flex items-center justify-between">
                     <div className="flex-1">

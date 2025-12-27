@@ -49,7 +49,7 @@ export const DistributionTable: React.FC<DistributionTableProps> = ({
 
             {isOverAllocated && <OverAllocationWarning />}
 
-            <div className="border rounded-lg overflow-hidden bg-white">
+            <div className="border rounded-md overflow-hidden bg-white">
                 <div className="overflow-x-auto">
                     <table className="w-full">
                         <DistributionTableHeader />

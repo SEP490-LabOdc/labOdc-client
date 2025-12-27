@@ -12,7 +12,6 @@ import {
   IconUserStar,      // For Mentors
   IconClipboardList,    // For Quản lý dự án
   IconCircleCheckFilled,// For Đã hoàn thành
-  IconHistory,
   IconList,
   IconProgress,
   IconEdit,
@@ -20,6 +19,7 @@ import {
   IconCircleXFilled,
   IconWallet,
   IconFileText,
+  IconPills,
 } from '@tabler/icons-react'
 // import { AudioWaveform, Command, GalleryVerticalEnd } from 'lucide-react'
 import { type SidebarData } from '../types'
@@ -144,12 +144,12 @@ export const systemAmdminSidebarData: SidebarData = {
               url: '/admin/system-config',
               icon: IconSettings,
             },
-            {
-              title: 'Lịch sử cập nhật',
-              url: '/',
-              icon: IconHistory,
-            }
           ]
+        },
+        {
+          title: 'Yêu cầu rút tiền',
+          url: '/admin/withdrawal',
+          icon: IconWallet,
         }
       ]
     },
@@ -259,6 +259,16 @@ export const labAdminSidebarData: SidebarData = {
           url: '/lab-admin/templates',
           icon: IconFileText,
         },
+        {
+          title: 'Quản lý kỹ năng',
+          url: '/lab-admin/skills',
+          icon: IconPills,
+        },
+        {
+          title: 'Quản lý báo cáo',
+          url: '/lab-admin/reports',
+          icon: IconFileText,
+        }
       ]
     },
   ],

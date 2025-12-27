@@ -11,3 +11,9 @@ export enum MilestoneStatus {
     PAID = 'PAID',
     RELEASED = 'RELEASED',
 }
+
+export enum MilestoneExtensionRequestStatus {
+    PENDING = 'PENDING',
+    REJECTED = 'REJECTED',
+    APPROVED = 'APPROVED',
+}

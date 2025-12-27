@@ -52,7 +52,7 @@ export function SuccessRegisterForm() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.6, delay: 0.6 }}
-                className="mb-8 p-6 bg-blue-50 rounded-xl border border-blue-200"
+                className="mb-8 p-6 bg-blue-50 rounded-md border border-blue-200"
             >
                 <div className="flex items-center justify-center mb-4">
                     <Clock className="w-6 h-6 text-amber-600 mr-2" />
@@ -75,7 +75,7 @@ export function SuccessRegisterForm() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.6, delay: 0.8 }}
-                className="mb-8 p-6 bg-blue-50 rounded-xl border border-blue-200"
+                className="mb-8 p-6 bg-blue-50 rounded-md border border-blue-200"
             >
                 <h3 className="text-lg font-semibold text-[#264653] mb-3">
                     Sau khi được xác nhận:

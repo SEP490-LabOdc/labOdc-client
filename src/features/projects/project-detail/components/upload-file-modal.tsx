@@ -78,7 +78,7 @@ export function UploadFileModal({
         <div className="space-y-4 py-4">
           <div className="space-y-2">
             <Label>
-              File tài liệu <span className="text-red-500">*</span>
+              File tài liệu <span className="text-destructive">*</span>
             </Label>
             <FileUpload
               value={documentUrl}

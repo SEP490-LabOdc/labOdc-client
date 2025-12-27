@@ -1,5 +1,5 @@
-import React from 'react'
-import { useNavigate, useRouter } from '@tanstack/react-router'
+import { useState } from 'react'
+import { useNavigate } from '@tanstack/react-router'
 import { Button } from '@/components/ui/button'
 import { ChevronLeft, Loader2 } from 'lucide-react'
 import { getRoleBasePath } from '@/lib/utils'
@@ -7,31 +7,28 @@ import { useUser } from '@/context/UserContext'
 import { usePermission } from '@/hooks/usePermission'
 import { ProjectStatus, useCloseProject, useCompleteProject } from '@/hooks/api/projects'
 import type { ProjectDetail } from '@/hooks/api/projects/types'
+import { ConfirmDialog } from '@/components/confirm-dialog'
 
 interface ProjectPageHeaderProps {
   projectData: ProjectDetail
 }
 
-export const ProjectPageHeader: React.FC<ProjectPageHeaderProps> = ({ projectData }) => {
+export const ProjectPageHeader = ({ projectData }: ProjectPageHeaderProps) => {
   const navigate = useNavigate()
-  const { history } = useRouter()
   const { user } = useUser()
   const { isCompany, isLabAdmin } = usePermission()
 
   const completeProjectMutation = useCompleteProject()
   const closeProjectMutation = useCloseProject()
+  const [isCompleteDialogOpen, setIsCompleteDialogOpen] = useState(false)
 
   const handleGoBack = () => {
-    // Try to go back in history, if no history, navigate to projects list
-    if (window.history.length > 1) {
-      history.go(-1)
-    } else {
-      navigate({ to: `${getRoleBasePath(user?.role)}/projects` })
-    }
+    navigate({ to: `${getRoleBasePath(user?.role)}/projects` })
   }
 
   const handleCompleteProject = async (projectId: string) => {
     await completeProjectMutation.mutateAsync(projectId)
+    setIsCompleteDialogOpen(false)
   }
 
   const handleCloseProject = async (projectId: string) => {
@@ -49,12 +46,12 @@ export const ProjectPageHeader: React.FC<ProjectPageHeaderProps> = ({ projectDat
   const showCloseButton = (isOngoing || isPaused) && isLabAdmin
 
   return (
-    <div className="bg-white px-6 lg:px-18 py-4 border-b flex items-center justify-between">
+    <div className="bg-card px-6 lg:px-18 py-4 border-b border-primary/20 flex items-center justify-between">
       <Button
         variant="ghost"
         size="sm"
         onClick={handleGoBack}
-        className="hover:bg-gray-100 text-gray-600 hover:text-gray-900"
+        className="hover:bg-muted text-muted-foreground hover:text-foreground"
       >
         <ChevronLeft className="h-4 w-4 mr-2" />
         Quay lại
@@ -62,17 +59,40 @@ export const ProjectPageHeader: React.FC<ProjectPageHeaderProps> = ({ projectDat
 
       <div className="flex items-center gap-3">
         {showCompleteButton && (
-          <Button
-            onClick={() => handleCompleteProject(projectData?.id)}
-            className="bg-green-600 hover:bg-green-700 text-white"
-            disabled={completeProjectMutation.isPending}
-          >
-            {completeProjectMutation.isPending ? (
-              <><Loader2 className="h-4 w-4 mr-2 animate-spin" /> Đang hoàn thành...</>
-            ) : (
-              'Hoàn thành'
-            )}
-          </Button>
+          <>
+            <Button
+              onClick={() => setIsCompleteDialogOpen(true)}
+              className="bg-secondary hover:bg-secondary/90 text-secondary-foreground"
+              disabled={completeProjectMutation.isPending}
+            >
+              Hoàn thành
+            </Button>
+            <ConfirmDialog
+              open={isCompleteDialogOpen}
+              onOpenChange={setIsCompleteDialogOpen}
+              title="Xác nhận hoàn thành dự án"
+              desc={
+                <div className="space-y-2">
+                  <p>Bạn có chắc chắn muốn hoàn thành dự án <strong>{projectData?.title}</strong>?</p>
+                  <p className="text-sm text-muted-foreground">
+                    Sau khi hoàn thành, dự án sẽ được đánh dấu là hoàn thành và không thể chỉnh sửa thêm.
+                  </p>
+                </div>
+              }
+              cancelBtnText="Hủy"
+              confirmText={
+                completeProjectMutation.isPending ? (
+                  <>
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" /> Đang xử lý...
+                  </>
+                ) : (
+                  'Xác nhận hoàn thành'
+                )
+              }
+              handleConfirm={() => handleCompleteProject(projectData?.id)}
+              isLoading={completeProjectMutation.isPending}
+            />
+          </>
         )}
 
         {showCloseButton && (

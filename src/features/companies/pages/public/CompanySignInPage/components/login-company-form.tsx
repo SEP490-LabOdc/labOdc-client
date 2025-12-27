@@ -9,8 +9,6 @@ import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Link } from '@tanstack/react-router';
 
-// Schema validation cho form đăng nhập
-// (Đặt rememberMe là bắt buộc để input = output, tránh lỗi TS2322)
 const schema = z.object({
     email: z.string().email("Địa chỉ email không hợp lệ"),
     password: z.string().min(1, "Mật khẩu không được để trống"),
@@ -35,7 +33,6 @@ export function LoginCompanyForm() {
         setIsLoading(true);
         console.log("Company login:", data);
 
-        // TODO: Thay thế bằng lời gọi API đăng nhập thật
         setTimeout(() => {
             alert("Đăng nhập thành công!");
             setIsLoading(false);
@@ -52,13 +49,13 @@ export function LoginCompanyForm() {
                     name='email'
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel className="text-sm font-medium text-[#264653]">Email công ty *</FormLabel>
+                            <FormLabel className="text-sm font-medium text-foreground">Email công ty *</FormLabel>
                             <FormControl>
                                 <div className='relative'>
-                                    <Mail className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                                    <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                                     <Input
                                         type="email"
-                                        className="pl-10 border-gray-300 focus:border-[#2a9d8f] focus:ring-[#2a9d8f]"
+                                        className="pl-10 border-input focus:border-secondary focus:ring-secondary"
                                         placeholder='congty@email.com'
                                         {...field}
                                     />
@@ -75,13 +72,13 @@ export function LoginCompanyForm() {
                     name='password'
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel className="text-sm font-medium text-[#264653]">Mật khẩu *</FormLabel>
+                            <FormLabel className="text-sm font-medium text-foreground">Mật khẩu *</FormLabel>
                             <FormControl>
                                 <div className='relative'>
-                                    <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                                    <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                                     <Input
                                         type="password"
-                                        className="pl-10 border-gray-300 focus:border-[#2a9d8f] focus:ring-[#2a9d8f]"
+                                        className="pl-10 border-input focus:border-secondary focus:ring-secondary"
                                         placeholder='Nhập mật khẩu của bạn'
                                         {...field}
                                     />
@@ -102,13 +99,12 @@ export function LoginCompanyForm() {
                                 <FormControl>
                                     <Checkbox
                                         checked={!!field.value}
-                                        // Radix Checkbox trả về CheckedState (boolean | "indeterminate")
                                         onCheckedChange={(checked) => field.onChange(checked === true)}
                                         onBlur={field.onBlur}
                                         ref={field.ref}
                                     />
                                 </FormControl>
-                                <FormLabel className="text-sm font-normal text-gray-600">
+                                <FormLabel className="text-sm font-normal text-foreground/80">
                                     Ghi nhớ đăng nhập
                                 </FormLabel>
                             </FormItem>
@@ -116,7 +112,7 @@ export function LoginCompanyForm() {
                     />
                     <Link
                         to="/forgot-password"
-                        className="text-sm text-[#2a9d8f] hover:underline font-medium"
+                        className="text-sm text-secondary hover:underline font-medium"
                     >
                         Quên mật khẩu?
                     </Link>
