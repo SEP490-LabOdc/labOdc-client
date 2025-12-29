@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button'
 import { CalendarDays, CheckCircle2, Circle, Clock, Plus, UserPlus, Users } from 'lucide-react'
 import { getRoleBasePath } from '@/lib/utils'
 import { useNavigate } from '@tanstack/react-router'
-import type { Milestone } from '@/hooks/api/milestones'
+import { MilestoneStatus, type Milestone } from '@/hooks/api/milestones'
 import type { ProjectDetail } from '@/hooks/api/projects/types'
 import { CreateMilestoneModal } from './create-milestone-modal'
 import { AddMemberModal } from '@/features/projects/components/add-member-modal'
@@ -29,8 +29,8 @@ const getStatusIcon = (status: string) => {
     <StatusRenderer
       status={status.toUpperCase()}
       renderers={{
-        COMPLETE: <CheckCircle2 className="h-4 w-4 text-secondary" />,
-        ON_GOING: <Clock className="h-4 w-4 text-secondary" />,
+        [MilestoneStatus.COMPLETED]: <CheckCircle2 className="h-4 w-4 text-secondary" />,
+        [MilestoneStatus.ON_GOING]: <Clock className="h-4 w-4 text-secondary" />,
       }}
       fallback={<Circle className="h-4 w-4 text-muted-foreground" />}
     />
@@ -78,23 +78,28 @@ export const MilestonesTab = ({
     setIsAddMemberModalOpen(true)
   }
 
-  const handleNavigateToMilestone = async (milestoneId: string) => {
+  const handleNavigateToMilestone = (milestoneId: string) => {
+    if (!projectData?.companyId) return
+
     const roleBasePath = user?.role ? getRoleBasePath(user.role) : '/talent'
 
-    await navigate({
-      to: `${roleBasePath}/projects/$projectId/${milestoneId}/`,
-      params: { projectId }
+    navigate({
+      to: `${roleBasePath}/projects/$projectId/$milestoneId/`,
+      params: { projectId, milestoneId },
+      search: {
+        companyId: projectData.companyId
+      }
     })
   }
 
   return (
     <div className="space-y-3">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-lg font-semibold">Milestones</h2>
+        <h2 className="text-lg font-semibold">Cột mốc</h2>
         {isMentor && (
           <Button onClick={() => setIsCreateModalOpen(true)} size="sm">
             <Plus className="h-4 w-4 mr-2" />
-            Tạo Milestone
+            Tạo cột mốc
           </Button>
         )}
       </div>
