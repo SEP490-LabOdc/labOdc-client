@@ -22,7 +22,6 @@ export function useUpdateMilestoneMemberLeader() {
     })
 }
 
-
 export function useUpdateMilestone() {
     const queryClient = useQueryClient()
 
@@ -76,11 +75,9 @@ export function useUpdateExtensionRequest() {
             return data
         },
         onSuccess: (_, variables) => {
+            // Invalidate all extension request queries for this milestone
             queryClient.invalidateQueries({
-                queryKey: [
-                    milestoneKeys.detail(variables.milestoneId),
-                    milestoneKeys.milestoneExtensionRequests(variables.milestoneId)
-                ]
+                queryKey: milestoneKeys.milestoneExtensionRequests(variables.milestoneId)
             })
         }
     })

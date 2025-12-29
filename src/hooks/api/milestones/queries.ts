@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import { milestoneKeys } from './query-keys'
 import apiRequest from '@/config/request';
-import type { MilestoneFeedback, MilestoneMembersResponse } from './types';
+import type { ExtensionRequestParams, MilestoneFeedback, MilestoneMembersResponse } from './types';
 import type { ApiResponse } from '../types';
 
 export function useGetMilestonesByProjectId(projectId: string) {
@@ -91,5 +91,18 @@ export function useGetMyMilestoneExtensionRequests(milestoneId: string) {
             return data;
         },
         enabled: !!milestoneId,
+    });
+}
+
+export function useGetExtensionRequestsOfCompany(params: ExtensionRequestParams) {
+    return useQuery({
+        queryKey: milestoneKeys.extensionRequests(params),
+        queryFn: async () => {
+            const { data } = await apiRequest.get(
+                `/api/v1/project-milestones/${params.milestoneId}/extension-requests?projectId=${params.projectId}&companyId=${params.companyId}&page=${params?.page}&size=${params?.size}&sortDir=${params?.sortDir}`,
+            );
+            return data;
+        },
+        enabled: !!params.milestoneId && !!params.projectId && !!params.companyId,
     });
 }

@@ -2,15 +2,21 @@ import React from 'react'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Spinner } from '@/components/ui/spinner'
+import { Button } from '@/components/ui/button'
 import { Clock, CheckCircle, XCircle, Calendar, FileText } from 'lucide-react'
-import { useGetMyMilestoneExtensionRequests } from '@/hooks/api/milestones/queries'
+import { useGetExtensionRequestsOfCompany } from '@/hooks/api/milestones/queries'
 import { MilestoneExtensionRequestStatus } from '@/hooks/api/milestones/enums'
 import { formatDateOnly, formatDateLong } from '@/helpers/datetime'
+import { usePermission } from '@/hooks/usePermission'
+import { usePopUp } from '@/hooks/usePopUp'
+import { ApproveRejectModal } from './approve-reject-modal'
 
 interface Props {
     milestone: {
         id: string;
     };
+    projectId: string;
+    companyId: string;
 }
 
 interface ExtensionRequest {
@@ -56,15 +62,39 @@ const getStatusBadge = (status: MilestoneExtensionRequestStatus) => {
     }
 }
 
-export const ExtensionTab: React.FC<Props> = ({ milestone }) => {
+export const ExtensionTab: React.FC<Props> = ({ milestone, projectId, companyId }) => {
+    const { isCompany } = usePermission()
+    const { popUp, handlePopUpOpen, handlePopUpClose } = usePopUp(['approveRejectER'] as const)
+
     const {
         data: extensionRequestsResponse,
         isLoading,
-    } = useGetMyMilestoneExtensionRequests(milestone.id)
+        refetch,
+    } = useGetExtensionRequestsOfCompany({
+        milestoneId: milestone.id,
+        projectId,
+        companyId: companyId,
+        page: 1,
+        size: 10,
+    })
 
     // Extract data from API response
-    const extensionRequests: ExtensionRequest[] =
-        (extensionRequestsResponse?.data?.data || extensionRequestsResponse?.data || []) as ExtensionRequest[]
+    const extensionRequests: ExtensionRequest[] = extensionRequestsResponse?.data?.data as ExtensionRequest[]
+
+    const handleOpenModal = (requestId: string, action: 'approve' | 'reject') => {
+        handlePopUpOpen('approveRejectER', { requestId, action })
+    }
+
+    const handleCloseModal = () => {
+        handlePopUpClose('approveRejectER')
+    }
+
+    const handleSuccess = () => {
+        refetch()
+        handlePopUpClose('approveRejectER')
+    }
+
+    const modalData = popUp.approveRejectER.data as { requestId: string; action: 'approve' | 'reject' } | undefined
 
     return (
         <Card>
@@ -93,7 +123,7 @@ export const ExtensionTab: React.FC<Props> = ({ milestone }) => {
                                         key={request.id}
                                         className="flex flex-col gap-4 p-4 border rounded-md hover:bg-gray-50 transition-colors bg-white shadow-sm"
                                     >
-                                        <div className="flex items-start justify-between">
+                                        <div className="flex items-start justify-between gap-4">
                                             <div className="flex-1 min-w-0">
                                                 <div className="flex items-center gap-2 mb-2">
                                                     {getStatusBadge(request.status)}
@@ -134,6 +164,30 @@ export const ExtensionTab: React.FC<Props> = ({ milestone }) => {
                                                     </div>
                                                 )}
                                             </div>
+
+                                            {/* Action buttons - only show for company and pending requests */}
+                                            {isCompany && request.status === MilestoneExtensionRequestStatus.PENDING && (
+                                                <div className="flex items-center gap-2 flex-shrink-0">
+                                                    <Button
+                                                        size="sm"
+                                                        variant="outline"
+                                                        className="text-green-600 border-green-600 hover:bg-green-50"
+                                                        onClick={() => handleOpenModal(request.id, 'approve')}
+                                                    >
+                                                        <CheckCircle className="h-4 w-4 mr-1" />
+                                                        Phê duyệt
+                                                    </Button>
+                                                    <Button
+                                                        size="sm"
+                                                        variant="outline"
+                                                        className="text-red-600 border-red-600 hover:bg-red-50"
+                                                        onClick={() => handleOpenModal(request.id, 'reject')}
+                                                    >
+                                                        <XCircle className="h-4 w-4 mr-1" />
+                                                        Từ chối
+                                                    </Button>
+                                                </div>
+                                            )}
                                         </div>
                                     </div>
                                 ))}
@@ -142,6 +196,22 @@ export const ExtensionTab: React.FC<Props> = ({ milestone }) => {
                     </>
                 )}
             </CardContent>
+
+            {/* Approve/Reject Modal */}
+            {modalData && (
+                <ApproveRejectModal
+                    open={popUp.approveRejectER.isOpen}
+                    onOpenChange={(open) => {
+                        if (!open) {
+                            handleCloseModal()
+                        }
+                    }}
+                    milestoneId={milestone.id}
+                    extensionRequestId={modalData.requestId}
+                    action={modalData.action}
+                    onSuccess={handleSuccess}
+                />
+            )}
         </Card>
     )
 }

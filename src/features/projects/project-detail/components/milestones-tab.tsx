@@ -78,12 +78,17 @@ export const MilestonesTab = ({
     setIsAddMemberModalOpen(true)
   }
 
-  const handleNavigateToMilestone = async (milestoneId: string) => {
+  const handleNavigateToMilestone = (milestoneId: string) => {
+    if (!projectData?.companyId) return
+
     const roleBasePath = user?.role ? getRoleBasePath(user.role) : '/talent'
 
-    await navigate({
-      to: `${roleBasePath}/projects/$projectId/${milestoneId}/`,
-      params: { projectId }
+    navigate({
+      to: `${roleBasePath}/projects/$projectId/$milestoneId/`,
+      params: { projectId, milestoneId },
+      search: {
+        companyId: projectData.companyId
+      }
     })
   }
 

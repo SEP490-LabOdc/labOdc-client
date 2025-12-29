@@ -102,3 +102,12 @@ export interface ExtensionRequestPayload {
   currentEndDate: string
   requestReason: string
 }
+
+export interface ExtensionRequestParams {
+  milestoneId: string
+  projectId: string
+  companyId: string
+  page?: number
+  size?: number
+  sortDir?: string
+}
