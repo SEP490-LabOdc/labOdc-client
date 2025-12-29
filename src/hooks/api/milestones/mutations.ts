@@ -77,7 +77,10 @@ export function useUpdateExtensionRequest() {
         onSuccess: (_, variables) => {
             // Invalidate all extension request queries for this milestone
             queryClient.invalidateQueries({
-                queryKey: milestoneKeys.milestoneExtensionRequests(variables.milestoneId)
+                queryKey: [
+                    milestoneKeys.milestoneExtensionRequests(variables.milestoneId),
+                    milestoneKeys.detail(variables.milestoneId)
+                ]
             })
         }
     })
