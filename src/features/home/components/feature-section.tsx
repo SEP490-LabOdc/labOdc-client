@@ -1,5 +1,5 @@
 import { Card, CardContent } from '@/components/ui/card'
-import { ClipboardList, ShieldCheck, GraduationCap, Wallet, UserCheck, Users2, Rocket } from 'lucide-react'
+import { ClipboardList, ShieldCheck, GraduationCap, Wallet, UserCheck, Users2 } from 'lucide-react'
 
 export function FeatureSection() {
     return (
