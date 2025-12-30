@@ -34,43 +34,41 @@ const ProjectFinancialPage: React.FC = () => {
   const currentUserRole = 'TALENT_LEADER'
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-10">
+    <div className="min-h-screen bg-background pb-10">
 
       {/* 1. Header riêng biệt cho trang Tài chính */}
-      <header className="bg-white border-b border-gray-200 sticky top-0 z-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center gap-4">
-              <Button
-                variant="ghost"
-                size="sm"
-                className="-ml-2 text-gray-500 hover:text-gray-900"
-                onClick={() => navigate({ to: `/projects/${projectId}` })} // Quay lại trang chi tiết
-              >
-                <ArrowLeft className="w-5 h-5 mr-1" />
-                Quay lại Dự án
-              </Button>
-              <div className="h-6 w-px bg-gray-300 mx-2 hidden sm:block"></div>
-              <div>
-                <h1 className="text-lg font-bold text-gray-900">Dashboard Tài chính</h1>
-                <p className="text-xs text-gray-500 hidden sm:block">Dự án: Xây dựng Hệ thống E-commerce</p>
-              </div>
+      <header className="bg-card px-6 lg:px-18 py-4 border-b border-primary/20 sticky top-0 z-10">
+        <div className="flex justify-between items-center">
+          <div className="flex items-center gap-4">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="hover:bg-muted text-muted-foreground hover:text-foreground"
+              onClick={() => navigate({ to: `/projects/${projectId}` })} // Quay lại trang chi tiết
+            >
+              <ArrowLeft className="w-5 h-5 mr-1" />
+              Quay lại Dự án
+            </Button>
+            <div className="h-6 w-px bg-border mx-2 hidden sm:block"></div>
+            <div>
+              <h1 className="text-lg font-bold text-foreground">Dashboard Tài chính</h1>
+              <p className="text-xs text-muted-foreground hidden sm:block">Dự án: Xây dựng Hệ thống E-commerce</p>
             </div>
+          </div>
 
-            <div className="flex items-center gap-2">
-              <Button variant="outline" size="sm" className="hidden sm:flex">
-                <Calendar className="w-4 h-4 mr-2" /> Tùy chọn ngày
-              </Button>
-              <Button variant="outline" size="sm">
-                <Download className="w-4 h-4 mr-2" /> Xuất Báo cáo
-              </Button>
-            </div>
+          <div className="flex items-center gap-2">
+            <Button variant="outline" size="sm" className="hidden sm:flex">
+              <Calendar className="w-4 h-4 mr-2" /> Tùy chọn ngày
+            </Button>
+            <Button variant="outline" size="sm">
+              <Download className="w-4 h-4 mr-2" /> Xuất Báo cáo
+            </Button>
           </div>
         </div>
       </header>
 
       {/* 2. Nội dung chính */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="max-w-7xl mx-auto px-6 lg:px-18 py-8">
         {/* Gọi lại component phức tạp chúng ta đã build */}
         <ProjectFinancialsTab
           summary={summary}
@@ -81,11 +79,11 @@ const ProjectFinancialPage: React.FC = () => {
         {/* Có thể thêm các section khác bên dưới nếu cần, ví dụ: Biểu đồ dòng tiền theo thời gian */}
         <div className="mt-8 grid grid-cols-1 gap-6">
           {/* Placeholder cho biểu đồ */}
-          <div className="bg-white p-6 rounded-md shadow-sm border border-gray-200">
-            <h3 className="font-bold text-gray-800 mb-4 flex items-center gap-2">
+          <div className="bg-card p-6 rounded-md shadow-sm border border-border">
+            <h3 className="font-bold text-foreground mb-4 flex items-center gap-2">
               <Filter className="w-4 h-4" /> Phân tích dòng tiền (Coming Soon)
             </h3>
-            <div className="h-64 bg-gray-50 rounded-md flex items-center justify-center text-gray-400">
+            <div className="h-64 bg-muted rounded-md flex items-center justify-center text-muted-foreground">
               Biểu đồ xu hướng thu chi sẽ hiển thị ở đây
             </div>
           </div>
