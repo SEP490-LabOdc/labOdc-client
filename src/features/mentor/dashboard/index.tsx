@@ -26,17 +26,17 @@ export default function Dashboard() {
     const isLoading =
         isLoadingProject || isNotificationLoading
 
-    const projects = data.data;
-
     if (isLoading) {
         return (
             <Main>
-                <p className="text-sm text-muted-foreground">
-                    Đang tải dữ liệu dashboard...
-                </p>
+                <div className="container mx-auto px-8 py-12 text-center">
+                    <div className="text-gray-500">Đang tải dữ liệu...</div>
+                </div>
             </Main>
         )
     }
+
+    const projects = data.data;
 
     let latestNotifications = [];
 
