@@ -171,34 +171,32 @@ export const TemplatesPage: React.FC = () => {
 
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+        <div className="min-h-screen bg-background">
             {/* Header */}
-            <div className="bg-white border-b shadow-sm sticky top-0 z-10">
-                <div className="max-w-7xl mx-auto px-6 py-4">
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-4">
-                            <Button
-                                variant="ghost"
-                                size="sm"
-                                onClick={() =>
-                                    navigate({
-                                        to: `${getRoleBasePath(user?.role)}/projects/${projectId}`,
-                                    })
-                                }
-                                className="hover:bg-gray-100"
-                            >
-                                <ChevronLeft className="h-4 w-4 mr-2" />
-                                Quay lại
-                            </Button>
-                            <div>
-                                <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-                                    <Sparkles className="w-6 h-6 text-[#2a9d8f]" />
-                                    Template Hệ thống
-                                </h1>
-                                <p className="text-sm text-gray-500 mt-1">
-                                    Tải xuống và sử dụng các template có sẵn
-                                </p>
-                            </div>
+            <div className="bg-card px-6 lg:px-18 py-4 border-b border-primary/20 sticky top-0 z-10">
+                <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() =>
+                                navigate({
+                                    to: `${getRoleBasePath(user?.role)}/projects/${projectId}`,
+                                })
+                            }
+                            className="hover:bg-muted text-muted-foreground hover:text-foreground"
+                        >
+                            <ChevronLeft className="h-4 w-4 mr-2" />
+                            Quay lại
+                        </Button>
+                        <div>
+                            <h1 className="text-2xl font-bold text-foreground flex items-center gap-2">
+                                <Sparkles className="w-6 h-6 text-secondary" />
+                                Template Hệ thống
+                            </h1>
+                            <p className="text-sm text-muted-foreground mt-1">
+                                Tải xuống và sử dụng các template có sẵn
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -208,10 +206,10 @@ export const TemplatesPage: React.FC = () => {
                 <div className="grid grid-cols-12 gap-6">
                     {/* Left Sidebar - Filters */}
                     <div className="col-span-12 lg:col-span-4">
-                        <Card className="border-[#2a9d8f]/20 shadow-sm sticky top-24">
+                        <Card className="border-secondary/20 shadow-sm sticky top-24">
                             <CardHeader>
                                 <CardTitle className="flex items-center gap-2 text-lg">
-                                    <Filter className="w-5 h-5 text-[#2a9d8f]" />
+                                    <Filter className="w-5 h-5 text-secondary" />
                                     Bộ lọc & Tìm kiếm
                                 </CardTitle>
                             </CardHeader>
@@ -281,9 +279,9 @@ export const TemplatesPage: React.FC = () => {
 
                                 {/* Current Selection Info */}
                                 {!isLoading && !isError && filteredTemplates.length > 0 && (
-                                    <div className="pt-4 border-t border-gray-200">
-                                        <div className="text-xs text-gray-500 mb-1">Đang xem:</div>
-                                        <div className="text-sm font-semibold text-[#2a9d8f]">
+                                    <div className="pt-4 border-t border-border">
+                                        <div className="text-xs text-muted-foreground mb-1">Đang xem:</div>
+                                        <div className="text-sm font-semibold text-secondary">
                                             {selectedCategory
                                                 ? `${TEMPLATE_CATEGORY_LABELS[selectedCategory]} (${filteredTemplates.length} template${filteredTemplates.length > 1 ? 's' : ''})`
                                                 : TEMPLATE_TYPE_LABELS[selectedType]}
@@ -363,14 +361,14 @@ export const TemplatesPage: React.FC = () => {
                                 {filteredTemplates.map((template) => (
                                     <Card
                                         key={template.id}
-                                        className="border-gray-200 hover:border-[#2a9d8f]/30 hover:shadow-lg transition-all duration-200 group"
+                                        className="border-border hover:border-secondary/30 hover:shadow-lg transition-all duration-200 group"
                                     >
                                         <CardHeader>
                                             <div className="flex items-start justify-between gap-2 mb-2">
-                                                <CardTitle className="text-xl font-semibold text-gray-900 group-hover:text-[#264653] transition-colors">
+                                                <CardTitle className="text-xl font-semibold text-foreground group-hover:text-primary transition-colors">
                                                     {template.name}
                                                 </CardTitle>
-                                                <CheckCircle2 className="w-5 h-5 text-[#2a9d8f] flex-shrink-0 mt-1" />
+                                                <CheckCircle2 className="w-5 h-5 text-secondary flex-shrink-0 mt-1" />
                                             </div>
                                             <Badge
                                                 className={cn(

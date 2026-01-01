@@ -7,14 +7,22 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar.tsx'
 import {
   DropdownMenu,
   DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem,
-  DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuShortcut,
+  DropdownMenuLabel, DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu.tsx'
 import { getAvatarFallback } from '@/helpers/stringUtils.ts'
-import { Palette, UserCog2, Wrench } from 'lucide-react'
-// Define helper function inside component
-
+import {
+  LogOut,
+  Palette,
+  UserCog2,
+  Wrench,
+  LayoutDashboard,
+  FolderKanban,
+  Wallet,
+  Receipt
+} from 'lucide-react'
 import { getRoleBasePath } from '@/lib/utils.ts'
+import { ROLE } from '@/const.ts'
 
 export function ProfileDropdown() {
   const logout = useAuthStore(state => state.logout)
@@ -43,6 +51,10 @@ export function ProfileDropdown() {
 
   const basePath = getRoleBasePath(user.role)
 
+  // Check if user role has wallet and transactions access
+  const hasWalletAccess = [ROLE.USER, ROLE.MENTOR, ROLE.COMPANY].includes(user.role)
+  const hasTransactionsAccess = [ROLE.USER, ROLE.MENTOR, ROLE.COMPANY].includes(user.role)
+
   return (
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
@@ -64,6 +76,29 @@ export function ProfileDropdown() {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
+          <DropdownMenuItem onClick={() => handleNavigation(basePath)}>
+            <LayoutDashboard />
+            Dashboard
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => handleNavigation(`${basePath}/projects`)}>
+            <FolderKanban />
+            Dự án
+          </DropdownMenuItem>
+          {hasWalletAccess && (
+            <DropdownMenuItem onClick={() => handleNavigation(`${basePath}/wallet`)}>
+              <Wallet />
+              Ví
+            </DropdownMenuItem>
+          )}
+          {hasTransactionsAccess && (
+            <DropdownMenuItem onClick={() => handleNavigation(`${basePath}/my-transactions`)}>
+              <Receipt />
+              Giao dịch của tôi
+            </DropdownMenuItem>
+          )}
+        </DropdownMenuGroup>
+        <DropdownMenuSeparator />
+        <DropdownMenuGroup>
           <DropdownMenuItem onClick={() => handleNavigation(`${basePath}/settings`)}>
             <UserCog2 />
             Hồ sơ
@@ -79,8 +114,8 @@ export function ProfileDropdown() {
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={handleLogout}>
+          <LogOut />
           Đăng xuất
-          <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
