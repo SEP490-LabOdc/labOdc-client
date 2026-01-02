@@ -49,7 +49,7 @@ export const usersColumns: ColumnDef<User>[] = [
             <LongText className='max-w-36 ps-3'>
                 {(() => {
                     const id = row.original.id;
-                    const linkTo = `/admin/users/info?id=${id}`
+                    const linkTo = `/admin/users/${id}`
 
                     return (
                         <Link to={linkTo} className="hover:underline">
