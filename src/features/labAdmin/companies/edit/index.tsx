@@ -2,12 +2,14 @@ import { CompanySidebar } from '../company-detail/companies-sidebar'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { CompanyOverviewTab } from '../company-detail/companies-overview-tab'
 import { CompanyProjects } from '../company-detail/companies-projects'
+import { CompanyPageHeader } from '../components/companies-page-header-props'
 
 export default function EditCompany({ company }: { company: any }) {
 
     return (
         <>
             <div className="min-h-screen bg-gray-50">
+                <CompanyPageHeader />
                 <div className="max-w-7xl mx-auto grid grid-cols-12 gap-6 p-6">
                     <div className="col-span-12 lg:col-span-4 space-y-6">
                         <CompanySidebar company={company} />
