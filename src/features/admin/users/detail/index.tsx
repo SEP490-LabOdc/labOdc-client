@@ -2,14 +2,10 @@ import { getRouteApi, useNavigate } from '@tanstack/react-router'
 import { Main } from '@/components/layout/main'
 import { ErrorView } from '@/components/admin/ErrorView'
 import { getRoleBasePath } from '@/lib/utils'
-import UserProfileView from '../components/user-profile-view'
+import UserProfileView from '@/features/users/components/user-profile-view'
 import { Button } from '@/components/ui/button'
 import { ChevronLeft } from 'lucide-react'
 import { useGetUserById } from '@/hooks/api/users'
-// import { UsersDialogs } from './components/users-dialogs'
-// import { UsersProvider } from './components/users-provider'
-// import { UsersTable } from './components/users-table'
-// import { users } from '../data/users'
 
 const route = getRouteApi('/_authenticated/admin/users/$userId/')
 

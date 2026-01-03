@@ -5,11 +5,7 @@ import { ErrorView } from '@/components/admin/ErrorView'
 import { getRoleBasePath } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { ChevronLeft } from 'lucide-react'
-import UserProfileView from '../components/user-profile-view'
-// import { UsersDialogs } from './components/users-dialogs'
-// import { UsersProvider } from './components/users-provider'
-// import { UsersTable } from './components/users-table'
-// import { users } from '../data/users'
+import UserProfileView from '@/features/users/components/user-profile-view'
 
 const route = getRouteApi('/_authenticated/lab-admin/users/$userId/')
 

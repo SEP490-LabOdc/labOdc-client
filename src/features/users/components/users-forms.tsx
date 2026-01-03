@@ -17,7 +17,7 @@ import { SelectDropdown } from '@/components/select-dropdown'
 import { useNavigate } from '@tanstack/react-router'
 import { DatePicker } from '@/components/date-picker'
 import { toast } from 'sonner'
-import { USER_ROLE, USER_ROLE_OPTIONS, USER_STATUS } from '../data/schema'
+import { USER_ROLE, USER_ROLE_OPTIONS, USER_STATUS } from '@/features/users/data/schema'
 import { useCreateUser, useUpdateUserStatus } from '@/hooks/api/users/queries'
 
 // ✅ Schema cập nhật
