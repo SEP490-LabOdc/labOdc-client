@@ -17,6 +17,8 @@ import { useNavigate } from '@tanstack/react-router'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { MoneyInput } from '@/components/admin/MoneyInput'
 import { ReferenceField } from '@/components/admin/ReferenceField'
+import { getRoleBasePath } from '@/lib/utils'
+import { useUser } from '@/context/UserContext'
 
 /* -------------------- SCHEMA -------------------- */
 const projectSchema = z.object({
@@ -53,6 +55,7 @@ export default function ProjectForm({
         defaultValues: initialData,
     })
 
+    const { user } = useUser();
     const navigate = useNavigate();
 
     if (!initialData) return null
@@ -94,7 +97,6 @@ export default function ProjectForm({
                                                 type="company"
                                                 value={field.value}
                                                 id={form.getValues("companyId")}
-                                                userRole={'LAB_ADMIN'}
                                             />
 
                                         </FormControl>
@@ -138,7 +140,6 @@ export default function ProjectForm({
                                                 type="user"
                                                 value={field.value}
                                                 id={form.getValues("createdBy")}
-                                                userRole={'LAB_ADMIN'}
                                             />
                                         </FormControl>
                                         <FormMessage />
@@ -274,7 +275,7 @@ export default function ProjectForm({
                 <Button
                     type="button"
                     variant="outline"
-                    onClick={() => navigate({ to: '/admin/projects' })}
+                    onClick={() => navigate({ to: getRoleBasePath(user.role) + '/projects' })}
                 >
                     Quay về danh sách
                 </Button>
