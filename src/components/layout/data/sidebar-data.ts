@@ -23,7 +23,7 @@ import {
 } from '@tabler/icons-react'
 // import { AudioWaveform, Command, GalleryVerticalEnd } from 'lucide-react'
 import { type SidebarData } from '../types'
-import { USER_ROLE, USER_ROLE_LABEL } from '@/features/admin/users/data/schema'
+import { USER_ROLE, USER_ROLE_LABEL } from '@/features/users/data/schema'
 import { Building2, FlaskConical, LockKeyhole, User } from 'lucide-react'
 import { PROJECT_STATUS } from '@/features/company-manage/project/data/schema.ts'
 

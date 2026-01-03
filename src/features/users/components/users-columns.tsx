@@ -1,5 +1,5 @@
 import { type ColumnDef } from '@tanstack/react-table'
-import { cn } from '@/lib/utils'
+import { cn, getRoleBasePath } from '@/lib/utils'
 import { Badge } from '@/components/ui/badge'
 import { Checkbox } from '@/components/ui/checkbox'
 import { DataTableColumnHeader } from '@/components/data-table'
@@ -8,6 +8,7 @@ import { callTypes, roles } from '../data/data'
 import { USER_ROLE_LABEL, USER_STATUS_LABEL, type User } from '../data/schema'
 import { DataTableRowActions } from './data-table-row-actions'
 import { Link } from '@tanstack/react-router'
+import { useUser } from '@/context/UserContext'
 
 export const usersColumns: ColumnDef<User>[] = [
     {
@@ -48,8 +49,9 @@ export const usersColumns: ColumnDef<User>[] = [
 
             <LongText className='max-w-36 ps-3'>
                 {(() => {
+                    const { user } = useUser();
                     const id = row.original.id;
-                    const linkTo = `/lab-admin/users/${id}`
+                    const linkTo = getRoleBasePath(user.role) + `/users/${id}`
 
                     return (
                         <Link to={linkTo} className="hover:underline">
