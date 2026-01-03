@@ -1,25 +1,10 @@
-// import { getRouteApi } from '@tanstack/react-router'
-import { ConfigDrawer } from '@/components/config-drawer'
-import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
-import { ProfileDropdown } from '@/components/profile-dropdown'
-import { Search } from '@/components/search'
-import { ThemeSwitch } from '@/components/theme-switch'
 import UsersForm from '../../../users/components/users-forms'
 
 export default function CreateUser() {
 
     return (
         <>
-            <Header fixed>
-                <Search />
-                <div className='ms-auto flex items-center space-x-4'>
-                    <ThemeSwitch />
-                    <ConfigDrawer />
-                    <ProfileDropdown />
-                </div>
-            </Header>
-
             <Main>
                 <div className='mb-2 flex flex-wrap items-center justify-between space-y-2'>
                     <div>
