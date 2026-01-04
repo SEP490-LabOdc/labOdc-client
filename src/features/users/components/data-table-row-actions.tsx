@@ -13,6 +13,8 @@ import {
 import { type User } from '../data/schema'
 import { useUsers } from './users-provider'
 import { useNavigate } from '@tanstack/react-router'
+import { useUser } from '@/context/UserContext'
+import { getRoleBasePath } from '@/lib/utils'
 
 type DataTableRowActionsProps = {
     row: Row<User>
@@ -36,9 +38,9 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
                 <DropdownMenuContent align='end' className='w-[160px]'>
                     <DropdownMenuItem
                         onClick={() => {
+                            const { user } = useUser();
                             navigate({
-                                to: '/admin/users/info',
-                                search: { id: row.original.id },
+                                to: getRoleBasePath(user.role) + '/users/' + row.original.id,
                             })
                         }}
                     >

@@ -5,7 +5,7 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { DataTableColumnHeader } from '@/components/data-table'
 import { LongText } from '@/components/long-text'
 import { callTypes, roles } from '../data/data'
-import { USER_ROLE_LABEL, USER_STATUS_LABEL, type User } from '../data/schema'
+import { USER_ROLE_LABEL, USER_STATUS_LABEL, type User, type UserRole } from '../data/schema'
 import { DataTableRowActions } from './data-table-row-actions'
 import { Link } from '@tanstack/react-router'
 import { useUser } from '@/context/UserContext'
@@ -110,7 +110,7 @@ export const usersColumns: ColumnDef<User>[] = [
             return (
                 <div className='flex items-center gap-x-2'>
                     {userRole?.icon && <userRole.icon size={16} className='text-muted-foreground' />}
-                    <span className='text-sm'>{USER_ROLE_LABEL[role] ?? role}</span>
+                    <span className='text-sm'>{USER_ROLE_LABEL[role as UserRole] ?? role}</span>
                 </div>
             )
         },

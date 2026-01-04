@@ -5,6 +5,7 @@ import {
 } from '@/hooks/api/companies/queries'
 import { ErrorView } from '@/components/admin/ErrorView'
 import { StatusAlert } from '@/components/admin/StatusAlert'
+import { COMPANY_STATUS } from '@/features/company-classic/data/schema'
 
 const ApprovingTableSkeleton = () => (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2 animate-pulse">
@@ -118,12 +119,19 @@ export default function ApproveCompany({ company }: { company: any }) {
                         Phê duyệt thông tin công ty
                     </h2>
                     <p className="text-muted-foreground">
-                        Phê duyệt thông tin công ty tại đây. Nhấn nút phê duyệt khi bạn hoàn tất.
+                        Phê duyệt thông tin công ty tại đây.
                     </p>
                 </div>
             </div>
-
-            {company?.status === 'UPDATE_REQUIRED' && (
+            {company?.status === COMPANY_STATUS.PENDING && (
+                <StatusAlert
+                    variant="info"
+                    title="Lab Admin đang trong quá trình phê duyệt thông tin."
+                    message="Vui lòng chờ Lab Admin hoàn tất các thủ tục phê duyệt được yêu cầu."
+                    className="mb-4"
+                />
+            )}
+            {company?.status === COMPANY_STATUS.UPDATE_REQUIRED && (
                 <StatusAlert
                     variant="warning"
                     title="Công ty đang trong quá trình cập nhật thông tin."

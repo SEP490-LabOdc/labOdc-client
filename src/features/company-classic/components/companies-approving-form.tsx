@@ -3,12 +3,15 @@ import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Input } from '@/components/ui/input'
 import { ConfirmDialog } from '@/components/confirm-dialog'
-import type { Company } from '../data/schema'
+import { COMPANY_STATUS, type Company } from '../data/schema'
 import { Textarea } from '@/components/ui/textarea'
 import { usePatchPendingCompany } from '@/hooks/api/companies'
 import { Loader2 } from 'lucide-react'
 import { useNavigate } from '@tanstack/react-router'
 import { toast } from 'sonner'
+import { useUser } from '@/context/UserContext'
+import { USER_ROLE } from '@/features/users/data/schema'
+import { getRoleBasePath } from '@/lib/utils'
 
 type ChecklistItem = {
     id: string
@@ -52,6 +55,7 @@ export default function CompanyApprovingForm({
 }) {
     const patchPendingCompany = usePatchPendingCompany();
     const navigate = useNavigate();
+    const { user } = useUser();
 
     const buildInitialVerification = () => {
         const state: Record<string, boolean> = {}
@@ -127,7 +131,7 @@ export default function CompanyApprovingForm({
             } else {
                 await patchPendingCompany.mutateAsync(payload)
                 toast.success('Đã phê duyệt yêu cầu thành công!');
-                navigate({ to: '/lab-admin/companies/' + initialData.id });
+                navigate({ to: getRoleBasePath(user.role) + '/companies/' + initialData.id });
             }
         } catch (error: any) {
             console.error('PATCH company failed:', error)
@@ -163,7 +167,7 @@ export default function CompanyApprovingForm({
     const uncheckedItems = requiredItems.filter((item) => !verification[item.id])
     const allChecked = uncheckedItems.length === 0
 
-    const isUpdateLocked = initialData?.status === 'UPDATE_REQUIRED';
+    const isUpdateLocked = initialData?.status === COMPANY_STATUS.UPDATE_REQUIRED || user.role != USER_ROLE.LAB_ADMIN;
 
     return (
         <>
@@ -292,43 +296,51 @@ export default function CompanyApprovingForm({
                                 </div>
                             ))}
                         </div>
+                        {
+                            user.role == USER_ROLE.LAB_ADMIN && (
+                                <div>
+                                    <Button
+                                        type="button"
+                                        variant="secondary"
+                                        disabled={allChecked || isUpdateLocked}
+                                        onClick={() => setRequestDialogOpen(true)}
+                                    >
+                                        Yêu cầu cập nhật thông tin
+                                    </Button>
+                                </div>
+                            )
+                        }
 
-                        <div>
-                            <Button
-                                type="button"
-                                variant="secondary"
-                                disabled={allChecked || isUpdateLocked}
-                                onClick={() => setRequestDialogOpen(true)}
-                            >
-                                Yêu cầu cập nhật thông tin
-                            </Button>
-                        </div>
                     </div>
                 </div>
             </div>
 
             {/* --- HÀNH ĐỘNG CUỐI --- */}
             <div className="pt-3 md:col-span-2 flex gap-3">
-                <Button
-                    type="button"
-                    disabled={!allChecked || isUpdateLocked}
-                    onClick={() => handleSendRequest({ status: 'ACTIVE' })}
-                >
-                    {loadingAction === 'ACTIVE' ? (
-                        <>
-                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                            Đang phê duyệt...
-                        </>
-                    ) : (
-                        'Phê duyệt'
-                    )}
-                </Button>
+                {
+                    user.role == USER_ROLE.LAB_ADMIN && (
+                        <Button
+                            type="button"
+                            disabled={!allChecked || isUpdateLocked}
+                            onClick={() => handleSendRequest({ status: 'ACTIVE' })}
+                        >
+                            {loadingAction === 'ACTIVE' ? (
+                                <>
+                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                    Đang phê duyệt...
+                                </>
+                            ) : (
+                                'Phê duyệt'
+                            )}
+                        </Button>
+                    )
+                }
                 <Button
                     type="button"
                     variant="outline"
-                    onClick={() => navigate({ to: '/lab-admin/companies' })}
+                    onClick={() => navigate({ to: getRoleBasePath(user.role) + '/companies' })}
                 >
-                    Hủy
+                    Quay lại
                 </Button>
             </div>
 
