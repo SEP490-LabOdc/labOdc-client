@@ -45,8 +45,8 @@ export function CompaniesTable({ data, search, navigate }: DataTableProps) {
     const [rowSelection, setRowSelection] = useState({})
     const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
         taxCode: false,
-        address: false,
-        createdAt: false,
+        description: false,
+        domain: false
     })
     const [sorting, setSorting] = useState<SortingState>([])
 

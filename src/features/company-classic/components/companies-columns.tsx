@@ -1,5 +1,5 @@
 import { type ColumnDef } from '@tanstack/react-table'
-import { cn } from '@/lib/utils'
+import { cn, getRoleBasePath } from '@/lib/utils'
 import { Badge } from '@/components/ui/badge'
 import { Checkbox } from '@/components/ui/checkbox'
 import { DataTableColumnHeader } from '@/components/data-table'
@@ -9,6 +9,7 @@ import { COMPANY_STATUS_LABEL, type Company } from '../data/schema'
 import { DataTableRowActions } from './data-table-row-actions'
 import { Link } from '@tanstack/react-router'
 import { formatDateOnly } from '@/helpers/datetime'
+import { useUser } from '@/context/UserContext'
 
 
 export const companiesColumns: ColumnDef<Company>[] = [
@@ -48,8 +49,9 @@ export const companiesColumns: ColumnDef<Company>[] = [
             <LongText className="max-w-36 ps-3">
                 {(() => {
                     const id = row.original.id;
+                    const { user } = useUser();
 
-                    const linkTo = `/lab-admin/companies/${id}`;
+                    const linkTo = getRoleBasePath(user.role) + `/companies/${id}`;
 
                     return (
                         <Link to={linkTo} className="hover:underline">

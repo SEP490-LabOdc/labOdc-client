@@ -13,14 +13,16 @@ import {
 import { COMPANY_STATUS, type Company } from '../data/schema'
 // import { useCompanies } from './companies-provider'
 import { useNavigate } from '@tanstack/react-router'
+import { useUser } from '@/context/UserContext'
+import { getRoleBasePath } from '@/lib/utils'
 
 type DataTableRowActionsProps = {
     row: Row<Company>
 }
 
 export function DataTableRowActions({ row }: DataTableRowActionsProps) {
-    // const { setOpen, setCurrentRow } = useCompanies()
-    const navigate = useNavigate()
+    const navigate = useNavigate();
+    const { user } = useUser();
     return (
         <>
             <DropdownMenu modal={false}>
@@ -40,7 +42,7 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
                             <DropdownMenuItem
                                 onClick={() => {
                                     navigate({
-                                        to: '/lab-admin/companies/' + row.original.id,
+                                        to: getRoleBasePath(user.role) + '/companies/' + row.original.id,
                                     })
                                 }}
                             >
@@ -54,8 +56,9 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
 
                             <DropdownMenuItem
                                 onClick={() => {
+
                                     navigate({
-                                        to: '/lab-admin/companies/' + row.original.id,
+                                        to: getRoleBasePath(user.role) + '/companies/' + row.original.id,
                                     })
                                 }}
                             >
