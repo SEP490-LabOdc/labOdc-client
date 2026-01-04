@@ -1,4 +1,4 @@
-import CompanyApprovingForm from '../components/companies-approving-form'
+import CompanyApprovingForm from '@/features/company-classic/components/companies-approving-form'
 import {
     useGetCheckList,
     useGetCompanyChecklists,

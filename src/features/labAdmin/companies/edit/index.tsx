@@ -1,8 +1,8 @@
-import { CompanySidebar } from '../company-detail/companies-sidebar'
+import { CompanySidebar } from '@/features/company-classic/company-detail/companies-sidebar'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { CompanyOverviewTab } from '../company-detail/companies-overview-tab'
-import { CompanyProjects } from '../company-detail/companies-projects'
-import { CompanyPageHeader } from '../components/companies-page-header-props'
+import { CompanyOverviewTab } from '@/features/company-classic/company-detail/companies-overview-tab'
+import { CompanyProjects } from '@/features/company-classic/company-detail/companies-projects'
+import { CompanyPageHeader } from '@/features/company-classic/components/companies-page-header-props'
 
 export default function EditCompany({ company }: { company: any }) {
 
@@ -36,15 +36,3 @@ export default function EditCompany({ company }: { company: any }) {
         </>
     )
 }
-
-{/* <div className='mb-2 flex flex-wrap items-center justify-between space-y-2'>
-                <div>
-                    <h2 className='text-2xl font-bold tracking-tight'>Thông tin công ty</h2>
-                    <p className='text-muted-foreground'>
-                        Xem thông tin công ty tại đây.
-                    </p>
-                </div>
-            </div>
-            <div className='-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-y-0 lg:space-x-12'>
-                <CompanyForm mode='edit' initialData={company} />
-            </div> */}

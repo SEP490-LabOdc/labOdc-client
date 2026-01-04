@@ -28,7 +28,7 @@ export function DatePicker({
 }: DatePickerProps) {
   return (
     <Popover>
-      <PopoverTrigger asChild className='w-100'>
+      <PopoverTrigger asChild>
         <Button
           variant='outline'
           data-empty={!selected}

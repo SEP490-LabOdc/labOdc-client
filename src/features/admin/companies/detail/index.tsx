@@ -1,31 +1,34 @@
-import { ErrorView } from "@/components/admin/ErrorView"
-import { Main } from "@/components/layout/main"
-import { useGetCompanyById } from "@/hooks/api/companies/queries"
-import { COMPANY_STATUS } from "../data/schema"
-import ApproveCompany from "../approve"
-import { getRouteApi } from "@tanstack/react-router"
-import EditCompany from "../edit"
+import { ErrorView } from "@/components/admin/ErrorView";
+import { useGetCompanyById } from "@/hooks/api/companies/queries";
+import { getRouteApi } from "@tanstack/react-router";
+import { COMPANY_STATUS } from "@/features/company-classic/data/schema";
+import ApproveCompany from "../approve";
+import EditCompany from "../edit";
+import { Main } from "@/components/layout/main";
 
-
-const route = getRouteApi('/_authenticated/lab-admin/companies/$companyId/')
+const route = getRouteApi('/_authenticated/admin/companies/$companyId/')
 
 export default function ViewCompany() {
     const { companyId } = route.useParams()
 
-    const companyQuery = useGetCompanyById(companyId)
-    const { data: companyData, isLoading: isCompanyLoading, isError: isCompanyError, error: companyError } = companyQuery
+    const {
+        data: companyData,
+        isLoading,
+        isError,
+        error,
+    } = useGetCompanyById(companyId)
 
-    if (isCompanyError) {
+    if (isError) {
         return (
             <ErrorView
                 title="Lỗi tải dữ liệu"
-                description="Không thể tải thông tin công ty."
-                details={companyError?.message}
+                description="Không thể tải thông tin công ty cần chỉnh sửa."
+                details={error?.message}
             />
         )
     }
 
-    if (isCompanyLoading) {
+    if (isLoading) {
         return (
             <div className="flex h-screen flex-col items-center justify-center">
                 <p className="text-muted-foreground">Đang tải thông tin công ty...</p>
@@ -33,7 +36,7 @@ export default function ViewCompany() {
         )
     }
 
-    const company = companyData?.data
+    const company = companyData?.data;
 
     return (
         <>
