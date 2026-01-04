@@ -1,50 +1,32 @@
 import React from "react"
-import { cn } from "@/lib/utils"
+import { cn, getRoleBasePath } from "@/lib/utils"
 import { Info } from "lucide-react"
 import { Input } from "../ui/input";
 import { toast } from "sonner"
-
-export const REFERENCE_USER_ROLE = {
-    SYSTEM_ADMIN: "SYSTEM_ADMIN",
-    LAB_ADMIN: "LAB_ADMIN",
-    SUPERVISOR: "SUPERVISOR",
-    USER: "USER",
-    COMPANY: "COMPANY",
-} as const;
+import { useUser } from "@/context/UserContext";
 
 interface ReferenceFieldProps
     extends React.InputHTMLAttributes<HTMLInputElement> {
     type: "company" | "user" | "project"
     id?: string
-    userRole: keyof typeof REFERENCE_USER_ROLE
 }
 
-export function ReferenceField({ type, id, userRole, className, disabled, ...props }: ReferenceFieldProps) {
+export function ReferenceField({ type, id, className, disabled, ...props }: ReferenceFieldProps) {
+    const { user } = useUser();
 
-    const getPrefix = () => {
-        switch (userRole) {
-            case REFERENCE_USER_ROLE.SYSTEM_ADMIN: return "/admin/"
-            case REFERENCE_USER_ROLE.LAB_ADMIN: return "/lab-admin/"
-            case REFERENCE_USER_ROLE.SUPERVISOR: return "/mentor/"
-            case REFERENCE_USER_ROLE.USER: return "/talent/"
-            case REFERENCE_USER_ROLE.COMPANY: return "/company/"
-            default: return ""
-        }
-    }
+    const prefix = getRoleBasePath(user.role);
 
     const getTypeSegment = () => {
         switch (type) {
-            case "company": return "companies/"
-            case "user": return "users/"
-            case "project": return "projects/"
+            case "company": return "/companies/"
+            case "user": return "/users/"
+            case "project": return "/projects/"
             default: return ""
         }
     }
 
     const buildUrl = () => {
         if (!id) return undefined
-
-        const prefix = getPrefix()
         const segment = getTypeSegment()
 
         if (!prefix || !segment) return undefined
@@ -60,8 +42,6 @@ export function ReferenceField({ type, id, userRole, className, disabled, ...pro
             toast.error("ID trống hoặc không hợp lệ.")
             return
         }
-
-        const prefix = getPrefix()
         if (!prefix) {
             toast.error("Không xác định được quyền truy cập (userRole không hợp lệ).")
             return

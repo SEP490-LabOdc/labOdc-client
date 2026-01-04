@@ -1,7 +1,7 @@
 import { ErrorView } from "@/components/admin/ErrorView";
 import { useGetCompanyById } from "@/hooks/api/companies/queries";
 import { getRouteApi } from "@tanstack/react-router";
-import { COMPANY_STATUS } from "../data/schema";
+import { COMPANY_STATUS } from "@/features/company-classic/data/schema";
 import ApproveCompany from "../approve";
 import EditCompany from "../edit";
 import { Main } from "@/components/layout/main";

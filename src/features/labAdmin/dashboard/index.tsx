@@ -19,7 +19,7 @@ import {
 import { Link } from '@tanstack/react-router'
 import { useUser } from '@/context/UserContext'
 import { useGetUserNotifications } from '@/hooks/api/notifications'
-import { Bar, BarChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
+import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from 'recharts'
 import { formatVND } from '@/helpers/currency'
 import { useGetCompanyDashboardOverview, useGetCompanyLast6MonthStatistic, useGetMyWallet, useGetProjectDashboardOverview, useGetProjectLast6MonthStatistic, useGetUserDashboardOverview } from '@/hooks/api/dashboard'
 
@@ -60,16 +60,13 @@ export default function Dashboard() {
 
     let latestNotifications = [];
 
-    if (!isLoading) {
-        latestNotifications = [...notifications?.data]
-            .sort(
-                (a, b) =>
-                    new Date(b.sentAt).getTime() -
-                    new Date(a.sentAt).getTime()
-            )
-            .slice(0, 8)
-
-    }
+    latestNotifications = [...(notifications?.data ?? [])]
+        .sort(
+            (a, b) =>
+                new Date(b.sentAt).getTime() -
+                new Date(a.sentAt).getTime()
+        )
+        .slice(0, 8)
 
 
     const projectChartData =
@@ -322,10 +319,6 @@ export default function Dashboard() {
                                     <BarChart data={projectChartData}>
                                         <XAxis dataKey="label" />
                                         <YAxis allowDecimals={false} />
-                                        <Tooltip
-                                            formatter={(value: number | undefined) => [`${value} dự án`, 'Số lượng']}
-                                            labelFormatter={(label) => `Tháng ${label}`}
-                                        />
                                         <Bar
                                             dataKey="total"
                                             radius={[4, 4, 0, 0]}
@@ -349,13 +342,6 @@ export default function Dashboard() {
                                     <BarChart data={companyChartData}>
                                         <XAxis dataKey="label" />
                                         <YAxis allowDecimals={false} />
-                                        <Tooltip
-                                            formatter={(value: number | undefined) => [
-                                                `${value} doanh nghiệp`,
-                                                'Đăng ký mới',
-                                            ]}
-                                            labelFormatter={(label) => `Tháng ${label}`}
-                                        />
                                         <Bar
                                             dataKey="total"
                                             radius={[4, 4, 0, 0]}

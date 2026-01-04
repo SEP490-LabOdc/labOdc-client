@@ -139,7 +139,6 @@ export default function ProjectForm({
                                                 type="company"
                                                 value={field.value}
                                                 id={form.getValues("companyId")}
-                                                userRole={'LAB_ADMIN'}
                                             />
 
                                         </FormControl>
@@ -183,7 +182,6 @@ export default function ProjectForm({
                                                 type="user"
                                                 value={field.value}
                                                 id={form.getValues("createdBy")}
-                                                userRole={'LAB_ADMIN'}
                                             />
                                         </FormControl>
                                         <FormMessage />

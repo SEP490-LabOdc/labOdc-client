@@ -1,10 +1,10 @@
 import { getRouteApi } from '@tanstack/react-router'
 import { Main } from '@/components/layout/main'
-import { UsersDialogs } from './components/users-dialogs'
-import { UsersProvider } from './components/users-provider'
-import { UsersTable } from './components/users-table'
+import { UsersDialogs } from '@/features/users/components/users-dialogs'
+import { UsersProvider } from '@/features/users/components/users-provider'
+import { UsersTable } from '@/features/users/components/users-table'
 import { useGetUsers } from '@/hooks/api/users'
-import { UsersImportButton } from './components/user-import-button'
+import { UsersImportButton } from '@/features/users/components/user-import-button'
 
 const route = getRouteApi('/_authenticated/lab-admin/users/')
 

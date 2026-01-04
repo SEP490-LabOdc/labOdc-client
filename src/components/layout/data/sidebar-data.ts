@@ -23,7 +23,7 @@ import {
 } from '@tabler/icons-react'
 // import { AudioWaveform, Command, GalleryVerticalEnd } from 'lucide-react'
 import { type SidebarData } from '../types'
-import { USER_ROLE, USER_ROLE_LABEL } from '@/features/admin/users/data/schema'
+import { USER_ROLE, USER_ROLE_LABEL } from '@/features/users/data/schema'
 import { Building2, FlaskConical, LockKeyhole, User } from 'lucide-react'
 import { PROJECT_STATUS } from '@/features/company-manage/project/data/schema.ts'
 
@@ -67,27 +67,17 @@ export const systemAmdminSidebarData: SidebarData = {
           title: 'Quản lý dự án',
           icon: IconClipboardList,
           items: [
-            {
-              title: 'Đang chờ phê duyệt',
-              url: '/',
-              icon: IconClockHour4,
-            },
-            {
-              title: 'Đang hoạt động',
-              url: '/',
-              icon: IconCircleCheck,
-            },
-            {
-              title: 'Đã hoàn thành',
-              url: '/',
-              icon: IconCircleCheckFilled,
-            },
-            {
-              title: 'Đã hủy',
-              url: '/',
-              icon: IconCircleX,
-            },
-          ]
+            { title: 'Tất cả', url: '/admin/projects', icon: IconList },
+
+            // --- PLANNING ---
+            { title: 'Chờ duyệt', url: '/admin/projects?status=["' + PROJECT_STATUS.PENDING + '"]', icon: IconClockHour4 },
+            { title: 'Công ty cập nhật', url: '/admin/projects?status=["' + PROJECT_STATUS.UPDATE_REQUIRED + '"]', icon: IconEdit },
+            { title: 'Xây dựng kế hoạch', url: '/admin/projects?status=["' + PROJECT_STATUS.PLANNING + '"]', icon: IconPencilCog },
+            { title: 'Bị từ chối', url: '/admin/projects?status=["' + PROJECT_STATUS.REJECTED + '"]', icon: IconCircleXFilled },
+            // --- EXECUTING ---
+            { title: 'Đang thực hiện', url: '/admin/projects?status=["' + PROJECT_STATUS.ON_GOING + '"]', icon: IconProgress },
+            { title: 'Hoàn thành', url: '/admin/projects?status=["' + PROJECT_STATUS.COMPLETE + '"]', icon: IconCircleCheckFilled },
+          ],
         },
         {
           title: 'Quản lý người dùng',
