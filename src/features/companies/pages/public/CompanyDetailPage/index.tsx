@@ -1,110 +1,153 @@
-import { useState } from 'react'
 import { useParams } from '@tanstack/react-router'
 import { Button } from '@/components/ui/button'
-import { Briefcase, Calendar, Globe, Heart, Mail, MapPin, Star, Users } from 'lucide-react'
+import { Briefcase, Calendar, Globe, Mail, MapPin, Star, Users } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
 import { Card, CardContent } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import type { Company } from '@/features/companies/types'
-import { findCompanyById } from '@/features/companies/api/getCompanyById'
+import { useGetProjectsByCompanyId, useGetPublicCompanyDetails } from '@/hooks/api/projects'
 import { GeneralError } from '@/features/errors/general-error'
+import { Skeleton } from '@/components/ui/skeleton'
 
 export default function CompanyDetailPage() {
-    const [followed, setFollowed] = useState(false)
     const { companyId } = useParams({ from: '/(public)/companies/$companyId' });
 
-    const company: Company | undefined = findCompanyById(companyId)
+    const {
+        data: companyData,
+        isLoading: isCompanyLoading,
+        isError: isCompanyError
+    } = useGetPublicCompanyDetails(companyId)
 
-    const toggleFollow = () => {
-        setFollowed(true)
+    const {
+        data: projectsData,
+        isLoading: isProjectsLoading
+    } = useGetProjectsByCompanyId(companyId || '')
+
+    const company = companyData?.data
+    const projects = projectsData?.data?.projectResponses || []
+
+    if (isCompanyError) return <GeneralError />
+
+    if (isCompanyLoading) {
+        return (
+            <div className="container mx-auto max-w-6xl px-4 py-6">
+                <Skeleton className="w-full h-64 rounded-md" />
+                <div className="mt-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div className="lg:col-span-2 space-y-4">
+                        <Skeleton className="h-64 w-full rounded-md" />
+                    </div>
+                    <div className="space-y-4">
+                        <Skeleton className="h-48 w-full rounded-md" />
+                    </div>
+                </div>
+            </div>
+        )
     }
 
     if (!company) return <GeneralError />
 
     return (
-        <div className="mx-auto max-w-6xl">
+        <div className="container mx-auto max-w-7xl px-4 py-4">
             {/* HERO */}
-            <div className="relative w-full h-120 overflow-hidden rounded-md">
-                <img
-                    src={company.coverUrl || "/placeholder-banner.jpg"}
-                    alt={`${company.name} cover`}
-                    className="w-full h-8/12 object-cover"
-                />
-                {/* HEADER INFO */}
-                <div className="relative bg-[#264653] h-full py-8">
-                    <div className="flex justify-around items-center gap-3">
-                        <div className="min-w-0">
-                            <div className="flex items-center gap-2">
-                                <h1 className="text-xl text-white sm:text-2xl font-semibold truncate">{company.name}</h1>
-                                <Badge variant="secondary" className="shrink-0">{company.industry}</Badge>
-                            </div>
-
-                            <div className="mt-2 flex flex-wrap items-center gap-3 text-sm text-white">
-                                <span className="inline-flex items-center gap-1">
-                                    <MapPin className="h-4 w-4" /> {company.location}
-                                </span>
-                                <Separator orientation="vertical" className="hidden sm:inline-block h-4" />
-                                <span className="inline-flex items-center gap-1">
-                                    <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                                    {company.rating} <span className="ml-1">({company.reviews} reviews)</span>
-                                </span>
-                            </div>
-                            <div className="p-4 flex items-center gap-3">
-                                <Briefcase className="h-5 w-5 text-primary" />
-                                <div>
-                                    <div className="text-sm text-muted-foreground">Projects mở</div>
-                                    <div className="text-lg font-semibold">{company.openProjects}</div>
-                                </div>
-                            </div>
-                            <div className="p-4 flex items-center gap-3">
-                                <Users className="h-5 w-5 text-primary" />
-                                <div>
-                                    <div className="text-sm text-muted-foreground">Đã hợp tác</div>
-                                    <div className="text-lg font-semibold">{company.collaboratedTalents} talents</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="flex items-center gap-2">
-                            {company.website && (
-                                <Button asChild variant="outline">
-                                    <a href={company.website} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2">
-                                        <Globe className="h-4 w-4" /> Website
-                                    </a>
-                                </Button>
-                            )}
-                            <Button
-                                variant={followed ? "secondary" : "default"}
-                                onClick={toggleFollow}
-                                className={followed ? "text-red-600 bg-red-50 hover:bg-red-100" : ""}
-                            >
-                                <Heart className={`h-4 w-4 mr-1 ${followed ? "fill-red-600" : ""}`} />
-                                {followed ? "Đã theo dõi" : "Theo dõi"}
-                            </Button>
-                        </div>
-                    </div>
+            <Card className="relative w-full overflow-hidden p-0">
+                {/* Cover Image */}
+                <div className="relative h-64 w-full overflow-hidden bg-linear-to-r from-primary to-secondary">
+                    <img
+                        src={company.banner || "/placeholder-banner.jpg"}
+                        alt={`${company.name} cover`}
+                        className="h-full w-full object-cover opacity-80"
+                    />
+                    <div className="absolute inset-0 bg-linear-to-t from-black/60 to-transparent" />
                 </div>
-                <div className="absolute bottom-16 left-6">
-                    <div className="h-34 w-34 rounded-md overflow-hidden border bg-white shadow-md flex items-center justify-center">
+
+                {/* Company Logo */}
+                <div className="absolute top-50 left-6 z-10">
+                    <div className="h-28 w-28 rounded-md overflow-hidden border-4 border-card bg-card ring-2 ring-primary/20 flex items-center justify-center">
                         <img
-                            src={company.logoUrl || "/placeholder.svg"}
+                            src={company.logo || "/placeholder.svg"}
                             alt={`${company.name} logo`}
-                            className="h-20 w-20 object-contain"
+                            className="h-full w-full object-contain p-2"
                         />
                     </div>
                 </div>
-            </div>
 
+                {/* Header Info */}
+                <div className="bg-card pb-6 px-6">
+                    <div className="flex items-start gap-6">
+                        {/* Logo Space - Invisible spacer to push content right */}
+                        <div className="w-28 shrink-0" />
 
+                        {/* Header Content */}
+                        <div className="flex-1 min-w-0">
+                            <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+                                <div className="flex-1 min-w-0">
+                                    <div className="flex flex-wrap items-center gap-2 mb-3">
+                                        <h1 className="text-2xl sm:text-3xl font-bold text-foreground truncate">{company.name}</h1>
+                                        {company.industry && (
+                                            <Badge variant="secondary" className="shrink-0">{company.industry}</Badge>
+                                        )}
+                                    </div>
 
+                                    <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground mb-4">
+                                        {company.address && (
+                                            <span className="inline-flex items-center gap-1.5">
+                                                <MapPin className="h-4 w-4" /> {company.address}
+                                            </span>
+                                        )}
+                                        {(company.rating || company.reviews) && (
+                                            <>
+                                                <Separator orientation="vertical" className="h-4" />
+                                                <span className="inline-flex items-center gap-1.5">
+                                                    <Star className="h-4 w-4 fill-accent text-accent" />
+                                                    {company.rating || 0} <span className="text-muted-foreground">({company.reviews || 0} reviews)</span>
+                                                </span>
+                                            </>
+                                        )}
+                                    </div>
+
+                                    <div className="flex flex-wrap gap-6">
+                                        <div className="flex items-center gap-3">
+                                            <div className="p-2 rounded-md bg-primary/10">
+                                                <Briefcase className="h-5 w-5 text-primary" />
+                                            </div>
+                                            <div>
+                                                <div className="text-xs text-muted-foreground">Projects mở</div>
+                                                <div className="text-lg font-semibold text-foreground">{projects.length}</div>
+                                            </div>
+                                        </div>
+                                        <div className="flex items-center gap-3">
+                                            <div className="p-2 rounded-md bg-secondary/10">
+                                                <Users className="h-5 w-5 text-secondary" />
+                                            </div>
+                                            <div>
+                                                <div className="text-xs text-muted-foreground">Đã hợp tác</div>
+                                                <div className="text-lg font-semibold text-foreground">{company.collaboratedTalents || 0} talents</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {company.website && (
+                                    <div className="shrink-0">
+                                        <Button asChild variant="outline" size="lg">
+                                            <a href={company.website} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2">
+                                                <Globe className="h-4 w-4" /> Website
+                                            </a>
+                                        </Button>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </Card>
             {/* MAIN GRID */}
-            <div className="mt-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="mt-8 grid grid-cols-1 lg:grid-cols-3 gap-6">
                 {/* left/main */}
                 <div className="lg:col-span-2">
                     {/* Tabs */}
                     <Tabs defaultValue="overview" className="w-full">
-                        <TabsList>
+                        <TabsList className="grid w-full grid-cols-3 h-auto">
                             <TabsTrigger value="overview">Overview</TabsTrigger>
                             <TabsTrigger value="projects">Projects</TabsTrigger>
                             <TabsTrigger value="talents">Talents</TabsTrigger>
@@ -113,29 +156,46 @@ export default function CompanyDetailPage() {
                         <TabsContent value="overview" className="mt-4">
                             <Card>
                                 <CardContent className="p-5 leading-relaxed text-sm text-muted-foreground">
-                                    {company.bio}
+                                    {company.description || company.bio || 'Chưa có mô tả.'}
                                 </CardContent>
                             </Card>
                         </TabsContent>
 
                         <TabsContent value="projects" className="mt-4">
                             <div className="grid gap-3">
-                                {/* {projects.length === 0 ? (
+                                {isProjectsLoading ? (
+                                    <Card><CardContent className="p-5 text-sm text-muted-foreground">Đang tải dự án...</CardContent></Card>
+                                ) : projects.length === 0 ? (
                                     <Card><CardContent className="p-5 text-sm text-muted-foreground">Chưa có dự án công khai.</CardContent></Card>
                                 ) : (
-                                    projects.map((p) => (
-                                        <Card key={p.id}>
+                                    projects.map((project: any) => (
+                                        <Card key={project.id || project.projectId}>
                                             <CardContent className="p-5">
                                                 <div className="flex items-center justify-between">
-                                                    <h3 className="font-medium">{p.name}</h3>
-                                                    <Button size="sm" variant="outline">Xem chi tiết</Button>
+                                                    <h3 className="font-medium">{project.title || project.projectName || project.name}</h3>
+                                                    {project.status && (
+                                                        <Badge variant="outline">{project.status}</Badge>
+                                                    )}
                                                 </div>
-                                                <p className="mt-2 text-sm text-muted-foreground line-clamp-2">{p.summary}</p>
+                                                <p className="mt-2 text-sm text-muted-foreground line-clamp-2">
+                                                    {project.description || project.summary || 'Chưa có mô tả.'}
+                                                </p>
+                                                <div className="mt-3 flex items-center gap-4 text-sm text-muted-foreground">
+                                                    {project.budget && (
+                                                        <span className="font-medium text-foreground">
+                                                            Ngân sách: {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(project.budget)}
+                                                        </span>
+                                                    )}
+                                                    {project.startDate && (
+                                                        <span>
+                                                            Bắt đầu: {new Date(project.startDate).toLocaleDateString('vi-VN')}
+                                                        </span>
+                                                    )}
+                                                </div>
                                             </CardContent>
                                         </Card>
                                     ))
-                                )} */}
-                                <Card><CardContent className="p-5 text-sm text-muted-foreground">Chưa có dự án công khai.</CardContent></Card>
+                                )}
                             </div>
                         </TabsContent>
 
@@ -166,7 +226,9 @@ export default function CompanyDetailPage() {
                                 {company.foundedYear && (
                                     <div className="flex items-center gap-2"><Calendar className="h-4 w-4" /> Thành lập: {company.foundedYear}</div>
                                 )}
-                                <div className="flex items-center gap-2"><MapPin className="h-4 w-4" /> {company.location}</div>
+                                {(company.address || company.location) && (
+                                    <div className="flex items-center gap-2"><MapPin className="h-4 w-4" /> {company.address || company.location}</div>
+                                )}
                             </div>
                             <Separator />
                             <Button className="w-full">Liên hệ công ty</Button>
@@ -176,7 +238,7 @@ export default function CompanyDetailPage() {
                     <Card>
                         <CardContent className="p-0">
                             {/* Map placeholder / ảnh trụ sở */}
-                            <div className="h-48 w-full rounded-md overflow-hidden">
+                            <div className="h-48 w-full rounded-md overflow-hidden bg-muted">
                                 <img src="/placeholder-map.png" alt="Map" className="w-full h-full object-cover" />
                             </div>
                         </CardContent>
