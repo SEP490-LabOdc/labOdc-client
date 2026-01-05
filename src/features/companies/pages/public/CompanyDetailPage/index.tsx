@@ -5,8 +5,7 @@ import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
 import { Card, CardContent } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { useGetCompanyById } from '@/hooks/api/companies/queries'
-import { useGetProjectsByCompanyId } from '@/hooks/api/projects/queries'
+import { useGetProjectsByCompanyId, useGetPublicCompanyDetails } from '@/hooks/api/projects'
 import { GeneralError } from '@/features/errors/general-error'
 import { Skeleton } from '@/components/ui/skeleton'
 
@@ -17,7 +16,7 @@ export default function CompanyDetailPage() {
         data: companyData,
         isLoading: isCompanyLoading,
         isError: isCompanyError
-    } = useGetCompanyById(companyId)
+    } = useGetPublicCompanyDetails(companyId)
 
     const {
         data: projectsData,

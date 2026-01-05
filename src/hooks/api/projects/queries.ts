@@ -310,5 +310,16 @@ export function useGetProjectsByCompanyId(companyId: string) {
   })
 }
 
+export function useGetPublicCompanyDetails(companyId: string) {
+  return useQuery({
+    queryKey: projectKeys.getPublicCompanyDetails(companyId),
+    queryFn: async () => {
+      const { data } = await apiRequest.get(`/api/v1/companies/public/${companyId}`);
+      return data;
+    },
+    enabled: !!companyId,
+  })
+}
+
 
 
