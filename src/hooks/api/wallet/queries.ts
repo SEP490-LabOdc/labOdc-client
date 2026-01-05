@@ -15,3 +15,14 @@ export function useGetMyWallet() {
         },
     })
 }
+
+export function useGetMilestoneWallet(milestoneId: string) {
+    return useQuery<WalletResponse>({
+        queryKey: walletKeys.getMilestoneWallet(milestoneId),
+        queryFn: async () => {
+            const { data } = await apiRequest.get<WalletResponse>(`/api/v1/wallets/milestones/${milestoneId}`)
+            return data
+        },
+        enabled: !!milestoneId,
+    })
+}

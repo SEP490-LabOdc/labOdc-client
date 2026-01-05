@@ -8,6 +8,12 @@ export interface WalletData {
     heldBalance: number
     currency: string
     status: string
+    bankInfos: BankInfo[]
+}
+export interface BankInfo {
+    bankName: string
+    accountNumber: string
+    accountHolderName: string
 }
 
 export type WalletResponse = ApiResponse<WalletData>
@@ -19,3 +25,8 @@ export interface WithdrawPayload {
     accountName: string
 }
 
+export interface BankInfoPayload {
+    bankName: string
+    accountNumber: string
+    accountHolderName: string
+}

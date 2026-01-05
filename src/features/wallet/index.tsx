@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import { Wallet } from 'lucide-react'
 import { usePermission } from '@/hooks/usePermission'
 import {
@@ -6,15 +6,18 @@ import {
     WalletTransactionHistory,
     WithdrawDialog,
     BankAccountDialog,
+    BankAccountListDialog,
     DepositDialog,
     PaymentSuccessDialog,
     PaymentFailureDialog,
     type Transaction
 } from './components'
 import { useUser } from '@/context/UserContext'
-import { useGetMyWallet } from '@/hooks/api/wallet'
+import { useGetMyWallet, useDeleteBankInfo, useCreateBankInfo } from '@/hooks/api/wallet'
 import { useSearch, useNavigate } from '@tanstack/react-router'
 import { Main } from '@/components/layout/main'
+import { toast } from 'sonner'
+import { usePopUp } from '@/hooks/usePopUp'
 
 // Mock Data
 const MOCK_TRANSACTIONS: Transaction[] = [
@@ -64,12 +67,6 @@ const MOCK_TRANSACTIONS: Transaction[] = [
     }
 ]
 
-const MOCK_BANK_ACCOUNT = {
-    bankName: 'Vietcombank - Ngân hàng Ngoại thương',
-    accountNumber: '1234567890',
-    accountHolder: 'NGUYEN VAN A'
-}
-
 export const MyWalletPage: React.FC = () => {
     const { user, isCompany } = usePermission()
     const { user: userProfile } = useUser()
@@ -84,41 +81,41 @@ export const MyWalletPage: React.FC = () => {
         orderCode?: string
     }
 
-    const [isWithdrawOpen, setIsWithdrawOpen] = useState(false)
-    const [isBankAccountOpen, setIsBankAccountOpen] = useState(false)
-    const [isDepositOpen, setIsDepositOpen] = useState(false)
-    const [isPaymentSuccessOpen, setIsPaymentSuccessOpen] = useState(false)
-    const [isPaymentFailureOpen, setIsPaymentFailureOpen] = useState(false)
-    const [paymentResult, setPaymentResult] = useState<{
-        orderCode?: string
-        errorCode?: string
-        isCancelled?: boolean
-        amount?: number
-    }>({})
+    // Use usePopUp for dialogs
+    const { popUp, handlePopUpOpen, handlePopUpClose } = usePopUp([
+        'withdraw',
+        'bankAccount',
+        'bankAccountList',
+        'deposit',
+        'paymentSuccess',
+        'paymentFailure'
+    ] as const)
 
     // Fetch wallet data from API
     const { data: walletResponse, refetch: refetchWallet } = useGetMyWallet()
+
+    // Bank info mutations
+    const createBankInfoMutation = useCreateBankInfo()
+    const deleteBankInfoMutation = useDeleteBankInfo()
 
     // Handle payment callback
     useEffect(() => {
         if (search.code || search.status || search.cancel) {
             // Check if payment was successful
             if (search.code === '00' && search.status !== 'CANCELLED' && !search.cancel) {
-                setPaymentResult({
+                handlePopUpOpen('paymentSuccess', {
                     orderCode: search.orderCode,
                     amount: undefined // Could be extracted from URL if available
                 })
-                setIsPaymentSuccessOpen(true)
                 // Refetch wallet data to update balance
                 refetchWallet()
             } else {
                 const isCancelled = search.cancel === 'true' || search.status === 'CANCELLED'
-                setPaymentResult({
+                handlePopUpOpen('paymentFailure', {
                     orderCode: search.orderCode,
                     errorCode: search.code,
                     isCancelled
                 })
-                setIsPaymentFailureOpen(true)
             }
 
             // Clear URL params after showing notification
@@ -133,7 +130,7 @@ export const MyWalletPage: React.FC = () => {
                 replace: true,
             })
         }
-    }, [search.code, search.id, search.cancel, search.status, search.orderCode, navigate, refetchWallet])
+    }, [search.code, search.id, search.cancel, search.status, search.orderCode, navigate, refetchWallet, handlePopUpOpen])
 
     // Use API data if available, otherwise fallback to mock data
     const availableBalance = walletResponse?.data?.balance ?? 0
@@ -141,7 +138,16 @@ export const MyWalletPage: React.FC = () => {
 
     // Mock data for fields not yet available from API
     const [transactions] = useState<Transaction[]>(MOCK_TRANSACTIONS)
-    const [bankAccount, setBankAccount] = useState(MOCK_BANK_ACCOUNT)
+
+    // Get bank accounts from API response and map to UI format
+    const bankAccounts = useMemo(() => {
+        const bankInfos = walletResponse?.data?.bankInfos || []
+        return bankInfos.map(bankInfo => ({
+            bankName: bankInfo.bankName,
+            accountNumber: bankInfo.accountNumber,
+            accountHolder: bankInfo.accountHolderName // Map accountHolderName to accountHolder
+        }))
+    }, [walletResponse?.data?.bankInfos])
 
     const handleWithdraw = async (amount: number) => {
         // TODO: Call API to create withdrawal request
@@ -150,16 +156,38 @@ export const MyWalletPage: React.FC = () => {
         await new Promise(resolve => setTimeout(resolve, 1000))
     }
 
+    const handleOpenBankAccountDialog = (account?: {
+        bankName: string
+        accountNumber: string
+        accountHolder: string
+    }) => {
+        handlePopUpOpen('bankAccount', account)
+    }
+
     const handleSaveBankAccount = async (account: {
         bankName: string
         accountNumber: string
         accountHolder: string
     }) => {
-        // TODO: Call API to save/update bank account
-        console.log('Save bank account:', account)
-        setBankAccount(account)
-        // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 1000))
+        await createBankInfoMutation.mutateAsync({
+            bankName: account.bankName,
+            accountNumber: account.accountNumber,
+            accountHolderName: account.accountHolder // Map accountHolder to accountHolderName
+        })
+        // Refetch wallet data to get updated bankInfos
+        refetchWallet()
+    }
+
+    const handleDeleteBankAccount = async (accountNumber: string) => {
+        try {
+            await deleteBankInfoMutation.mutateAsync(accountNumber)
+            // Refetch wallet data to get updated bankInfos
+            refetchWallet()
+            toast.success('Xóa tài khoản ngân hàng thành công')
+        } catch (error) {
+            console.error('Error deleting bank account:', error)
+            toast.error('Có lỗi xảy ra khi xóa tài khoản ngân hàng')
+        }
     }
 
     return (
@@ -254,9 +282,9 @@ export const MyWalletPage: React.FC = () => {
                         <WalletBalanceCard
                             availableBalance={availableBalance}
                             pendingBalance={pendingBalance}
-                            onWithdraw={() => setIsWithdrawOpen(true)}
-                            onBankAccount={() => setIsBankAccountOpen(true)}
-                            onDeposit={() => setIsDepositOpen(true)}
+                            onWithdraw={() => handlePopUpOpen('withdraw')}
+                            onBankAccount={() => handlePopUpOpen('bankAccountList')}
+                            onDeposit={() => handlePopUpOpen('deposit')}
                             isCompany={isCompany}
                         />
                     </div>
@@ -270,55 +298,65 @@ export const MyWalletPage: React.FC = () => {
 
             {/* Withdraw Dialog */}
             <WithdrawDialog
-                isOpen={isWithdrawOpen}
-                onClose={() => setIsWithdrawOpen(false)}
+                isOpen={popUp.withdraw.isOpen}
+                onClose={() => handlePopUpClose('withdraw')}
                 availableBalance={availableBalance}
-                bankAccount={bankAccount}
+                bankAccount={bankAccounts.length > 0 ? bankAccounts[0] : undefined}
                 onConfirm={handleWithdraw}
+            />
+
+            {/* Bank Account List Dialog */}
+            <BankAccountListDialog
+                isOpen={popUp.bankAccountList.isOpen}
+                onClose={() => handlePopUpClose('bankAccountList')}
+                accounts={bankAccounts}
+                onAdd={() => {
+                    handlePopUpClose('bankAccountList')
+                    handleOpenBankAccountDialog()
+                }}
+                onEdit={(account) => {
+                    handlePopUpClose('bankAccountList')
+                    handleOpenBankAccountDialog(account)
+                }}
+                onDelete={handleDeleteBankAccount}
+                isDeleting={deleteBankInfoMutation.isPending}
             />
 
             {/* Bank Account Dialog */}
             <BankAccountDialog
-                isOpen={isBankAccountOpen}
-                onClose={() => setIsBankAccountOpen(false)}
-                currentAccount={bankAccount}
+                isOpen={popUp.bankAccount.isOpen}
+                onClose={() => handlePopUpClose('bankAccount')}
+                currentAccount={popUp.bankAccount.data}
                 onSave={handleSaveBankAccount}
             />
 
             {/* Deposit Dialog - Only for Company */}
             {isCompany && user?.userId && (
                 <DepositDialog
-                    isOpen={isDepositOpen}
-                    onClose={() => setIsDepositOpen(false)}
+                    isOpen={popUp.deposit.isOpen}
+                    onClose={() => handlePopUpClose('deposit')}
                 />
             )}
 
             {/* Payment Success Dialog */}
             <PaymentSuccessDialog
-                isOpen={isPaymentSuccessOpen}
-                onClose={() => {
-                    setIsPaymentSuccessOpen(false)
-                    setPaymentResult({})
-                }}
-                orderCode={paymentResult.orderCode}
-                amount={paymentResult.amount}
+                isOpen={popUp.paymentSuccess.isOpen}
+                onClose={() => handlePopUpClose('paymentSuccess')}
+                orderCode={popUp.paymentSuccess.data?.orderCode}
+                amount={popUp.paymentSuccess.data?.amount}
             />
 
             {/* Payment Failure Dialog */}
             <PaymentFailureDialog
-                isOpen={isPaymentFailureOpen}
-                onClose={() => {
-                    setIsPaymentFailureOpen(false)
-                    setPaymentResult({})
-                }}
+                isOpen={popUp.paymentFailure.isOpen}
+                onClose={() => handlePopUpClose('paymentFailure')}
                 onRetry={() => {
-                    setIsPaymentFailureOpen(false)
-                    setIsDepositOpen(true)
-                    setPaymentResult({})
+                    handlePopUpClose('paymentFailure')
+                    handlePopUpOpen('deposit')
                 }}
-                orderCode={paymentResult.orderCode}
-                errorCode={paymentResult.errorCode}
-                isCancelled={paymentResult.isCancelled}
+                orderCode={popUp.paymentFailure.data?.orderCode}
+                errorCode={popUp.paymentFailure.data?.errorCode}
+                isCancelled={popUp.paymentFailure.data?.isCancelled}
             />
         </Main>
     )
