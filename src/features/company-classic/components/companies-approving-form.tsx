@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input'
 import { ConfirmDialog } from '@/components/confirm-dialog'
 import { COMPANY_STATUS, type Company } from '../data/schema'
 import { Textarea } from '@/components/ui/textarea'
-import { usePatchPendingCompany } from '@/hooks/api/companies'
+import { usePostPendingCompany } from '@/hooks/api/companies'
 import { Loader2 } from 'lucide-react'
 import { useNavigate } from '@tanstack/react-router'
 import { toast } from 'sonner'
@@ -53,7 +53,7 @@ export default function CompanyApprovingForm({
     initialData?: CompanyWithVerification
     checkList: ChecklistTemplate
 }) {
-    const patchPendingCompany = usePatchPendingCompany();
+    const patchPendingCompany = usePostPendingCompany();
     const navigate = useNavigate();
     const { user } = useUser();
 
