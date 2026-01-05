@@ -1,10 +1,11 @@
 import { getRouteApi } from '@tanstack/react-router'
 import { Main } from '@/components/layout/main'
-import { UsersDialogs } from './components/users-dialogs'
-import { UsersPrimaryButtons } from './components/users-primary-buttons'
-import { UsersProvider } from './components/users-provider'
-import { UsersTable } from './components/users-table'
+import { UsersDialogs } from '@/features/users/components/users-dialogs'
+import { UsersPrimaryButtons } from '@/features/users/components/users-primary-buttons'
+import { UsersProvider } from '@/features/users/components/users-provider'
+import { UsersTable } from '@/features/users/components/users-table'
 import { useGetUsers } from '@/hooks/api/users'
+import { UsersImportButton } from '@/features/users/components/user-import-button'
 
 const route = getRouteApi('/_authenticated/admin/users/')
 
@@ -42,7 +43,10 @@ export default function Users() {
                                 Quản lý người dùng và phân quyền tại đây.
                             </p>
                         </div>
-                        <UsersPrimaryButtons />
+                        <div className='flex gap-2'>
+                            <UsersPrimaryButtons />
+                            <UsersImportButton />
+                        </div>
                     </div>
                     <div className='-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-y-0 lg:space-x-12'>
                         <UsersTable data={users} search={search} navigate={navigate} />

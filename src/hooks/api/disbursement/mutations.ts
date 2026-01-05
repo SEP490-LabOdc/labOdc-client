@@ -10,7 +10,7 @@ import type { ApiResponse } from '../types.ts'
 import type { DisbursePayload } from './types.ts'
 
 /**
- * Hook để tính toán phân bổ tiền cho milestone
+ * Hook calculate disbursement
  */
 export function useCalculateDisbursement() {
     return useMutation<CalculateDisbursementResponse, Error, CalculateDisbursementPayload>({
@@ -29,7 +29,7 @@ export function useCalculateDisbursement() {
 }
 
 /**
- * Hook để thực hiện giải ngân (phân bổ tiền)
+ * Hook execute disbursement
  */
 export function useExecuteDisbursement() {
     return useMutation<ExecuteDisbursementResponse, Error, ExecuteDisbursementPayload>({

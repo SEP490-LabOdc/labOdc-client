@@ -1,9 +1,9 @@
 import { getRouteApi } from '@tanstack/react-router'
 import { Main } from '@/components/layout/main'
-import { CompaniesProvider } from './components/companies-provider'
-import { CompaniesTable } from './components/companies-table'
+import { CompaniesProvider } from '@/features/company-classic/components/companies-provider'
+import { CompaniesTable } from '@/features/company-classic/components/companies-table'
 //import { companies } from './data/companies'
-import { CompaniesDialogs } from './components/companies-dialogs'
+import { CompaniesDialogs } from '@/features/company-classic/components/companies-dialogs'
 import { useGetCompanies } from '@/hooks/api/companies'
 import { ErrorView } from '@/components/admin/ErrorView'
 
