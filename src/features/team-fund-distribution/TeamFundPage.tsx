@@ -8,17 +8,15 @@ import {
     MilestoneDetailCard,
     EmptyMilestoneState
 } from './components'
-import { useGetMyProjects, useGetProjectMilestones } from '@/hooks/api/projects'
-import { useGetMilestonesMembersByRole } from '@/hooks/api/milestones/queries'
+import { useGetMyProjects } from '@/hooks/api/projects'
+import { useGetMilestonesMembersByRole, useGetMilestonesPaid } from '@/hooks/api/milestones/queries'
 import type { MilestoneMember } from '@/hooks/api/milestones'
 import { usePermission } from '@/hooks/usePermission'
 import { formatVND } from '@/helpers/currency'
 import { useDisburse } from '@/hooks/api/disbursement/mutations'
-import { UserRole } from '@/hooks/api/users'
-import { useGetDisbursementByMilestoneId } from '@/hooks/api/disbursement'
-import { DisbursementStatus } from '@/hooks/api/disbursement/enums'
 import { Spinner } from '@/components/ui/spinner'
 import type { Milestone } from '@/features/labAdmin/data'
+import { useGetMilestoneWallet } from '@/hooks/api/wallet'
 
 export const TeamFundPage: React.FC = () => {
     const { user } = usePermission()
@@ -31,7 +29,7 @@ export const TeamFundPage: React.FC = () => {
     const { data: projectsResponse, isLoading: isLoadingProjects } = useGetMyProjects('')
     const projects = projectsResponse?.data || []
 
-    const { data: milestonesResponse, isLoading: isLoadingMilestones } = useGetProjectMilestones(selectedProjectId)
+    const { data: milestonesResponse, isLoading: isLoadingMilestones } = useGetMilestonesPaid(selectedProjectId)
     const apiMilestones = milestonesResponse?.data || []
 
     const currentUserId = user?.userId || ''
@@ -42,17 +40,11 @@ export const TeamFundPage: React.FC = () => {
         userRole
     )
 
-    const { data: disbursementResponse, isLoading: isLoadingDisbursement } = useGetDisbursementByMilestoneId(selectedMilestoneId)
-    const disbursement = disbursementResponse?.data
-    const hasDisbursement = !!disbursement
-    const isDisbursementCompleted = disbursement?.status === DisbursementStatus.COMPLETED
-
-    const roleAmount = useMemo(() => {
-        if (!disbursement) return 0
-        return userRole === UserRole.MENTOR
-            ? disbursement.mentorAmount
-            : disbursement.talentAmount
-    }, [disbursement, userRole])
+    // Get milestone wallet information
+    const { data: walletResponse, isLoading: isLoadingWallet } = useGetMilestoneWallet(selectedMilestoneId)
+    const walletData = walletResponse?.data
+    const availableBalance = walletData?.balance ?? 0
+    const heldBalance = walletData?.heldBalance ?? 0
 
     const apiMembers: MilestoneMember[] = membersResponse?.data
         ? (Array.isArray(membersResponse.data)
@@ -64,21 +56,18 @@ export const TeamFundPage: React.FC = () => {
     const selectedMilestone = apiMilestones.find((m: Milestone) => m.id === selectedMilestoneId)
 
     const totalAllocated = useMemo(() => {
-        if (hasDisbursement && disbursement) {
-            return roleAmount
-        }
         return Object.values(allocations).reduce((sum, amount) => sum + amount, 0)
-    }, [hasDisbursement, disbursement, roleAmount, allocations])
+    }, [allocations])
 
     const remaining = selectedMilestone
         ? selectedMilestone.remainingAmount - totalAllocated
         : 0
 
     const canSubmit = (selectedMilestone
-        && !isDisbursementCompleted
         && remaining >= 0
         && totalAllocated > 0
-        && hasMembers) || false
+        && hasMembers
+        && availableBalance >= totalAllocated) || false
 
     const handleProjectChange = (projectId: string) => {
         setSelectedProjectId(projectId)
@@ -92,8 +81,6 @@ export const TeamFundPage: React.FC = () => {
     }
 
     const handleAllocationChange = (memberId: string, amount: number) => {
-        if (isDisbursementCompleted) return
-
         setAllocations(prev => ({
             ...prev,
             [memberId]: amount
@@ -117,10 +104,16 @@ export const TeamFundPage: React.FC = () => {
             return
         }
 
+        if (!walletData?.id) {
+            toast.error('Không thể lấy thông tin ví của milestone')
+            return
+        }
+
         setIsSubmitting(true)
         try {
             await disburse({
                 milestoneId: selectedMilestoneId,
+                walletId: walletData.id,
                 disbursements
             })
 
@@ -170,8 +163,9 @@ export const TeamFundPage: React.FC = () => {
                 <div className="grid grid-cols-12 gap-6 h-[calc(100%-80px)]">
                     <div className="col-span-12 lg:col-span-4 flex flex-col gap-4 h-full overflow-hidden">
                         <SummaryCards
-                            remainingInHolding={0}
-                            totalDistributed={0}
+                            remainingInHolding={heldBalance}
+                            totalDistributed={availableBalance}
+                            isLoading={isLoadingWallet}
                         />
 
                         <MilestoneList
@@ -184,7 +178,7 @@ export const TeamFundPage: React.FC = () => {
                     </div>
 
                     <div className="col-span-12 lg:col-span-8 h-full">
-                        {isLoadingMilestones || isLoadingMembers || isLoadingDisbursement ? renderLoading() : selectedMilestone ? (
+                        {isLoadingMilestones || isLoadingMembers || isLoadingWallet ? renderLoading() : selectedMilestone ? (
                             <MilestoneDetailCard
                                 milestone={selectedMilestone}
                                 members={apiMembers}
@@ -198,9 +192,7 @@ export const TeamFundPage: React.FC = () => {
                                 canSubmit={canSubmit}
                                 isSubmitting={isSubmitting}
                                 onSubmit={handleConfirmDistribution}
-                                disbursement={disbursement}
-                                roleAmount={roleAmount}
-                                isDisbursementCompleted={isDisbursementCompleted}
+                                availableBalance={availableBalance}
                             />
                         ) : (
                             <EmptyMilestoneState />

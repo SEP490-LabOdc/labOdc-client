@@ -106,3 +106,14 @@ export function useGetExtensionRequestsOfCompany(params: ExtensionRequestParams)
         enabled: !!params.milestoneId && !!params.projectId && !!params.companyId,
     });
 }
+
+export function useGetMilestonesPaid(projectId: string) {
+    return useQuery({
+        queryKey: milestoneKeys.getMilestonesPaid(projectId),
+        queryFn: async () => {
+            const { data } = await apiRequest.get(`/api/v1/project-milestones/${projectId}/paid`);
+            return data;
+        },
+        enabled: !!projectId,
+    });
+}

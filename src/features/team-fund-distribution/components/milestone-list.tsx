@@ -65,7 +65,7 @@ export const MilestoneList: React.FC<MilestoneListProps> = ({
                                                     {milestone.title}
                                                 </p>
                                                 {isSelected && (
-                                                    <Badge className="bg-indigo-500 text-white flex-shrink-0">
+                                                    <Badge className="bg-indigo-500 text-white shrink-0">
                                                         Đang chọn
                                                     </Badge>
                                                 )}

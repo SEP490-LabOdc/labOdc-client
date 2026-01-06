@@ -1,5 +1,4 @@
 import React, { useMemo } from 'react'
-import { FundSummaryCards } from './fund-summary-cards'
 import { OverAllocationWarning } from './over-allocation-warning'
 import { DistributionTableHeader } from './distribution-table-header'
 import { DistributionTableRow } from './distribution-table-row'
@@ -7,7 +6,6 @@ import { DistributionTableFooterSection } from './distribution-table-footer-sect
 import { InfoBoxes } from './info-boxes'
 import { EmptyState } from './empty-state'
 import type { MilestoneMember } from '@/hooks/api/milestones'
-import type { Disbursement } from '@/hooks/api/disbursement'
 
 interface DistributionTableProps {
     members: MilestoneMember[]
@@ -16,8 +14,6 @@ interface DistributionTableProps {
     onAllocationChange: (memberId: string, amount: number) => void
     currentUserId: string
     isReadOnly: boolean
-    disbursement?: Disbursement
-    roleAmount: number
 }
 
 export const DistributionTable: React.FC<DistributionTableProps> = ({
@@ -27,26 +23,15 @@ export const DistributionTable: React.FC<DistributionTableProps> = ({
     onAllocationChange,
     currentUserId,
     isReadOnly = false,
-    disbursement,
-    roleAmount,
 }) => {
     const totalAllocated = useMemo(() => {
         return Object.values(allocations).reduce((sum, amount) => sum + amount, 0)
     }, [allocations])
 
-    const remaining = totalFund - totalAllocated
     const isOverAllocated = totalAllocated > totalFund
 
     return (
         <div className="space-y-4">
-            <FundSummaryCards
-                totalFund={totalFund}
-                totalAllocated={totalAllocated}
-                remaining={remaining}
-                disbursement={disbursement}
-                roleAmount={roleAmount}
-            />
-
             {isOverAllocated && <OverAllocationWarning />}
 
             <div className="border rounded-md overflow-hidden bg-white">

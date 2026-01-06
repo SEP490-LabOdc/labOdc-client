@@ -9,6 +9,3 @@ export { default } from './TeamFundPage'
 
 // Components
 export { DistributionTable } from './components'
-
-// Types and utilities
-export * from './finance.types'

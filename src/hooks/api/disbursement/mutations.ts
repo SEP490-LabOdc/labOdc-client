@@ -53,7 +53,8 @@ export function useDisburse() {
             const { data } = await apiRequest.post<ApiResponse<{}>>(
                 `/api/v1/disbursement/milestones/${payload.milestoneId}/disburse`,
                 {
-                    disbursements: payload.disbursements
+                    disbursements: payload.disbursements,
+                    walletId: payload.walletId
                 }
             )
             return data

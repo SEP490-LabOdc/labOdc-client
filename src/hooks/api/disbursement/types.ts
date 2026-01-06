@@ -91,6 +91,7 @@ export type ExecuteDisbursementResponse = ApiResponse<ExecuteDisbursementResult>
  */
 export interface DisbursePayload {
     milestoneId: string
+    walletId: string
     disbursements: Array<{
         userId: string
         amount: number
