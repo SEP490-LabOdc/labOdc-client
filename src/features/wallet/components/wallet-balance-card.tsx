@@ -33,9 +33,9 @@ export const WalletBalanceCard: React.FC<WalletBalanceCardProps> = ({
                     Tổng quan Ví
                 </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-6">
+            <CardContent className="space-y-2 flex flex-col gap-2">
                 {/* Tổng số dư */}
-                <div className="p-6 bg-gradient-to-r from-[#2a9d8f] to-[#264653] rounded-md text-white">
+                <div className="p-6 bg-linear-to-r from-[#2a9d8f] to-[#264653] rounded-md text-white">
                     <div className="flex items-center justify-between mb-2">
                         <p className="text-sm font-medium opacity-90">Tổng số dư</p>
                         <TrendingUp className="h-5 w-5 opacity-75" />
@@ -48,35 +48,32 @@ export const WalletBalanceCard: React.FC<WalletBalanceCardProps> = ({
                     </div>
                 </div>
 
-                {/* Breakdown */}
-                <div className="grid grid-cols-2 gap-4">
-                    {/* Số dư khả dụng */}
-                    <div className="p-4 bg-green-50 border-2 border-green-200 rounded-md">
-                        <div className="flex items-center gap-2 mb-2">
-                            <div className="p-2 bg-green-100 rounded-full">
-                                <DollarSign className="h-4 w-4 text-green-600" />
-                            </div>
-                            <p className="text-sm font-semibold text-green-800">Khả dụng</p>
+                {/* Số dư khả dụng */}
+                <div className="p-4 bg-green-50 border-2 border-green-200 rounded-md">
+                    <div className="flex items-center gap-2 mb-2">
+                        <div className="p-2 bg-green-100 rounded-full">
+                            <DollarSign className="h-4 w-4 text-green-600" />
                         </div>
-                        <p className="text-2xl font-bold text-green-700">
-                            {formatVND(availableBalance)}
-                        </p>
-                        <p className="text-xs text-green-600 mt-1">Có thể rút ngay</p>
+                        <p className="text-sm font-semibold text-green-800">Khả dụng</p>
                     </div>
+                    <p className="text-2xl font-bold text-green-700">
+                        {formatVND(availableBalance)}
+                    </p>
+                    <p className="text-xs text-green-600 mt-1">Có thể rút ngay</p>
+                </div>
 
-                    {/* Số dư chờ */}
-                    <div className="p-4 bg-orange-50 border-2 border-orange-200 rounded-md">
-                        <div className="flex items-center gap-2 mb-2">
-                            <div className="p-2 bg-orange-100 rounded-full">
-                                <Clock className="h-4 w-4 text-orange-600" />
-                            </div>
-                            <p className="text-sm font-semibold text-orange-800">Đang chờ</p>
+                {/* Số dư chờ */}
+                <div className="p-4 bg-orange-50 border-2 border-orange-200 rounded-md">
+                    <div className="flex items-center gap-2 mb-2">
+                        <div className="p-2 bg-orange-100 rounded-full">
+                            <Clock className="h-4 w-4 text-orange-600" />
                         </div>
-                        <p className="text-2xl font-bold text-orange-700">
-                            {formatVND(pendingBalance)}
-                        </p>
-                        <p className="text-xs text-orange-600 mt-1">Đang xử lý</p>
+                        <p className="text-sm font-semibold text-orange-800">Đang chờ</p>
                     </div>
+                    <p className="text-2xl font-bold text-orange-700">
+                        {formatVND(pendingBalance)}
+                    </p>
+                    <p className="text-xs text-orange-600 mt-1">Đang xử lý</p>
                 </div>
 
                 {/* Action Buttons */}
@@ -114,13 +111,13 @@ export const WalletBalanceCard: React.FC<WalletBalanceCardProps> = ({
                 {availableBalance <= 0 && (
                     <div className="p-3 bg-blue-50 border border-blue-200 rounded-md">
                         <p className="text-xs text-blue-800">
-                            💡 <strong>Lưu ý:</strong> Số dư khả dụng của bạn hiện đang là 0.
+                            <strong>Lưu ý:</strong> Số dư khả dụng của bạn hiện đang là 0.
                             Bạn cần nhận tiền từ Milestone hoặc Leader trước khi có thể rút.
                         </p>
                     </div>
                 )}
             </CardContent>
-        </Card>
+        </Card >
     )
 }
 

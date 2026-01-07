@@ -211,7 +211,7 @@ export const WithdrawDialog: React.FC<WithdrawDialogProps> = ({
                         <div className="flex items-start gap-2">
                             <AlertTriangle className="h-4 w-4 text-yellow-600 flex-shrink-0 mt-0.5" />
                             <div className="text-xs text-yellow-800">
-                                <p className="font-semibold mb-1">⚠️ Lưu ý quan trọng:</p>
+                                <p className="font-semibold mb-1">Lưu ý quan trọng:</p>
                                 <ul className="space-y-0.5 ml-4">
                                     <li>• Thời gian xử lý: 1-3 ngày làm việc</li>
                                     <li>• Yêu cầu không thể hủy sau khi gửi</li>
