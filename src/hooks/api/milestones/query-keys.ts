@@ -19,4 +19,6 @@ export const milestoneKeys = {
         [...milestoneKeys.all, 'milestone-extension-requests', milestoneId] as const,
     extensionRequests: (params: ExtensionRequestParams) =>
         [...milestoneKeys.all, 'extension-requests', params.milestoneId, params.projectId, params.companyId, params.page, params.size, params.sortDir] as const,
+    getMilestonesPaid: (projectId: string) =>
+        [...milestoneKeys.all, 'milestones-paid', projectId] as const,
 }

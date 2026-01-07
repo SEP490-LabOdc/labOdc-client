@@ -23,7 +23,7 @@ export const MilestoneList: React.FC<MilestoneListProps> = ({
 }) => {
     return (
         <Card className="flex-1 shadow-md rounded-md border-2 overflow-hidden flex flex-col">
-            <CardHeader className="pb-3">
+            <CardHeader>
                 <CardTitle className="text-base flex items-center gap-2">
                     <Layers className="h-5 w-5 text-[#2a9d8f]" />
                     Milestones ({milestones.length})
@@ -31,7 +31,7 @@ export const MilestoneList: React.FC<MilestoneListProps> = ({
             </CardHeader>
             <CardContent className="flex-1 overflow-hidden p-0">
                 <ScrollArea className="h-full">
-                    <div className="p-4 space-y-2">
+                    <div className="px-4 space-y-2">
                         {!selectedProjectId ? (
                             <div className="text-center py-8 text-gray-500">
                                 <p className="text-sm">Vui lòng chọn dự án trước</p>
@@ -65,7 +65,7 @@ export const MilestoneList: React.FC<MilestoneListProps> = ({
                                                     {milestone.title}
                                                 </p>
                                                 {isSelected && (
-                                                    <Badge className="bg-indigo-500 text-white flex-shrink-0">
+                                                    <Badge className="bg-indigo-500 text-white shrink-0">
                                                         Đang chọn
                                                     </Badge>
                                                 )}

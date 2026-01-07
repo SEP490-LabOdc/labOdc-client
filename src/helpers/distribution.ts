@@ -1,7 +1,16 @@
-import { calculatePercentage } from "@/features/talent/team-fund-distribution"
-
-export const getPercentage = (amount: number, totalFund: number): number => {
-    return calculatePercentage(amount, totalFund)
+/**
+ * Calculates the percentage of a value relative to a total
+ * @param value The value to calculate percentage for
+ * @param total The total value to calculate percentage against
+ * @param decimals Number of decimal places (default: 2)
+ * @returns The percentage value (0-100), or 0 if total is 0 or invalid
+ */
+export const getPercentage = (value: number, total: number, decimals: number = 2): number => {
+    if (!total || total === 0 || isNaN(value) || isNaN(total)) {
+        return 0
+    }
+    const percentage = (value / total) * 100
+    return Number(percentage.toFixed(decimals))
 }
 
 export const getBarWidth = (percentage: number): string => {
