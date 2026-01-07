@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo, useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Users, DollarSign } from 'lucide-react'
@@ -6,38 +6,118 @@ import { formatVND } from '@/helpers/currency'
 import type { Milestone, MilestoneMember } from '@/hooks/api/milestones'
 import { UserRole } from '@/hooks/api/users'
 import { DistributionFooter, DistributionTable } from './distribution'
+import { useGetMilestonesMembersByRole } from '@/hooks/api/milestones/queries'
+import { useGetMilestoneWallet } from '@/hooks/api/wallet'
+import { useDisburse } from '@/hooks/api/disbursement/mutations'
+import { toast } from 'sonner'
+import { Spinner } from '@/components/ui/spinner'
 
 interface MilestoneDetailCardProps {
     milestone: Milestone
-    members: MilestoneMember[]
+    milestoneId: string
+    userRole: string
+    currentUserId: string
     allocations: Record<string, number>
     onAllocationChange: (memberId: string, amount: number) => void
-    currentUserId: string
-    hasMembers: boolean
-    userRole: string
-    totalAllocated: number
-    remaining: number
-    canSubmit: boolean
-    isSubmitting: boolean
-    onSubmit: () => void
-    availableBalance: number
+    onDistributionSuccess?: () => void
 }
 
 export const MilestoneDetailCard: React.FC<MilestoneDetailCardProps> = ({
     milestone,
-    members,
+    milestoneId,
+    userRole,
+    currentUserId,
     allocations,
     onAllocationChange,
-    currentUserId,
-    hasMembers,
-    userRole,
-    totalAllocated,
-    remaining,
-    canSubmit,
-    isSubmitting,
-    onSubmit,
-    availableBalance
+    onDistributionSuccess
 }) => {
+    const [isSubmitting, setIsSubmitting] = useState(false)
+
+    // Fetch members by role
+    const { data: membersResponse, isLoading: isLoadingMembers } = useGetMilestonesMembersByRole(
+        milestoneId,
+        userRole
+    )
+
+    // Fetch milestone wallet information
+    const { data: walletResponse, isLoading: isLoadingWallet } = useGetMilestoneWallet(milestoneId)
+
+    // Disbursement mutation
+    const { mutateAsync: disburse } = useDisburse()
+
+    // Process members data
+    const members: MilestoneMember[] = useMemo(() => {
+        return membersResponse?.data
+            ? (Array.isArray(membersResponse.data)
+                ? membersResponse.data
+                : [])
+            : []
+    }, [membersResponse?.data])
+
+    // Process wallet data
+    const walletData = walletResponse?.data
+    const availableBalance = walletData?.balance ?? 0
+    const walletId = walletData?.id
+
+    // Calculate derived values
+    const hasMembers = members.length > 0
+    const totalAllocated = useMemo(() => {
+        return Object.values(allocations).reduce((sum, amount) => sum + amount, 0)
+    }, [allocations])
+
+    const remaining = availableBalance - totalAllocated
+    const canSubmit = Boolean(
+        remaining >= 0
+        && totalAllocated > 0
+        && hasMembers
+        && walletId
+    )
+
+    // Handle distribution submission
+    const handleConfirmDistribution = async () => {
+        if (!canSubmit || !milestoneId || !walletId) return
+
+        const disbursements = Object.entries(allocations)
+            .filter(([_, amount]) => amount > 0)
+            .map(([userId, amount]) => ({
+                userId,
+                amount
+            }))
+
+        if (disbursements.length === 0) {
+            toast.error('Vui lòng phân bổ tiền cho ít nhất một thành viên')
+            return
+        }
+
+        setIsSubmitting(true)
+        try {
+            await disburse({
+                milestoneId,
+                walletId,
+                disbursements
+            })
+
+            toast.success(`Đã phân bổ thành công ${formatVND(totalAllocated)}`)
+            onDistributionSuccess?.()
+        } catch (error: any) {
+            console.error('Distribution error:', error)
+            toast.error(error?.response?.data?.message || 'Có lỗi xảy ra khi phân bổ quỹ')
+        } finally {
+            setIsSubmitting(false)
+        }
+    }
+
+    // Loading state
+    if (isLoadingMembers || isLoadingWallet) {
+        return (
+            <Card className="h-full shadow-lg rounded-md border-2 flex flex-col overflow-hidden">
+                <CardContent className="flex-1 flex items-center justify-center">
+                    <Spinner />
+                </CardContent>
+            </Card>
+        )
+    }
+
     return (
         <Card className="h-full shadow-lg rounded-md border-2 flex flex-col overflow-hidden">
             <CardHeader className="border-b bg-white">
@@ -89,13 +169,9 @@ export const MilestoneDetailCard: React.FC<MilestoneDetailCardProps> = ({
 
             <CardFooter className="border-t bg-gray-50 p-4 flex-col gap-3">
                 <DistributionFooter
-                    milestone={milestone}
-                    totalAllocated={totalAllocated}
-                    remaining={remaining}
                     canSubmit={canSubmit}
                     isSubmitting={isSubmitting}
-                    onSubmit={onSubmit}
-                    availableBalance={availableBalance}
+                    onSubmit={handleConfirmDistribution}
                 />
             </CardFooter>
         </Card>

@@ -1,6 +1,5 @@
-import React, { useState, useMemo } from 'react'
+import React, { useState } from 'react'
 import { Wallet } from 'lucide-react'
-import { toast } from 'sonner'
 import {
     ProjectSelector,
     SummaryCards,
@@ -9,11 +8,8 @@ import {
     EmptyMilestoneState
 } from './components'
 import { useGetMyProjects } from '@/hooks/api/projects'
-import { useGetMilestonesMembersByRole, useGetMilestonesPaid } from '@/hooks/api/milestones/queries'
-import type { MilestoneMember } from '@/hooks/api/milestones'
+import { useGetMilestonesPaid } from '@/hooks/api/milestones/queries'
 import { usePermission } from '@/hooks/usePermission'
-import { formatVND } from '@/helpers/currency'
-import { useDisburse } from '@/hooks/api/disbursement/mutations'
 import { Spinner } from '@/components/ui/spinner'
 import type { Milestone } from '@/features/labAdmin/data'
 import { useGetMilestoneWallet } from '@/hooks/api/wallet'
@@ -24,7 +20,6 @@ export const TeamFundPage: React.FC = () => {
     const [selectedProjectId, setSelectedProjectId] = useState<string>('')
     const [selectedMilestoneId, setSelectedMilestoneId] = useState<string>('')
     const [allocations, setAllocations] = useState<Record<string, number>>({})
-    const [isSubmitting, setIsSubmitting] = useState(false)
 
     const { data: projectsResponse, isLoading: isLoadingProjects } = useGetMyProjects('')
     const projects = projectsResponse?.data || []
@@ -35,39 +30,13 @@ export const TeamFundPage: React.FC = () => {
     const currentUserId = user?.userId || ''
     const userRole = user?.role || ''
 
-    const { data: membersResponse, isLoading: isLoadingMembers } = useGetMilestonesMembersByRole(
-        selectedMilestoneId,
-        userRole
-    )
-
-    // Get milestone wallet information
+    // Get milestone wallet information for SummaryCards
     const { data: walletResponse, isLoading: isLoadingWallet } = useGetMilestoneWallet(selectedMilestoneId)
     const walletData = walletResponse?.data
     const availableBalance = walletData?.balance ?? 0
     const heldBalance = walletData?.heldBalance ?? 0
 
-    const apiMembers: MilestoneMember[] = membersResponse?.data
-        ? (Array.isArray(membersResponse.data)
-            ? membersResponse.data
-            : [])
-        : []
-
-    const hasMembers = apiMembers.length > 0
     const selectedMilestone = apiMilestones.find((m: Milestone) => m.id === selectedMilestoneId)
-
-    const totalAllocated = useMemo(() => {
-        return Object.values(allocations).reduce((sum, amount) => sum + amount, 0)
-    }, [allocations])
-
-    const remaining = selectedMilestone
-        ? selectedMilestone.remainingAmount - totalAllocated
-        : 0
-
-    const canSubmit = (selectedMilestone
-        && remaining >= 0
-        && totalAllocated > 0
-        && hasMembers
-        && availableBalance >= totalAllocated) || false
 
     const handleProjectChange = (projectId: string) => {
         setSelectedProjectId(projectId)
@@ -87,45 +56,9 @@ export const TeamFundPage: React.FC = () => {
         }))
     }
 
-    const { mutateAsync: disburse } = useDisburse()
-
-    const handleConfirmDistribution = async () => {
-        if (!canSubmit || !selectedMilestoneId) return
-
-        const disbursements = Object.entries(allocations)
-            .filter(([_, amount]) => amount > 0)
-            .map(([userId, amount]) => ({
-                userId,
-                amount
-            }))
-
-        if (disbursements.length === 0) {
-            toast.error('Vui lòng phân bổ tiền cho ít nhất một thành viên')
-            return
-        }
-
-        if (!walletData?.id) {
-            toast.error('Không thể lấy thông tin ví của milestone')
-            return
-        }
-
-        setIsSubmitting(true)
-        try {
-            await disburse({
-                milestoneId: selectedMilestoneId,
-                walletId: walletData.id,
-                disbursements
-            })
-
-            toast.success(`Đã phân bổ thành công ${formatVND(totalAllocated)}`)
-
-            setAllocations({})
-            setSelectedMilestoneId('')
-        } catch (error: any) {
-            console.error('Distribution error:', error)
-        } finally {
-            setIsSubmitting(false)
-        }
+    const handleDistributionSuccess = () => {
+        setAllocations({})
+        setSelectedMilestoneId('')
     }
 
     const renderLoading = () => {
@@ -178,21 +111,15 @@ export const TeamFundPage: React.FC = () => {
                     </div>
 
                     <div className="col-span-12 lg:col-span-8 h-full">
-                        {isLoadingMilestones || isLoadingMembers || isLoadingWallet ? renderLoading() : selectedMilestone ? (
+                        {isLoadingMilestones ? renderLoading() : selectedMilestone ? (
                             <MilestoneDetailCard
                                 milestone={selectedMilestone}
-                                members={apiMembers}
+                                milestoneId={selectedMilestoneId}
+                                userRole={userRole}
+                                currentUserId={currentUserId}
                                 allocations={allocations}
                                 onAllocationChange={handleAllocationChange}
-                                currentUserId={currentUserId}
-                                hasMembers={hasMembers}
-                                userRole={userRole}
-                                totalAllocated={totalAllocated}
-                                remaining={remaining}
-                                canSubmit={canSubmit}
-                                isSubmitting={isSubmitting}
-                                onSubmit={handleConfirmDistribution}
-                                availableBalance={availableBalance}
+                                onDistributionSuccess={handleDistributionSuccess}
                             />
                         ) : (
                             <EmptyMilestoneState />

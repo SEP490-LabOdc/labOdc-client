@@ -6,6 +6,7 @@ import {
   IconClipboardList,
   IconList,
   IconWallet,
+  IconHistory,
 } from '@tabler/icons-react'
 import type { SidebarData } from '@/components/layout/types.ts'
 import { ProjectStatus } from '@/hooks/api/projects'
@@ -66,6 +67,11 @@ export const talentSidebarData: SidebarData = {
           url: '/talent/wallet',
           icon: IconWallet,
         },
+        {
+          title: "Giao dịch của tôi",
+          url: '/talent/my-transactions',
+          icon: IconHistory,
+        }
       ]
     },
   ],

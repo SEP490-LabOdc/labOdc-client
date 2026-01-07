@@ -1,71 +1,24 @@
 import React from 'react'
 import { Button } from '@/components/ui/button'
-import { CheckCircle, AlertTriangle, XCircle, ArrowRight } from 'lucide-react'
+import { CheckCircle, ArrowRight } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import type { Milestone } from '@/hooks/api/milestones'
-import { formatVND } from '@/helpers/currency'
 
 interface DistributionFooterProps {
-    milestone: Milestone
-    totalAllocated: number
-    remaining: number
     canSubmit: boolean
     isSubmitting: boolean
     onSubmit: () => void
-    availableBalance: number
 }
 
 export const DistributionFooter: React.FC<DistributionFooterProps> = ({
-    milestone,
-    totalAllocated,
-    remaining,
     canSubmit,
     isSubmitting,
     onSubmit,
-    availableBalance
 }) => {
 
     return (
         <>
             {/* Summary Stats */}
-            <div className="w-full flex flex-col sm:flex-row items-center justify-between gap-3">
-                <div className="flex flex-wrap items-center gap-4 text-sm">
-                    <div>
-                        <p className="text-xs text-gray-500 font-medium">Giá trị Milestone</p>
-                        <p className="text-base font-bold text-gray-900">
-                            {formatVND(milestone.budget)}
-                        </p>
-                    </div>
-
-                    <div className="h-8 w-px bg-gray-300 hidden sm:block" />
-
-                    <div>
-                        <p className="text-xs text-gray-500 font-medium">Đã Phân Bổ</p>
-                        <p className="text-base font-bold text-blue-600">
-                            {formatVND(totalAllocated)}
-                        </p>
-                    </div>
-
-                    <div className="h-8 w-px bg-gray-300 hidden sm:block" />
-
-                    <div>
-                        <p className="text-xs text-gray-500 font-medium flex items-center gap-1">
-                            Còn Lại
-                            {remaining > 0 && <AlertTriangle className="h-3 w-3 text-orange-500" />}
-                            {remaining === 0 && <CheckCircle className="h-3 w-3 text-green-500" />}
-                            {remaining < 0 && <XCircle className="h-3 w-3 text-red-500" />}
-                        </p>
-                        <p className={cn(
-                            "text-lg font-bold",
-                            remaining > 0 && "text-orange-600",
-                            remaining === 0 && "text-green-600",
-                            remaining < 0 && "text-red-600"
-                        )}>
-                            {formatVND(Math.abs(remaining))}
-                        </p>
-                    </div>
-                </div>
-
+            <div className="w-full flex justify-end">
                 {/* Action Button */}
                 <Button
                     size="lg"
@@ -92,33 +45,6 @@ export const DistributionFooter: React.FC<DistributionFooterProps> = ({
                     )}
                 </Button>
             </div>
-
-            {/* Status Messages */}
-            {remaining > 0 && totalAllocated > 0 && (
-                <div className="w-full p-2 bg-orange-50 border border-orange-200 rounded">
-                    <p className="text-xs text-orange-800 text-center">
-                        ⚠️ Còn {formatVND(remaining)} chưa phân bổ
-                    </p>
-                </div>
-            )}
-
-            {remaining === 0 && totalAllocated > 0 && (
-                <div className="w-full p-2 bg-green-50 border border-green-200 rounded">
-                    <p className="text-xs text-green-800 text-center flex items-center justify-center gap-1">
-                        <CheckCircle className="h-3 w-3" />
-                        Hoàn hảo! Đã phân bổ đầy đủ
-                    </p>
-                </div>
-            )}
-
-            {remaining < 0 && (
-                <div className="w-full p-2 bg-red-50 border border-red-200 rounded">
-                    <p className="text-xs text-red-800 text-center flex items-center justify-center gap-1">
-                        <XCircle className="h-3 w-3" />
-                        Vượt quá {formatVND(Math.abs(remaining))}
-                    </p>
-                </div>
-            )}
         </>
     )
 }

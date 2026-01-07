@@ -7,6 +7,7 @@ import {
   IconCircleCheckFilled,
   IconList,
   IconWallet,
+  IconHistory,
 } from '@tabler/icons-react'
 import type { SidebarData } from '@/components/layout/types.ts'
 import { ProjectStatus } from '@/hooks/api/projects/enums'
@@ -67,6 +68,11 @@ export const mentorSidebarData: SidebarData = {
           url: '/mentor/wallet',
           icon: IconWallet,
         },
+        {
+          title: "Giao dịch của tôi",
+          url: '/mentor/my-transactions',
+          icon: IconHistory,
+        }
       ]
     },
   ],
