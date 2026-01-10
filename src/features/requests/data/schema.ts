@@ -28,8 +28,8 @@ export const requestTypeSchema = z.nativeEnum(REQUEST_TYPE)
 export type RequestType = z.infer<typeof requestTypeSchema>
 
 export const REQUEST_TYPE_LABEL: Record<RequestType, string> = {
-    [REQUEST_TYPE.UPDATE_USER]: 'Cập nhật thông tin người dùng',
-    [REQUEST_TYPE.UPDATE_COMPANY]: 'Cập nhật thông tin công ty',
+    [REQUEST_TYPE.UPDATE_USER]: 'Cập nhật người dùng',
+    [REQUEST_TYPE.UPDATE_COMPANY]: 'Cập nhật công ty',
 }
 
 export const REQUEST_TYPE_OPTIONS = Object.entries(REQUEST_TYPE_LABEL).map(
@@ -43,11 +43,8 @@ export const requestSchema = z.object({
 
     requestType: requestTypeSchema,
 
-    targetId: z.string(),
+    targetName: z.string(),
     // userId hoặc companyId – FE chỉ cần hiển thị tên (BE map)
-
-    targetName: z.string().optional(),
-    // Tên user / company (BE trả thêm cho list)
 
     createdByName: z.string().optional(),
 

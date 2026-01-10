@@ -22,9 +22,8 @@ import {
     TableRow,
 } from '@/components/ui/table'
 import { DataTablePagination, DataTableToolbar } from '@/components/data-table'
-import { USER_ROLE_OPTIONS, USER_STATUS_OPTIONS, type User } from '../data/schema'
-import { DataTableBulkActions } from './data-table-bulk-actions'
-import { usersColumns as columns } from './users-columns'
+import { REQUEST_STATUS_OPTIONS, REQUEST_TYPE_OPTIONS, type RequestList } from '../data/schema'
+import { requestColumns as columns } from './request-columns'
 
 declare module '@tanstack/react-table' {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -34,15 +33,19 @@ declare module '@tanstack/react-table' {
 }
 
 type DataTableProps = {
-    data: User[]
+    data: RequestList[]
     search: Record<string, unknown>
     navigate: NavigateFn
 }
 
-export function UsersTable({ data, search, navigate }: DataTableProps) {
+export function RequestTable({ data, search, navigate }: DataTableProps) {
     // Local UI-only states
     const [rowSelection, setRowSelection] = useState({})
-    const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
+    const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
+        processedByName: false,
+        createdAt: false,
+        note: false
+    })
     const [sorting, setSorting] = useState<SortingState>([])
 
     // Local state management for table (uncomment to use local-only state, not synced with URL)
@@ -63,9 +66,8 @@ export function UsersTable({ data, search, navigate }: DataTableProps) {
         globalFilter: { enabled: false },
         columnFilters: [
             // username per-column text filter
-            { columnId: 'fullName', searchKey: 'fullName', type: 'string' },
+            { columnId: 'requestType', searchKey: 'requestType', type: 'array' },
             { columnId: 'status', searchKey: 'status', type: 'array' },
-            { columnId: 'role', searchKey: 'role', type: 'array' },
         ],
     })
 
@@ -101,18 +103,18 @@ export function UsersTable({ data, search, navigate }: DataTableProps) {
         <div className='space-y-4 max-sm:has-[div[role="toolbar"]]:mb-16'>
             <DataTableToolbar
                 table={table}
-                searchPlaceholder='Tìm kiếm người dùng...'
-                searchKey='fullName'
+                searchPlaceholder='Tìm kiếm yêu cầu...'
+                searchKey='code'
                 filters={[
                     {
                         columnId: 'status',
                         title: 'Trạng thái',
-                        options: USER_STATUS_OPTIONS,
+                        options: REQUEST_STATUS_OPTIONS,
                     },
                     {
-                        columnId: 'role',
-                        title: 'Vai trò',
-                        options: USER_ROLE_OPTIONS,
+                        columnId: 'requestType',
+                        title: 'loại yêu cầu',
+                        options: REQUEST_TYPE_OPTIONS,
                     },
                 ]}
             />
@@ -181,7 +183,6 @@ export function UsersTable({ data, search, navigate }: DataTableProps) {
                 </Table>
             </div>
             <DataTablePagination table={table} />
-            <DataTableBulkActions table={table} />
         </div>
     )
 }

@@ -6,11 +6,12 @@ import { LongText } from '@/components/long-text'
 import { DataTableRowActions } from './data-table-row-actions'
 import { Link } from '@tanstack/react-router'
 import { useUser } from '@/context/UserContext'
-import { REQUEST_STATUS_LABEL, type Request, type RequestStatus } from '../data/schema'
-import { requestStatusCallTypes } from '../data/data'
+import { REQUEST_STATUS_LABEL, REQUEST_TYPE_LABEL, type Request, type RequestStatus, type RequestType } from '../data/schema'
+import { requestStatusCallTypes, requestTypeCallTypes } from '../data/data'
+import { formatDateTime } from '@/helpers/datetime'
 
 
-export const usersColumns: ColumnDef<Request>[] = [
+export const requestColumns: ColumnDef<Request>[] = [
     {
         accessorKey: 'code',
         header: ({ column }) => (
@@ -43,11 +44,11 @@ export const usersColumns: ColumnDef<Request>[] = [
             <DataTableColumnHeader column={column} title='Loại yêu cầu' />
         ),
         cell: ({ row }) => {
-            const status = row.original.status
+            const requestType = row.original.requestType
 
             return (
-                <Badge variant='outline' className={cn('capitalize border-none', callTypes.get(status))}>
-                    {USER_STATUS_LABEL[status]}
+                <Badge variant='outline' className={cn('capitalize border-none', requestTypeCallTypes.get(requestType))}>
+                    {REQUEST_TYPE_LABEL[requestType as RequestType]}
                 </Badge>
             )
         },
@@ -108,14 +109,30 @@ export const usersColumns: ColumnDef<Request>[] = [
         header: ({ column }) => (
             <DataTableColumnHeader column={column} title='Được tạo vào' />
         ),
-        cell: ({ row }) => <div>{row.getValue('createdAt') ?? '-'}</div>,
+        cell: ({ row }) => {
+            const value = row.getValue('createdAt') as Date | null
+
+            return (
+                <div>
+                    {value ? formatDateTime(value) : '-'}
+                </div>
+            )
+        },
     },
     {
         accessorKey: 'updatedAt',
         header: ({ column }) => (
             <DataTableColumnHeader column={column} title='Được cập nhật vào' />
         ),
-        cell: ({ row }) => <div>{row.getValue('updatedAt') ?? '-'}</div>,
+        cell: ({ row }) => {
+            const value = row.getValue('updatedAt') as Date | null
+
+            return (
+                <div>
+                    {value ? formatDateTime(value) : '-'}
+                </div>
+            )
+        },
     },
 
     {
