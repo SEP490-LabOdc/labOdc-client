@@ -9,7 +9,7 @@ import { SkillsCreateDialog } from './components/skills-create-dialog'
 import { SkillsEditDialog } from './components/skills-edit-dialog'
 import { SkillsConfirmDialog } from './components/skills-confirm-dialog'
 
-const route = getRouteApi('/_authenticated/lab-admin/skills/')
+const route = getRouteApi('/_authenticated/admin/skills/')
 
 export default function Skills() {
     const search = route.useSearch()

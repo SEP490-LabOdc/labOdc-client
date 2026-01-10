@@ -7,7 +7,7 @@ export const Route = createFileRoute('/_authenticated/lab-admin')({
   beforeLoad: ({ context }) => {
     const user = context.authStore.getState().user
 
-    if (!user || user.role !== ROLE.LAB_ADMIN) {
+    if (!user || (user.role !== ROLE.LAB_ADMIN && user.role !== ROLE.SYSTEM_ADMIN)) {
       const redirectPath = user?.role ? getRoleBasePath(user.role) : '/'
 
       throw redirect({
