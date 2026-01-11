@@ -2,7 +2,7 @@ import { Outlet } from '@tanstack/react-router'
 import { Palette, Wrench, UserCog } from 'lucide-react'
 import { Separator } from '@/components/ui/separator'
 import { Main } from '@/components/layout/main'
-import { SidebarNav } from './components/sidebar-nav'
+import { SidebarNav } from '../../settings/components/sidebar-nav'
 
 const sidebarNavItems = [
     {
