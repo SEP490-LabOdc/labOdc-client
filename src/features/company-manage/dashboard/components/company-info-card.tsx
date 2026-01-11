@@ -6,6 +6,7 @@ import {
     Globe,
     MapPin,
     Briefcase,
+    Pencil,
 } from 'lucide-react'
 
 import {
@@ -15,25 +16,40 @@ import {
     CardTitle,
     CardDescription,
 } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
 
 import OverviewItem from './overview-item'
 
 type CompanyInfoCardProps = {
     company: any
     projectCount: number
+    onEdit: () => void
 }
 
 export default function CompanyInfoCard({
     company,
     projectCount,
+    onEdit,
 }: CompanyInfoCardProps) {
     return (
-        <Card className='gap-3'>
-            <CardHeader>
-                <CardTitle>Thông tin công ty</CardTitle>
-                <CardDescription>
-                    Thông tin tổng quan doanh nghiệp
-                </CardDescription>
+        <Card className="gap-3">
+            <CardHeader className="flex flex-row items-start justify-between">
+                <div>
+                    <CardTitle>Thông tin công ty</CardTitle>
+                    <CardDescription>
+                        Thông tin tổng quan doanh nghiệp
+                    </CardDescription>
+                </div>
+
+                <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={onEdit}
+                    className="flex items-center gap-1"
+                >
+                    <Pencil size={14} />
+                    Chỉnh sửa
+                </Button>
             </CardHeader>
 
             <CardContent className="space-y-3 text-sm">
@@ -79,7 +95,6 @@ export default function CompanyInfoCard({
                     value={company?.address || '-'}
                 />
 
-                {/* Company Description */}
                 <div className="rounded-md border p-3">
                     <div className="mb-1 text-sm text-muted-foreground">
                         Mô tả công ty

@@ -15,7 +15,7 @@ interface SelectDropdownProps {
   defaultValue: string | undefined
   placeholder?: string
   isPending?: boolean
-  items: { label: string; value: string; label2: string | null }[] | undefined
+  items: { label: string; value: string; label2?: string | null }[] | undefined
   disabled?: boolean
   className?: string
   isControlled?: boolean
