@@ -4,7 +4,7 @@ import { type RequestType } from './schema'
 export const requestStatusCallTypes = new Map<RequestStatus, string>([
     [
         'PENDING',
-        'bg-sky-100/40 text-sky-900 dark:text-sky-100 border-sky-300',
+        'bg-sky-200/40 text-sky-900 dark:text-sky-100 border-sky-300',
     ],
     [
         'APPROVED',
@@ -12,17 +12,17 @@ export const requestStatusCallTypes = new Map<RequestStatus, string>([
     ],
     [
         'REJECTED',
-        'bg-destructive/10 dark:bg-destructive/50 text-destructive dark:text-primary border-destructive/10',
+        'bg-red-400/30 text-red-900 dark:bg-red-700/50 dark:text-red-100 border-red-500',
     ],
 ])
 
 export const requestTypeCallTypes = new Map<RequestType, string>([
     [
         'UPDATE_USER',
-        'bg-indigo-100/40 text-indigo-900 dark:text-indigo-200 border-indigo-300',
+        'bg-teal-100/50 text-teal-900 dark:bg-teal-900/30 dark:text-teal-200 border-teal-300',
     ],
     [
         'UPDATE_COMPANY',
-        'bg-amber-100/40 text-amber-900 dark:text-amber-200 border-amber-300',
-    ],
+        'bg-violet-100/50 text-violet-900 dark:bg-violet-900/30 dark:text-violet-200 border-violet-300',
+    ]
 ])

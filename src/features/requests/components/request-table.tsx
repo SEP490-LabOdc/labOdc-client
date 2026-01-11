@@ -33,7 +33,7 @@ declare module '@tanstack/react-table' {
 }
 
 type DataTableProps = {
-    data: RequestList[]
+    data: RequestList
     search: Record<string, unknown>
     navigate: NavigateFn
 }

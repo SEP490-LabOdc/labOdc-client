@@ -63,16 +63,6 @@ export const updateCompanySchema = z.object({
         .or(z.literal('')),
 })
 
-type CompanyUpdatableFields = {
-    name: string
-    domain: string
-    phone: string
-    website: string
-    address: string
-    description: string
-}
-
-
 export type UpdateCompanyFormValues = z.infer<typeof updateCompanySchema>
 
 type UpdateCompanyModalProps = {

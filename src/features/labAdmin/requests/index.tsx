@@ -7,7 +7,7 @@ import type { RequestList } from '@/features/requests/data/schema'
 
 const route = getRouteApi('/_authenticated/lab-admin/requests/')
 
-export const mockRequests = [
+export const mockRequests: RequestList = [
     {
         id: '1',
         code: '00000001',
@@ -168,7 +168,7 @@ export default function Users() {
                         </div>
                     </div>
                     <div className='-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-y-0 lg:space-x-12'>
-                        <RequestTable data={mockRequests as RequestList} search={search} navigate={navigate} />
+                        <RequestTable data={mockRequests} search={search} navigate={navigate} />
                     </div>
                 </Main>
 
