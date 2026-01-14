@@ -12,22 +12,9 @@ import {
     Eye
 } from 'lucide-react'
 import { Spinner } from '@/components/ui/spinner'
-
-export interface Transaction {
-    id: string
-    type: 'INCOME' | 'WITHDRAWAL' | 'DEPOSIT' | 'MILESTONE_RELEASE' | 'REFUND' | 'INTERNAL_DISTRIBUTION'
-    amount: number
-    description: string
-    status: 'COMPLETED' | 'PENDING' | 'FAILED'
-    createdAt: string
-    metadata?: {
-        milestoneName?: string
-        bankAccount?: string
-        fromUser?: string
-        projectName?: string
-        [key: string]: unknown
-    }
-}
+import { TransactionDirection, TransactionStatus } from '@/hooks/api/transactions'
+import { formatVND } from '@/helpers/currency'
+import type { Transaction } from '@/hooks/api/transactions'
 
 interface WalletTransactionHistoryProps {
     transactions: Transaction[]
@@ -35,42 +22,20 @@ interface WalletTransactionHistoryProps {
     onViewAll?: () => void
 }
 
-const formatVND = (v: number) => new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(v)
-
-const getTypeConfig = (type: Transaction['type']) => {
-    switch (type) {
-        case 'INCOME':
-        case 'MILESTONE_RELEASE':
-        case 'INTERNAL_DISTRIBUTION':
+const getTypeConfig = (direction: TransactionDirection) => {
+    switch (direction) {
+        case TransactionDirection.CREDIT:
             return {
                 icon: ArrowDownLeft,
                 color: 'text-green-600',
                 bgColor: 'bg-green-100',
-                label: 'Thu nhập',
                 sign: '+'
             }
-        case 'DEPOSIT':
-            return {
-                icon: ArrowDownLeft,
-                color: 'text-blue-600',
-                bgColor: 'bg-blue-100',
-                label: 'Nạp tiền',
-                sign: '+'
-            }
-        case 'WITHDRAWAL':
+        case TransactionDirection.DEBIT:
             return {
                 icon: ArrowUpRight,
                 color: 'text-red-600',
                 bgColor: 'bg-red-100',
-                label: 'Rút tiền',
-                sign: '-'
-            }
-        case 'REFUND':
-            return {
-                icon: ArrowUpRight,
-                color: 'text-orange-600',
-                bgColor: 'bg-orange-100',
-                label: 'Hoàn tiền',
                 sign: '-'
             }
         default:
@@ -78,7 +43,6 @@ const getTypeConfig = (type: Transaction['type']) => {
                 icon: ArrowDownLeft,
                 color: 'text-gray-600',
                 bgColor: 'bg-gray-100',
-                label: 'Giao dịch',
                 sign: ''
             }
     }
@@ -86,27 +50,29 @@ const getTypeConfig = (type: Transaction['type']) => {
 
 const getStatusBadge = (status: Transaction['status']) => {
     switch (status) {
-        case 'COMPLETED':
+        case TransactionStatus.SUCCESS:
             return (
                 <Badge className="bg-green-100 text-green-800 border-green-200">
                     <CheckCircle className="h-3 w-3 mr-1" />
                     Hoàn thành
                 </Badge>
             )
-        case 'PENDING':
+        case TransactionStatus.PENDING:
             return (
                 <Badge className="bg-orange-100 text-orange-800 border-orange-200">
                     <Clock className="h-3 w-3 mr-1" />
                     Đang xử lý
                 </Badge>
             )
-        case 'FAILED':
+        case TransactionStatus.FAILED:
             return (
                 <Badge className="bg-red-100 text-red-800 border-red-200">
                     <XCircle className="h-3 w-3 mr-1" />
                     Thất bại
                 </Badge>
             )
+        default:
+            return null
     }
 }
 
@@ -129,9 +95,9 @@ export const WalletTransactionHistory: React.FC<WalletTransactionHistoryProps> =
                         </CardDescription>
                     </div>
                     {onViewAll && (
-                        <Button 
-                            variant="outline" 
-                            size="sm" 
+                        <Button
+                            variant="outline"
+                            size="sm"
                             onClick={onViewAll}
                             className="flex items-center gap-2"
                         >
@@ -149,7 +115,8 @@ export const WalletTransactionHistory: React.FC<WalletTransactionHistoryProps> =
                 ) : transactions.length > 0 ? (
                     <div className="space-y-3">
                         {transactions.map((transaction) => {
-                            const typeConfig = getTypeConfig(transaction.type)
+                            console.log(transaction)
+                            const typeConfig = getTypeConfig(transaction.direction)
                             const TypeIcon = typeConfig.icon
 
                             return (
@@ -174,30 +141,11 @@ export const WalletTransactionHistory: React.FC<WalletTransactionHistoryProps> =
                                                     {new Date(transaction.createdAt).toLocaleString('vi-VN')}
                                                 </span>
                                             </div>
-                                            {transaction.metadata && (
-                                                <div className="mt-1 text-xs text-gray-500 space-y-0.5">
-                                                    {transaction.metadata.milestoneName && (
-                                                        <div>📍 {transaction.metadata.milestoneName}</div>
-                                                    )}
-                                                    {transaction.metadata.projectName && (
-                                                        <div>📁 {transaction.metadata.projectName}</div>
-                                                    )}
-                                                    {transaction.metadata.fromUser && (
-                                                        <div>👤 Từ: {transaction.metadata.fromUser}</div>
-                                                    )}
-                                                    {transaction.metadata.bankAccount && (
-                                                        <div>🏦 {transaction.metadata.bankAccount}</div>
-                                                    )}
-                                                </div>
-                                            )}
                                         </div>
                                     </div>
                                     <div className="text-right">
                                         <p className={`text-lg font-bold ${typeConfig.color}`}>
                                             {typeConfig.sign}{formatVND(transaction.amount)}
-                                        </p>
-                                        <p className="text-xs text-gray-500 mt-1">
-                                            {typeConfig.label}
                                         </p>
                                     </div>
                                 </div>

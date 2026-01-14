@@ -61,13 +61,13 @@ export const ProjectFilesTab = ({
         {/* Phần Files */}
         <div>
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold">Files</h3>
+            <h3 className="text-lg font-semibold">Tài liệu</h3>
             <Button
               size="sm"
               onClick={() => setIsUploadModalOpen(true)}
             >
               <Plus className="h-4 w-4 mr-2" />
-              Add New
+              Thêm mới
             </Button>
           </div>
 
@@ -85,7 +85,7 @@ export const ProjectFilesTab = ({
                     className="flex items-center justify-between p-3 border border-primary/20 rounded-md bg-muted hover:bg-muted/80 transition-colors"
                   >
                     <div className="flex items-center gap-3 flex-1 min-w-0">
-                      <FileText className="h-8 w-8 text-muted-foreground flex-shrink-0" />
+                      <FileText className="h-8 w-8 text-muted-foreground shrink-0" />
                       <div className="min-w-0">
                         <p className="font-medium text-foreground truncate">{file.documentName}</p>
                         <p className="text-sm text-muted-foreground">
@@ -93,7 +93,7 @@ export const ProjectFilesTab = ({
                         </p>
                       </div>
                     </div>
-                    <div className="flex items-center gap-2 flex-shrink-0">
+                    <div className="flex items-center gap-2 shrink-0">
                       <Button
                         variant="ghost"
                         size="icon"
@@ -110,9 +110,9 @@ export const ProjectFilesTab = ({
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
                           <DropdownMenuItem onClick={() => handleViewFile(file.documentUrl)}>
-                            View
+                            Xem
                           </DropdownMenuItem>
-                          <DropdownMenuItem className="text-destructive">Delete</DropdownMenuItem>
+                          <DropdownMenuItem className="text-destructive">Xóa</DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
                     </div>
