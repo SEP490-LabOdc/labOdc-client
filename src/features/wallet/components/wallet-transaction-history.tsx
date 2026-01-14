@@ -1,18 +1,21 @@
 import React from 'react'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
 import {
     ArrowDownLeft,
     ArrowUpRight,
     Clock,
     CheckCircle,
     XCircle,
-    History
+    History,
+    Eye
 } from 'lucide-react'
+import { Spinner } from '@/components/ui/spinner'
 
 export interface Transaction {
     id: string
-    type: 'INCOME' | 'WITHDRAWAL'
+    type: 'INCOME' | 'WITHDRAWAL' | 'DEPOSIT' | 'MILESTONE_RELEASE' | 'REFUND' | 'INTERNAL_DISTRIBUTION'
     amount: number
     description: string
     status: 'COMPLETED' | 'PENDING' | 'FAILED'
@@ -21,31 +24,63 @@ export interface Transaction {
         milestoneName?: string
         bankAccount?: string
         fromUser?: string
+        projectName?: string
+        [key: string]: unknown
     }
 }
 
 interface WalletTransactionHistoryProps {
     transactions: Transaction[]
+    isLoading?: boolean
+    onViewAll?: () => void
 }
 
 const formatVND = (v: number) => new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(v)
 
 const getTypeConfig = (type: Transaction['type']) => {
-    if (type === 'INCOME') {
-        return {
-            icon: ArrowDownLeft,
-            color: 'text-green-600',
-            bgColor: 'bg-green-100',
-            label: 'Thu nhập',
-            sign: '+'
-        }
-    }
-    return {
-        icon: ArrowUpRight,
-        color: 'text-red-600',
-        bgColor: 'bg-red-100',
-        label: 'Rút tiền',
-        sign: '-'
+    switch (type) {
+        case 'INCOME':
+        case 'MILESTONE_RELEASE':
+        case 'INTERNAL_DISTRIBUTION':
+            return {
+                icon: ArrowDownLeft,
+                color: 'text-green-600',
+                bgColor: 'bg-green-100',
+                label: 'Thu nhập',
+                sign: '+'
+            }
+        case 'DEPOSIT':
+            return {
+                icon: ArrowDownLeft,
+                color: 'text-blue-600',
+                bgColor: 'bg-blue-100',
+                label: 'Nạp tiền',
+                sign: '+'
+            }
+        case 'WITHDRAWAL':
+            return {
+                icon: ArrowUpRight,
+                color: 'text-red-600',
+                bgColor: 'bg-red-100',
+                label: 'Rút tiền',
+                sign: '-'
+            }
+        case 'REFUND':
+            return {
+                icon: ArrowUpRight,
+                color: 'text-orange-600',
+                bgColor: 'bg-orange-100',
+                label: 'Hoàn tiền',
+                sign: '-'
+            }
+        default:
+            return {
+                icon: ArrowDownLeft,
+                color: 'text-gray-600',
+                bgColor: 'bg-gray-100',
+                label: 'Giao dịch',
+                sign: ''
+            }
     }
 }
 
@@ -76,21 +111,42 @@ const getStatusBadge = (status: Transaction['status']) => {
 }
 
 export const WalletTransactionHistory: React.FC<WalletTransactionHistoryProps> = ({
-    transactions
+    transactions,
+    isLoading = false,
+    onViewAll
 }) => {
     return (
         <Card>
             <CardHeader>
-                <CardTitle className="text-xl flex items-center gap-2">
-                    <History className="h-6 w-6 text-[#2a9d8f]" />
-                    Lịch sử Giao dịch
-                </CardTitle>
-                <CardDescription>
-                    Theo dõi các khoản thu nhập và rút tiền
-                </CardDescription>
+                <div className="flex items-center justify-between">
+                    <div>
+                        <CardTitle className="text-xl flex items-center gap-2">
+                            <History className="h-6 w-6 text-[#2a9d8f]" />
+                            Lịch sử Giao dịch
+                        </CardTitle>
+                        <CardDescription>
+                            Theo dõi các khoản thu nhập và rút tiền
+                        </CardDescription>
+                    </div>
+                    {onViewAll && (
+                        <Button 
+                            variant="outline" 
+                            size="sm" 
+                            onClick={onViewAll}
+                            className="flex items-center gap-2"
+                        >
+                            <Eye className="h-4 w-4" />
+                            Xem tất cả
+                        </Button>
+                    )}
+                </div>
             </CardHeader>
             <CardContent>
-                {transactions.length > 0 ? (
+                {isLoading ? (
+                    <div className="flex items-center justify-center py-12">
+                        <Spinner className="w-10 h-10" />
+                    </div>
+                ) : transactions.length > 0 ? (
                     <div className="space-y-3">
                         {transactions.map((transaction) => {
                             const typeConfig = getTypeConfig(transaction.type)
@@ -119,15 +175,18 @@ export const WalletTransactionHistory: React.FC<WalletTransactionHistoryProps> =
                                                 </span>
                                             </div>
                                             {transaction.metadata && (
-                                                <div className="mt-1 text-xs text-gray-500">
+                                                <div className="mt-1 text-xs text-gray-500 space-y-0.5">
                                                     {transaction.metadata.milestoneName && (
-                                                        <span>📍 {transaction.metadata.milestoneName}</span>
+                                                        <div>📍 {transaction.metadata.milestoneName}</div>
+                                                    )}
+                                                    {transaction.metadata.projectName && (
+                                                        <div>📁 {transaction.metadata.projectName}</div>
                                                     )}
                                                     {transaction.metadata.fromUser && (
-                                                        <span>👤 Từ: {transaction.metadata.fromUser}</span>
+                                                        <div>👤 Từ: {transaction.metadata.fromUser}</div>
                                                     )}
                                                     {transaction.metadata.bankAccount && (
-                                                        <span>🏦 {transaction.metadata.bankAccount}</span>
+                                                        <div>🏦 {transaction.metadata.bankAccount}</div>
                                                     )}
                                                 </div>
                                             )}

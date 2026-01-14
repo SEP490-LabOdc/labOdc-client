@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import { Wallet } from 'lucide-react'
 import { usePermission } from '@/hooks/usePermission'
 import {
@@ -14,58 +14,14 @@ import {
 } from './components'
 import { useUser } from '@/context/UserContext'
 import { useGetMyWallet, useDeleteBankInfo, useCreateBankInfo } from '@/hooks/api/wallet'
+import { useGetMyTransactions } from '@/hooks/api/transactions'
+import { Sort } from '@/hooks/api/types'
 import { useSearch, useNavigate } from '@tanstack/react-router'
 import { Main } from '@/components/layout/main'
 import { toast } from 'sonner'
 import { usePopUp } from '@/hooks/usePopUp'
+import { ROLE } from '@/const'
 
-// Mock Data
-const MOCK_TRANSACTIONS: Transaction[] = [
-    {
-        id: 't1',
-        type: 'INCOME',
-        amount: 2500000,
-        description: 'Thu nhập từ Milestone 1',
-        status: 'COMPLETED',
-        createdAt: '2025-01-16T09:00:00',
-        metadata: {
-            milestoneName: 'Milestone 1: Setup & Design'
-        }
-    },
-    {
-        id: 't2',
-        type: 'INCOME',
-        amount: 3000000,
-        description: 'Phân bổ từ Leader',
-        status: 'COMPLETED',
-        createdAt: '2025-01-20T14:30:00',
-        metadata: {
-            fromUser: 'Nguyễn Văn A (Leader)'
-        }
-    },
-    {
-        id: 't3',
-        type: 'WITHDRAWAL',
-        amount: 2000000,
-        description: 'Rút tiền về Vietcombank',
-        status: 'PENDING',
-        createdAt: '2025-01-25T10:15:00',
-        metadata: {
-            bankAccount: 'Vietcombank - *****1234'
-        }
-    },
-    {
-        id: 't4',
-        type: 'WITHDRAWAL',
-        amount: 1000000,
-        description: 'Rút tiền về Techcombank',
-        status: 'COMPLETED',
-        createdAt: '2025-01-10T16:45:00',
-        metadata: {
-            bankAccount: 'Techcombank - *****5678'
-        }
-    }
-]
 
 export const MyWalletPage: React.FC = () => {
     const { user, isCompany } = usePermission()
@@ -93,6 +49,14 @@ export const MyWalletPage: React.FC = () => {
 
     // Fetch wallet data from API
     const { data: walletResponse, refetch: refetchWallet } = useGetMyWallet()
+
+    // Fetch 5 newest transactions
+    const { data: transactionsResponse, isLoading: isLoadingTransactions } = useGetMyTransactions({
+        page: 0,
+        size: 5,
+        sortBy: 'createdAt',
+        sortDir: Sort.DESC
+    })
 
     // Bank info mutations
     const createBankInfoMutation = useCreateBankInfo()
@@ -136,8 +100,19 @@ export const MyWalletPage: React.FC = () => {
     const availableBalance = walletResponse?.data?.balance ?? 0
     const pendingBalance = walletResponse?.data?.heldBalance ?? 0
 
-    // Mock data for fields not yet available from API
-    const [transactions] = useState<Transaction[]>(MOCK_TRANSACTIONS)
+    // Map transactions from API response
+    const transactions = useMemo(() => {
+        const transactionsData = transactionsResponse?.data?.content || transactionsResponse?.data || []
+        return transactionsData.slice(0, 5).map((t: any) => ({
+            id: t.id,
+            type: t.type as Transaction['type'],
+            amount: t.amount,
+            description: t.description,
+            status: t.status as Transaction['status'],
+            createdAt: t.createdAt,
+            metadata: t.metadata || {}
+        })) as Transaction[]
+    }, [transactionsResponse])
 
     // Get bank accounts from API response and map to UI format
     const bankAccounts = useMemo(() => {
@@ -188,6 +163,24 @@ export const MyWalletPage: React.FC = () => {
             console.error('Error deleting bank account:', error)
             toast.error('Có lỗi xảy ra khi xóa tài khoản ngân hàng')
         }
+    }
+
+    // Navigate to my-transactions page based on user role
+    const handleViewAllTransactions = () => {
+        const role = user?.role
+        let basePath = '/talent'
+
+        if (role === ROLE.MENTOR) {
+            basePath = '/mentor'
+        } else if (role === ROLE.COMPANY) {
+            basePath = '/company-manage'
+        } else if (role === ROLE.SYSTEM_ADMIN || role === ROLE.LAB_ADMIN) {
+            basePath = '/admin'
+        }
+
+        navigate({
+            to: `${basePath}/my-transactions`,
+        })
     }
 
     return (
@@ -291,7 +284,11 @@ export const MyWalletPage: React.FC = () => {
 
                     {/* Right Column - Transaction History */}
                     <div className="lg:col-span-2">
-                        <WalletTransactionHistory transactions={transactions} />
+                        <WalletTransactionHistory
+                            transactions={transactions}
+                            isLoading={isLoadingTransactions}
+                            onViewAll={handleViewAllTransactions}
+                        />
                     </div>
                 </div>
             </div>
