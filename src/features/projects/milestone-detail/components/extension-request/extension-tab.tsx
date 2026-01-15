@@ -154,7 +154,7 @@ export const ExtensionTab: React.FC<Props> = ({ milestone, projectId, companyId 
                                                 {request.requestReason && (
                                                     <div className="mt-3 p-3 bg-gray-50 rounded-md">
                                                         <div className="flex items-start gap-2">
-                                                            <FileText className="h-4 w-4 text-gray-400 flex-shrink-0" />
+                                                            <FileText className="h-4 w-4 text-gray-400 shrink-0" />
                                                             <div className="flex item-center gap-2">
                                                                 <p className="text-sm font-medium text-gray-500">Lý do gia hạn:</p>
                                                                 <p className="text-sm text-gray-700 whitespace-pre-wrap">
@@ -167,7 +167,7 @@ export const ExtensionTab: React.FC<Props> = ({ milestone, projectId, companyId 
                                                 {request.status === MilestoneExtensionRequestStatus.REJECTED && (
                                                     <div className="mt-3 p-3 bg-gray-50 rounded-md">
                                                         <div className="flex items-start gap-2">
-                                                            <FileText className="h-4 w-4 text-gray-400 flex-shrink-0" />
+                                                            <FileText className="h-4 w-4 text-gray-400 shrink-0" />
                                                             <div className="flex item-center gap-2">
                                                                 <p className="text-sm font-medium text-gray-500">Lý do từ chối:</p>
                                                                 <p className="text-sm text-gray-700 whitespace-pre-wrap">
@@ -181,7 +181,7 @@ export const ExtensionTab: React.FC<Props> = ({ milestone, projectId, companyId 
 
                                             {/* Action buttons - only show for company and pending requests */}
                                             {isCompany && request.status === MilestoneExtensionRequestStatus.PENDING && (
-                                                <div className="flex items-center gap-2 flex-shrink-0">
+                                                <div className="flex items-center gap-2 shrink-0">
                                                     <Button
                                                         size="sm"
                                                         variant="outline"

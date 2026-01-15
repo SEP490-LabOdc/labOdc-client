@@ -93,7 +93,7 @@ export const ProjectOverviewTab = ({ projectData }: ProjectOverviewTabProps) => 
       <Card>
         <CardContent className="p-6 space-y-6">
           <div className="flex items-start gap-4">
-            <CircleDotDashed className="h-10 w-10 text-secondary flex-shrink-0" />
+            <CircleDotDashed className="h-10 w-10 text-secondary shrink-0" />
             <div>
               <h2 className="text-2xl font-bold text-foreground">{projectData.title}</h2>
               <p className="text-sm text-muted-foreground">Mã dự án: {projectData.id.slice(0, 8)}</p>
@@ -102,7 +102,7 @@ export const ProjectOverviewTab = ({ projectData }: ProjectOverviewTabProps) => 
 
           <div className="space-y-5 pt-4 border-t border-primary/20">
             <div className="flex items-start">
-              <div className="w-40 flex-shrink-0 flex items-center gap-3 text-sm text-muted-foreground">
+              <div className="w-40 shrink-0 flex items-center gap-3 text-sm text-muted-foreground">
                 <CheckSquare className="h-4 w-4" />
                 <span>Trạng thái</span>
               </div>
@@ -114,7 +114,7 @@ export const ProjectOverviewTab = ({ projectData }: ProjectOverviewTabProps) => 
             </div>
 
             <div className="flex items-start">
-              <div className="w-40 flex-shrink-0 flex items-center gap-3 text-sm text-muted-foreground">
+              <div className="w-40 shrink-0 flex items-center gap-3 text-sm text-muted-foreground">
                 <Briefcase className="h-4 w-4" />
                 <span>Tuyển dụng</span>
               </div>
@@ -171,7 +171,7 @@ export const ProjectOverviewTab = ({ projectData }: ProjectOverviewTabProps) => 
 
             {/* Section Đội ngũ */}
             <div className="flex items-start">
-              <div className="w-40 flex-shrink-0 flex items-center gap-3 text-sm text-muted-foreground">
+              <div className="w-40 shrink-0 flex items-center gap-3 text-sm text-muted-foreground">
                 <Users className="h-4 w-4" />
                 <span>Đội ngũ</span>
               </div>
@@ -211,7 +211,7 @@ export const ProjectOverviewTab = ({ projectData }: ProjectOverviewTabProps) => 
             </div>
 
             <div className="flex items-start">
-              <div className="w-40 flex-shrink-0 flex items-center gap-3 text-sm text-muted-foreground">
+              <div className="w-40 shrink-0 flex items-center gap-3 text-sm text-muted-foreground">
                 <User className="h-4 w-4" />
                 <span>Giảng viên</span>
               </div>
@@ -231,7 +231,7 @@ export const ProjectOverviewTab = ({ projectData }: ProjectOverviewTabProps) => 
             </div>
 
             <div className="flex items-start">
-              <div className="w-40 flex-shrink-0 flex items-center gap-3 text-sm text-muted-foreground">
+              <div className="w-40 shrink-0 flex items-center gap-3 text-sm text-muted-foreground">
                 <User className="h-4 w-4" />
                 <span>Quản lý dự án</span>
               </div>
@@ -247,7 +247,7 @@ export const ProjectOverviewTab = ({ projectData }: ProjectOverviewTabProps) => 
             </div>
 
             <div className="flex items-start">
-              <div className="w-40 flex-shrink-0 flex items-center gap-3 text-sm text-muted-foreground">
+              <div className="w-40 shrink-0 flex items-center gap-3 text-sm text-muted-foreground">
                 <Tag className="h-4 w-4" />
                 <span>Nhãn</span>
               </div>
@@ -261,7 +261,7 @@ export const ProjectOverviewTab = ({ projectData }: ProjectOverviewTabProps) => 
             </div>
 
             <div className="flex items-start">
-              <div className="w-40 flex-shrink-0 flex items-center gap-3 text-sm text-muted-foreground">
+              <div className="w-40 shrink-0 flex items-center gap-3 text-sm text-muted-foreground">
                 <FileText className="h-4 w-4" />
                 <span>Mô tả</span>
               </div>
