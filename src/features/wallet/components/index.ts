@@ -8,5 +8,4 @@ export { BankAccountListDialog } from './bank-account-list-dialog'
 export { DepositDialog } from './deposit-dialog'
 export { PaymentSuccessDialog } from './payment-success-dialog'
 export { PaymentFailureDialog } from './payment-failure-dialog'
-export type { Transaction } from './wallet-transaction-history'
 
