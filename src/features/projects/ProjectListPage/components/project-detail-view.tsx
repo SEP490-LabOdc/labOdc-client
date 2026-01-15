@@ -69,7 +69,7 @@ export function ProjectDetailView({ project, onApply }: ProjectDetailViewProps) 
         {hasApplied && applicationInfo?.status && (
           <div className={`mt-3 rounded-md border-2 p-4 ${getCandidateStatusColor(applicationInfo.status)}`}>
             <div className="flex items-start gap-3">
-              <div className="flex-shrink-0 mt-0.5">
+              <div className="shrink-0 mt-0.5">
                 {getStatusIcon(applicationInfo.status)}
               </div>
               <div className="flex-1 min-w-0">
