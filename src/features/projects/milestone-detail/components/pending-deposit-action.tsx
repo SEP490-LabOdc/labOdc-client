@@ -15,7 +15,7 @@ export const PendingDepositAction: React.FC<PendingDepositActionProps> = ({
         <div className="space-y-2">
             <div className="p-3 bg-orange-50 border border-orange-200 rounded-md">
                 <div className="flex items-start gap-2">
-                    <AlertCircle className="w-4 h-4 text-orange-500 flex-shrink-0 mt-0.5" />
+                    <AlertCircle className="w-4 h-4 text-orange-500 shrink-0 mt-0.5" />
                     <div>
                         <p className="text-xs font-semibold text-orange-800">Chưa ký quỹ</p>
                         <p className="text-xs text-orange-700 mt-0.5">

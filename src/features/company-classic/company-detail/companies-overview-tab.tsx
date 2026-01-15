@@ -35,7 +35,7 @@ export const CompanyOverviewTab: React.FC<CompanyOverviewTabProps> = ({ company 
 
                 {/* Header */}
                 <div className="flex items-start gap-4">
-                    <Building2 className="h-10 w-10 text-blue-600 flex-shrink-0" />
+                    <Building2 className="h-10 w-10 text-blue-600 shrink-0" />
                     <div>
                         <h2 className="text-2xl font-bold">{company.name}</h2>
                         <p className="text-sm text-gray-500">Mã công ty: {company.id.slice(0, 8)}</p>
@@ -46,7 +46,7 @@ export const CompanyOverviewTab: React.FC<CompanyOverviewTabProps> = ({ company 
 
                     {/* Status */}
                     <div className="flex items-start">
-                        <div className="w-40 flex-shrink-0 flex items-center gap-3 text-sm text-gray-600">
+                        <div className="w-40 shrink-0 flex items-center gap-3 text-sm text-gray-600">
                             <CircleDotDashed className="h-4 w-4" />
                             <span>Trạng thái</span>
                         </div>
@@ -59,7 +59,7 @@ export const CompanyOverviewTab: React.FC<CompanyOverviewTabProps> = ({ company 
 
                     {/* Contact info */}
                     <div className="flex items-start">
-                        <div className="w-40 flex-shrink-0 flex items-center gap-3 text-sm text-gray-600">
+                        <div className="w-40 shrink-0 flex items-center gap-3 text-sm text-gray-600">
                             <Mail className="h-4 w-4" />
                             <span>Email</span>
                         </div>
@@ -67,7 +67,7 @@ export const CompanyOverviewTab: React.FC<CompanyOverviewTabProps> = ({ company 
                     </div>
 
                     <div className="flex items-start">
-                        <div className="w-40 flex-shrink-0 flex items-center gap-3 text-sm text-gray-600">
+                        <div className="w-40 shrink-0 flex items-center gap-3 text-sm text-gray-600">
                             <Smartphone className="h-4 w-4" />
                             <span>Điện thoại</span>
                         </div>
@@ -75,7 +75,7 @@ export const CompanyOverviewTab: React.FC<CompanyOverviewTabProps> = ({ company 
                     </div>
 
                     <div className="flex items-start">
-                        <div className="w-40 flex-shrink-0 flex items-center gap-3 text-sm text-gray-600">
+                        <div className="w-40 shrink-0 flex items-center gap-3 text-sm text-gray-600">
                             <MapPin className="h-4 w-4" />
                             <span>Địa chỉ</span>
                         </div>
@@ -84,7 +84,7 @@ export const CompanyOverviewTab: React.FC<CompanyOverviewTabProps> = ({ company 
 
                     {/* Website */}
                     <div className="flex items-start">
-                        <div className="w-40 flex-shrink-0 flex items-center gap-3 text-sm text-gray-600">
+                        <div className="w-40 shrink-0 flex items-center gap-3 text-sm text-gray-600">
                             <Globe className="h-4 w-4" />
                             <span>Website</span>
                         </div>
@@ -95,7 +95,7 @@ export const CompanyOverviewTab: React.FC<CompanyOverviewTabProps> = ({ company 
 
                     {/* Domain */}
                     <div className="flex items-start">
-                        <div className="w-40 flex-shrink-0 flex items-center gap-3 text-sm text-gray-600">
+                        <div className="w-40 shrink-0 flex items-center gap-3 text-sm text-gray-600">
                             <LinkIcon className="h-4 w-4" />
                             <span>Domain</span>
                         </div>
@@ -106,7 +106,7 @@ export const CompanyOverviewTab: React.FC<CompanyOverviewTabProps> = ({ company 
 
                     {/* Contact Person */}
                     <div className="flex items-start">
-                        <div className="w-40 flex-shrink-0 flex items-center gap-3 text-sm text-gray-600">
+                        <div className="w-40 shrink-0 flex items-center gap-3 text-sm text-gray-600">
                             <User className="h-4 w-4" />
                             <span>Người liên hệ</span>
                         </div>
@@ -127,7 +127,7 @@ export const CompanyOverviewTab: React.FC<CompanyOverviewTabProps> = ({ company 
 
                     {/* Description */}
                     <div className="flex items-start">
-                        <div className="w-40 flex-shrink-0 flex items-center gap-3 text-sm text-gray-600">
+                        <div className="w-40 shrink-0 flex items-center gap-3 text-sm text-gray-600">
                             <FileText className="h-4 w-4" />
                             <span>Mô tả</span>
                         </div>
@@ -140,7 +140,7 @@ export const CompanyOverviewTab: React.FC<CompanyOverviewTabProps> = ({ company 
 
                     {/* Created At */}
                     <div className="flex items-start">
-                        <div className="w-40 flex-shrink-0 flex items-center gap-3 text-sm text-gray-600">
+                        <div className="w-40 shrink-0 flex items-center gap-3 text-sm text-gray-600">
                             <FileText className="h-4 w-4" />
                             <span>Ngày tạo</span>
                         </div>

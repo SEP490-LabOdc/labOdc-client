@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import { Wallet } from 'lucide-react'
 import { usePermission } from '@/hooks/usePermission'
 import {
@@ -10,62 +10,18 @@ import {
     DepositDialog,
     PaymentSuccessDialog,
     PaymentFailureDialog,
-    type Transaction
 } from './components'
 import { useUser } from '@/context/UserContext'
 import { useGetMyWallet, useDeleteBankInfo, useCreateBankInfo } from '@/hooks/api/wallet'
+import { useGetMyTransactions } from '@/hooks/api/transactions'
+import { Sort } from '@/hooks/api/types'
 import { useSearch, useNavigate } from '@tanstack/react-router'
 import { Main } from '@/components/layout/main'
 import { toast } from 'sonner'
 import { usePopUp } from '@/hooks/usePopUp'
+import { ROLE } from '@/const'
+import { formatVND } from '@/helpers/currency'
 
-// Mock Data
-const MOCK_TRANSACTIONS: Transaction[] = [
-    {
-        id: 't1',
-        type: 'INCOME',
-        amount: 2500000,
-        description: 'Thu nhập từ Milestone 1',
-        status: 'COMPLETED',
-        createdAt: '2025-01-16T09:00:00',
-        metadata: {
-            milestoneName: 'Milestone 1: Setup & Design'
-        }
-    },
-    {
-        id: 't2',
-        type: 'INCOME',
-        amount: 3000000,
-        description: 'Phân bổ từ Leader',
-        status: 'COMPLETED',
-        createdAt: '2025-01-20T14:30:00',
-        metadata: {
-            fromUser: 'Nguyễn Văn A (Leader)'
-        }
-    },
-    {
-        id: 't3',
-        type: 'WITHDRAWAL',
-        amount: 2000000,
-        description: 'Rút tiền về Vietcombank',
-        status: 'PENDING',
-        createdAt: '2025-01-25T10:15:00',
-        metadata: {
-            bankAccount: 'Vietcombank - *****1234'
-        }
-    },
-    {
-        id: 't4',
-        type: 'WITHDRAWAL',
-        amount: 1000000,
-        description: 'Rút tiền về Techcombank',
-        status: 'COMPLETED',
-        createdAt: '2025-01-10T16:45:00',
-        metadata: {
-            bankAccount: 'Techcombank - *****5678'
-        }
-    }
-]
 
 export const MyWalletPage: React.FC = () => {
     const { user, isCompany } = usePermission()
@@ -93,6 +49,14 @@ export const MyWalletPage: React.FC = () => {
 
     // Fetch wallet data from API
     const { data: walletResponse, refetch: refetchWallet } = useGetMyWallet()
+
+    // Fetch 5 newest transactions
+    const { data: transactionsResponse, isLoading: isLoadingTransactions } = useGetMyTransactions({
+        page: 0,
+        size: 5,
+        sortBy: 'createdAt',
+        sortDir: Sort.DESC
+    })
 
     // Bank info mutations
     const createBankInfoMutation = useCreateBankInfo()
@@ -136,8 +100,11 @@ export const MyWalletPage: React.FC = () => {
     const availableBalance = walletResponse?.data?.balance ?? 0
     const pendingBalance = walletResponse?.data?.heldBalance ?? 0
 
-    // Mock data for fields not yet available from API
-    const [transactions] = useState<Transaction[]>(MOCK_TRANSACTIONS)
+    // Map transactions from API response
+    const transactions = useMemo(() => {
+        const transactionsData = transactionsResponse?.data?.content || transactionsResponse?.data || []
+        return transactionsData
+    }, [transactionsResponse])
 
     // Get bank accounts from API response and map to UI format
     const bankAccounts = useMemo(() => {
@@ -190,6 +157,24 @@ export const MyWalletPage: React.FC = () => {
         }
     }
 
+    // Navigate to my-transactions page based on user role
+    const handleViewAllTransactions = () => {
+        const role = user?.role
+        let basePath = '/talent'
+
+        if (role === ROLE.MENTOR) {
+            basePath = '/mentor'
+        } else if (role === ROLE.COMPANY) {
+            basePath = '/company-manage'
+        } else if (role === ROLE.SYSTEM_ADMIN || role === ROLE.LAB_ADMIN) {
+            basePath = '/admin'
+        }
+
+        navigate({
+            to: `${basePath}/my-transactions`,
+        })
+    }
+
     return (
         <Main>
             <div className="max-w-7xl mx-auto space-y-6">
@@ -229,11 +214,7 @@ export const MyWalletPage: React.FC = () => {
                             <div>
                                 <p className="text-xs text-gray-500">Tổng thu nhập</p>
                                 <p className="text-lg font-bold text-green-600">
-                                    {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(
-                                        transactions
-                                            .filter(t => t.type === 'INCOME' && t.status === 'COMPLETED')
-                                            .reduce((sum, t) => sum + t.amount, 0)
-                                    )}
+                                    {formatVND(0)}
                                 </p>
                             </div>
                         </div>
@@ -247,11 +228,7 @@ export const MyWalletPage: React.FC = () => {
                             <div>
                                 <p className="text-xs text-gray-500">Tổng đã rút</p>
                                 <p className="text-lg font-bold text-blue-600">
-                                    {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(
-                                        transactions
-                                            .filter(t => t.type === 'WITHDRAWAL' && t.status === 'COMPLETED')
-                                            .reduce((sum, t) => sum + t.amount, 0)
-                                    )}
+                                    {formatVND(0)}
                                 </p>
                             </div>
                         </div>
@@ -265,11 +242,7 @@ export const MyWalletPage: React.FC = () => {
                             <div>
                                 <p className="text-xs text-gray-500">Đang xử lý</p>
                                 <p className="text-lg font-bold text-orange-600">
-                                    {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(
-                                        transactions
-                                            .filter(t => t.status === 'PENDING')
-                                            .reduce((sum, t) => sum + t.amount, 0)
-                                    )}
+                                    {formatVND(0)}
                                 </p>
                             </div>
                         </div>
@@ -291,7 +264,11 @@ export const MyWalletPage: React.FC = () => {
 
                     {/* Right Column - Transaction History */}
                     <div className="lg:col-span-2">
-                        <WalletTransactionHistory transactions={transactions} />
+                        <WalletTransactionHistory
+                            transactions={transactions}
+                            isLoading={isLoadingTransactions}
+                            onViewAll={handleViewAllTransactions}
+                        />
                     </div>
                 </div>
             </div>

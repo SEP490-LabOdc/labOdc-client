@@ -157,7 +157,7 @@ export const MilestoneReportsTab: React.FC<Props> = ({ milestone }) => {
                   {reports.map((report: Report) => (
                     <div key={report.id} className="flex items-center justify-between p-4 border rounded-md hover:bg-gray-50 transition-colors bg-white shadow-sm">
                       <div className="flex items-start gap-4">
-                        <Avatar className="h-10 w-10 flex-shrink-0 mt-1">
+                        <Avatar className="h-10 w-10 shrink-0 mt-1">
                           <AvatarImage src={report.reporterAvatar} alt={report.reporterName} />
                           <AvatarFallback>
                             {getAvatarFallback(report.reporterName)}
@@ -180,7 +180,7 @@ export const MilestoneReportsTab: React.FC<Props> = ({ milestone }) => {
                         </div>
                       </div>
 
-                      <Button variant="ghost" size="sm" onClick={() => handlePopUpOpen('reportDetail', { report })} className="flex-shrink-0">
+                      <Button variant="ghost" size="sm" onClick={() => handlePopUpOpen('reportDetail', { report })} className="shrink-0">
                         <Eye className="w-4 h-4" /> Xem chi tiết
                       </Button>
                     </div>

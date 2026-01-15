@@ -167,7 +167,7 @@ export function NotificationDropdown() {
               {item.title}
             </p>
             {!item.readStatus && (
-              <div className='w-2 h-2 bg-primary rounded-full flex-shrink-0 mt-1' />
+              <div className='w-2 h-2 bg-primary rounded-full shrink-0 mt-1' />
             )}
           </div>
           <p className='text-sm text-muted-foreground leading-relaxed'>
@@ -212,7 +212,7 @@ export function NotificationDropdown() {
                 variant='link'
                 size='sm'
                 className='h-auto p-0 text-xs'
-                // onClick={handleMarkAllAsRead}
+              // onClick={handleMarkAllAsRead}
               >
                 Đánh dấu tất cả đã đọc
               </Button>
@@ -229,7 +229,7 @@ export function NotificationDropdown() {
             </TabsTrigger>
           </TabsList>
 
-          <DropdownMenuSeparator className="mt-2"/>
+          <DropdownMenuSeparator className="mt-2" />
 
           {/* Tab "Tất cả" */}
           <TabsContent value="all">

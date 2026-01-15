@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button.tsx";
 import { useGetProjectApplicationStatus } from '@/hooks/api/projects/queries.ts';
 import { format } from 'date-fns';
 import { getCandidateStatusLabel, getCandidateStatusColor } from '@/lib/utils';
+import { usePermission } from '@/hooks/usePermission.ts';
+import { ROLE } from '@/const.ts';
 
 interface ProjectDetailViewProps {
   project: Project | null
@@ -13,6 +15,8 @@ interface ProjectDetailViewProps {
 
 export function ProjectDetailView({ project, onApply }: ProjectDetailViewProps) {
   const { data: applicationStatus, isLoading: isAppLoading } = useGetProjectApplicationStatus(project?.projectId);
+  const { hasRole } = usePermission();
+  const isTalent = hasRole(ROLE.USER);
 
   if (!project) {
     return (
@@ -51,19 +55,21 @@ export function ProjectDetailView({ project, onApply }: ProjectDetailViewProps) 
         <h2 className="text-foreground text-3xl font-bold">{project.projectName}</h2>
         <p className="text-muted-foreground mt-1 mb-3">Chi tiết thông tin dự án</p>
 
-        <Button
-          className="w-full bg-brand-orange hover:bg-brand-orange/90 text-white text-lg py-3 font-bold mt-2 shadow-lg hover:shadow-xl transition-all"
-          onClick={() => onApply(project)}
-          disabled={!canApply || isAppLoading}
-        >
-          {isAppLoading ? 'Đang kiểm tra...' : (!canApply ? 'Đã ứng tuyển' : 'Ứng Tuyển Dự Án Này')}
-        </Button>
+        {isTalent && (
+          <Button
+            className="w-full bg-brand-orange hover:bg-brand-orange/90 text-white text-lg py-3 font-bold mt-2 shadow-lg hover:shadow-xl transition-all"
+            onClick={() => onApply(project)}
+            disabled={!canApply || isAppLoading}
+          >
+            {isAppLoading ? 'Đang kiểm tra...' : (!canApply ? 'Đã ứng tuyển' : 'Ứng Tuyển Dự Án Này')}
+          </Button>
+        )}
 
         {/* Chỉ hiển thị khi đã apply */}
         {hasApplied && applicationInfo?.status && (
           <div className={`mt-3 rounded-md border-2 p-4 ${getCandidateStatusColor(applicationInfo.status)}`}>
             <div className="flex items-start gap-3">
-              <div className="flex-shrink-0 mt-0.5">
+              <div className="shrink-0 mt-0.5">
                 {getStatusIcon(applicationInfo.status)}
               </div>
               <div className="flex-1 min-w-0">
@@ -193,7 +199,7 @@ export function ProjectDetailView({ project, onApply }: ProjectDetailViewProps) 
 
             <div className="p-3 bg-muted rounded-md">
               <div className="flex items-center text-sm text-muted-foreground">
-                <Clock className="h-4 w-4 mr-2 flex-shrink-0" />
+                <Clock className="h-4 w-4 mr-2 shrink-0" />
                 <span>Phản hồi thường trong vòng 24h</span>
               </div>
             </div>

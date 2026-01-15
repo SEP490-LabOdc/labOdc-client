@@ -17,21 +17,21 @@ interface FileUploadProps {
 }
 
 export function FileUpload({
-                             value,
-                             onChange,
-                             onFileUploaded,
-                             existingFileName,
-                             accept = '.pdf,.jpg,.jpeg,.png',
-                             maxSize = 10,
-                             placeholder = 'Chọn file để tải lên',
-                             disabled = false,
-                             className
-                           }: FileUploadProps) {
+  value,
+  onChange,
+  onFileUploaded,
+  existingFileName,
+  accept = '.pdf,.jpg,.jpeg,.png',
+  maxSize = 10,
+  placeholder = 'Chọn file để tải lên',
+  disabled = false,
+  className
+}: FileUploadProps) {
   const [isDragOver, setIsDragOver] = useState(false);
   const [uploadError, setUploadError] = useState<string>('');
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [uploadedFileInfo, setUploadedFileInfo] = useState<{fileName: string; fileUrl: string} | null>(null);
+  const [uploadedFileInfo, setUploadedFileInfo] = useState<{ fileName: string; fileUrl: string } | null>(null);
 
   const { mutateAsync: uploadFile, isPending: isUploading } = useUploadFile();
 
@@ -228,7 +228,7 @@ export function FileUpload({
       ) : (
         <div className="border border-gray-300 rounded-md p-4">
           <div className="flex items-center gap-3">
-            <div className="flex-shrink-0">
+            <div className="shrink-0">
               {showLoading ? (
                 <Loader2 className="h-8 w-8 text-[#2a9d8f] animate-spin" />
               ) : (
@@ -257,7 +257,7 @@ export function FileUpload({
                   size="sm"
                   onClick={handleViewFile}
                   disabled={disabled}
-                  className="flex-shrink-0 h-8 w-8 p-0 hover:bg-blue-50 hover:text-blue-600"
+                  className="shrink-0 h-8 w-8 p-0 hover:bg-blue-50 hover:text-blue-600"
                   title="Xem file"
                 >
                   <Eye className="h-4 w-4" />
@@ -272,7 +272,7 @@ export function FileUpload({
                   size="sm"
                   onClick={handleReplace}
                   disabled={disabled}
-                  className="flex-shrink-0 h-8 w-8 p-0 hover:bg-orange-50 hover:text-orange-600"
+                  className="shrink-0 h-8 w-8 p-0 hover:bg-orange-50 hover:text-orange-600"
                   title="Thay đổi file"
                 >
                   <RotateCcw className="h-4 w-4" />
@@ -286,7 +286,7 @@ export function FileUpload({
                 size="sm"
                 onClick={handleRemove}
                 disabled={disabled || isUploading}
-                className="flex-shrink-0 h-8 w-8 p-0 hover:bg-red-50 hover:text-red-600"
+                className="shrink-0 h-8 w-8 p-0 hover:bg-red-50 hover:text-red-600"
                 title="Xóa file"
               >
                 <X className="h-4 w-4" />
