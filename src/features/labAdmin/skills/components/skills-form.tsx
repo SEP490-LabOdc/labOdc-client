@@ -12,6 +12,8 @@ import {
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { type SkillForm, skillFormSchema } from '../data/schema'
+import { Checkbox } from '@/components/ui/checkbox'
+
 
 type SkillsFormProps = {
     mode: 'create' | 'edit'
@@ -35,6 +37,7 @@ export function SkillsForm({
         defaultValues: {
             name: initialData?.name ?? '',
             description: initialData?.description ?? '',
+            isDeleted: initialData?.isDeleted ?? false,
         },
     })
 
@@ -82,6 +85,25 @@ export function SkillsForm({
                     )}
                 />
 
+                <FormField
+                    control={form.control}
+                    name='isDeleted'
+                    render={({ field }) => (
+                        <FormItem className='flex flex-row items-center space-x-3 space-y-0'>
+                            <FormControl>
+                                <Checkbox
+                                    checked={field.value}
+                                    onCheckedChange={field.onChange}
+                                    disabled={isLoading}
+                                />
+                            </FormControl>
+                            <div className='space-y-1 leading-none'>
+                                <FormLabel>Đánh dấu là không hoạt động</FormLabel>
+                            </div>
+                        </FormItem>
+                    )}
+                />
+
                 <div className='flex justify-end gap-2 pt-4'>
                     <Button
                         type='button'
@@ -95,8 +117,8 @@ export function SkillsForm({
                         {isLoading
                             ? 'Đang xử lý...'
                             : isEdit
-                            ? 'Cập nhật'
-                            : 'Tạo mới'}
+                                ? 'Cập nhật'
+                                : 'Tạo mới'}
                     </Button>
                 </div>
             </form>

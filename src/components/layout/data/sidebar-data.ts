@@ -134,6 +134,11 @@ export const systemAmdminSidebarData: SidebarData = {
               url: '/admin/system-config',
               icon: IconSettings,
             },
+            {
+              title: 'Cấu hình Check-list Company',
+              url: '/admin/company-checklist-config',
+              icon: IconClipboardList,
+            },
           ]
         },
         {

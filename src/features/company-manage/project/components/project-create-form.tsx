@@ -242,7 +242,7 @@ export default function ProjectsForm({
                                 <FormLabel className="font-medium">Kỹ năng yêu cầu</FormLabel>
 
                                 <MultiSelectDropdown
-                                    items={skills.map((s: any) => ({
+                                    items={skills .filter((s: any) => !s.isDeleted).map((s: any) => ({
                                         label: s.name,
                                         value: s.id,
                                     }))}
