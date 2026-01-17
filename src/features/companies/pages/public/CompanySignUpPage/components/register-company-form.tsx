@@ -461,8 +461,7 @@ export function RegisterCompanyForm({
             {isLoading ? "Đang gửi…" : `${submitButtonText}`}
             <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
-          <p className='text-center text-foreground'>Đã có tài khoản <Link to='/company-login' className='text-secondary font-semibold hover:underline'>Đăng nhập ngay</Link></p>
-
+          <p className='text-center text-foreground'>Đã có tài khoản <Link to='/sign-in' search={{ mode: 'company' }} className='text-secondary font-semibold hover:underline'>Đăng nhập ngay</Link></p>
         </div>
       </form>
     </Form>

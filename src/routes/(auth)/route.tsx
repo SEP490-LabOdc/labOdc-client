@@ -1,5 +1,4 @@
-import { PublicLayout } from '@/components/layout/public-layout'
-import { createFileRoute, redirect } from '@tanstack/react-router'
+import { createFileRoute, Outlet, redirect } from '@tanstack/react-router'
 import { getRoleBasePath } from '@/lib/utils'
 
 export const Route = createFileRoute('/(auth)')({
@@ -15,5 +14,5 @@ export const Route = createFileRoute('/(auth)')({
       })
     }
   },
-  component: PublicLayout,
+  component: () => <Outlet />,
 })

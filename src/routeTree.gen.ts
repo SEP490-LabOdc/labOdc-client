@@ -17,7 +17,6 @@ import { Route as authRouteRouteImport } from './routes/(auth)/route'
 import { Route as CompanyIndexRouteImport } from './routes/company/index'
 import { Route as CompanyRegisterIndexRouteImport } from './routes/company-register/index'
 import { Route as CompanyRegisterSuccessIndexRouteImport } from './routes/company-register-success/index'
-import { Route as CompanyLoginIndexRouteImport } from './routes/company-login/index'
 import { Route as publicIndexRouteImport } from './routes/(public)/index'
 import { Route as errors503RouteImport } from './routes/(errors)/503'
 import { Route as errors500RouteImport } from './routes/(errors)/500'
@@ -164,11 +163,6 @@ const CompanyRegisterSuccessIndexRoute =
     path: '/company-register-success/',
     getParentRoute: () => rootRouteImport,
   } as any)
-const CompanyLoginIndexRoute = CompanyLoginIndexRouteImport.update({
-  id: '/company-login/',
-  path: '/company-login/',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const publicIndexRoute = publicIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -825,7 +819,6 @@ export interface FileRoutesByFullPath {
   '/500': typeof errors500Route
   '/503': typeof errors503Route
   '/': typeof publicIndexRoute
-  '/company-login': typeof CompanyLoginIndexRoute
   '/company-register-success': typeof CompanyRegisterSuccessIndexRoute
   '/company-register': typeof CompanyRegisterIndexRoute
   '/company/': typeof CompanyIndexRoute
@@ -933,7 +926,6 @@ export interface FileRoutesByTo {
   '/500': typeof errors500Route
   '/503': typeof errors503Route
   '/': typeof publicIndexRoute
-  '/company-login': typeof CompanyLoginIndexRoute
   '/company-register-success': typeof CompanyRegisterSuccessIndexRoute
   '/company-register': typeof CompanyRegisterIndexRoute
   '/company': typeof CompanyIndexRoute
@@ -1046,7 +1038,6 @@ export interface FileRoutesById {
   '/(errors)/500': typeof errors500Route
   '/(errors)/503': typeof errors503Route
   '/(public)/': typeof publicIndexRoute
-  '/company-login/': typeof CompanyLoginIndexRoute
   '/company-register-success/': typeof CompanyRegisterSuccessIndexRoute
   '/company-register/': typeof CompanyRegisterIndexRoute
   '/company/': typeof CompanyIndexRoute
@@ -1163,7 +1154,6 @@ export interface FileRouteTypes {
     | '/500'
     | '/503'
     | '/'
-    | '/company-login'
     | '/company-register-success'
     | '/company-register'
     | '/company/'
@@ -1271,7 +1261,6 @@ export interface FileRouteTypes {
     | '/500'
     | '/503'
     | '/'
-    | '/company-login'
     | '/company-register-success'
     | '/company-register'
     | '/company'
@@ -1383,7 +1372,6 @@ export interface FileRouteTypes {
     | '/(errors)/500'
     | '/(errors)/503'
     | '/(public)/'
-    | '/company-login/'
     | '/company-register-success/'
     | '/company-register/'
     | '/company/'
@@ -1495,7 +1483,6 @@ export interface RootRouteChildren {
   errors404Route: typeof errors404Route
   errors500Route: typeof errors500Route
   errors503Route: typeof errors503Route
-  CompanyLoginIndexRoute: typeof CompanyLoginIndexRoute
   CompanyRegisterSuccessIndexRoute: typeof CompanyRegisterSuccessIndexRoute
   CompanyRegisterIndexRoute: typeof CompanyRegisterIndexRoute
 }
@@ -1556,13 +1543,6 @@ declare module '@tanstack/react-router' {
       path: '/company-register-success'
       fullPath: '/company-register-success'
       preLoaderRoute: typeof CompanyRegisterSuccessIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/company-login/': {
-      id: '/company-login/'
-      path: '/company-login'
-      fullPath: '/company-login'
-      preLoaderRoute: typeof CompanyLoginIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/(public)/': {
@@ -2790,7 +2770,6 @@ const rootRouteChildren: RootRouteChildren = {
   errors404Route: errors404Route,
   errors500Route: errors500Route,
   errors503Route: errors503Route,
-  CompanyLoginIndexRoute: CompanyLoginIndexRoute,
   CompanyRegisterSuccessIndexRoute: CompanyRegisterSuccessIndexRoute,
   CompanyRegisterIndexRoute: CompanyRegisterIndexRoute,
 }
