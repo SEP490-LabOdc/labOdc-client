@@ -44,18 +44,14 @@ export const requestSchema = z.object({
     requestType: requestTypeSchema,
 
     targetName: z.string(),
-    // userId hoặc companyId – FE chỉ cần hiển thị tên (BE map)
 
     createdByName: z.string().optional(),
 
     status: requestStatusSchema,
 
-    processedByName: z.string().nullable().optional(),
-
     note: z.string().nullable().optional(),
 
-    createdAt: z.coerce.date(),
-    updatedAt: z.coerce.date(),
+    requestedAt: z.coerce.date(),
 })
 
 export const requestListSchema = z.array(requestSchema)
