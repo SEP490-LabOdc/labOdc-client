@@ -104,7 +104,7 @@ export function TwoColumnAuthLayout({
                     className={cn(
                         'hidden lg:flex',
                         rightWidthClass,
-                        'bg-gradient-to-br from-primary to-secondary items-center justify-center p-12 fixed right-0 top-0 h-screen',
+                        'bg-linear-to-br from-primary to-secondary items-center justify-center p-12 fixed right-0 top-0 h-screen',
                         rightColumnClassName
                     )}
                 >
