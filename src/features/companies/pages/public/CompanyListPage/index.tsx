@@ -1,17 +1,16 @@
-import { useState, useEffect } from "react"
+import { useState, useMemo } from "react"
 import { Briefcase, Filter, Search, Loader2 } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { FiltersBar, type Filters } from "./components/filters-bar"
 import { PaginationBar } from "./components/pagination-bar"
 import { CardCompany } from "./components/card-company"
-import { useSearchCompanies } from "@/hooks/api/companies/mutations"
-import type { SearchCompaniesPayload, Company } from "@/hooks/api/companies/types"
+import { useGetPublicCompanies } from "@/hooks/api/companies/queries"
+import type { Company } from "@/hooks/api/companies/types"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet.tsx'
 import { Input } from '@/components/ui/input.tsx'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select.tsx'
 
 export default function CompanyListPage() {
-    const [companies, setCompanies] = useState<Company[]>([])
     const [filters, setFilters] = useState<Filters>({
         search: "",
         industry: "all",
@@ -19,106 +18,83 @@ export default function CompanyListPage() {
         sort: "relevant",
     })
     const [currentPage, setCurrentPage] = useState(1)
-    const [totalItems, setTotalItems] = useState(0)
 
     const pageSize = 8
-    const searchCompaniesMutation = useSearchCompanies()
+    const { data: companiesData, isLoading, isError } = useGetPublicCompanies()
 
-    // Build search payload from filters
-    const buildSearchPayload = (filters: Filters, page: number): SearchCompaniesPayload => {
-        const payloadFilters: Array<{ key: string; operator: string; value: string; valueTo: Object }> = []
+    // Filter and sort companies on client-side
+    const filteredAndSortedCompanies = useMemo(() => {
+        if (!companiesData || !Array.isArray(companiesData)) return []
 
-        // Add search filter if exists
+        let filtered = [...companiesData]
+
+        // Filter by search
         if (filters.search) {
-            payloadFilters.push({
-                key: "name",
-                operator: "CONTAINS",
-                value: filters.search,
-                valueTo: {}
-            })
+            const searchLower = filters.search.toLowerCase()
+            filtered = filtered.filter(company =>
+                company.name?.toLowerCase().includes(searchLower) ||
+                company.description?.toLowerCase().includes(searchLower)
+            )
         }
 
-        // Add industry filter if not "all"
+        // Filter by industry
         if (filters.industry !== "all") {
-            payloadFilters.push({
-                key: "industry",
-                operator: "EQUAL",
-                value: filters.industry,
-                valueTo: {}
-            })
+            // Note: Assuming industry field exists in Company type
+            // If not, you may need to adjust this filter
+            filtered = filtered.filter(company =>
+                (company as any).industry === filters.industry
+            )
         }
 
-        // Add location filter if not "all"
+        // Filter by location
         if (filters.location !== "all") {
-            payloadFilters.push({
-                key: "address",
-                operator: "CONTAINS",
-                value: filters.location,
-                valueTo: {}
-            })
+            filtered = filtered.filter(company =>
+                company.address?.includes(filters.location)
+            )
         }
 
-        // Build sort
-        const sorts: Array<{ key: string; direction: string }> = []
+        // Sort companies
         switch (filters.sort) {
             case "rating":
-                sorts.push({ key: "rating", direction: "DESC" })
+                // Sort by rating (if available)
+                filtered.sort((a, b) => {
+                    const ratingA = (a as any).rating || 0
+                    const ratingB = (b as any).rating || 0
+                    return ratingB - ratingA
+                })
                 break
             case "projects":
-                sorts.push({ key: "openProjects", direction: "DESC" })
+                // Sort by number of projects (if available)
+                filtered.sort((a, b) => {
+                    const projectsA = (a as any).openProjects || 0
+                    const projectsB = (b as any).openProjects || 0
+                    return projectsB - projectsA
+                })
                 break
             case "newest":
-                sorts.push({ key: "createdAt", direction: "DESC" })
+                // Sort by createdAt (if available)
+                filtered.sort((a, b) => {
+                    const dateA = (a as any).createdAt ? new Date((a as any).createdAt).getTime() : 0
+                    const dateB = (b as any).createdAt ? new Date((b as any).createdAt).getTime() : 0
+                    return dateB - dateA
+                })
                 break
             default:
-                // Most relevant - no sort
+                // Most relevant - keep original order
                 break
         }
 
-        return {
-            filters: payloadFilters.length > 0 ? payloadFilters as any : [{ key: "status", operator: "EQUAL", value: "ACTIVE", valueTo: {} }],
-            sorts: sorts.length > 0 ? sorts as any : [{ key: "createdAt", direction: "ASC" }],
-            page: page,
-            size: pageSize
-        }
-    }
+        return filtered
+    }, [companiesData, filters])
 
-    // Search companies when filters or page changes
-    useEffect(() => {
-        const payload = buildSearchPayload(filters, currentPage)
-        searchCompaniesMutation.mutate(payload, {
-            onSuccess: (response) => {
-                // Map API response to Company type
-                // API response structure: data.data.content
-                const companiesData = response?.data?.data || []
+    // Paginate companies
+    const paginatedCompanies = useMemo(() => {
+        const startIndex = (currentPage - 1) * pageSize
+        const endIndex = startIndex + pageSize
+        return filteredAndSortedCompanies.slice(startIndex, endIndex)
+    }, [filteredAndSortedCompanies, currentPage, pageSize])
 
-                const mappedCompanies: Company[] = (Array.isArray(companiesData) ? companiesData : []).map((item: any) => ({
-                    id: item.id || '',
-                    name: item.name || '',
-                    email: item.email || '',
-                    phone: item.phone || '',
-                    taxCode: item.taxCode || '',
-                    address: item.address || '',
-                    logo: item.logo || '',
-                    description: item.description || '',
-                    website: item.website || '',
-                    status: item.status || '',
-                    domain: item.domain || '',
-                    contactPersonName: item.contactPersonName || '',
-                    contactPersonEmail: item.contactPersonEmail || '',
-                    contactPersonPhone: item.contactPersonPhone || ''
-                }))
-                setCompanies(mappedCompanies)
-                setTotalItems(response?.data?.data?.totalElements || response?.data?.totalElements || response?.totalElements || response?.total || 0)
-            },
-            onError: (error) => {
-                console.error('Error searching companies:', error)
-                setCompanies([])
-                setTotalItems(0)
-            }
-        })
-    }, [filters, currentPage])
-
+    const totalItems = filteredAndSortedCompanies.length
     const totalPages = Math.ceil(totalItems / pageSize)
 
     const handleFiltersChange = (newFilters: Filters) => {
@@ -233,21 +209,21 @@ export default function CompanyListPage() {
                 {/* Results count */}
                 <div className="flex items-center justify-between mb-6">
                     <p className="text-sm text-muted-foreground">
-                        {searchCompaniesMutation.isPending ? (
+                        {isLoading ? (
                             "Đang tìm kiếm..."
                         ) : (
                             `Tìm thấy ${totalItems} công ty`
                         )}
                     </p>
                     {(filters.search || filters.industry !== "all" || filters.location !== "all") && (
-                        <Button variant="ghost" size="sm" onClick={clearFilters} disabled={searchCompaniesMutation.isPending}>
+                        <Button variant="ghost" size="sm" onClick={clearFilters} disabled={isLoading}>
                             Xóa bộ lọc
                         </Button>
                     )}
                 </div>
 
                 {/* Loading state */}
-                {searchCompaniesMutation.isPending && (
+                {isLoading && (
                     <div className="text-center py-16">
                         <Loader2 className="h-12 w-12 mx-auto animate-spin text-muted-foreground mb-4" />
                         <p className="text-muted-foreground">Đang tải danh sách công ty...</p>
@@ -255,24 +231,18 @@ export default function CompanyListPage() {
                 )}
 
                 {/* Error state */}
-                {searchCompaniesMutation.isError && !searchCompaniesMutation.isPending && (
+                {isError && !isLoading && (
                     <div className="text-center py-16">
                         <div className="mb-4">
                             <Briefcase className="h-16 w-16 mx-auto text-muted-foreground/50" />
                         </div>
                         <h3 className="text-lg font-semibold mb-2">Lỗi khi tải dữ liệu</h3>
                         <p className="text-muted-foreground mb-4">Vui lòng thử lại sau</p>
-                        <Button onClick={() => {
-                            const payload = buildSearchPayload(filters, currentPage)
-                            searchCompaniesMutation.mutate(payload)
-                        }}>
-                            Thử lại
-                        </Button>
                     </div>
                 )}
 
                 {/* Empty state */}
-                {!searchCompaniesMutation.isPending && !searchCompaniesMutation.isError && companies.length === 0 && (
+                {!isLoading && !isError && paginatedCompanies.length === 0 && (
                     <div className="text-center py-16">
                         <div className="mb-4">
                             <Briefcase className="h-16 w-16 mx-auto text-muted-foreground/50" />
@@ -284,11 +254,11 @@ export default function CompanyListPage() {
                 )}
 
                 {/* Company grid */}
-                {!searchCompaniesMutation.isPending && !searchCompaniesMutation.isError && companies.length > 0 && (
+                {!isLoading && !isError && paginatedCompanies.length > 0 && (
                     <>
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
-                            {companies.map((company) => (
-                                <CardCompany key={company.id} company={company} />
+                            {paginatedCompanies.map((company) => (
+                                <CardCompany key={company.id} company={company as Company} />
                             ))}
                         </div>
 
