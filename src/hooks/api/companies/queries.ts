@@ -12,16 +12,6 @@ export const useGetCompanies = () =>
         }
     });
 
-export const getCompanyByIdQueryOptions = (id: string) => ({
-    queryKey: [...companyKeys.getCompanyById, id],
-    queryFn: async () => {
-        if (!id) throw new Error('Missing company id')
-        const { data } = await apiRequest.get(`/api/v1/companies/${id}`)
-        return data
-    },
-    enabled: !!id,
-})
-
 export const useGetCompanyById = (id?: string) =>
     useQuery({
         queryKey: [...companyKeys.getCompanyById, id],
@@ -137,3 +127,33 @@ export const useGetMyCompanyInfo = () =>
             return data.data
         },
     })
+
+export const useGetPublicCompanies = () =>
+    useQuery({
+        queryKey: companyKeys.getPublicCompanies,
+        queryFn: async () => {
+            const { data } = await apiRequest.get('/api/v1/companies/public')
+            return data.data
+        },
+    })
+
+export function useGetPublicCompanyDetails(companyId: string) {
+    return useQuery({
+        queryKey: companyKeys.getPublicCompanyDetails(companyId),
+        queryFn: async () => {
+            const { data } = await apiRequest.get(`/api/v1/companies/public/${companyId}`);
+            return data;
+        },
+        enabled: !!companyId,
+    })
+}
+
+export const useGetPublicCompanyDetailsQueryOptions = (companyId: string) => ({
+    queryKey: companyKeys.getPublicCompanyDetails(companyId),
+    queryFn: async () => {
+        if (!companyId) throw new Error('Missing company id')
+        const { data } = await apiRequest.get(`/api/v1/companies/public/${companyId}`);
+        return data;
+    },
+    enabled: !!companyId,
+})

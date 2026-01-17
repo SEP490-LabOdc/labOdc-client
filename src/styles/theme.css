@@ -11,12 +11,14 @@
  * 4. Component-Specific Colors (Sidebar, Charts, etc.)
  * 5. Spacing & Layout (Radius, Shadows, etc.)
  * 6. Tailwind Theme Integration (@theme inline)
+ * 
+ * Note: Linter warnings about CSS custom properties and @theme inline are false positives.
+ * These are valid CSS/Tailwind CSS v4 features that the linter doesn't recognize.
  */
 
 /* ============================================================================
    TYPOGRAPHY
    ============================================================================ */
-
 :root {
   /* Font Families */
   --font-inter: "Inter", sans-serif;
