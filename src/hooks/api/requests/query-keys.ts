@@ -5,5 +5,6 @@ export const requestKeys = {
 
   list: (payload: any) =>
     [...requestKeys.lists(), payload] as const,
+  byId: (id: string) => [...requestKeys.all, 'by-id', id] as const,
 };
 

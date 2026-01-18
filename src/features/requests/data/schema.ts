@@ -57,3 +57,17 @@ export const requestSchema = z.object({
 export const requestListSchema = z.array(requestSchema)
 export type Request = z.infer<typeof requestSchema>
 export type RequestList = z.infer<typeof requestListSchema>
+
+export interface UpdateDetailRequest {
+    id: string;
+    code: string;
+    requestType: RequestType;
+    targetId: string;
+    changeData: any | null;
+    status: RequestStatus;
+    requestedBy: string;
+    requestedAt: string;
+    reviewedBy: string | null;
+    reviewedAt: string | null;
+    rejectReason: string | null;
+}

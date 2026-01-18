@@ -1,4 +1,4 @@
-import { type RequestList } from './../../../features/requests/data/schema';
+import { type RequestList, type UpdateDetailRequest } from './../../../features/requests/data/schema';
 import { useQuery } from "@tanstack/react-query";
 import apiRequest from "@/config/request";
 import { requestKeys } from './query-keys';
@@ -20,3 +20,17 @@ export const useGetRequests = (
     },
   });
 };
+
+export const useGetRequestDetail = (requestId: string) => {
+  return useQuery({
+    queryKey: requestKeys.byId(requestId),
+    queryFn: async () => {
+      const { data } = await apiRequest.get(`/api/v1/update-requests/${requestId}`)
+      return data.data as UpdateDetailRequest
+    },
+    enabled: !!requestId,
+  })
+};
+
+
+

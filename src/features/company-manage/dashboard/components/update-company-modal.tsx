@@ -27,6 +27,7 @@ import { DOMAIN_OPTIONS } from '@/features/company-classic/data/data'
 import { getChangedFields } from '@/helpers/getChangedFields'
 import type { UpdatePayload } from '@/types/update'
 import { toast } from 'sonner'
+import { useUpdateCompanyInfo } from '@/hooks/api/requests'
 
 export const updateCompanySchema = z.object({
     name: z
@@ -89,6 +90,10 @@ export default function UpdateCompanyModal({
         },
     })
 
+    const { mutate: updateCompany, isPending } = useUpdateCompanyInfo(() => {
+        onClose();
+    });
+
     useEffect(() => {
         if (open) {
             form.reset({
@@ -122,14 +127,12 @@ export default function UpdateCompanyModal({
 
 
         const payload: UpdatePayload = {
-            targetTable: 'companies',
+            requestType: 'UPDATE_COMPANY',
             targetId: company.id,
             changeData: changeData
         }
 
-        console.log('REQUEST UPDATE COMPANY:', payload)
-
-        // onClose()
+        updateCompany(payload);
     }
 
     return (
@@ -246,7 +249,7 @@ export default function UpdateCompanyModal({
                             >
                                 Hủy
                             </Button>
-                            <Button type="submit">
+                            <Button type="submit" loading={isPending} disabled={isPending}>
                                 Gửi yêu cầu cập nhật
                             </Button>
                         </DialogFooter>
