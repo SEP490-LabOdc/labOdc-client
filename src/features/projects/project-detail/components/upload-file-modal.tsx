@@ -22,11 +22,11 @@ interface UploadFileModalProps {
 }
 
 export function UploadFileModal({
-                                  isOpen,
-                                  onClose,
-                                  projectId,
-                                  onSuccess
-                                }: UploadFileModalProps) {
+  isOpen,
+  onClose,
+  projectId,
+  onSuccess
+}: UploadFileModalProps) {
   const [documentUrl, setDocumentUrl] = useState<string | null>(null)
   const [uploadedFileName, setUploadedFileName] = useState('')
 
