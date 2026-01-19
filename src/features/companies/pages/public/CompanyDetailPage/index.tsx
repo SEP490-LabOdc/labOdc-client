@@ -9,6 +9,7 @@ import { useGetProjectsByCompanyId } from '@/hooks/api/projects'
 import { GeneralError } from '@/features/errors/general-error'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useGetPublicCompanyDetails } from '@/hooks/api/companies'
+import { COMPANY_BANNER_DEFAULT, COMPANY_LOGO_DEFAULT } from '@/const'
 
 export default function CompanyDetailPage() {
     const { companyId } = useParams({ from: '/(public)/companies/$companyId' });
@@ -54,7 +55,7 @@ export default function CompanyDetailPage() {
                 {/* Cover Image */}
                 <div className="relative h-64 w-full overflow-hidden bg-linear-to-r from-primary to-secondary">
                     <img
-                        src={company.banner || "/placeholder-banner.jpg"}
+                        src={company.banner || COMPANY_BANNER_DEFAULT}
                         alt={`Ảnh bìa ${company.name}`}
                         className="h-full w-full object-cover opacity-80"
                     />
@@ -65,7 +66,7 @@ export default function CompanyDetailPage() {
                 <div className="absolute top-50 left-6 z-10">
                     <div className="h-28 w-28 rounded-md overflow-hidden border-4 border-card bg-card ring-2 ring-primary/20 flex items-center justify-center">
                         <img
-                            src={company.logo || "/placeholder.svg"}
+                            src={company.logo || COMPANY_LOGO_DEFAULT}
                             alt={`Logo ${company.name}`}
                             className="h-full w-full object-contain p-2"
                         />
