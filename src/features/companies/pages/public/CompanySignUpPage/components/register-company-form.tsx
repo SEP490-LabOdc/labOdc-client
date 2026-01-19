@@ -441,9 +441,9 @@ export function RegisterCompanyForm({
                 <div className="space-y-1 leading-none">
                   <FormLabel className="text-sm leading-relaxed text-muted-foreground">
                     Tôi đồng ý với{' '}
-                    <Link to="/terms-and-privacy" className="text-secondary hover:underline font-medium">Điều khoản sử dụng</Link>
+                    <a href="/terms-and-privacy" target="_blank" rel="noopener noreferrer" className="text-secondary hover:underline font-medium">Điều khoản sử dụng</a>
                     {' '}và{' '}
-                    <Link to="/terms-and-privacy" className="text-secondary hover:underline font-medium">Chính sách bảo mật</Link>
+                    <a href="/terms-and-privacy" target="_blank" rel="noopener noreferrer" className="text-secondary hover:underline font-medium">Chính sách bảo mật</a>
                     {' '}của LabOdc
                   </FormLabel>
                   <FormMessage />

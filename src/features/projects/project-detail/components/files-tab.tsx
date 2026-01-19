@@ -11,6 +11,12 @@ import {
 import { UploadFileModal } from './upload-file-modal'
 import { useGetProjectDocuments } from '@/hooks/api/projects/queries'
 import { formatDateOnly } from '@/helpers/datetime'
+import { usePermission } from '@/hooks/usePermission'
+import { ROLE } from '@/const'
+import { useDeleteProjectDocument } from '@/hooks/api/projects/mutation'
+import { useQueryClient } from '@tanstack/react-query'
+import { projectKeys } from '@/hooks/api/projects/query-keys'
+import { toast } from 'sonner'
 
 export interface ProjectDocument {
   id: string
@@ -29,11 +35,20 @@ export const ProjectFilesTab = ({
   projectId,
 }: ProjectFilesTabProps) => {
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false)
+  const { hasRole } = usePermission()
+  const queryClient = useQueryClient()
 
   // Sử dụng hook đã có để fetch documents
   const { data: documentsResponse, isLoading, refetch } = useGetProjectDocuments(projectId)
+  const deleteDocumentMutation = useDeleteProjectDocument()
 
   const files = documentsResponse?.data || []
+
+  // Chỉ company mới có thể thêm file mới
+  const canAddFile = hasRole(ROLE.COMPANY)
+
+  // Chỉ company mới có thể xóa file
+  const canDeleteFile = hasRole(ROLE.COMPANY)
 
 
   const handleDownload = (url: string, fileName: string) => {
@@ -53,22 +68,40 @@ export const ProjectFilesTab = ({
     refetch()
   }
 
+  const handleDelete = async (documentId: string) => {
+    if (!canDeleteFile) {
+      toast.error('Bạn không có quyền xóa tài liệu')
+      return
+    }
+
+    try {
+      await deleteDocumentMutation.mutateAsync(documentId)
+      toast.success('Xóa tài liệu thành công')
+      await queryClient.invalidateQueries({
+        queryKey: projectKeys.getProjectDocuments(projectId)
+      })
+    } catch (error) {
+      console.error(error)
+      toast.error('Xóa tài liệu thất bại')
+    }
+  }
+
   return (
     <Card>
       <CardContent className="p-6 space-y-6">
-
-
         {/* Phần Files */}
         <div>
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-semibold">Tài liệu</h3>
-            <Button
-              size="sm"
-              onClick={() => setIsUploadModalOpen(true)}
-            >
-              <Plus className="h-4 w-4 mr-2" />
-              Thêm mới
-            </Button>
+            {canAddFile && (
+              <Button
+                size="sm"
+                onClick={() => setIsUploadModalOpen(true)}
+              >
+                <Plus className="h-4 w-4 mr-2" />
+                Thêm mới
+              </Button>
+            )}
           </div>
 
           {isLoading ? (
@@ -112,7 +145,15 @@ export const ProjectFilesTab = ({
                           <DropdownMenuItem onClick={() => handleViewFile(file.documentUrl)}>
                             Xem
                           </DropdownMenuItem>
-                          <DropdownMenuItem className="text-destructive">Xóa</DropdownMenuItem>
+                          {canDeleteFile && (
+                            <DropdownMenuItem
+                              className="text-destructive"
+                              onClick={() => handleDelete(file.id)}
+                              disabled={deleteDocumentMutation.isPending}
+                            >
+                              {deleteDocumentMutation.isPending ? 'Đang xóa...' : 'Xóa'}
+                            </DropdownMenuItem>
+                          )}
                         </DropdownMenuContent>
                       </DropdownMenu>
                     </div>
