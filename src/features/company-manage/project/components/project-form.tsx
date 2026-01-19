@@ -19,6 +19,7 @@ import { toast } from "sonner"
 import { useUpdateProject } from "@/hooks/api/projects"
 import { MoneyInput } from "@/components/admin/MoneyInput"
 import { DatePicker } from "@/components/date-picker"
+import { CURRENCY_SUFFIX } from "@/const"
 
 const projectSchema = z.object({
     id: z.string(),
@@ -146,7 +147,7 @@ export default function ProjectForm({ initialData }: { initialData: ProjectFormD
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel className="text-base font-medium">
-                                        Ngân sách (VNĐ)
+                                        Ngân sách ({CURRENCY_SUFFIX})
                                     </FormLabel>
                                     <FormControl>
                                         <MoneyInput

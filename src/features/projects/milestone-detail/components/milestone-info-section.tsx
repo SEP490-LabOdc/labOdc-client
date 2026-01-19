@@ -2,6 +2,7 @@ import { Badge } from "@/components/ui/badge"
 import { calculateDaysRemaining, getMilestoneStatusBadge } from "@/helpers/milestone"
 import type { Milestone } from "@/hooks/api/milestones"
 import { CalendarDays, DollarSign } from "lucide-react"
+import { CURRENCY_SUFFIX } from "@/const"
 
 interface MilestoneInfoSectionProps {
     milestone: Milestone
@@ -21,7 +22,7 @@ export const MilestoneInfoSection: React.FC<MilestoneInfoSectionProps> = ({ mile
                     Ngân sách:
                 </span>
                 <span className="font-medium">
-                    {(milestone.budget ?? 0).toLocaleString('vi-VN')} VNĐ
+                    {(milestone.budget ?? 0).toLocaleString('vi-VN')} {CURRENCY_SUFFIX}
                 </span>
             </div>
 
