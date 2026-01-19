@@ -24,6 +24,7 @@ import { AddMemberModal } from './add-member-modal'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { MoneyInput } from '@/components/admin/MoneyInput'
 import { ReferenceField } from '@/components/admin/ReferenceField'
+import { CURRENCY_SUFFIX } from '@/const'
 
 /* -------------------- SCHEMA -------------------- */
 const projectSchema = z.object({
@@ -154,7 +155,7 @@ export default function ProjectForm({
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel className="text-base font-medium">
-                                            Ngân sách (VNĐ)
+                                            Ngân sách ({CURRENCY_SUFFIX})
                                         </FormLabel>
                                         <FormControl>
                                             <MoneyInput

@@ -19,6 +19,7 @@ import { MoneyInput } from '@/components/admin/MoneyInput'
 import { ReferenceField } from '@/components/admin/ReferenceField'
 import { getRoleBasePath } from '@/lib/utils'
 import { useUser } from '@/context/UserContext'
+import { CURRENCY_SUFFIX } from '@/const'
 
 /* -------------------- SCHEMA -------------------- */
 const projectSchema = z.object({
@@ -112,7 +113,7 @@ export default function ProjectForm({
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel className="text-base font-medium">
-                                            Ngân sách (VNĐ)
+                                            Ngân sách ({CURRENCY_SUFFIX})
                                         </FormLabel>
                                         <FormControl>
                                             <MoneyInput

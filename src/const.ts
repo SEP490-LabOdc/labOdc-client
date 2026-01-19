@@ -10,3 +10,4 @@ export const ROLE = {
   USER: 'USER',
   TALENT: 'TALENT',
 }
+export const CURRENCY_SUFFIX = 'VND'

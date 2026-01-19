@@ -15,6 +15,7 @@ import { toast } from 'sonner'
 import { usePermission } from '@/hooks/usePermission'
 import { calculateProgress, getMilestoneStatusBadge } from '@/helpers/milestone'
 import { StatusRenderer } from '@/components/status-renderer'
+import { CURRENCY_SUFFIX } from '@/const'
 
 interface MilestonesTabProps {
   milestones: Milestone[]
@@ -144,7 +145,7 @@ export const MilestonesTab = ({
                     <div className="flex items-center gap-1.5">
                       <span className="text-muted-foreground">Ngân sách:</span>
                       <span className="font-medium text-foreground">
-                        {(milestone.budget ?? 0).toLocaleString('vi-VN')} VNĐ
+                        {(milestone.budget ?? 0).toLocaleString('vi-VN')} {CURRENCY_SUFFIX}
                       </span>
                     </div>
 

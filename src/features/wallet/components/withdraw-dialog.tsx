@@ -13,6 +13,7 @@ import {
 import { Wallet, AlertTriangle, CheckCircle, CreditCard } from 'lucide-react'
 import { toast } from 'sonner'
 import { formatVND } from '@/helpers/currency'
+import { CURRENCY_SUFFIX } from '@/const'
 
 interface WithdrawDialogProps {
     isOpen: boolean
@@ -139,7 +140,7 @@ export const WithdrawDialog: React.FC<WithdrawDialogProps> = ({
 
                     {/* Amount Input */}
                     <div className="space-y-2">
-                        <Label htmlFor="amount">Số tiền muốn rút (VNĐ)</Label>
+                        <Label htmlFor="amount">Số tiền muốn rút ({CURRENCY_SUFFIX})</Label>
                         <Input
                             id="amount"
                             type="number"

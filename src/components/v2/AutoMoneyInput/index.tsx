@@ -1,0 +1,1 @@
+export { AutoMoneyInput } from "./AutoMoneyInput";

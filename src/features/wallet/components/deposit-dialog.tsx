@@ -15,6 +15,7 @@ import { toast } from 'sonner'
 import { usePaymentDeposit } from '@/hooks/api/payment'
 import { useUser } from '@/context/UserContext'
 import { getRoleBasePath } from '@/lib/utils'
+import { CURRENCY_SUFFIX } from '@/const'
 
 interface DepositDialogProps {
     isOpen: boolean
@@ -87,7 +88,7 @@ export const DepositDialog: React.FC<DepositDialogProps> = ({
                 <div className="space-y-4 py-4">
                     {/* Amount Input */}
                     <div className="space-y-2">
-                        <Label htmlFor="amount">Số tiền nạp (VNĐ)</Label>
+                        <Label htmlFor="amount">Số tiền nạp ({CURRENCY_SUFFIX})</Label>
                         <Input
                             id="amount"
                             type="number"
