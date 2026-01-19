@@ -19,6 +19,7 @@ import { toast } from "sonner"
 import { useUpdateProject } from "@/hooks/api/projects"
 import { MoneyInput } from "@/components/admin/MoneyInput"
 import { DatePicker } from "@/components/date-picker"
+import { toLocalISOString } from "@/helpers/datetime"
 
 const projectSchema = z.object({
     id: z.string(),
@@ -97,8 +98,8 @@ export default function ProjectForm({ initialData }: { initialData: ProjectFormD
             description: values.description,
             budget: Number(values.budget),
             skillIds: values.skills.map((s: any) => s.id),
-            startDate: values.startDate,
-            endDate: values.endDate,
+            startDate: toLocalISOString(values.startDate),
+            endDate: toLocalISOString(values.endDate),
         }
 
         const promise = updateProject.mutateAsync(payload)
