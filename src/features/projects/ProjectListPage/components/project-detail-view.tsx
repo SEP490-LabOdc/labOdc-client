@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button.tsx";
 import { useGetProjectApplicationStatus } from '@/hooks/api/projects/queries.ts';
 import { format } from 'date-fns';
 import { getCandidateStatusLabel, getCandidateStatusColor } from '@/lib/utils';
+import { usePermission } from '@/hooks/usePermission.ts';
+import { ROLE } from '@/const.ts';
 
 interface ProjectDetailViewProps {
   project: Project | null
@@ -13,6 +15,8 @@ interface ProjectDetailViewProps {
 
 export function ProjectDetailView({ project, onApply }: ProjectDetailViewProps) {
   const { data: applicationStatus, isLoading: isAppLoading } = useGetProjectApplicationStatus(project?.projectId);
+  const { hasRole } = usePermission();
+  const isTalent = hasRole(ROLE.USER);
 
   if (!project) {
     return (
@@ -51,13 +55,15 @@ export function ProjectDetailView({ project, onApply }: ProjectDetailViewProps) 
         <h2 className="text-foreground text-3xl font-bold">{project.projectName}</h2>
         <p className="text-muted-foreground mt-1 mb-3">Chi tiết thông tin dự án</p>
 
-        <Button
-          className="w-full bg-brand-orange hover:bg-brand-orange/90 text-white text-lg py-3 font-bold mt-2 shadow-lg hover:shadow-xl transition-all"
-          onClick={() => onApply(project)}
-          disabled={!canApply || isAppLoading}
-        >
-          {isAppLoading ? 'Đang kiểm tra...' : (!canApply ? 'Đã ứng tuyển' : 'Ứng Tuyển Dự Án Này')}
-        </Button>
+        {isTalent && (
+          <Button
+            className="w-full bg-brand-orange hover:bg-brand-orange/90 text-white text-lg py-3 font-bold mt-2 shadow-lg hover:shadow-xl transition-all"
+            onClick={() => onApply(project)}
+            disabled={!canApply || isAppLoading}
+          >
+            {isAppLoading ? 'Đang kiểm tra...' : (!canApply ? 'Đã ứng tuyển' : 'Ứng Tuyển Dự Án Này')}
+          </Button>
+        )}
 
         {/* Chỉ hiển thị khi đã apply */}
         {hasApplied && applicationInfo?.status && (

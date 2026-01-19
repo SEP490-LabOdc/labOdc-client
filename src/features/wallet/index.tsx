@@ -10,7 +10,6 @@ import {
     DepositDialog,
     PaymentSuccessDialog,
     PaymentFailureDialog,
-    type Transaction
 } from './components'
 import { useUser } from '@/context/UserContext'
 import { useGetMyWallet, useDeleteBankInfo, useCreateBankInfo } from '@/hooks/api/wallet'
@@ -21,6 +20,7 @@ import { Main } from '@/components/layout/main'
 import { toast } from 'sonner'
 import { usePopUp } from '@/hooks/usePopUp'
 import { ROLE } from '@/const'
+import { formatVND } from '@/helpers/currency'
 
 
 export const MyWalletPage: React.FC = () => {
@@ -103,15 +103,7 @@ export const MyWalletPage: React.FC = () => {
     // Map transactions from API response
     const transactions = useMemo(() => {
         const transactionsData = transactionsResponse?.data?.content || transactionsResponse?.data || []
-        return transactionsData.slice(0, 5).map((t: any) => ({
-            id: t.id,
-            type: t.type as Transaction['type'],
-            amount: t.amount,
-            description: t.description,
-            status: t.status as Transaction['status'],
-            createdAt: t.createdAt,
-            metadata: t.metadata || {}
-        })) as Transaction[]
+        return transactionsData
     }, [transactionsResponse])
 
     // Get bank accounts from API response and map to UI format
@@ -222,11 +214,7 @@ export const MyWalletPage: React.FC = () => {
                             <div>
                                 <p className="text-xs text-gray-500">Tổng thu nhập</p>
                                 <p className="text-lg font-bold text-green-600">
-                                    {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(
-                                        transactions
-                                            .filter(t => t.type === 'INCOME' && t.status === 'COMPLETED')
-                                            .reduce((sum, t) => sum + t.amount, 0)
-                                    )}
+                                    {formatVND(0)}
                                 </p>
                             </div>
                         </div>
@@ -240,11 +228,7 @@ export const MyWalletPage: React.FC = () => {
                             <div>
                                 <p className="text-xs text-gray-500">Tổng đã rút</p>
                                 <p className="text-lg font-bold text-blue-600">
-                                    {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(
-                                        transactions
-                                            .filter(t => t.type === 'WITHDRAWAL' && t.status === 'COMPLETED')
-                                            .reduce((sum, t) => sum + t.amount, 0)
-                                    )}
+                                    {formatVND(0)}
                                 </p>
                             </div>
                         </div>
@@ -258,11 +242,7 @@ export const MyWalletPage: React.FC = () => {
                             <div>
                                 <p className="text-xs text-gray-500">Đang xử lý</p>
                                 <p className="text-lg font-bold text-orange-600">
-                                    {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(
-                                        transactions
-                                            .filter(t => t.status === 'PENDING')
-                                            .reduce((sum, t) => sum + t.amount, 0)
-                                    )}
+                                    {formatVND(0)}
                                 </p>
                             </div>
                         </div>

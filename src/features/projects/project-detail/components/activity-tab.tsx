@@ -23,10 +23,10 @@ export const ProjectActivityTab = ({ notes, activities }: ProjectActivityTabProp
         {/* Phần Notes */}
         <div>
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold">Notes</h3>
+            <h3 className="text-lg font-semibold">Ghi chú</h3>
             <Button size="sm">
               <Plus className="h-4 w-4 mr-2" />
-              Add New
+              Thêm mới
             </Button>
           </div>
           <div className="space-y-4">
@@ -41,8 +41,8 @@ export const ProjectActivityTab = ({ notes, activities }: ProjectActivityTabProp
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
-                      <DropdownMenuItem>Edit</DropdownMenuItem>
-                      <DropdownMenuItem>Delete</DropdownMenuItem>
+                      <DropdownMenuItem>Chỉnh sửa</DropdownMenuItem>
+                      <DropdownMenuItem>Xóa</DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </div>
@@ -59,7 +59,7 @@ export const ProjectActivityTab = ({ notes, activities }: ProjectActivityTabProp
         {/* Phần Activity */}
         <div>
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold">Activity</h3>
+            <h3 className="text-lg font-semibold">Hoạt động</h3>
           </div>
           <div className="space-y-4">
             {activities.map((activity) => (
