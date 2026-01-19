@@ -41,7 +41,7 @@ export const MentorTalentStatusView: React.FC<MentorTalentStatusViewProps> = ({
         <div className="border-t pt-4">
             <div className="p-3 bg-blue-50 border border-blue-200 rounded-md">
                 <div className="flex items-start gap-2">
-                    <Info className="w-4 h-4 text-blue-500 flex-shrink-0 mt-0.5" />
+                    <Info className="w-4 h-4 text-blue-500 shrink-0 mt-0.5" />
                     <div>
                         <p className="text-xs font-semibold text-blue-800">
                             {getStatusText()}

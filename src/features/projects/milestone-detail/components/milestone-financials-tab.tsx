@@ -135,7 +135,7 @@ export const MilestoneFinancialsTab: React.FC<MilestoneFinancialsTabProps> = ({
         <CardContent className="space-y-6">
           {/* Info Note */}
           <div className="flex gap-3 p-4 bg-blue-50 text-blue-800 text-sm rounded-md border border-blue-200">
-            <Info className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" />
+            <Info className="w-5 h-5 text-blue-500 shrink-0 mt-0.5" />
             <div>
               <p className="font-semibold mb-1">Lưu ý về phân bổ tự động:</p>
               <ul className="text-xs space-y-1 text-blue-700">

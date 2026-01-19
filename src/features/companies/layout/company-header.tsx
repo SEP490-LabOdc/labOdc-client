@@ -3,7 +3,7 @@ import logo from '@/assets/logo-black-text.png'
 
 export function CompanyHeader() {
     return (
-        <header className="border-b backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50 w-full">
+        <header className="border-b backdrop-blur supports-backdrop-filter:bg-background/60 sticky top-0 z-50 w-full">
             <div className="px-14 h-16 flex items-center justify-between">
                 <div className='flex space-x-4'>
                     <div className="flex items-center space-x-2">
@@ -16,7 +16,7 @@ export function CompanyHeader() {
                     </p>
                 </div>
                 <div className="flex items-center space-x-4">
-                    <Link to='/company-login' className='font-semibold'>
+                    <Link to='/sign-in' search={{ mode: 'company' }} className='font-semibold'>
                         Đăng nhập
                     </Link>
                 </div>

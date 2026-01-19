@@ -20,12 +20,15 @@ import {
   IconWallet,
   IconFileText,
   IconPills,
+  IconListDetails,
+  IconClockPause,
 } from '@tabler/icons-react'
 // import { AudioWaveform, Command, GalleryVerticalEnd } from 'lucide-react'
 import { type SidebarData } from '../types'
 import { USER_ROLE, USER_ROLE_LABEL } from '@/features/users/data/schema'
 import { Building2, FlaskConical, LockKeyhole, User } from 'lucide-react'
 import { PROJECT_STATUS } from '@/features/company-manage/project/data/schema.ts'
+import { REQUEST_STATUS } from '@/features/requests/data/schema'
 
 export const systemAmdminSidebarData: SidebarData = {
   navGroups: [
@@ -175,6 +178,32 @@ export const labAdminSidebarData: SidebarData = {
           title: 'Dashboard',
           url: '/lab-admin',
           icon: IconLayoutDashboard,
+        },
+        {
+          title: 'Quản lý yêu cầu',
+          icon: IconClipboardList,
+          items: [
+            {
+              title: 'Tất cả',
+              url: '/lab-admin/requests',
+              icon: IconListDetails,
+            },
+            {
+              title: 'Đang chờ xử lý',
+              url: '/lab-admin/requests?status=["' + REQUEST_STATUS.PENDING + '"]',
+              icon: IconClockPause,
+            },
+            {
+              title: 'Đã duyệt',
+              url: '/lab-admin/requests?status=["' + REQUEST_STATUS.APPROVED + '"]',
+              icon: IconCircleCheckFilled,
+            },
+            {
+              title: 'Đã từ chối',
+              url: '/lab-admin/requests?status=["' + REQUEST_STATUS.REJECTED + '"]',
+              icon: IconCircleXFilled,
+            },
+          ]
         },
         {
           title: 'Quản lý công ty',

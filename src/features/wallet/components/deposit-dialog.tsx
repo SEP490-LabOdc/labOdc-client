@@ -105,7 +105,7 @@ export const DepositDialog: React.FC<DepositDialogProps> = ({
                     {amountNum >= minDeposit && (
                         <div className="p-3 bg-blue-50 border border-blue-200 rounded-md">
                             <div className="flex items-start gap-2">
-                                <Wallet className="h-4 w-4 text-blue-600 mt-0.5 flex-shrink-0" />
+                                <Wallet className="h-4 w-4 text-blue-600 mt-0.5 shrink-0" />
                                 <div className="text-sm text-blue-800">
                                     <p className="font-semibold mb-1">Thông tin thanh toán:</p>
                                     <p>Số tiền: <strong>{formatVND(amountNum)}</strong></p>

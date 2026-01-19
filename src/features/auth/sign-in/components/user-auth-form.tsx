@@ -72,11 +72,11 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
       >
         <div className="relative my-2">
           <div className="absolute inset-0 flex items-center">
-            <span className="w-full border-t" />
+            <span className="w-full border-t border-border" />
           </div>
           <div className="relative flex justify-center text-xs uppercase">
-            <span className="bg-background text-muted-foreground px-2">
-              Or continue with
+            <span className="bg-background text-muted-foreground px-2 font-medium">
+              Hoặc tiếp tục với
             </span>
           </div>
         </div>
@@ -105,14 +105,18 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
               <FormMessage />
               <Link
                 to="/forgot-password"
-                className="text-muted-foreground absolute end-0 -top-0.5 text-sm font-medium hover:opacity-75"
+                className="text-muted-foreground absolute end-0 -top-0.5 text-sm font-medium hover:text-secondary transition-colors duration-200"
               >
                 Quên mật khẩu?
               </Link>
             </FormItem>
           )}
         />
-        <Button className="mt-2 bg-[#2a9d8f]" disabled={signIn.isPending} size="lg">
+        <Button
+          className="mt-2 bg-brand-orange hover:bg-brand-orange/90 active:bg-brand-orange/80 text-white shadow-md hover:shadow-lg transition-all duration-200"
+          disabled={signIn.isPending}
+          size="lg"
+        >
           {signIn.isPending ? <Loader2 className="animate-spin" /> : <LogIn />}
           Đăng nhập
         </Button>

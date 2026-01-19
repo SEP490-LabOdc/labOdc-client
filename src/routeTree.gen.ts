@@ -17,7 +17,6 @@ import { Route as authRouteRouteImport } from './routes/(auth)/route'
 import { Route as CompanyIndexRouteImport } from './routes/company/index'
 import { Route as CompanyRegisterIndexRouteImport } from './routes/company-register/index'
 import { Route as CompanyRegisterSuccessIndexRouteImport } from './routes/company-register-success/index'
-import { Route as CompanyLoginIndexRouteImport } from './routes/company-login/index'
 import { Route as publicIndexRouteImport } from './routes/(public)/index'
 import { Route as errors503RouteImport } from './routes/(errors)/503'
 import { Route as errors500RouteImport } from './routes/(errors)/500'
@@ -63,6 +62,7 @@ import { Route as AuthenticatedLabAdminUsersIndexRouteImport } from './routes/_a
 import { Route as AuthenticatedLabAdminTemplatesIndexRouteImport } from './routes/_authenticated/lab-admin/templates/index'
 import { Route as AuthenticatedLabAdminSkillsIndexRouteImport } from './routes/_authenticated/lab-admin/skills/index'
 import { Route as AuthenticatedLabAdminSettingsIndexRouteImport } from './routes/_authenticated/lab-admin/settings/index'
+import { Route as AuthenticatedLabAdminRequestsIndexRouteImport } from './routes/_authenticated/lab-admin/requests/index'
 import { Route as AuthenticatedLabAdminReportsIndexRouteImport } from './routes/_authenticated/lab-admin/reports/index'
 import { Route as AuthenticatedLabAdminProjectsIndexRouteImport } from './routes/_authenticated/lab-admin/projects/index'
 import { Route as AuthenticatedLabAdminCompaniesIndexRouteImport } from './routes/_authenticated/lab-admin/companies/index'
@@ -163,11 +163,6 @@ const CompanyRegisterSuccessIndexRoute =
     path: '/company-register-success/',
     getParentRoute: () => rootRouteImport,
   } as any)
-const CompanyLoginIndexRoute = CompanyLoginIndexRouteImport.update({
-  id: '/company-login/',
-  path: '/company-login/',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const publicIndexRoute = publicIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -424,6 +419,12 @@ const AuthenticatedLabAdminSettingsIndexRoute =
     id: '/',
     path: '/',
     getParentRoute: () => AuthenticatedLabAdminSettingsRouteRoute,
+  } as any)
+const AuthenticatedLabAdminRequestsIndexRoute =
+  AuthenticatedLabAdminRequestsIndexRouteImport.update({
+    id: '/requests/',
+    path: '/requests/',
+    getParentRoute: () => AuthenticatedLabAdminRouteRoute,
   } as any)
 const AuthenticatedLabAdminReportsIndexRoute =
   AuthenticatedLabAdminReportsIndexRouteImport.update({
@@ -818,7 +819,6 @@ export interface FileRoutesByFullPath {
   '/500': typeof errors500Route
   '/503': typeof errors503Route
   '/': typeof publicIndexRoute
-  '/company-login': typeof CompanyLoginIndexRoute
   '/company-register-success': typeof CompanyRegisterSuccessIndexRoute
   '/company-register': typeof CompanyRegisterIndexRoute
   '/company/': typeof CompanyIndexRoute
@@ -863,6 +863,7 @@ export interface FileRoutesByFullPath {
   '/lab-admin/companies': typeof AuthenticatedLabAdminCompaniesIndexRoute
   '/lab-admin/projects': typeof AuthenticatedLabAdminProjectsIndexRoute
   '/lab-admin/reports': typeof AuthenticatedLabAdminReportsIndexRoute
+  '/lab-admin/requests': typeof AuthenticatedLabAdminRequestsIndexRoute
   '/lab-admin/settings/': typeof AuthenticatedLabAdminSettingsIndexRoute
   '/lab-admin/skills': typeof AuthenticatedLabAdminSkillsIndexRoute
   '/lab-admin/templates': typeof AuthenticatedLabAdminTemplatesIndexRoute
@@ -925,7 +926,6 @@ export interface FileRoutesByTo {
   '/500': typeof errors500Route
   '/503': typeof errors503Route
   '/': typeof publicIndexRoute
-  '/company-login': typeof CompanyLoginIndexRoute
   '/company-register-success': typeof CompanyRegisterSuccessIndexRoute
   '/company-register': typeof CompanyRegisterIndexRoute
   '/company': typeof CompanyIndexRoute
@@ -964,6 +964,7 @@ export interface FileRoutesByTo {
   '/lab-admin/companies': typeof AuthenticatedLabAdminCompaniesIndexRoute
   '/lab-admin/projects': typeof AuthenticatedLabAdminProjectsIndexRoute
   '/lab-admin/reports': typeof AuthenticatedLabAdminReportsIndexRoute
+  '/lab-admin/requests': typeof AuthenticatedLabAdminRequestsIndexRoute
   '/lab-admin/settings': typeof AuthenticatedLabAdminSettingsIndexRoute
   '/lab-admin/skills': typeof AuthenticatedLabAdminSkillsIndexRoute
   '/lab-admin/templates': typeof AuthenticatedLabAdminTemplatesIndexRoute
@@ -1037,7 +1038,6 @@ export interface FileRoutesById {
   '/(errors)/500': typeof errors500Route
   '/(errors)/503': typeof errors503Route
   '/(public)/': typeof publicIndexRoute
-  '/company-login/': typeof CompanyLoginIndexRoute
   '/company-register-success/': typeof CompanyRegisterSuccessIndexRoute
   '/company-register/': typeof CompanyRegisterIndexRoute
   '/company/': typeof CompanyIndexRoute
@@ -1082,6 +1082,7 @@ export interface FileRoutesById {
   '/_authenticated/lab-admin/companies/': typeof AuthenticatedLabAdminCompaniesIndexRoute
   '/_authenticated/lab-admin/projects/': typeof AuthenticatedLabAdminProjectsIndexRoute
   '/_authenticated/lab-admin/reports/': typeof AuthenticatedLabAdminReportsIndexRoute
+  '/_authenticated/lab-admin/requests/': typeof AuthenticatedLabAdminRequestsIndexRoute
   '/_authenticated/lab-admin/settings/': typeof AuthenticatedLabAdminSettingsIndexRoute
   '/_authenticated/lab-admin/skills/': typeof AuthenticatedLabAdminSkillsIndexRoute
   '/_authenticated/lab-admin/templates/': typeof AuthenticatedLabAdminTemplatesIndexRoute
@@ -1153,7 +1154,6 @@ export interface FileRouteTypes {
     | '/500'
     | '/503'
     | '/'
-    | '/company-login'
     | '/company-register-success'
     | '/company-register'
     | '/company/'
@@ -1198,6 +1198,7 @@ export interface FileRouteTypes {
     | '/lab-admin/companies'
     | '/lab-admin/projects'
     | '/lab-admin/reports'
+    | '/lab-admin/requests'
     | '/lab-admin/settings/'
     | '/lab-admin/skills'
     | '/lab-admin/templates'
@@ -1260,7 +1261,6 @@ export interface FileRouteTypes {
     | '/500'
     | '/503'
     | '/'
-    | '/company-login'
     | '/company-register-success'
     | '/company-register'
     | '/company'
@@ -1299,6 +1299,7 @@ export interface FileRouteTypes {
     | '/lab-admin/companies'
     | '/lab-admin/projects'
     | '/lab-admin/reports'
+    | '/lab-admin/requests'
     | '/lab-admin/settings'
     | '/lab-admin/skills'
     | '/lab-admin/templates'
@@ -1371,7 +1372,6 @@ export interface FileRouteTypes {
     | '/(errors)/500'
     | '/(errors)/503'
     | '/(public)/'
-    | '/company-login/'
     | '/company-register-success/'
     | '/company-register/'
     | '/company/'
@@ -1416,6 +1416,7 @@ export interface FileRouteTypes {
     | '/_authenticated/lab-admin/companies/'
     | '/_authenticated/lab-admin/projects/'
     | '/_authenticated/lab-admin/reports/'
+    | '/_authenticated/lab-admin/requests/'
     | '/_authenticated/lab-admin/settings/'
     | '/_authenticated/lab-admin/skills/'
     | '/_authenticated/lab-admin/templates/'
@@ -1482,7 +1483,6 @@ export interface RootRouteChildren {
   errors404Route: typeof errors404Route
   errors500Route: typeof errors500Route
   errors503Route: typeof errors503Route
-  CompanyLoginIndexRoute: typeof CompanyLoginIndexRoute
   CompanyRegisterSuccessIndexRoute: typeof CompanyRegisterSuccessIndexRoute
   CompanyRegisterIndexRoute: typeof CompanyRegisterIndexRoute
 }
@@ -1543,13 +1543,6 @@ declare module '@tanstack/react-router' {
       path: '/company-register-success'
       fullPath: '/company-register-success'
       preLoaderRoute: typeof CompanyRegisterSuccessIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/company-login/': {
-      id: '/company-login/'
-      path: '/company-login'
-      fullPath: '/company-login'
-      preLoaderRoute: typeof CompanyLoginIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/(public)/': {
@@ -1866,6 +1859,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/lab-admin/settings/'
       preLoaderRoute: typeof AuthenticatedLabAdminSettingsIndexRouteImport
       parentRoute: typeof AuthenticatedLabAdminSettingsRouteRoute
+    }
+    '/_authenticated/lab-admin/requests/': {
+      id: '/_authenticated/lab-admin/requests/'
+      path: '/requests'
+      fullPath: '/lab-admin/requests'
+      preLoaderRoute: typeof AuthenticatedLabAdminRequestsIndexRouteImport
+      parentRoute: typeof AuthenticatedLabAdminRouteRoute
     }
     '/_authenticated/lab-admin/reports/': {
       id: '/_authenticated/lab-admin/reports/'
@@ -2516,6 +2516,7 @@ interface AuthenticatedLabAdminRouteRouteChildren {
   AuthenticatedLabAdminCompaniesIndexRoute: typeof AuthenticatedLabAdminCompaniesIndexRoute
   AuthenticatedLabAdminProjectsIndexRoute: typeof AuthenticatedLabAdminProjectsIndexRoute
   AuthenticatedLabAdminReportsIndexRoute: typeof AuthenticatedLabAdminReportsIndexRoute
+  AuthenticatedLabAdminRequestsIndexRoute: typeof AuthenticatedLabAdminRequestsIndexRoute
   AuthenticatedLabAdminSkillsIndexRoute: typeof AuthenticatedLabAdminSkillsIndexRoute
   AuthenticatedLabAdminTemplatesIndexRoute: typeof AuthenticatedLabAdminTemplatesIndexRoute
   AuthenticatedLabAdminUsersIndexRoute: typeof AuthenticatedLabAdminUsersIndexRoute
@@ -2539,6 +2540,8 @@ const AuthenticatedLabAdminRouteRouteChildren: AuthenticatedLabAdminRouteRouteCh
       AuthenticatedLabAdminProjectsIndexRoute,
     AuthenticatedLabAdminReportsIndexRoute:
       AuthenticatedLabAdminReportsIndexRoute,
+    AuthenticatedLabAdminRequestsIndexRoute:
+      AuthenticatedLabAdminRequestsIndexRoute,
     AuthenticatedLabAdminSkillsIndexRoute:
       AuthenticatedLabAdminSkillsIndexRoute,
     AuthenticatedLabAdminTemplatesIndexRoute:
@@ -2767,7 +2770,6 @@ const rootRouteChildren: RootRouteChildren = {
   errors404Route: errors404Route,
   errors500Route: errors500Route,
   errors503Route: errors503Route,
-  CompanyLoginIndexRoute: CompanyLoginIndexRoute,
   CompanyRegisterSuccessIndexRoute: CompanyRegisterSuccessIndexRoute,
   CompanyRegisterIndexRoute: CompanyRegisterIndexRoute,
 }

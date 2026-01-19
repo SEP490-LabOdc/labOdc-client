@@ -36,7 +36,7 @@ const CompanyLandingPage: React.FC = () => {
                         </div>
                         <div className="lg:w-1/2">
                             <div className="bg-card rounded-2xl shadow-2xl p-8">
-                                <div className="bg-gradient-to-r from-secondary to-[var(--color-brand-orange)] h-4 rounded-t-lg mb-6"></div>
+                                <div className="bg-linear-to-r from-secondary to-brand-orange h-4 rounded-t-lg mb-6"></div>
                                 <div className="space-y-4">
                                     <div className="flex items-center gap-3">
                                         <div className="w-12 h-12 bg-accent/20 rounded-md flex items-center justify-center">
@@ -106,9 +106,9 @@ const CompanyLandingPage: React.FC = () => {
                         </h2>
                     </div>
                     <div className="grid md:grid-cols-3 gap-8">
-                        <div className="text-center p-6 rounded-md border border-border hover:shadow-lg hover:border-[var(--color-brand-orange)]/30 transition-all">
-                            <div className="w-16 h-16 bg-[var(--color-brand-orange)]/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                                <Users className="w-8 h-8 text-[var(--color-brand-orange)]" />
+                        <div className="text-center p-6 rounded-md border border-border hover:shadow-lg hover:border-brand-orange/30 transition-all">
+                            <div className="w-16 h-16 bg-brand-orange/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <Users className="w-8 h-8 text-brand-orange" />
                             </div>
                             <h3 className="text-xl font-semibold mb-2 text-foreground">Tiếp cận sinh viên FPTU chất lượng</h3>
                             <p className="text-muted-foreground">Kết nối trực tiếp với pool tài năng trẻ được đào tạo bài bản</p>
@@ -132,7 +132,7 @@ const CompanyLandingPage: React.FC = () => {
             </section>
 
             {/* Value Proposition */}
-            <section className="py-20 bg-gradient-to-r from-muted/50 to-primary/5">
+            <section className="py-20 bg-linear-to-r from-muted/50 to-primary/5">
                 <div className="container mx-auto px-6">
                     <div className="text-center mb-16">
                         <h2 className="text-4xl font-bold text-foreground mb-4">
@@ -143,9 +143,9 @@ const CompanyLandingPage: React.FC = () => {
                         </div>
                     </div>
                     <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-                        <div className="bg-card p-6 rounded-md shadow-md hover:shadow-lg transition-shadow border-l-4 border-[var(--color-brand-orange)]">
-                            <div className="w-12 h-12 bg-[var(--color-brand-orange)]/10 rounded-md flex items-center justify-center mb-4">
-                                <Users className="w-6 h-6 text-[var(--color-brand-orange)]" />
+                        <div className="bg-card p-6 rounded-md shadow-md hover:shadow-lg transition-shadow border-l-4 border-brand-orange">
+                            <div className="w-12 h-12 bg-brand-orange/10 rounded-md flex items-center justify-center mb-4">
+                                <Users className="w-6 h-6 text-brand-orange" />
                             </div>
                             <h3 className="font-semibold mb-2 text-card-foreground">Nhân lực trẻ & sáng tạo</h3>
                             <p className="text-muted-foreground text-sm">Sinh viên tiếp cận công nghệ & xu hướng mới</p>
@@ -185,7 +185,7 @@ const CompanyLandingPage: React.FC = () => {
                     </div>
                     <div className="flex flex-col md:flex-row justify-between items-center gap-8">
                         <div className="flex-1 text-center">
-                            <div className="w-16 h-16 bg-[var(--color-brand-orange)] text-white rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold shadow-lg">
+                            <div className="w-16 h-16 bg-brand-orange text-white rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold shadow-lg">
                                 1
                             </div>
                             <h3 className="font-semibold mb-2 text-foreground">Đăng ký & xác thực</h3>
@@ -228,7 +228,7 @@ const CompanyLandingPage: React.FC = () => {
                         </h2>
                     </div>
                     <div className="grid md:grid-cols-3 gap-8">
-                        <div className="bg-card p-6 rounded-md shadow-md hover:shadow-lg transition-shadow border-t-4 border-[var(--color-brand-orange)]">
+                        <div className="bg-card p-6 rounded-md shadow-md hover:shadow-lg transition-shadow border-t-4 border-brand-orange">
                             <div className="flex items-center mb-4">
                                 <img src="/api/placeholder/50/50" alt="Company Logo" className="w-12 h-12 rounded-md mr-3" />
                                 <div>
@@ -301,7 +301,7 @@ const CompanyLandingPage: React.FC = () => {
                             </p>
                             <div className="flex items-center gap-8">
                                 <div className="text-center">
-                                    <div className="text-3xl font-bold text-[var(--color-brand-orange)]">500+</div>
+                                    <div className="text-3xl font-bold text-brand-orange">500+</div>
                                     <div className="text-muted-foreground">Sinh viên</div>
                                 </div>
                                 <div className="text-center">

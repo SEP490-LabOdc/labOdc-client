@@ -120,7 +120,7 @@ export const ReportTemplateModal: React.FC<ReportTemplateModalProps> = ({
                                             <CardTitle className="text-lg font-semibold text-gray-900">
                                                 {template.name}
                                             </CardTitle>
-                                            <CheckCircle2 className="w-5 h-5 text-green-500 flex-shrink-0" />
+                                            <CheckCircle2 className="w-5 h-5 text-green-500 shrink-0" />
                                         </div>
                                         <Badge
                                             variant="outline"

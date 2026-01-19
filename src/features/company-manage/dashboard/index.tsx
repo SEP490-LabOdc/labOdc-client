@@ -1,11 +1,15 @@
-﻿import { Main } from '@/components/layout/main'
+﻿import { useState } from 'react'
+import { Main } from '@/components/layout/main'
 import { ErrorView } from '@/components/admin/ErrorView'
 import { useGetMyCompanyInfo } from '@/hooks/api/companies'
 import { useGetMyCompanyProjects } from '@/hooks/api/projects'
 import CompanyProjectsCard from './components/company-projects-card'
 import CompanyInfoCard from './components/company-info-card'
+import UpdateCompanyModal from './components/update-company-modal'
 
 export default function CompanyDashboard() {
+    const [openEdit, setOpenEdit] = useState(false)
+
     const {
         data: company,
         isLoading: isLoadingCompanyInfo,
@@ -53,9 +57,18 @@ export default function CompanyDashboard() {
                 </div>
 
                 <div className="lg:col-span-5">
-                    <CompanyInfoCard company={company} projectCount={projects.length} />
+                    <CompanyInfoCard
+                        company={company}
+                        projectCount={projects.length}
+                        onEdit={() => setOpenEdit(true)}
+                    />
                 </div>
             </div>
+            <UpdateCompanyModal
+                open={openEdit}
+                onClose={() => setOpenEdit(false)}
+                company={company}
+            />
         </Main>
     )
 }

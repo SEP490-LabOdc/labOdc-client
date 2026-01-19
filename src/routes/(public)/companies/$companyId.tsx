@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 import CompanyDetailPage from '@/features/companies/pages/public/CompanyDetailPage'
-import { getCompanyByIdQueryOptions } from '@/hooks/api/companies'
+import { useGetPublicCompanyDetailsQueryOptions } from '@/hooks/api/companies'
 import { queryClient } from '@/hooks/api/reactQuery'
 
 export const Route = createFileRoute('/(public)/companies/$companyId')({
@@ -10,7 +10,7 @@ export const Route = createFileRoute('/(public)/companies/$companyId')({
 
         try {
             const companyData = await queryClient.ensureQueryData(
-                getCompanyByIdQueryOptions(companyId)
+                useGetPublicCompanyDetailsQueryOptions(companyId)
             )
 
             return {

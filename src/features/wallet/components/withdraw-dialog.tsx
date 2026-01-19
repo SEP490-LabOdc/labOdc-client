@@ -107,7 +107,7 @@ export const WithdrawDialog: React.FC<WithdrawDialogProps> = ({
                     {bankAccount ? (
                         <div className="p-4 bg-green-50 border border-green-200 rounded-md">
                             <div className="flex items-start gap-3">
-                                <CreditCard className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
+                                <CreditCard className="h-5 w-5 text-green-600 shrink-0 mt-0.5" />
                                 <div className="flex-1">
                                     <p className="text-sm font-semibold text-green-900">
                                         Tài khoản nhận tiền
@@ -124,7 +124,7 @@ export const WithdrawDialog: React.FC<WithdrawDialogProps> = ({
                     ) : (
                         <div className="p-4 bg-orange-50 border border-orange-200 rounded-md">
                             <div className="flex items-start gap-3">
-                                <AlertTriangle className="h-5 w-5 text-orange-600 flex-shrink-0" />
+                                <AlertTriangle className="h-5 w-5 text-orange-600 shrink-0" />
                                 <div>
                                     <p className="text-sm font-semibold text-orange-900">
                                         Chưa liên kết tài khoản ngân hàng
@@ -209,7 +209,7 @@ export const WithdrawDialog: React.FC<WithdrawDialogProps> = ({
                     {/* Warning */}
                     <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-md">
                         <div className="flex items-start gap-2">
-                            <AlertTriangle className="h-4 w-4 text-yellow-600 flex-shrink-0 mt-0.5" />
+                            <AlertTriangle className="h-4 w-4 text-yellow-600 shrink-0 mt-0.5" />
                             <div className="text-xs text-yellow-800">
                                 <p className="font-semibold mb-1">Lưu ý quan trọng:</p>
                                 <ul className="space-y-0.5 ml-4">

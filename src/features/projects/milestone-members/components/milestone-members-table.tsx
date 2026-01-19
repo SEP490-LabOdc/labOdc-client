@@ -70,7 +70,7 @@ export const MilestoneMembersTable: React.FC<MilestoneMembersTableProps> = ({
                                                 <div className="font-medium text-foreground truncate flex items-center gap-2">
                                                     {member.fullName}
                                                     {member.leader && (
-                                                        <Badge variant="secondary" className="flex-shrink-0 bg-yellow-100 text-yellow-800">
+                                                        <Badge variant="secondary" className="shrink-0 bg-yellow-100 text-yellow-800">
                                                             <Crown className="h-3 w-3" />
                                                             <span>Trưởng nhóm</span>
                                                         </Badge>
