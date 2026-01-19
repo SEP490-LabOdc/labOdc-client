@@ -46,6 +46,9 @@ interface ProjectFinancialsTabProps {
   summary: FinancialSummary;
   transactions: Transaction[];
   userRole: 'COMPANY' | 'MENTOR' | 'TALENT_LEADER' | 'TALENT_MEMBER' | 'ADMIN';
+  totalPages?: number;
+  currentPage?: number;
+  onPageChange?: (page: number) => void;
 }
 
 // --- Utils ---
@@ -64,7 +67,10 @@ const getTransactionColor = (type: TransactionType) => {
 export const ProjectFinancialsTab: React.FC<ProjectFinancialsTabProps> = ({
   summary,
   transactions,
-  userRole
+  userRole,
+  totalPages = 1,
+  currentPage = 0,
+  onPageChange
 }) => {
 
   return (
@@ -183,6 +189,31 @@ export const ProjectFinancialsTab: React.FC<ProjectFinancialsTabProps> = ({
             </div>
             {transactions.length === 0 && (
               <div className="p-8 text-center text-gray-500">Chưa có giao dịch nào được ghi nhận</div>
+            )}
+            {totalPages > 1 && (
+              <div className="flex items-center justify-between px-4 py-3 bg-white border-t">
+                <div className="text-sm text-gray-700">
+                  Trang {currentPage + 1} / {totalPages}
+                </div>
+                <div className="flex gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => onPageChange?.(currentPage - 1)}
+                    disabled={currentPage === 0}
+                  >
+                    Trước
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => onPageChange?.(currentPage + 1)}
+                    disabled={currentPage >= totalPages - 1}
+                  >
+                    Tiếp
+                  </Button>
+                </div>
+              </div>
             )}
           </div>
         </CardContent>

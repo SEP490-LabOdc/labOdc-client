@@ -27,6 +27,7 @@ export function SkillsEditDialog({ isOpen, onOpenChange, skill }: SkillsEditDial
                 id: skill.id,
                 name: values.name,
                 description: values.description || '',
+                isDeleted: values.isDeleted,
             })
             toast.success('Cập nhật kỹ năng thành công!')
             onOpenChange(false)
@@ -57,6 +58,7 @@ export function SkillsEditDialog({ isOpen, onOpenChange, skill }: SkillsEditDial
                             name: skill.name,
                             description: skill.description ?? undefined,
                             id: skill.id,
+                                isDeleted: skill.isDeleted ?? false,
                         }}
                         onSubmit={handleUpdate}
                         onCancel={handleClose}
