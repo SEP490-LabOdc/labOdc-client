@@ -32,7 +32,7 @@ export function Footer() {
                     {/* Brand Section */}
                     <div className="space-y-4">
                         <div className="flex gap-4">
-                            <img src={logo} alt="LabODC Logo" className="w-28 h-28 flex-shrink-0" />
+                            <img src={logo} alt="LabODC Logo" className="w-28 h-28 shrink-0" />
                             <div className="flex-1 pt-6">
                                 <p className="text-primary-foreground/70 text-sm leading-relaxed">
                                     Nền tảng Lab-based ODC kết nối doanh nghiệp với tài năng công nghệ thông tin.

@@ -112,7 +112,7 @@ export const MilestonesTab = ({
           <Card key={milestone.id} className="hover:shadow-md transition-shadow">
             <CardContent>
               <div className="flex items-start gap-3">
-                <div className="flex-shrink-0 mt-0.5">
+                <div className="shrink-0 mt-0.5">
                   {getStatusIcon(milestone.status)}
                 </div>
 
@@ -127,7 +127,7 @@ export const MilestonesTab = ({
                       </h3>
                       <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{milestone.description}</p>
                     </div>
-                    <div className="flex-shrink-0">
+                    <div className="shrink-0">
                       {getMilestoneStatusBadge(milestone.status)}
                     </div>
                   </div>

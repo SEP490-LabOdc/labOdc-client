@@ -150,7 +150,7 @@ export const CandidateDetailModal: React.FC<CandidateDetailModalProps> = ({
                             <Button
                                 variant="outline"
                                 onClick={() => window.open(candidate.cvUrl, '_blank')}
-                                className="flex-shrink-0"
+                                className="shrink-0"
                             >
                                 <FileText className="h-4 w-4 mr-2" />
                                 Xem CV/Resume
@@ -210,7 +210,7 @@ export const CandidateDetailModal: React.FC<CandidateDetailModalProps> = ({
                                                     key={index}
                                                     className="flex items-start gap-3 p-3 bg-white rounded-md border border-green-200"
                                                 >
-                                                    <CheckCircle2 className="h-4 w-4 text-green-600 mt-0.5 flex-shrink-0" />
+                                                    <CheckCircle2 className="h-4 w-4 text-green-600 mt-0.5 shrink-0" />
                                                     <p className="text-sm text-gray-700 flex-1">
                                                         {pro}
                                                     </p>
@@ -233,7 +233,7 @@ export const CandidateDetailModal: React.FC<CandidateDetailModalProps> = ({
                                                     key={index}
                                                     className="flex items-start gap-3 p-3 bg-white rounded-md border border-red-200"
                                                 >
-                                                    <XCircle className="h-4 w-4 text-red-600 mt-0.5 flex-shrink-0" />
+                                                    <XCircle className="h-4 w-4 text-red-600 mt-0.5 shrink-0" />
                                                     <p className="text-sm text-gray-700 flex-1">
                                                         {con}
                                                     </p>
@@ -246,7 +246,7 @@ export const CandidateDetailModal: React.FC<CandidateDetailModalProps> = ({
 
                             {/* Match Score with Circular Progress */}
                             <div className="flex flex-col sm:flex-row items-center gap-6 p-6 bg-white rounded-md border border-slate-200">
-                                <div className="flex-shrink-0">
+                                <div className="shrink-0">
                                     <CircularProgress
                                         value={aiScanResult.matchScore}
                                         size={120}

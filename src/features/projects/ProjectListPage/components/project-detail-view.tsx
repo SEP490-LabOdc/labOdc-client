@@ -63,7 +63,7 @@ export function ProjectDetailView({ project, onApply }: ProjectDetailViewProps) 
         {hasApplied && applicationInfo?.status && (
           <div className={`mt-3 rounded-md border-2 p-4 ${getCandidateStatusColor(applicationInfo.status)}`}>
             <div className="flex items-start gap-3">
-              <div className="flex-shrink-0 mt-0.5">
+              <div className="shrink-0 mt-0.5">
                 {getStatusIcon(applicationInfo.status)}
               </div>
               <div className="flex-1 min-w-0">
@@ -193,7 +193,7 @@ export function ProjectDetailView({ project, onApply }: ProjectDetailViewProps) 
 
             <div className="p-3 bg-muted rounded-md">
               <div className="flex items-center text-sm text-muted-foreground">
-                <Clock className="h-4 w-4 mr-2 flex-shrink-0" />
+                <Clock className="h-4 w-4 mr-2 shrink-0" />
                 <span>Phản hồi thường trong vòng 24h</span>
               </div>
             </div>

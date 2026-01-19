@@ -64,7 +64,7 @@ export const ProjectActivityTab = ({ notes, activities }: ProjectActivityTabProp
           <div className="space-y-4">
             {activities.map((activity) => (
               <div key={activity.id} className="flex gap-3 items-start">
-                <Avatar className="h-8 w-8 flex-shrink-0">
+                <Avatar className="h-8 w-8 shrink-0">
                   <AvatarImage src={activity.user.avatar} />
                   <AvatarFallback>{activity.user.name[0]}</AvatarFallback>
                 </Avatar>

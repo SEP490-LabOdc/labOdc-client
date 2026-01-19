@@ -368,7 +368,7 @@ export const TemplatesPage: React.FC = () => {
                                                 <CardTitle className="text-xl font-semibold text-foreground group-hover:text-primary transition-colors">
                                                     {template.name}
                                                 </CardTitle>
-                                                <CheckCircle2 className="w-5 h-5 text-secondary flex-shrink-0 mt-1" />
+                                                <CheckCircle2 className="w-5 h-5 text-secondary shrink-0 mt-1" />
                                             </div>
                                             <Badge
                                                 className={cn(
