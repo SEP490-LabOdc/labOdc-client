@@ -15,7 +15,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
 import { useNavigate } from '@tanstack/react-router'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
-import { MoneyInput } from '@/components/admin/MoneyInput'
+import { AutoMoneyInput } from '@/components/v2/AutoMoneyInput'
 import { ReferenceField } from '@/components/admin/ReferenceField'
 import { getRoleBasePath } from '@/lib/utils'
 import { useUser } from '@/context/UserContext'
@@ -116,10 +116,12 @@ export default function ProjectForm({
                                             Ngân sách ({CURRENCY_SUFFIX})
                                         </FormLabel>
                                         <FormControl>
-                                            <MoneyInput
+                                            <AutoMoneyInput
                                                 {...field}
                                                 disabled
                                                 value={Number(field.value)}
+                                                onChange={field.onChange}
+                                                suffix={CURRENCY_SUFFIX}
                                                 className='bg-muted/20 text-foreground disabled:opacity-100'
                                             />
                                         </FormControl>

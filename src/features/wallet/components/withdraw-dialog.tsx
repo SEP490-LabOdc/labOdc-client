@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { AutoMoneyInput } from '@/components/v2/AutoMoneyInput'
 import {
     Dialog,
     DialogContent,
@@ -34,10 +34,10 @@ export const WithdrawDialog: React.FC<WithdrawDialogProps> = ({
     bankAccount,
     onConfirm
 }) => {
-    const [amount, setAmount] = useState<string>('')
+    const [amount, setAmount] = useState<number>(0)
     const [isProcessing, setIsProcessing] = useState(false)
 
-    const amountNum = parseFloat(amount) || 0
+    const amountNum = amount || 0
     const minWithdraw = 50000
     const maxWithdraw = availableBalance
 
@@ -61,7 +61,7 @@ export const WithdrawDialog: React.FC<WithdrawDialogProps> = ({
         try {
             await onConfirm(amountNum)
             toast.success('Yêu cầu rút tiền đã được gửi thành công')
-            setAmount('')
+            setAmount(0)
             onClose()
         } catch (error) {
             toast.error('Có lỗi xảy ra, vui lòng thử lại')
@@ -71,13 +71,17 @@ export const WithdrawDialog: React.FC<WithdrawDialogProps> = ({
     }
 
     const handleClose = () => {
-        setAmount('')
+        setAmount(0)
         onClose()
     }
 
     const setQuickAmount = (percent: number) => {
         const quickAmount = Math.floor(availableBalance * percent)
-        setAmount(quickAmount.toString())
+        setAmount(quickAmount)
+    }
+
+    const handleAmountChange = (value: number) => {
+        setAmount(value)
     }
 
     return (
@@ -141,15 +145,15 @@ export const WithdrawDialog: React.FC<WithdrawDialogProps> = ({
                     {/* Amount Input */}
                     <div className="space-y-2">
                         <Label htmlFor="amount">Số tiền muốn rút ({CURRENCY_SUFFIX})</Label>
-                        <Input
+                        <AutoMoneyInput
                             id="amount"
-                            type="number"
                             placeholder="Nhập số tiền..."
                             value={amount}
-                            onChange={(e) => setAmount(e.target.value)}
+                            onChange={handleAmountChange}
                             min={minWithdraw}
                             max={maxWithdraw}
                             disabled={!bankAccount}
+                            suffix={CURRENCY_SUFFIX}
                         />
 
                         {/* Quick Amount Buttons */}

@@ -22,7 +22,7 @@ import { toast } from 'sonner'
 import { useLabAdminApproveProject, useUpdateProjectStatus } from '@/hooks/api/projects'
 import { AddMemberModal } from './add-member-modal'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
-import { MoneyInput } from '@/components/admin/MoneyInput'
+import { AutoMoneyInput } from '@/components/v2/AutoMoneyInput'
 import { ReferenceField } from '@/components/admin/ReferenceField'
 import { CURRENCY_SUFFIX } from '@/const'
 
@@ -78,7 +78,7 @@ export default function ProjectForm({
 
         const updatePromise = updateProjectStatus.mutateAsync({
             projectId: initialData.id,
-            status: "UPDATE_REQUIRED",
+            status: PROJECT_STATUS.PENDING,
             notes: requestNote,
         });
 
@@ -158,10 +158,12 @@ export default function ProjectForm({
                                             Ngân sách ({CURRENCY_SUFFIX})
                                         </FormLabel>
                                         <FormControl>
-                                            <MoneyInput
+                                            <AutoMoneyInput
                                                 {...field}
                                                 disabled
                                                 value={Number(field.value)}
+                                                onChange={field.onChange}
+                                                suffix={CURRENCY_SUFFIX}
                                                 className='bg-muted/20 text-foreground disabled:opacity-100'
                                             />
                                         </FormControl>

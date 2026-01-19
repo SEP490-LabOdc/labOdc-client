@@ -21,6 +21,8 @@ import { toast } from 'sonner'
 import { FileUpload } from '@/components/file/FileUpload'
 import { getMilestoneStatusBadge } from '@/helpers/milestone'
 import type { MilestoneAttachment, MilestoneDetail } from '@/hooks/api/milestones/types'
+import { MilestoneStatus } from '@/hooks/api/milestones'
+import { UserRole } from '@/hooks/api/users'
 
 const updateMilestoneSchema = z.object({
     title: z.string().min(1, 'Tiêu đề không được để trống'),
@@ -122,7 +124,7 @@ export const UpdateMilestoneForm: React.FC<UpdateMilestoneFormProps> = ({
                     description: data.description,
                     startDate: data.startDate,
                     endDate: data.endDate,
-                    status: milestone.status as any, // Giữ nguyên status hiện tại, không cho update
+                    status: MilestoneStatus.PENDING,
                     attachments: attachments,
                 },
             })
@@ -130,7 +132,7 @@ export const UpdateMilestoneForm: React.FC<UpdateMilestoneFormProps> = ({
             onSuccess?.()
 
             // Navigate back to milestone detail
-            const basePath = '/projects' // Adjust based on your routing structure
+            const basePath = `${UserRole.MENTOR}/projects` // Adjust based on your routing structure
             navigate({
                 to: `${basePath}/${projectId}/${milestoneId}`,
                 params: { projectId, milestoneId },
