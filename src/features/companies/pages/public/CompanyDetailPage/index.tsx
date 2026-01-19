@@ -120,10 +120,6 @@ export default function CompanyDetailPage() {
                                             <div className="p-2 rounded-md bg-secondary/10">
                                                 <Users className="h-5 w-5 text-secondary" />
                                             </div>
-                                            <div>
-                                                <div className="text-xs text-muted-foreground">Đã hợp tác</div>
-                                                <div className="text-lg font-semibold text-foreground">{company.collaboratedTalents || 0} tài năng</div>
-                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -206,7 +202,7 @@ export default function CompanyDetailPage() {
                                                         <div className="flex flex-wrap gap-2">
                                                             {project.skills.map((skill: any) => (
                                                                 <Badge
-                                                                    key={skill.id || skill.name}
+                                                                    key={skill.id}
                                                                     variant="secondary"
                                                                     className="text-xs"
                                                                 >
