@@ -12,7 +12,7 @@ import {
     PaymentFailureDialog,
 } from './components'
 import { useUser } from '@/context/UserContext'
-import { useGetMyWallet, useDeleteBankInfo, useCreateBankInfo } from '@/hooks/api/wallet'
+import { useGetMyWallet, useDeleteBankInfo, useCreateBankInfo, useWithdraw } from '@/hooks/api/wallet'
 import { useGetMyTransactions } from '@/hooks/api/transactions'
 import { Sort } from '@/hooks/api/types'
 import { useSearch, useNavigate } from '@tanstack/react-router'
@@ -61,6 +61,7 @@ export const MyWalletPage: React.FC = () => {
     // Bank info mutations
     const createBankInfoMutation = useCreateBankInfo()
     const deleteBankInfoMutation = useDeleteBankInfo()
+    const withdrawMutation = useWithdraw()
 
     // Handle payment callback
     useEffect(() => {
@@ -117,10 +118,25 @@ export const MyWalletPage: React.FC = () => {
     }, [walletResponse?.data?.bankInfos])
 
     const handleWithdraw = async (amount: number) => {
-        // TODO: Call API to create withdrawal request
-        console.log('Withdraw request:', { amount })
-        // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 1000))
+        if (bankAccounts.length === 0) {
+            toast.error('Vui lòng liên kết tài khoản ngân hàng trước')
+            return
+        }
+
+        const selectedBankAccount = bankAccounts[0]
+        try {
+            await withdrawMutation.mutateAsync({
+                amount,
+                bankName: selectedBankAccount.bankName,
+                accountNumber: selectedBankAccount.accountNumber,
+                accountName: selectedBankAccount.accountHolder
+            })
+            toast.success('Yêu cầu rút tiền đã được gửi thành công')
+            // Refetch wallet data to update balance
+            refetchWallet()
+        } catch (error) {
+            console.error('Error creating withdrawal request:', error)
+        }
     }
 
     const handleOpenBankAccountDialog = (account?: {
