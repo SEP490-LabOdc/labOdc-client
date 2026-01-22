@@ -20,7 +20,7 @@ const MilestoneDetailPage: React.FC = () => {
   const search = useSearch({ strict: false })
   // Get companyId from search params (passed when navigating from project detail)
   const companyId = search.companyId as string
-  const { data: milestoneData, isLoading, error } = useGetMilestoneById(milestoneId as string)
+  const { data: milestoneData, isLoading, error, refetch } = useGetMilestoneById(milestoneId as string)
   const { user, isMentor, isCompany } = usePermission()
 
   // Get user role for display (used by MilestoneFinancialsTab)
@@ -43,6 +43,7 @@ const MilestoneDetailPage: React.FC = () => {
             milestone={milestone}
             paymentStatus={MilestoneStatus.PENDING_DEPOSIT}
             projectId={projectId as string || milestone.projectId}
+            onRefresh={refetch}
           />
         </div>
 

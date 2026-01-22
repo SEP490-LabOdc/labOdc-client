@@ -3,7 +3,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import {
   Users,
   Unlock,
-  ArrowRight
+  ArrowRight,
+  UserPlus
 } from 'lucide-react'
 import { getRoleBasePath } from '@/lib/utils'
 import { usePermission } from '@/hooks/usePermission'
@@ -26,24 +27,32 @@ import { ReleasedStatus } from './released-status'
 import { MentorTalentStatusView } from './mentor-talent-status-view'
 import { MilestoneStatus } from '@/hooks/api/milestones/enums'
 import { formatVND } from '@/helpers/currency'
+import { Button } from '@/components/ui/button'
+import { StatusRenderer } from '@/components'
+import { AddMemberModal } from '@/features/projects/components/add-member-modal'
+import { useAddTalentToMilestone, useGetProjectMembers } from '@/hooks/api/projects'
 
 interface MilestoneSidebarProps {
   milestone: Milestone
   paymentStatus?: MilestoneStatus
-  projectId?: string
+  projectId: string
+  onRefresh?: () => void
 }
 
 export const MilestoneSidebar: React.FC<MilestoneSidebarProps> = ({
   milestone,
-  projectId
+  projectId,
+  onRefresh
 }) => {
-  const { isCompany, user } = usePermission()
+  const { isCompany, isMentor, user } = usePermission()
   const navigate = useNavigate()
   const [isConfirmDepositOpen, setIsConfirmDepositOpen] = useState(false)
   const [isConfirmReleaseOpen, setIsConfirmReleaseOpen] = useState(false)
   const payMilestone = usePayMilestone()
   const calculateDisbursement = useCalculateDisbursement()
   const executeDisbursement = useExecuteDisbursement()
+  const [isAddMemberModalOpen, setIsAddMemberModalOpen] = useState(false)
+  const [selectedMilestoneId, setSelectedMilestoneId] = useState<string | null>(null)
 
   // Map talents to ProjectMember format
   const talents = useMemo(() => {
@@ -179,6 +188,36 @@ export const MilestoneSidebar: React.FC<MilestoneSidebarProps> = ({
     }
   }
 
+  const { data: projectMembersData } = useGetProjectMembers(
+    projectId,
+    selectedMilestoneId || undefined
+  )
+  const addTalentMutation = useAddTalentToMilestone()
+
+  const projectMembers = projectMembersData?.data || []
+
+  const handleAddMembers = async (selectedUserIds: string[]) => {
+    if (!selectedMilestoneId) return
+
+    try {
+      await addTalentMutation.mutateAsync({
+        milestoneId: selectedMilestoneId,
+        projectMemberIds: selectedUserIds
+      })
+      toast.success('Thêm thành viên vào milestone thành công')
+      onRefresh?.()
+    } catch (error) {
+      console.error(error)
+      toast.error('Thêm thành viên thất bại')
+    }
+  }
+
+
+  const openAddMemberModal = (milestoneId: string) => {
+    setSelectedMilestoneId(milestoneId)
+    setIsAddMemberModalOpen(true)
+  }
+
   return (
     <Card>
       <CardHeader>
@@ -220,8 +259,34 @@ export const MilestoneSidebar: React.FC<MilestoneSidebarProps> = ({
             />
           </div>
 
+          <div className="flex justify-center">
+            {(() => {
+              const addMemberButton = isMentor ? (
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => openAddMemberModal(milestone.id)}
+                // disabled={isLoadingMembers}
+                >
+                  <UserPlus className="h-2 w-4 mr-1" />
+                  Thêm thành viên
+                </Button>
+              ) : null
+
+              return (
+                <StatusRenderer
+                  status={milestone.status}
+                  renderers={{
+                    ON_GOING: addMemberButton,
+                    PENDING_START: addMemberButton,
+                  }}
+                />
+              )
+            })()}
+          </div>
+
           {/* Navigate to members page */}
-          <div className="pt-2">
+          <div>
             <button
               onClick={() => {
                 const basePath = getRoleBasePath(user?.role || '')
@@ -305,6 +370,16 @@ export const MilestoneSidebar: React.FC<MilestoneSidebarProps> = ({
         mentorShare={mentorShare}
         teamShare={teamShare}
         isLoading={calculateDisbursement.isPending || executeDisbursement.isPending}
+      />
+
+      <AddMemberModal
+        isOpen={isAddMemberModalOpen}
+        onClose={() => {
+          setIsAddMemberModalOpen(false)
+          setSelectedMilestoneId(null)
+        }}
+        onAddMembers={handleAddMembers}
+        projectMembers={projectMembers}
       />
     </Card>
   )

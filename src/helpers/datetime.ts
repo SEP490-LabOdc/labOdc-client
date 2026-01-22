@@ -98,3 +98,22 @@ export const formatDateTime = (dateStr: string | Date | null | undefined): strin
         minute: '2-digit',
     })
 }
+
+/**
+ * Chuyển Date object sang ISO string nhưng GIỮ NGUYÊN giờ local
+ * (tránh bị trừ timezone khi gửi lên backend)
+ *
+ * Ví dụ:
+ *  Date local (GMT+7): 2026-01-30 00:00
+ *  ISO mặc định:       2026-01-29T17:00:00.000Z
+ *  ISO sau khi xử lý:  2026-01-30T00:00:00.000
+ */
+export const toLocalISOString = (date: Date) => {
+    // Lấy độ lệch timezone so với UTC (phút)
+    const tzOffset = date.getTimezoneOffset() * 60000
+
+    // Trừ offset để "đẩy" timestamp về đúng giờ local,
+    return new Date(date.getTime() - tzOffset)
+        .toISOString() // luôn trả UTC theo chuẩn ISO 8601
+        .slice(0, -1)  // bỏ chữ 'Z' để backend hiểu là local time
+}
