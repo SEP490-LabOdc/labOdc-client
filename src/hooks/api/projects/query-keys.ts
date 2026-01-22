@@ -18,6 +18,5 @@ export const projectKeys = {
   getProjectMilestoneReports: (milestoneId: string) => ['project-milestone-reports', { milestoneId }] as const,
   getMyApplications: () => ['my-applications'] as const,
   getReportRecipients: (projectId: string, milestoneId: string) => ['report-recipients', { projectId, milestoneId }] as const,
-  getPublicCompanyDetails: (companyId: string) => ['public-company-details', { companyId }] as const,
 };
 

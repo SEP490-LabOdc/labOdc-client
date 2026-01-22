@@ -1,13 +1,15 @@
-import { useParams } from '@tanstack/react-router'
+import { useParams, Link } from '@tanstack/react-router'
 import { Button } from '@/components/ui/button'
 import { Briefcase, Calendar, Globe, Mail, MapPin, Star, Users } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
 import { Card, CardContent } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { useGetProjectsByCompanyId, useGetPublicCompanyDetails } from '@/hooks/api/projects'
+import { useGetProjectsByCompanyId } from '@/hooks/api/projects'
 import { GeneralError } from '@/features/errors/general-error'
 import { Skeleton } from '@/components/ui/skeleton'
+import { useGetPublicCompanyDetails } from '@/hooks/api/companies'
+import { COMPANY_BANNER_DEFAULT, COMPANY_LOGO_DEFAULT } from '@/const'
 
 export default function CompanyDetailPage() {
     const { companyId } = useParams({ from: '/(public)/companies/$companyId' });
@@ -53,8 +55,8 @@ export default function CompanyDetailPage() {
                 {/* Cover Image */}
                 <div className="relative h-64 w-full overflow-hidden bg-linear-to-r from-primary to-secondary">
                     <img
-                        src={company.banner || "/placeholder-banner.jpg"}
-                        alt={`${company.name} cover`}
+                        src={company.banner || COMPANY_BANNER_DEFAULT}
+                        alt={`Ảnh bìa ${company.name}`}
                         className="h-full w-full object-cover opacity-80"
                     />
                     <div className="absolute inset-0 bg-linear-to-t from-black/60 to-transparent" />
@@ -64,8 +66,8 @@ export default function CompanyDetailPage() {
                 <div className="absolute top-50 left-6 z-10">
                     <div className="h-28 w-28 rounded-md overflow-hidden border-4 border-card bg-card ring-2 ring-primary/20 flex items-center justify-center">
                         <img
-                            src={company.logo || "/placeholder.svg"}
-                            alt={`${company.name} logo`}
+                            src={company.logo || COMPANY_LOGO_DEFAULT}
+                            alt={`Logo ${company.name}`}
                             className="h-full w-full object-contain p-2"
                         />
                     </div>
@@ -99,7 +101,7 @@ export default function CompanyDetailPage() {
                                                 <Separator orientation="vertical" className="h-4" />
                                                 <span className="inline-flex items-center gap-1.5">
                                                     <Star className="h-4 w-4 fill-accent text-accent" />
-                                                    {company.rating || 0} <span className="text-muted-foreground">({company.reviews || 0} reviews)</span>
+                                                    {company.rating || 0} <span className="text-muted-foreground">({company.reviews || 0} đánh giá)</span>
                                                 </span>
                                             </>
                                         )}
@@ -111,17 +113,13 @@ export default function CompanyDetailPage() {
                                                 <Briefcase className="h-5 w-5 text-primary" />
                                             </div>
                                             <div>
-                                                <div className="text-xs text-muted-foreground">Projects mở</div>
+                                                <div className="text-xs text-muted-foreground">Dự án mở</div>
                                                 <div className="text-lg font-semibold text-foreground">{projects.length}</div>
                                             </div>
                                         </div>
                                         <div className="flex items-center gap-3">
                                             <div className="p-2 rounded-md bg-secondary/10">
                                                 <Users className="h-5 w-5 text-secondary" />
-                                            </div>
-                                            <div>
-                                                <div className="text-xs text-muted-foreground">Đã hợp tác</div>
-                                                <div className="text-lg font-semibold text-foreground">{company.collaboratedTalents || 0} talents</div>
                                             </div>
                                         </div>
                                     </div>
@@ -131,7 +129,7 @@ export default function CompanyDetailPage() {
                                     <div className="shrink-0">
                                         <Button asChild variant="outline" size="lg">
                                             <a href={company.website} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2">
-                                                <Globe className="h-4 w-4" /> Website
+                                                <Globe className="h-4 w-4" /> Trang web
                                             </a>
                                         </Button>
                                     </div>
@@ -148,48 +146,71 @@ export default function CompanyDetailPage() {
                     {/* Tabs */}
                     <Tabs defaultValue="overview" className="w-full">
                         <TabsList className="grid w-full grid-cols-3 h-auto">
-                            <TabsTrigger value="overview">Overview</TabsTrigger>
-                            <TabsTrigger value="projects">Projects</TabsTrigger>
-                            <TabsTrigger value="talents">Talents</TabsTrigger>
+                            <TabsTrigger value="overview">Tổng quan</TabsTrigger>
+                            <TabsTrigger value="projects">Dự án đang tuyển</TabsTrigger>
+                            <TabsTrigger value="talents">Tài năng đã/đang hợp tác</TabsTrigger>
                         </TabsList>
 
                         <TabsContent value="overview" className="mt-4">
                             <Card>
-                                <CardContent className="p-5 leading-relaxed text-sm text-muted-foreground">
-                                    {company.description || company.bio || 'Chưa có mô tả.'}
-                                </CardContent>
+                                <CardContent
+                                    className="p-5 leading-relaxed text-sm text-muted-foreground prose prose-sm max-w-none"
+                                    dangerouslySetInnerHTML={{
+                                        __html: company.description || 'Chưa có mô tả.'
+                                    }}
+                                />
                             </Card>
                         </TabsContent>
 
                         <TabsContent value="projects" className="mt-4">
-                            <div className="grid gap-3">
+                            <div className="grid gap-4">
                                 {isProjectsLoading ? (
                                     <Card><CardContent className="p-5 text-sm text-muted-foreground">Đang tải dự án...</CardContent></Card>
                                 ) : projects.length === 0 ? (
                                     <Card><CardContent className="p-5 text-sm text-muted-foreground">Chưa có dự án công khai.</CardContent></Card>
                                 ) : (
                                     projects.map((project: any) => (
-                                        <Card key={project.id || project.projectId}>
-                                            <CardContent className="p-5">
-                                                <div className="flex items-center justify-between">
-                                                    <h3 className="font-medium">{project.title || project.projectName || project.name}</h3>
-                                                    {project.status && (
-                                                        <Badge variant="outline">{project.status}</Badge>
-                                                    )}
-                                                </div>
-                                                <p className="mt-2 text-sm text-muted-foreground line-clamp-2">
-                                                    {project.description || project.summary || 'Chưa có mô tả.'}
-                                                </p>
-                                                <div className="mt-3 flex items-center gap-4 text-sm text-muted-foreground">
-                                                    {project.budget && (
-                                                        <span className="font-medium text-foreground">
-                                                            Ngân sách: {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(project.budget)}
-                                                        </span>
-                                                    )}
+                                        <Card key={project.id || project.projectId} className="hover:shadow-md transition-shadow">
+                                            <CardContent className="p-6">
+                                                <div className="space-y-4">
+                                                    {/* Title */}
+                                                    <Link
+                                                        to="/projects"
+                                                        params={{ projectId: project.id }}
+                                                        className="block"
+                                                    >
+                                                        <h3 className="text-lg font-semibold text-foreground hover:text-primary transition-colors cursor-pointer">
+                                                            {project.title}
+                                                        </h3>
+                                                    </Link>
+
+                                                    {/* Start Date */}
                                                     {project.startDate && (
-                                                        <span>
-                                                            Bắt đầu: {new Date(project.startDate).toLocaleDateString('vi-VN')}
-                                                        </span>
+                                                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                                                            <Calendar className="h-4 w-4" />
+                                                            <span>
+                                                                Bắt đầu: {new Date(project.startDate).toLocaleDateString('vi-VN', {
+                                                                    day: '2-digit',
+                                                                    month: '2-digit',
+                                                                    year: 'numeric'
+                                                                })}
+                                                            </span>
+                                                        </div>
+                                                    )}
+
+                                                    {/* Skills */}
+                                                    {project.skills && project.skills.length > 0 && (
+                                                        <div className="flex flex-wrap gap-2">
+                                                            {project.skills.map((skill: any) => (
+                                                                <Badge
+                                                                    key={skill.id}
+                                                                    variant="secondary"
+                                                                    className="text-xs"
+                                                                >
+                                                                    {skill.name}
+                                                                </Badge>
+                                                            ))}
+                                                        </div>
                                                     )}
                                                 </div>
                                             </CardContent>
@@ -239,7 +260,7 @@ export default function CompanyDetailPage() {
                         <CardContent className="p-0">
                             {/* Map placeholder / ảnh trụ sở */}
                             <div className="h-48 w-full rounded-md overflow-hidden bg-muted">
-                                <img src="/placeholder-map.png" alt="Map" className="w-full h-full object-cover" />
+                                <img src="/placeholder-map.png" alt="Bản đồ" className="w-full h-full object-cover" />
                             </div>
                         </CardContent>
                     </Card>

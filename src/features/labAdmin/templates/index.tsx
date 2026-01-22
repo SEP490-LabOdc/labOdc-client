@@ -80,7 +80,7 @@ export const TEMPLATE_CATEGORY_LABELS: Record<string, string> = {
 }
 
 export default function TemplatesManagementPage() {
-    const { isLabAdmin } = usePermission()
+    const { isSystemAdmin } = usePermission()
     const navigate = useNavigate()
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
     const [selectedType, setSelectedType] = useState<string>('')
@@ -117,10 +117,10 @@ export default function TemplatesManagementPage() {
 
     // Redirect if not lab-admin
     React.useEffect(() => {
-        if (!isLabAdmin) {
+        if (!isSystemAdmin) {
             navigate({ to: '/lab-admin' })
         }
-    }, [isLabAdmin, navigate])
+    }, [isSystemAdmin, navigate])
 
 
     const handleDelete = async (templateId: string) => {
@@ -148,7 +148,7 @@ export default function TemplatesManagementPage() {
     }
 
 
-    if (!isLabAdmin) {
+    if (!isSystemAdmin) {
         return null
     }
 

@@ -137,12 +137,32 @@ export const systemAmdminSidebarData: SidebarData = {
               url: '/admin/system-config',
               icon: IconSettings,
             },
+            {
+              title: 'Cấu hình Check-list Company',
+              url: '/admin/company-checklist-config',
+              icon: IconClipboardList,
+            },
           ]
         },
         {
           title: 'Yêu cầu rút tiền',
           url: '/admin/withdrawal',
           icon: IconWallet,
+        },
+        {
+          title: 'Quản lý Template',
+          url: '/admin/templates',
+          icon: IconFileText,
+        },
+        {
+          title: 'Quản lý kỹ năng',
+          url: '/admin/skills',
+          icon: IconPills,
+        },
+        {
+          title: 'Quản lý báo cáo',
+          url: '/admin/reports',
+          icon: IconFileText,
         }
       ]
     },
@@ -272,22 +292,22 @@ export const labAdminSidebarData: SidebarData = {
               icon: User,
             },
           ]
-        },
-        {
-          title: 'Quản lý Template',
-          url: '/lab-admin/templates',
-          icon: IconFileText,
-        },
-        {
-          title: 'Quản lý kỹ năng',
-          url: '/lab-admin/skills',
-          icon: IconPills,
-        },
-        {
-          title: 'Quản lý báo cáo',
-          url: '/lab-admin/reports',
-          icon: IconFileText,
         }
+        // {
+        //   title: 'Quản lý Template',
+        //   url: '/lab-admin/templates',
+        //   icon: IconFileText,
+        // },
+        // {
+        //   title: 'Quản lý kỹ năng',
+        //   url: '/lab-admin/skills',
+        //   icon: IconPills,
+        // },
+        // {
+        //   title: 'Quản lý báo cáo',
+        //   url: '/lab-admin/reports',
+        //   icon: IconFileText,
+        // }
       ]
     },
   ],

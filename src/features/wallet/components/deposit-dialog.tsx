@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { AutoMoneyInput } from '@/components/v2/AutoMoneyInput'
 import {
     Dialog,
     DialogContent,
@@ -15,6 +15,7 @@ import { toast } from 'sonner'
 import { usePaymentDeposit } from '@/hooks/api/payment'
 import { useUser } from '@/context/UserContext'
 import { getRoleBasePath } from '@/lib/utils'
+import { CURRENCY_SUFFIX } from '@/const'
 
 interface DepositDialogProps {
     isOpen: boolean
@@ -27,12 +28,12 @@ export const DepositDialog: React.FC<DepositDialogProps> = ({
     isOpen,
     onClose
 }) => {
-    const [amount, setAmount] = useState<string>('')
+    const [amount, setAmount] = useState<number>(0)
     const { user } = useUser()
 
     const paymentDeposit = usePaymentDeposit()
 
-    const amountNum = parseFloat(amount) || 0
+    const amountNum = amount || 0
     const minDeposit = 2000
 
     const handleSubmit = async () => {
@@ -67,8 +68,12 @@ export const DepositDialog: React.FC<DepositDialogProps> = ({
     }
 
     const handleClose = () => {
-        setAmount('')
+        setAmount(0)
         onClose()
+    }
+
+    const handleAmountChange = (value: number) => {
+        setAmount(value)
     }
 
     return (
@@ -87,14 +92,14 @@ export const DepositDialog: React.FC<DepositDialogProps> = ({
                 <div className="space-y-4 py-4">
                     {/* Amount Input */}
                     <div className="space-y-2">
-                        <Label htmlFor="amount">Số tiền nạp (VNĐ)</Label>
-                        <Input
+                        <Label htmlFor="amount">Số tiền nạp ({CURRENCY_SUFFIX})</Label>
+                        <AutoMoneyInput
                             id="amount"
-                            type="number"
                             placeholder="Nhập số tiền"
                             value={amount}
-                            onChange={(e) => setAmount(e.target.value)}
+                            onChange={handleAmountChange}
                             min={minDeposit}
+                            suffix={CURRENCY_SUFFIX}
                         />
                         <p className="text-xs text-gray-500">
                             Tối thiểu: {formatVND(minDeposit)}
