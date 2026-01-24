@@ -2,6 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import type { ProjectDetail } from '@/hooks/api/projects/types'
 import { getAvatarFallback } from '@/helpers/stringUtils.ts'
+import { CURRENCY_SUFFIX } from '@/const'
 
 interface ProjectSidebarProps {
   projectData: ProjectDetail;
@@ -17,8 +18,8 @@ export const ProjectSidebar = ({ projectData }: ProjectSidebarProps) => {
         <div className="space-y-3 text-sm">
           {[
             { label: 'Khách hàng', value: projectData.companyName },
-            { label: 'Tổng chi phí dự án', value: `${projectData.budget.toLocaleString('vi-VN')} VNĐ` },
-            { label: 'Số dư ngân sách', value: `${(projectData.remainingBudget ?? 0).toLocaleString('vi-VN')} VNĐ` },
+            { label: 'Tổng chi phí dự án', value: `${projectData.budget.toLocaleString('vi-VN')} ${CURRENCY_SUFFIX}` },
+            { label: 'Số dư ngân sách', value: `${(projectData.remainingBudget ?? 0).toLocaleString('vi-VN')} ${CURRENCY_SUFFIX}` },
             { label: 'Ngày tạo', value: new Date(projectData.createdAt).toLocaleDateString('vi-VN') },
             { label: 'Ngày bắt đầu', value: new Date(projectData.startDate).toLocaleDateString('vi-VN') },
           ].map((item, index) => (

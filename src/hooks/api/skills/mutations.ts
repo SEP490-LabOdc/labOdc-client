@@ -14,6 +14,7 @@ export const useCreateSkill = () => {
         mutationFn: async (payload: {
             name: string,
             description: string
+            isDeleted?: boolean
         }) => {
             const { data } = await apiRequest.post(`/api/v1/skills`, payload)
             return data
@@ -36,7 +37,8 @@ export const useUpdateSkill = () => {
         mutationFn: async (payload: {
             id: string,
             name: string,
-            description: string
+            description: string,
+            isDeleted?: boolean
         }) => {
             const { data } = await apiRequest.put(`/api/v1/skills/${payload.id}`, payload)
             return data

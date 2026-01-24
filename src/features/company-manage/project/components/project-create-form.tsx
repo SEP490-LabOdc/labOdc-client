@@ -23,7 +23,6 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 import { Badge } from '@/components/ui/badge'
 import { MoneyInput } from '@/components/admin/MoneyInput'
 import { DatePicker } from '@/components/date-picker'
-import { ConfirmApprovedAlert } from '@/components/admin/ConfirmApprovedAlert'
 
 const formSchema = z.object({
     title: z.string().min(3, 'Tên dự án là bắt buộc và ít nhất 3 kí tự.').max(50, 'Tên dự án phải nhỏ hơn 50 kí tự'),
@@ -243,7 +242,7 @@ export default function ProjectsForm({
                                 <FormLabel className="font-medium">Kỹ năng yêu cầu</FormLabel>
 
                                 <MultiSelectDropdown
-                                    items={skills.map((s: any) => ({
+                                    items={skills .filter((s: any) => !s.isDeleted).map((s: any) => ({
                                         label: s.name,
                                         value: s.id,
                                     }))}
@@ -304,9 +303,6 @@ export default function ProjectsForm({
                             </FormItem>
                         )}
                     />
-
-                    {/* ALERT: Confirm information before submit */}
-                    <ConfirmApprovedAlert className="mt-4" />
 
                     {/* BUTTONS */}
                     <div className="flex justify-end gap-3 pt-4">

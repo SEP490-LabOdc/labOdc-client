@@ -321,3 +321,14 @@ export function useCloseProject() {
   })
 }
 
+export function useDeleteProjectDocument() {
+  return useMutation({
+    mutationFn: async (documentId: string) => {
+      const { data } = await apiRequest.delete(
+        `/api/v1/project-documents/${documentId}`
+      )
+      return data
+    }
+  })
+}
+

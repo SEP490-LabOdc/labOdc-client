@@ -1,12 +1,8 @@
 import { Input } from "@/components/ui/input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Search } from "lucide-react"
 
 export type Filters = {
     search: string
-    industry: string
-    location: string
-    sort: string
 }
 
 export function FiltersBar({
@@ -29,47 +25,6 @@ export function FiltersBar({
                     />
                 </div>
             </div>
-
-            <Select value={filters.industry} onValueChange={(value) => onFiltersChange({ ...filters, industry: value })}>
-                <SelectTrigger className="w-[140px]">
-                    <SelectValue placeholder="Ngành" />
-                </SelectTrigger>
-                <SelectContent>
-                    <SelectItem value="all">Tất cả ngành</SelectItem>
-                    <SelectItem value="IT Services">IT Services</SelectItem>
-                    <SelectItem value="Fintech">Fintech</SelectItem>
-                    <SelectItem value="E-commerce">E-commerce</SelectItem>
-                    <SelectItem value="Game">Game</SelectItem>
-                    <SelectItem value="AI/ML">AI/ML</SelectItem>
-                    <SelectItem value="Other">Other</SelectItem>
-                </SelectContent>
-            </Select>
-
-            <Select value={filters.location} onValueChange={(value) => onFiltersChange({ ...filters, location: value })}>
-                <SelectTrigger className="w-[140px]">
-                    <SelectValue placeholder="Địa điểm" />
-                </SelectTrigger>
-                <SelectContent>
-                    <SelectItem value="all">Tất cả</SelectItem>
-                    <SelectItem value="Ho Chi Minh">Ho Chi Minh</SelectItem>
-                    <SelectItem value="Ha Noi">Ha Noi</SelectItem>
-                    <SelectItem value="Da Nang">Da Nang</SelectItem>
-                    <SelectItem value="Singapore">Singapore</SelectItem>
-                    <SelectItem value="Bangkok">Bangkok</SelectItem>
-                </SelectContent>
-            </Select>
-
-            <Select value={filters.sort} onValueChange={(value) => onFiltersChange({ ...filters, sort: value })}>
-                <SelectTrigger className="w-[140px]">
-                    <SelectValue placeholder="Sắp xếp" />
-                </SelectTrigger>
-                <SelectContent>
-                    <SelectItem value="relevant">Phù hợp nhất</SelectItem>
-                    <SelectItem value="projects">Nhiều dự án</SelectItem>
-                    <SelectItem value="rating">Đánh giá cao</SelectItem>
-                    <SelectItem value="newest">Mới nhất</SelectItem>
-                </SelectContent>
-            </Select>
         </div>
     )
 }

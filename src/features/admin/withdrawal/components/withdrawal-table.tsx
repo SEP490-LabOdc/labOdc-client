@@ -22,7 +22,7 @@ import {
     TableRow,
 } from '@/components/ui/table'
 import { DataTablePagination, DataTableToolbar } from '@/components/data-table'
-import { type WithdrawalRequestItem, WITHDRAWAL_STATUS_OPTIONS } from '../data/schema'
+import { type WithdrawalRequestItem } from '../data/schema'
 import { withdrawalColumns as columns } from './withdrawal-columns'
 
 declare module '@tanstack/react-table' {
@@ -41,11 +41,10 @@ type DataTableProps = {
 export function WithdrawalTable({ data, search, navigate }: DataTableProps) {
     // Local UI-only states
     const [rowSelection, setRowSelection] = useState({})
-    const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
-        userId: false,
-        processedAt: false,
-        adminNote: false,
-    })
+    
+    // Updated: Initialize with empty object to show all columns by default
+    const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
+    
     const [sorting, setSorting] = useState<SortingState>([])
 
     // Synced with URL states
@@ -60,9 +59,7 @@ export function WithdrawalTable({ data, search, navigate }: DataTableProps) {
         navigate,
         pagination: { defaultPage: 1, defaultPageSize: 10 },
         globalFilter: { enabled: false },
-        columnFilters: [
-            { columnId: 'status', searchKey: 'status', type: 'array' },
-        ],
+        columnFilters: [], 
     })
 
     const table = useReactTable({
@@ -94,18 +91,11 @@ export function WithdrawalTable({ data, search, navigate }: DataTableProps) {
     }, [table, ensurePageInRange])
 
     return (
-        <div className='space-y-4 max-sm:has-[div[role="toolbar"]]:mb-16'>
+        <div className='space-y-4'>
             <DataTableToolbar
                 table={table}
-                searchPlaceholder='Tìm kiếm yêu cầu rút tiền...'
+                searchPlaceholder='Tìm kiếm theo ID...'
                 searchKey='id'
-                filters={[
-                    {
-                        columnId: 'status',
-                        title: 'Trạng thái',
-                        options: WITHDRAWAL_STATUS_OPTIONS,
-                    },
-                ]}
             />
             <div className='overflow-hidden rounded-md border'>
                 <Table>
@@ -118,7 +108,7 @@ export function WithdrawalTable({ data, search, navigate }: DataTableProps) {
                                             key={header.id}
                                             colSpan={header.colSpan}
                                             className={cn(
-                                                'bg-background group-hover/row:bg-muted group-data-[state=selected]/row:bg-muted',
+                                                'bg-muted/50 group-hover/row:bg-muted group-data-[state=selected]/row:bg-muted',
                                                 header.column.columnDef.meta?.className ?? ''
                                             )}
                                         >
@@ -175,4 +165,3 @@ export function WithdrawalTable({ data, search, navigate }: DataTableProps) {
         </div>
     )
 }
-

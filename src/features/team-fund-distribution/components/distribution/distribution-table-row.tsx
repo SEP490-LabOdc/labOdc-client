@@ -1,12 +1,13 @@
 import React from 'react'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
 import { Crown, User } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { getPercentage, getBarWidth, getPercentageColor } from '@/helpers/distribution'
 import { formatVND } from '@/helpers/currency'
 import type { MilestoneMember } from '@/hooks/api/milestones'
+import { AutoMoneyInput } from '@/components/v2/AutoMoneyInput'
+import { CURRENCY_SUFFIX } from '@/const'
 
 interface DistributionTableRowProps {
     member: MilestoneMember
@@ -29,23 +30,9 @@ export const DistributionTableRow: React.FC<DistributionTableRowProps> = ({
     const isCurrentUser = member.userId === currentUserId
     const isInactive = member.leftAt !== null && member.leftAt !== undefined
 
-    const handleInputChange = (value: string) => {
+    const handleInputChange = (value: number) => {
         if (isReadOnly) return
-
-        const numericValue = value.replace(/\D/g, '')
-
-        if (numericValue === '') {
-            onAllocationChange(member.userId, 0)
-            return
-        }
-
-        const amount = parseInt(numericValue, 10)
-
-        if (isNaN(amount) || amount < 0) {
-            return
-        }
-
-        onAllocationChange(member.userId, amount)
+        onAllocationChange(member.userId, value)
     }
 
     return (
@@ -105,23 +92,20 @@ export const DistributionTableRow: React.FC<DistributionTableRowProps> = ({
             <td className="px-4 py-4">
                 <div className="flex items-center gap-2 max-w-xs">
                     <div className="relative flex-1">
-                        <Input
-                            type="text"
-                            inputMode="numeric"
-                            pattern="[0-9]*"
-                            value={allocation === 0 ? '' : allocation.toString()}
-                            onChange={(e) => handleInputChange(e.target.value)}
+                        <AutoMoneyInput
+                            value={allocation}
+                            onChange={handleInputChange}
+                            disabled={isReadOnly}
                             placeholder="0"
+                            suffix={CURRENCY_SUFFIX}
+                            min={0}
                             className={cn(
-                                "pr-16 text-right font-mono",
+                                "text-right font-mono",
                                 "focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500",
                                 isCurrentUser && "border-indigo-300",
                                 allocation > 0 && "border-green-300 bg-green-50/30"
                             )}
                         />
-                        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-medium text-gray-500">
-                            VNĐ
-                        </span>
                     </div>
 
                     {allocation > 0 && (

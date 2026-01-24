@@ -37,10 +37,10 @@ export function FileUpload({
 
   // Initialize with existing file info
   useEffect(() => {
-    if (value && existingFileName) {
+    if (!uploadedFileInfo && value && existingFileName) {
       setUploadedFileInfo({ fileName: existingFileName, fileUrl: value });
     }
-  }, [value, existingFileName]);
+  }, [value, existingFileName, uploadedFileInfo]);
 
   const handleFileSelect = async (file: File) => {
     setUploadError('');
@@ -121,12 +121,12 @@ export function FileUpload({
 
   // Handle replace file - remove current and trigger file picker
   const handleReplace = () => {
-    setUploadedFileInfo(null);
-    setSelectedFile(null);
-    setUploadError('');
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
-    }
+    // setUploadedFileInfo(null);
+    // setSelectedFile(null);
+    // setUploadError('');
+    // if (fileInputRef.current) {
+    //   fileInputRef.current.value = '';
+    // }
     // Trigger file picker
     setTimeout(() => handleClick(), 100);
   };
@@ -140,11 +140,11 @@ export function FileUpload({
   };
 
   const getFileName = () => {
-    if (selectedFile) {
-      return selectedFile.name;
-    }
     if (uploadedFileInfo) {
       return uploadedFileInfo.fileName;
+    }
+    if (selectedFile) {
+      return selectedFile.name;
     }
     if (existingFileName) {
       return existingFileName;
@@ -163,6 +163,7 @@ export function FileUpload({
   };
 
   const fileName = getFileName();
+  console.log(fileName);
   const fileSize = getFileSize();
   const hasFile = !!(fileName || value);
   const showLoading = isUploading || !!selectedFile;

@@ -1,7 +1,7 @@
-export type TargetTable =
-    | 'companies'
-    | 'projects'
-    | 'project_milestones'
+export type UpdateRequestType =
+    'UPDATE_PROJECT'
+    | 'UPDATE_COMPANY'
+    | 'UPDATE_MILESTONE'
 
 export type ChangeData = Record<
     string,
@@ -12,7 +12,7 @@ export type ChangeData = Record<
 >
 
 export type UpdatePayload = {
-    targetTable: TargetTable
+    requestType: UpdateRequestType
     targetId: string | number
     changeData: ChangeData
 }

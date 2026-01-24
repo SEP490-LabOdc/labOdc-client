@@ -41,48 +41,6 @@ export const systemAmdminSidebarData: SidebarData = {
           icon: IconLayoutDashboard,
         },
         {
-          title: 'Quản lý công ty',
-          icon: IconBuildingStore,
-          items: [
-            {
-              title: 'Tất cả',
-              url: '/admin/companies',
-              icon: IconList,
-            },
-            {
-              title: 'Đang chờ xác thực',
-              url: '/admin/companies?status=["PENDING"]',
-              icon: IconClockHour4,
-            },
-            {
-              title: 'Đang hoạt động',
-              url: '/admin/companies?status=["ACTIVE"]',
-              icon: IconCircleCheck,
-            },
-            {
-              title: 'Đã vô hiệu hóa',
-              url: '/admin/companies?status=["DISABLED"]',
-              icon: IconCircleX,
-            },
-          ]
-        },
-        {
-          title: 'Quản lý dự án',
-          icon: IconClipboardList,
-          items: [
-            { title: 'Tất cả', url: '/admin/projects', icon: IconList },
-
-            // --- PLANNING ---
-            { title: 'Chờ duyệt', url: '/admin/projects?status=["' + PROJECT_STATUS.PENDING + '"]', icon: IconClockHour4 },
-            { title: 'Công ty cập nhật', url: '/admin/projects?status=["' + PROJECT_STATUS.UPDATE_REQUIRED + '"]', icon: IconEdit },
-            { title: 'Xây dựng kế hoạch', url: '/admin/projects?status=["' + PROJECT_STATUS.PLANNING + '"]', icon: IconPencilCog },
-            { title: 'Bị từ chối', url: '/admin/projects?status=["' + PROJECT_STATUS.REJECTED + '"]', icon: IconCircleXFilled },
-            // --- EXECUTING ---
-            { title: 'Đang thực hiện', url: '/admin/projects?status=["' + PROJECT_STATUS.ON_GOING + '"]', icon: IconProgress },
-            { title: 'Hoàn thành', url: '/admin/projects?status=["' + PROJECT_STATUS.COMPLETE + '"]', icon: IconCircleCheckFilled },
-          ],
-        },
-        {
           title: 'Quản lý người dùng',
           icon: IconUsers,
           items: [
@@ -137,13 +95,18 @@ export const systemAmdminSidebarData: SidebarData = {
               url: '/admin/system-config',
               icon: IconSettings,
             },
+            {
+              title: 'Cấu hình Check-list Company',
+              url: '/admin/company-checklist-config',
+              icon: IconClipboardList,
+            },
           ]
         },
         {
           title: 'Yêu cầu rút tiền',
           url: '/admin/withdrawal',
           icon: IconWallet,
-        }
+        },
       ]
     },
   ],

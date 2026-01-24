@@ -8,21 +8,17 @@ import { useGetPublicCompanies } from "@/hooks/api/companies/queries"
 import type { Company } from "@/hooks/api/companies/types"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet.tsx'
 import { Input } from '@/components/ui/input.tsx'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select.tsx'
 
 export default function CompanyListPage() {
     const [filters, setFilters] = useState<Filters>({
         search: "",
-        industry: "all",
-        location: "all",
-        sort: "relevant",
     })
     const [currentPage, setCurrentPage] = useState(1)
 
     const pageSize = 8
     const { data: companiesData, isLoading, isError } = useGetPublicCompanies()
 
-    // Filter and sort companies on client-side
+    // Filter companies on client-side
     const filteredAndSortedCompanies = useMemo(() => {
         if (!companiesData || !Array.isArray(companiesData)) return []
 
@@ -35,53 +31,6 @@ export default function CompanyListPage() {
                 company.name?.toLowerCase().includes(searchLower) ||
                 company.description?.toLowerCase().includes(searchLower)
             )
-        }
-
-        // Filter by industry
-        if (filters.industry !== "all") {
-            // Note: Assuming industry field exists in Company type
-            // If not, you may need to adjust this filter
-            filtered = filtered.filter(company =>
-                (company as any).industry === filters.industry
-            )
-        }
-
-        // Filter by location
-        if (filters.location !== "all") {
-            filtered = filtered.filter(company =>
-                company.address?.includes(filters.location)
-            )
-        }
-
-        // Sort companies
-        switch (filters.sort) {
-            case "rating":
-                // Sort by rating (if available)
-                filtered.sort((a, b) => {
-                    const ratingA = (a as any).rating || 0
-                    const ratingB = (b as any).rating || 0
-                    return ratingB - ratingA
-                })
-                break
-            case "projects":
-                // Sort by number of projects (if available)
-                filtered.sort((a, b) => {
-                    const projectsA = (a as any).openProjects || 0
-                    const projectsB = (b as any).openProjects || 0
-                    return projectsB - projectsA
-                })
-                break
-            case "newest":
-                // Sort by createdAt (if available)
-                filtered.sort((a, b) => {
-                    const dateA = (a as any).createdAt ? new Date((a as any).createdAt).getTime() : 0
-                    const dateB = (b as any).createdAt ? new Date((b as any).createdAt).getTime() : 0
-                    return dateB - dateA
-                })
-                break
-            default:
-                // Most relevant - keep original order
-                break
         }
 
         return filtered
@@ -105,9 +54,6 @@ export default function CompanyListPage() {
     const clearFilters = () => {
         setFilters({
             search: "",
-            industry: "all",
-            location: "all",
-            sort: "relevant",
         })
         setCurrentPage(1)
     }
@@ -151,56 +97,6 @@ export default function CompanyListPage() {
                                         className="pl-10"
                                     />
                                 </div>
-
-                                <Select
-                                    value={filters.industry}
-                                    onValueChange={(value) => handleFiltersChange({ ...filters, industry: value })}
-                                >
-                                    <SelectTrigger>
-                                        <SelectValue placeholder="Chọn ngành" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value="all">Tất cả ngành</SelectItem>
-                                        <SelectItem value="IT Services">IT Services</SelectItem>
-                                        <SelectItem value="Fintech">Fintech</SelectItem>
-                                        <SelectItem value="E-commerce">E-commerce</SelectItem>
-                                        <SelectItem value="Game">Game</SelectItem>
-                                        <SelectItem value="AI/ML">AI/ML</SelectItem>
-                                        <SelectItem value="Other">Other</SelectItem>
-                                    </SelectContent>
-                                </Select>
-
-                                <Select
-                                    value={filters.location}
-                                    onValueChange={(value) => handleFiltersChange({ ...filters, location: value })}
-                                >
-                                    <SelectTrigger>
-                                        <SelectValue placeholder="Chọn địa điểm" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value="all">Tất cả địa điểm</SelectItem>
-                                        <SelectItem value="Ho Chi Minh">Ho Chi Minh</SelectItem>
-                                        <SelectItem value="Ha Noi">Ha Noi</SelectItem>
-                                        <SelectItem value="Da Nang">Da Nang</SelectItem>
-                                        <SelectItem value="Singapore">Singapore</SelectItem>
-                                        <SelectItem value="Bangkok">Bangkok</SelectItem>
-                                    </SelectContent>
-                                </Select>
-
-                                <Select
-                                    value={filters.sort}
-                                    onValueChange={(value) => handleFiltersChange({ ...filters, sort: value })}
-                                >
-                                    <SelectTrigger>
-                                        <SelectValue placeholder="Sắp xếp theo" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value="relevant">Phù hợp nhất</SelectItem>
-                                        <SelectItem value="projects">Nhiều dự án nhất</SelectItem>
-                                        <SelectItem value="rating">Đánh giá cao nhất</SelectItem>
-                                        <SelectItem value="newest">Mới nhất</SelectItem>
-                                    </SelectContent>
-                                </Select>
                             </div>
                         </SheetContent>
                     </Sheet>
@@ -215,7 +111,7 @@ export default function CompanyListPage() {
                             `Tìm thấy ${totalItems} công ty`
                         )}
                     </p>
-                    {(filters.search || filters.industry !== "all" || filters.location !== "all") && (
+                    {filters.search && (
                         <Button variant="ghost" size="sm" onClick={clearFilters} disabled={isLoading}>
                             Xóa bộ lọc
                         </Button>

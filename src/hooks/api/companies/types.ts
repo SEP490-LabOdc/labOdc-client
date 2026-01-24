@@ -51,6 +51,7 @@ export interface Company {
     taxCode: string
     address: string
     logo: string
+    banner?: string
     description: string
     website: string
     status: string
