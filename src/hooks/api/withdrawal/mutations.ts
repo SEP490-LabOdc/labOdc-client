@@ -13,10 +13,8 @@ export interface RejectWithdrawalPayload {
 export const useApproveWithdrawal = () => {
     return useMutation({
         mutationFn: async (payload: ApproveWithdrawalPayload) => {
-            const body = payload.adminNote ? { adminNote: payload.adminNote } : {}
-            const { data } = await apiRequest.post(
+            const { data } = await apiRequest.patch(
                 `/api/v1/admin/withdrawal-requests/${payload.withdrawalId}/approve`,
-                body
             )
             return data
         },
@@ -26,7 +24,7 @@ export const useApproveWithdrawal = () => {
 export const useRejectWithdrawal = () => {
     return useMutation({
         mutationFn: async (payload: RejectWithdrawalPayload) => {
-            const { data } = await apiRequest.post(
+            const { data } = await apiRequest.patch(
                 `/api/v1/admin/withdrawal-requests/${payload.withdrawalId}/reject`,
                 { adminNote: payload.adminNote }
             )

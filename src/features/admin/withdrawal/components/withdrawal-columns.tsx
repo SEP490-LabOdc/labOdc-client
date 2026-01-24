@@ -7,32 +7,31 @@ import { formatDate } from '@/helpers/datetime'
 import { type WithdrawalRequestItem, WITHDRAWAL_STATUS_LABEL } from '../data/schema'
 import { DataTableRowActions } from './data-table-row-actions'
 import { STATUS_COLORS } from '@/helpers/status'
-import { LongText } from '@/components/long-text'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 
 export const withdrawalColumns: ColumnDef<WithdrawalRequestItem>[] = [
     {
-        accessorKey: 'id',
+        accessorKey: 'fullName',
         header: ({ column }) => (
-            <DataTableColumnHeader column={column} title='ID' />
+            <DataTableColumnHeader column={column} title='Người dùng' />
         ),
-        cell: ({ row }) => (
-            <LongText className='max-w-32 font-mono text-xs'>
-                {row.getValue('id')?.toString().slice(0, 8)}...
-            </LongText>
-        ),
-        meta: { className: 'w-32' },
-    },
-    {
-        accessorKey: 'userId',
-        header: ({ column }) => (
-            <DataTableColumnHeader column={column} title='User ID' />
-        ),
-        cell: ({ row }) => (
-            <LongText className='max-w-32 font-mono text-xs'>
-                {row.getValue('userId')?.toString().slice(0, 8)}...
-            </LongText>
-        ),
-        meta: { className: 'w-32' },
+        cell: ({ row }) => {
+            const { fullName, email, avatarUrl } = row.original
+
+            return (
+                <div className='flex items-center gap-2'>
+                    <Avatar className='h-8 w-8'>
+                        <AvatarImage src={avatarUrl ?? undefined} alt={fullName} />
+                        <AvatarFallback>{fullName.slice(0, 2).toUpperCase()}</AvatarFallback>
+                    </Avatar>
+                    <div className='flex flex-col'>
+                        <span className='text-sm font-medium'>{fullName}</span>
+                        <span className='text-xs text-muted-foreground'>{email}</span>
+                    </div>
+                </div>
+            )
+        },
+        meta: { className: 'w-64' },
     },
     {
         accessorKey: 'amount',
@@ -79,40 +78,7 @@ export const withdrawalColumns: ColumnDef<WithdrawalRequestItem>[] = [
         },
         meta: { className: 'w-64' },
     },
-    {
-        accessorKey: 'status',
-        header: ({ column }) => (
-            <DataTableColumnHeader column={column} title='Trạng thái' />
-        ),
-        cell: ({ row }) => {
-            const status = row.original.status as string
-            const statusLabel = WITHDRAWAL_STATUS_LABEL[status] || status
-            const colorClass = STATUS_COLORS[status as keyof typeof STATUS_COLORS] || STATUS_COLORS.PENDING
-
-            return (
-                <Badge variant='outline' className={cn('capitalize border-none', colorClass)}>
-                    {statusLabel}
-                </Badge>
-            )
-        },
-        filterFn: (row, id, value) => value.includes(row.getValue(id)),
-        enableHiding: false,
-    },
-    {
-        accessorKey: 'adminNote',
-        header: ({ column }) => (
-            <DataTableColumnHeader column={column} title='Ghi chú' />
-        ),
-        cell: ({ row }) => {
-            const note = row.getValue('adminNote') as string | null | undefined
-            return (
-                <LongText className='max-w-48 text-sm'>
-                    {note || '-'}
-                </LongText>
-            )
-        },
-        meta: { className: 'w-48' },
-    },
+    
     {
         accessorKey: 'createdAt',
         header: ({ column }) => (
@@ -136,9 +102,27 @@ export const withdrawalColumns: ColumnDef<WithdrawalRequestItem>[] = [
         meta: { className: 'w-48' },
     },
     {
+        accessorKey: 'status',
+        header: ({ column }) => (
+            <DataTableColumnHeader column={column} title='Trạng thái' />
+        ),
+        cell: ({ row }) => {
+            const status = row.original.status as string
+            const statusLabel = WITHDRAWAL_STATUS_LABEL[status] || status
+            const colorClass = STATUS_COLORS[status as keyof typeof STATUS_COLORS] || STATUS_COLORS.PENDING
+
+            return (
+                <Badge variant='outline' className={cn('capitalize border-none', colorClass)}>
+                    {statusLabel}
+                </Badge>
+            )
+        },
+        filterFn: (row, id, value) => value.includes(row.getValue(id)),
+        enableHiding: false,
+    },
+    {
         id: 'actions',
         cell: DataTableRowActions,
         enableHiding: false,
     },
 ]
-
