@@ -3,7 +3,6 @@ import { Main } from '@/components/layout/main'
 import { UsersDialogs } from '@/features/users/components/users-dialogs'
 import { UsersProvider } from '@/features/users/components/users-provider'
 import { RequestTable } from '@/features/requests/components/request-table'
-import type { RequestList } from '@/features/requests/data/schema'
 import { useGetRequests } from '@/hooks/api/requests'
 
 const route = getRouteApi('/_authenticated/lab-admin/requests/')

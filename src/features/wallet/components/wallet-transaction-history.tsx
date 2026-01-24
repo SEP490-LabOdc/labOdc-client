@@ -22,7 +22,7 @@ interface WalletTransactionHistoryProps {
     onViewAll?: () => void
 }
 
-const getTypeConfig = (direction: TransactionDirection) => {
+const getTypeConfig = (direction: string) => {
     switch (direction) {
         case TransactionDirection.CREDIT:
             return {

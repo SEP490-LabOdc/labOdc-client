@@ -49,7 +49,7 @@ export interface CreateChecklistItemPayload {
   content: string
   displayOrder: number
   required: boolean
-  isDeleted: boolean // ✅ NEW
+  isDeleted?: boolean // ✅ NEW
 }
 
 export interface CreateChecklistGroupPayload {
