@@ -63,7 +63,7 @@ const ProjectDetailPage = () => {
           </div>
 
           {/* Biểu mẫu Card - Nổi bật và dễ nhận biết */}
-          <div className="bg-gradient-to-br from-secondary/10 to-primary/10 p-5 rounded-md shadow-md border-2 border-secondary/30 hover:border-secondary/50 transition-all hover:shadow-lg">
+          <div className="bg-linear-to-br from-secondary/10 to-primary/10 p-5 rounded-md shadow-md border-2 border-secondary/30 hover:border-secondary/50 transition-all hover:shadow-lg">
             <div className="flex items-start gap-3 mb-3">
               <div className="p-2 bg-card rounded-md shadow-sm">
                 <FileText className="w-6 h-6 text-secondary" />
@@ -78,7 +78,7 @@ const ProjectDetailPage = () => {
               </div>
             </div>
             <Button
-              className="w-full bg-gradient-to-r from-secondary to-primary hover:from-secondary/90 hover:to-primary/90 text-white font-semibold shadow-md transition-all group"
+              className="w-full bg-linear-to-br from-secondary to-primary hover:from-secondary/90 hover:to-primary/90 text-white font-semibold shadow-md transition-all group"
               onClick={() => navigate({ to: `${getRoleBasePath(user?.role)}/projects/${projectId}/templates` })}
             >
               <FileText className="w-4 h-4 mr-2" />

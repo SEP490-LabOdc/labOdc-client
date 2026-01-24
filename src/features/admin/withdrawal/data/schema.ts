@@ -16,6 +16,10 @@ export const WITHDRAWAL_STATUS_OPTIONS = Object.entries(WITHDRAWAL_STATUS_LABEL)
 export const withdrawalRequestItemSchema = z.object({
     id: z.string().uuid(),
     userId: z.string().uuid(),
+    fullName: z.string(),
+    email: z.string(),
+    avatarUrl: z.string().nullable().optional(),
+    
     walletId: z.string().uuid(),
     amount: z.number(),
     bankInfo: z.object({
@@ -28,11 +32,10 @@ export const withdrawalRequestItemSchema = z.object({
     }).catchall(z.unknown()),
     status: z.string(),
     adminNote: z.string().nullable().optional(),
-    scheduledAt: z.string().datetime().nullable().optional(),
-    processedAt: z.string().datetime().nullable().optional(),
-    createdAt: z.string().datetime(),
-    updatedAt: z.string().datetime(),
+    scheduledAt: z.string().nullable().optional(),
+    processedAt: z.string().nullable().optional(),
+    createdAt: z.string(),
+    updatedAt: z.string(),
 })
 
 export type WithdrawalRequestItem = z.infer<typeof withdrawalRequestItemSchema>
-
