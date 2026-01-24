@@ -1,11 +1,4 @@
-import { Plus, Download } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -62,46 +55,12 @@ export default function TalentProjectPage() {
   return (
     <div>
       <div className="container mx-auto px-8 py-6">
-        <div className="flex items-center justify-between mb-6">
-          <div>
-            <Breadcrumb>
-              <BreadcrumbList>
-                <BreadcrumbItem>
-                  <BreadcrumbLink href="/mentor">Mentor</BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator />
-                <BreadcrumbItem>
-                  <BreadcrumbPage>Dự án</BreadcrumbPage>
-                </BreadcrumbItem>
-              </BreadcrumbList>
-            </Breadcrumb>
-            <h1 className="text-2xl font-bold text-gray-900 mt-2">Dự án của tôi</h1>
-          </div>
-
-          <div className="flex items-center gap-3">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline">
-                  <Download className="h-4 w-4 mr-2" />
-                  Export
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                <DropdownMenuItem>Export PDF</DropdownMenuItem>
-                <DropdownMenuItem>Export Excel</DropdownMenuItem>
-                <DropdownMenuItem>Export CSV</DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-
-            <Button className="bg-orange-500 hover:bg-orange-600">
-              <Plus className="h-4 w-4 mr-2" />
-              Tham gia dự án
-            </Button>
-          </div>
+        <div className="mb-6">
+            <h1 className="text-2xl font-bold text-gray-900 ">Dự án của tôi</h1>
         </div>
 
         <ProjectsTable
-          data={projects?.data || []}
+          data={projects?.data || []} 
           search={{}}
           navigate={mockNavigate}
         />
