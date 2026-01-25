@@ -94,7 +94,7 @@ const ProjectDetailPage = () => {
               <TabsTrigger value="overview">Tổng quan</TabsTrigger>
               <TabsTrigger value="milestones">Cột mốc</TabsTrigger>
               <TabsTrigger value="files">Tệp tin & Hình ảnh</TabsTrigger>
-              <TabsTrigger value="activity">Hoạt động & Ghi chú</TabsTrigger>
+              <TabsTrigger value="activity">Hoạt động</TabsTrigger>
             </TabsList>
 
             <TabsContent value="overview" className="mt-6">

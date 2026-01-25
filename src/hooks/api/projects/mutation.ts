@@ -332,3 +332,22 @@ export function useDeleteProjectDocument() {
   })
 }
 
+export function useClosureRequests() {
+  return useMutation({
+    mutationFn: async (payload: {
+      projectId: string
+      reason: string
+      summary: string
+    }) => {
+      const { data } = await apiRequest.post(
+        `/api/v1/projects/${payload.projectId}/closure-requests`,
+        {
+          reason: payload.reason,
+          summary: payload.summary
+        }
+      )
+      return data
+    }
+  })
+}
+

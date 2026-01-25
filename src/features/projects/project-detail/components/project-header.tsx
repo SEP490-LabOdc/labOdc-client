@@ -8,6 +8,7 @@ import { usePermission } from '@/hooks/usePermission'
 import { ProjectStatus, useCloseProject, useCompleteProject } from '@/hooks/api/projects'
 import type { ProjectDetail } from '@/hooks/api/projects/types'
 import { ConfirmDialog } from '@/components/confirm-dialog'
+import { RequestCloseProjectModal } from './request-close-project'
 
 interface ProjectPageHeaderProps {
   projectData: ProjectDetail
@@ -16,11 +17,12 @@ interface ProjectPageHeaderProps {
 export const ProjectPageHeader = ({ projectData }: ProjectPageHeaderProps) => {
   const navigate = useNavigate()
   const { user } = useUser()
-  const { isCompany, isLabAdmin } = usePermission()
+  const { isCompany, isLabAdmin, isMentor } = usePermission()
 
   const completeProjectMutation = useCompleteProject()
   const closeProjectMutation = useCloseProject()
   const [isCompleteDialogOpen, setIsCompleteDialogOpen] = useState(false)
+  const [isRequestCloseDialogOpen, setIsRequestCloseDialogOpen] = useState(false)
 
   const handleGoBack = () => {
     navigate({ to: `${getRoleBasePath(user?.role)}/projects` })
@@ -45,6 +47,9 @@ export const ProjectPageHeader = ({ projectData }: ProjectPageHeaderProps) => {
   // Condition to show close button
   const showCloseButton = (isOngoing || isPaused) && isLabAdmin
 
+  // Condition to show request close button (Mentor only)
+  const showRequestCloseButton = isOngoing && isMentor
+
   return (
     <div className="bg-card px-6 lg:px-18 py-4 border-b border-primary/20 flex items-center justify-between">
       <Button
@@ -58,6 +63,23 @@ export const ProjectPageHeader = ({ projectData }: ProjectPageHeaderProps) => {
       </Button>
 
       <div className="flex items-center gap-3">
+        {showRequestCloseButton && (
+          <>
+            <Button
+              variant="outline"
+              className="border-red-200 text-red-700 hover:bg-red-50 hover:text-red-800"
+              onClick={() => setIsRequestCloseDialogOpen(true)}
+            >
+              Yêu cầu đóng dự án
+            </Button>
+            <RequestCloseProjectModal
+              open={isRequestCloseDialogOpen}
+              onOpenChange={setIsRequestCloseDialogOpen}
+              projectId={projectData?.id}
+            />
+          </>
+        )}
+
         {showCompleteButton && (
           <>
             <Button
