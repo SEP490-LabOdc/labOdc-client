@@ -225,7 +225,7 @@ export const MyWalletPage: React.FC = () => {
                         Role: {user?.role}
                     </span>
                 </div>
-                {/* Info Cards */}
+                {/* Info Cards
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div className="p-4 bg-white border rounded-md">
                         <div className="flex items-center gap-3">
@@ -268,7 +268,7 @@ export const MyWalletPage: React.FC = () => {
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> */}
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     {/* Left Column - Balance Card */}
