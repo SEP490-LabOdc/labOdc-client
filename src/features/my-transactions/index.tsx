@@ -58,7 +58,7 @@ export default function MyTransactions() {
         )
     }
 
-    const transactions = data?.data?.content || data?.data || []
+    const transactions = data?.data?.data || data?.data?.data || []
 
     return (
         <MyTransactionsProvider>
