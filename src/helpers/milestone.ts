@@ -15,11 +15,8 @@ export const MILESTONE_STATUS_LABEL: Record<MilestoneStatus, string> = {
     [MilestoneStatus.ON_GOING]: 'Đang thực hiện',
     [MilestoneStatus.PENDING_COMPLETED]: 'Chờ hoàn thành',
     [MilestoneStatus.COMPLETED]: 'Đã hoàn thành',
-    [MilestoneStatus.UPDATE_COMPLETED]: 'Cập nhật hoàn thành',
-    [MilestoneStatus.PENDING_DEPOSIT]: 'Chờ nạp tiền',
-    [MilestoneStatus.DEPOSITED]: 'Đã nạp tiền',
     [MilestoneStatus.PAID]: 'Đã thanh toán',
-    [MilestoneStatus.RELEASED]: 'Đã giải ngân',
+    [MilestoneStatus.DISTRIBUTED]: 'Đã giải ngân',
 }
 
 // ===== MILESTONE STATUS COLORS =====
@@ -33,11 +30,8 @@ export const MILESTONE_STATUS_COLORS: Record<MilestoneStatus, string> = {
     [MilestoneStatus.ON_GOING]: 'bg-emerald-100 text-emerald-700 border-emerald-200',
     [MilestoneStatus.PENDING_COMPLETED]: 'bg-yellow-100 text-yellow-700 border-yellow-200',
     [MilestoneStatus.COMPLETED]: 'bg-green-100 text-green-700 border-green-200',
-    [MilestoneStatus.UPDATE_COMPLETED]: 'bg-teal-100 text-teal-700 border-teal-200',
-    [MilestoneStatus.PENDING_DEPOSIT]: 'bg-amber-100 text-amber-700 border-amber-200',
-    [MilestoneStatus.DEPOSITED]: 'bg-indigo-100 text-indigo-700 border-indigo-200',
     [MilestoneStatus.PAID]: 'bg-emerald-100 text-emerald-700 border-emerald-200',
-    [MilestoneStatus.RELEASED]: 'bg-green-100 text-green-700 border-green-200',
+    [MilestoneStatus.DISTRIBUTED]: 'bg-green-100 text-green-700 border-green-200',
 }
 
 // ===== HELPER FUNCTIONS =====

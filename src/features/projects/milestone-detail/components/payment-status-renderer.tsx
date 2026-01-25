@@ -6,7 +6,7 @@ interface PaymentStatusRendererProps {
     children: {
         completed?: React.ReactNode
         paid?: React.ReactNode
-        released?: React.ReactNode
+        distributed?: React.ReactNode
         fallback?: React.ReactNode
     }
 }
@@ -20,8 +20,8 @@ export const PaymentStatusRenderer: React.FC<PaymentStatusRendererProps> = ({
             return <>{children.completed || children.fallback}</>
         case MilestoneStatus.PAID:
             return <>{children.paid || children.fallback}</>
-        case MilestoneStatus.RELEASED:
-            return <>{children.released || children.fallback}</>
+        case MilestoneStatus.DISTRIBUTED:
+            return <>{children.distributed || children.fallback}</>
         default:
             return <>{children.fallback}</>
     }

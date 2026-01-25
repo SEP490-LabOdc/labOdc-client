@@ -14,6 +14,7 @@ import {
 import { MilestoneStatus } from '@/hooks/api/milestones'
 import { Spinner } from '@/components/ui/spinner'
 import { ExtensionTab } from './components/extension-request'
+import { UserRole } from '@/hooks/api/users'
 
 const MilestoneDetailPage: React.FC = () => {
   const { milestoneId, projectId } = useParams({ strict: false })
@@ -24,7 +25,7 @@ const MilestoneDetailPage: React.FC = () => {
   const { user, isMentor, isCompany } = usePermission()
 
   // Get user role for display (used by MilestoneFinancialsTab)
-  const userRole = user?.role || 'USER'
+  const userRole = user?.role || UserRole.USER
 
   if (isLoading) return <div className="min-h-screen flex items-center justify-center">
     <Spinner />
@@ -41,7 +42,6 @@ const MilestoneDetailPage: React.FC = () => {
         <div className="col-span-12 lg:col-span-4 space-y-6">
           <MilestoneSidebar
             milestone={milestone}
-            paymentStatus={MilestoneStatus.PENDING_DEPOSIT}
             projectId={projectId as string || milestone.projectId}
             onRefresh={refetch}
           />
@@ -76,7 +76,7 @@ const MilestoneDetailPage: React.FC = () => {
             <TabsContent value="financials" className="mt-6">
               <MilestoneFinancialsTab
                 amount={milestone.budget}
-                status={MilestoneStatus.PENDING_DEPOSIT}
+                status={MilestoneStatus.COMPLETED}
                 userRole={userRole}
                 milestoneId={milestone.id}
               />
