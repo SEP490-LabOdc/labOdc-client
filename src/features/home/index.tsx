@@ -22,22 +22,22 @@ export default function Home() {
                             {
                                 name: "Sarah Vance",
                                 role: "Kỹ sư Phần mềm Trưởng nhóm",
-                                image: "/professional-woman-software-engineer-headshot.jpg",
+                                image: "https://tse1.mm.bing.net/th/id/OIP.QxF8jo3HQJhIHh--HjeCHAAAAA?rs=1&pid=ImgDetMain&o=7&rm=3",
                             },
                             {
                                 name: "Marcus Chen",
                                 role: "Quản lý Dự án Cấp cao",
-                                image: "/professional-asian-man-project-manager-headshot.jpg",
+                                image: "https://mshc.imgix.net/images/general/People/Marcus-Chen.jpg?auto=format",
                             },
                             {
                                 name: "Sophia Rodriguez",
                                 role: "Trưởng nhóm Thiết kế UI/UX",
-                                image: "/professional-latina-woman-designer-headshot.jpg",
+                                image: "https://tse1.mm.bing.net/th/id/OIP.jtKpEFLPC85l3Y1De-5gTwHaJQ?rs=1&pid=ImgDetMain&o=7&rm=3",
                             },
                             {
                                 name: "David Kim",
                                 role: "Chuyên gia DevOps",
-                                image: "/professional-korean-man-devops-engineer-headshot.jpg",
+                                image: "https://tse1.mm.bing.net/th/id/OIP.zyaK-O1oXn5q_JPXdej7CAHaHa?rs=1&pid=ImgDetMain&o=7&rm=3",
                             },
                         ].map((member, index) => (
                             <Card key={index} className="text-center hover:shadow-lg transition-shadow">
