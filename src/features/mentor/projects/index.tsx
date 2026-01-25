@@ -60,7 +60,7 @@ export default function MentorProjectPage() {
           </div>
 
           <div className="flex items-center gap-3">
-            <DropdownMenu>
+            {/* <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline">
                   <Download className="h-4 w-4 mr-2" />
@@ -72,12 +72,12 @@ export default function MentorProjectPage() {
                 <DropdownMenuItem>Export Excel</DropdownMenuItem>
                 <DropdownMenuItem>Export CSV</DropdownMenuItem>
               </DropdownMenuContent>
-            </DropdownMenu>
+            </DropdownMenu> */}
 
-            <Button>
+            {/* <Button>
               <Plus className="h-4 w-4 mr-2" />
               Tham gia dự án
-            </Button>
+            </Button> */}
           </div>
         </div>
 

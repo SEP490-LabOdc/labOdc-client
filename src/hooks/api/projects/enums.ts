@@ -9,4 +9,5 @@ export enum ProjectStatus {
     PAUSED = 'PAUSED',
     PENDING_START = 'PENDING_START',
     PAID = 'PAID',
+    PENDING_CLOSURE = 'PENDING_CLOSURE'
 }
