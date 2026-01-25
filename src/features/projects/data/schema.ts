@@ -41,6 +41,7 @@ export const PROJECT_STATUS_OPTIONS = [
   { label: 'Đang thực hiện', value: 'IN_PROGRESS' },
   { label: 'Hoàn thành', value: 'COMPLETED' },
   { label: 'Tạm dừng', value: 'ON_HOLD' },
+  { label: 'Đang chờ đóng', value: 'PENDING_CLOSURE' },
 ]
 
 export const PROJECT_PRIORITY_OPTIONS = [
