@@ -103,7 +103,7 @@ export const MyWalletPage: React.FC = () => {
 
     // Map transactions from API response
     const transactions = useMemo(() => {
-        const transactionsData = transactionsResponse?.data?.content || transactionsResponse?.data || []
+        const transactionsData = transactionsResponse?.data?.data || transactionsResponse?.data.data || []
         return transactionsData
     }, [transactionsResponse])
 
@@ -117,25 +117,30 @@ export const MyWalletPage: React.FC = () => {
         }))
     }, [walletResponse?.data?.bankInfos])
 
-    const handleWithdraw = async (amount: number) => {
-        if (bankAccounts.length === 0) {
-            toast.error('Vui lòng liên kết tài khoản ngân hàng trước')
-            return
+    const handleWithdraw = async (payload: {
+        amount: number
+        bankAccount: {
+            bankName: string
+            accountNumber: string
+            accountHolder: string
         }
+    }) => {
+        const { amount, bankAccount } = payload
 
-        const selectedBankAccount = bankAccounts[0]
         try {
             await withdrawMutation.mutateAsync({
                 amount,
-                bankName: selectedBankAccount.bankName,
-                accountNumber: selectedBankAccount.accountNumber,
-                accountName: selectedBankAccount.accountHolder
+                bankName: bankAccount.bankName,
+                accountNumber: bankAccount.accountNumber,
+                accountName: bankAccount.accountHolder
             })
+
             toast.success('Yêu cầu rút tiền đã được gửi thành công')
-            // Refetch wallet data to update balance
             refetchWallet()
+
         } catch (error) {
             console.error('Error creating withdrawal request:', error)
+            toast.error('Có lỗi xảy ra khi rút tiền')
         }
     }
 
@@ -294,7 +299,7 @@ export const MyWalletPage: React.FC = () => {
                 isOpen={popUp.withdraw.isOpen}
                 onClose={() => handlePopUpClose('withdraw')}
                 availableBalance={availableBalance}
-                bankAccount={bankAccounts.length > 0 ? bankAccounts[0] : undefined}
+                bankAccounts={bankAccounts}
                 onConfirm={handleWithdraw}
             />
 
