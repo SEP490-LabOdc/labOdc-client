@@ -9,6 +9,7 @@ import { ArrowRight, Wallet, FileText } from 'lucide-react'
 import { Button } from '@/components/ui/button.tsx'
 import { getRoleBasePath } from '@/lib/utils.ts'
 import { useUser } from '@/context/UserContext'
+import { UserRole } from '@/hooks/api/users'
 
 const ProjectDetailPage = () => {
   const { user } = useUser()
@@ -90,11 +91,11 @@ const ProjectDetailPage = () => {
 
         <div className="col-span-12 lg:col-span-8">
           <Tabs defaultValue="overview" className="w-full">
-            <TabsList className="grid w-full grid-cols-4 h-auto">
+            <TabsList className={`grid w-full ${user?.role === UserRole.USER ? 'grid-cols-3' : 'grid-cols-4'} h-auto`}>
               <TabsTrigger value="overview">Tổng quan</TabsTrigger>
               <TabsTrigger value="milestones">Cột mốc</TabsTrigger>
-              <TabsTrigger value="files">Tệp tin & Hình ảnh</TabsTrigger>
-              <TabsTrigger value="activity">Hoạt động</TabsTrigger>
+              <TabsTrigger value="files">Tệp tin</TabsTrigger>
+              {user?.role !== UserRole.USER && <TabsTrigger value="activity">Hoạt động</TabsTrigger>}
             </TabsList>
 
             <TabsContent value="overview" className="mt-6">
@@ -121,9 +122,11 @@ const ProjectDetailPage = () => {
               <ProjectFilesTab projectId={projectId as string} />
             </TabsContent>
 
-            <TabsContent value="activity" className="mt-6">
-              <ProjectActivityTab projectId={projectId as string} />
-            </TabsContent>
+            {user?.role !== UserRole.USER && (
+              <TabsContent value="activity" className="mt-6">
+                <ProjectActivityTab projectId={projectId as string} />
+              </TabsContent>
+            )}
           </Tabs>
         </div>
       </div>

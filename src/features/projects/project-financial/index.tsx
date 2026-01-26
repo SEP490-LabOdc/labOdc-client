@@ -6,10 +6,12 @@ import { ProjectFinancialsTab } from './components/index.tsx'
 import type { FinancialSummary, Transaction } from './components/financials-tab.tsx'
 import { useGetTransactionsByProjectId } from '@/hooks/api/transactions/queries'
 import type { Transaction as ApiTransaction } from '@/hooks/api/transactions/types'
+import { getRoleBasePath } from '@/lib/utils.ts'
 
 
 const ProjectFinancialPage: React.FC = () => {
   const { projectId } = useParams({ strict: false })
+  const { user } = useUser();
   const navigate = useNavigate()
 
   // Pagination state
@@ -72,7 +74,7 @@ const ProjectFinancialPage: React.FC = () => {
               variant="ghost"
               size="sm"
               className="hover:bg-muted text-muted-foreground hover:text-foreground"
-              onClick={() => navigate({ to: `/projects/${projectId}` })} // Quay lại trang chi tiết
+              onClick={() => navigate({ to: `${getRoleBasePath(currentUserRole)}/projects/${projectId}` })} // Quay lại trang chi tiết
             >
               <ArrowLeft className="w-5 h-5 mr-1" />
               Quay lại Dự án
