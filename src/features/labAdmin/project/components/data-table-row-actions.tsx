@@ -1,26 +1,23 @@
 import { DotsHorizontalIcon } from '@radix-ui/react-icons'
 import { type Row } from '@tanstack/react-table'
-import { Trash2, UserPen } from 'lucide-react'
+import { UserPen } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
-    DropdownMenuSeparator,
     DropdownMenuShortcut,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { PROJECT_STATUS, type Project } from '../data/schema'
-import { useProjects } from './project-provider'
-// import { useNavigate } from '@tanstack/react-router'
+import { type Project } from '../data/schema'
+import { useNavigate } from '@tanstack/react-router'
 
 type DataTableRowActionsProps = {
     row: Row<Project>
 }
 
 export function DataTableRowActions({ row }: DataTableRowActionsProps) {
-    const { setOpen, setCurrentRow } = useProjects()
-    // const navigate = useNavigate()
+    const navigate = useNavigate()
     return (
         <>
             <DropdownMenu modal={false}>
@@ -34,52 +31,16 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align='end' className='w-[160px]'>
-                    {
-                        row.original.status == PROJECT_STATUS.PENDING ? (
-
-                            <DropdownMenuItem
-                                // onClick={() => {
-                                //     navigate({
-                                //         to: '/admin/companies/approve',
-                                //         search: { id: row.original.id },
-                                //     })
-                                // }}
-                            >
-                                Vào phê duyệt
-                                <DropdownMenuShortcut>
-                                    <UserPen size={16} />
-                                </DropdownMenuShortcut>
-                            </DropdownMenuItem>
-
-                        ) : (
-
-                            <DropdownMenuItem
-                                // onClick={() => {
-                                //     navigate({
-                                //         to: '/admin/companies/edit',
-                                //         search: { id: row.original.id },
-                                //     })
-                                // }}
-                            >
-                                Chỉnh sửa
-                                <DropdownMenuShortcut>
-                                    <UserPen size={16} />
-                                </DropdownMenuShortcut>
-                            </DropdownMenuItem>
-                        )
-                    }
-
-                    <DropdownMenuSeparator />
                     <DropdownMenuItem
                         onClick={() => {
-                            setCurrentRow(row.original)
-                            setOpen('delete')
+                            navigate({
+                                to: '/lab-admin/projects/' + row.original.id,
+                            })
                         }}
-                        className='text-red-500!'
                     >
-                        Xóa
+                        Xem thông tin
                         <DropdownMenuShortcut>
-                            <Trash2 size={16} />
+                            <UserPen size={16} />
                         </DropdownMenuShortcut>
                     </DropdownMenuItem>
                 </DropdownMenuContent>

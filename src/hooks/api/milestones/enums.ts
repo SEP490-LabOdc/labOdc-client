@@ -5,11 +5,8 @@ export enum MilestoneStatus {
     ON_GOING = 'ON_GOING',
     PENDING_COMPLETED = 'PENDING_COMPLETED',
     COMPLETED = 'COMPLETED',
-    UPDATE_COMPLETED = 'UPDATE_COMPLETED',
-    PENDING_DEPOSIT = 'PENDING_DEPOSIT',
-    DEPOSITED = 'DEPOSITED',
     PAID = 'PAID',
-    RELEASED = 'RELEASED',
+    DISTRIBUTED = 'DISTRIBUTED',
 }
 
 export enum MilestoneExtensionRequestStatus {

@@ -10,6 +10,7 @@ export const PROJECT_STATUS = {
     CLOSED: 'CLOSED',
     PAUSED: 'PAUSED',
     COMPLETE: 'COMPLETE',
+    PENDING_CLOSURE: 'PENDING_CLOSURE'
 } as const
 
 // ===== Project Status Labels =====
@@ -22,6 +23,7 @@ export const PROJECT_STATUS_LABEL: Record<ProjectStatus, string> = {
     CLOSED: 'Đã đóng',
     PAUSED: 'Tạm dừng',
     COMPLETE: 'Hoàn thành',
+    PENDING_CLOSURE: 'Đang chờ đóng'
 }
 
 export const PROJECT_STATUS_OPTIONS = Object.entries(PROJECT_STATUS_LABEL).map(

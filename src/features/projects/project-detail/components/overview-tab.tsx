@@ -22,7 +22,6 @@ import { toast } from 'sonner'
 import { projectKeys, useUpdateStatusHiring, useGetProjectApplicants } from '@/hooks/api/projects'
 import { useQueryClient } from '@tanstack/react-query'
 import { usePermission } from '@/hooks/usePermission'
-import { Plus } from 'lucide-react'
 import { useUser } from '@/context/UserContext'
 import { MembersAvatarList } from '@/components/members-avatar-list'
 import type { ProjectMember } from '@/hooks/api/projects'
@@ -190,8 +189,7 @@ export const ProjectOverviewTab = ({ projectData }: ProjectOverviewTabProps) => 
                         onClick={() => navigate({ to: `${getRoleBasePath(user.role)}/projects/${projectData.id}/members` })}
                         className="h-8 px-3 rounded-full bg-secondary/10 hover:bg-secondary/20 text-secondary text-xs font-medium flex items-center gap-1 transition-colors border border-secondary/30"
                       >
-                        <Plus className="h-3 w-3" />
-                        Thêm/Sửa
+                        Xem tất cả
                       </button>
                     </>
                   ) : (
@@ -201,7 +199,6 @@ export const ProjectOverviewTab = ({ projectData }: ProjectOverviewTabProps) => 
                         onClick={() => navigate({ to: `${getRoleBasePath(user.role)}/projects/${projectData.id}/members` })}
                         className="h-8 px-3 rounded-full bg-secondary/10 hover:bg-secondary/20 text-secondary text-xs font-medium flex items-center gap-1 transition-colors border border-secondary/30"
                       >
-                        <Plus className="h-3 w-3" />
                         Thêm thành viên
                       </button>
                     </div>

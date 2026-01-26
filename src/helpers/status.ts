@@ -25,11 +25,8 @@ export const MILESTONE_STATUS_LABEL: Record<string, string> = {
     [MilestoneStatus.ON_GOING]: 'Đang thực hiện',
     [MilestoneStatus.PENDING_COMPLETED]: 'Chờ hoàn thành',
     [MilestoneStatus.COMPLETED]: 'Đã hoàn thành',
-    [MilestoneStatus.UPDATE_COMPLETED]: 'Cập nhật hoàn thành',
-    [MilestoneStatus.PENDING_DEPOSIT]: 'Chờ nạp tiền',
-    [MilestoneStatus.DEPOSITED]: 'Đã nạp tiền',
     [MilestoneStatus.PAID]: 'Đã thanh toán',
-    [MilestoneStatus.RELEASED]: 'Đã giải ngân',
+    [MilestoneStatus.DISTRIBUTED]: 'Đã giải ngân',
 }
 
 
@@ -103,8 +100,6 @@ export enum STATUS_COLORS {
     PENDING_START = COLOR_PALETTE.SKY,
     PENDING_COMPLETED = COLOR_PALETTE.YELLOW,
     UPDATE_COMPLETED = COLOR_PALETTE.ORANGE,
-    PENDING_DEPOSIT = COLOR_PALETTE.AMBER,
-    DEPOSITED = COLOR_PALETTE.BLUE,
     PAID = COLOR_PALETTE.EMERALD,
     RELEASED = COLOR_PALETTE.GREEN,
     DISABLED = COLOR_PALETTE.RED_DISABLED,

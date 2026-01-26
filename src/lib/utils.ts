@@ -84,6 +84,8 @@ const StatusColorMap: Record<ProjectStatus, string> = {
   [ProjectStatus.PENDING_START]: 'bg-sky-100 text-sky-800 border-sky-200',
   // PAID: Ngọc lục bảo (Emerald) (Thường dùng cho Tài chính/Tiền tệ/An toàn)
   [ProjectStatus.PAID]: 'bg-emerald-100 text-emerald-800 border-emerald-200',
+  // PENDING_CLOSURE: trung gian giữa đang hoạt động (blue) và hoàn tất (green)
+  [ProjectStatus.PENDING_CLOSURE]: 'bg-teal-100 text-teal-800 border-teal-200',
 }
 
 // Project status label mapping
@@ -98,6 +100,7 @@ const StatusLabelMap: Record<ProjectStatus, string> = {
   [ProjectStatus.PAUSED]: 'Tạm dừng',
   [ProjectStatus.PENDING_START]: 'Chờ bắt đầu',
   [ProjectStatus.PAID]: 'Đã thanh toán',
+  [ProjectStatus.PENDING_CLOSURE]: 'Đang chờ đóng',
 }
 
 export function getStatusColor(status: string): string {

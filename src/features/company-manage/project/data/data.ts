@@ -33,4 +33,8 @@ export const callTypes = new Map<ProjectStatus, string>([
         'COMPLETE',
         'bg-teal-200/40 text-teal-900 dark:text-teal-100 border-teal-300',
     ],
+    [
+        'PENDING_CLOSURE',
+        'bg-teal-100 text-teal-800 border-teal-200',
+    ]
 ]);

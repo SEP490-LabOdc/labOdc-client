@@ -9,7 +9,7 @@ const footerLinks = {
     ],
     enterprises: [
         { name: "Đăng ký doanh nghiệp", href: "/company-register" },
-        { name: "Đăng nhập", href: "/company-login" },
+        { name: "Đăng nhập", href: "/sign-in" },
         { name: "Danh sách công ty", href: "/companies" },
     ],
     resources: [

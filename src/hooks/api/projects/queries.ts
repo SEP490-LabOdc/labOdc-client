@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { projectKeys } from './query-keys.ts'
 import apiRequest from '@/config/request';
 import { useAuthStore } from '@/stores/auth-store.ts'
+import { toLocalISOString } from '@/helpers/datetime.ts';
 
 export const useGetProjectHiring = (page: number = 1, pageSize: number = 3) =>
   useQuery({
@@ -45,12 +46,12 @@ export function useCreateProject() {
 
       if (payload.startDate) {
         requestBody.startDate = payload.startDate instanceof Date
-          ? payload.startDate.toISOString()
+          ? toLocalISOString(payload.startDate)
           : payload.startDate
       }
       if (payload.endDate) {
         requestBody.endDate = payload.endDate instanceof Date
-          ? payload.endDate.toISOString()
+          ? toLocalISOString(payload.endDate)
           : payload.endDate
       }
 
@@ -305,6 +306,19 @@ export function useGetProjectsByCompanyId(companyId: string) {
     queryKey: projectKeys.getProjectsByCompanyId(companyId),
     queryFn: async () => {
       const { data } = await apiRequest.get(`/api/v1/projects/companies/${companyId}`);
+      return data;
+    }
+  })
+}
+
+export function useGetProjectClosureRequest(payload: {
+  projectId: string
+  role: string
+}) {
+  return useQuery({
+    queryKey: projectKeys.getProjectClosureRequest(payload.projectId),
+    queryFn: async () => {
+      const { data } = await apiRequest.get(`/api/v1/projects/${payload.projectId}/closure-requests?role=${payload.role}`);
       return data;
     }
   })

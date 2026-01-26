@@ -21,8 +21,8 @@ type DataTableRowActionsProps = {
 }
 
 export function DataTableRowActions({ row }: DataTableRowActionsProps) {
-    const { setOpen, setCurrentRow } = useUsers()
     const navigate = useNavigate()
+    const { user } = useUser();
     return (
         <>
             <DropdownMenu modal={false}>
@@ -38,18 +38,17 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
                 <DropdownMenuContent align='end' className='w-[160px]'>
                     <DropdownMenuItem
                         onClick={() => {
-                            const { user } = useUser();
                             navigate({
                                 to: getRoleBasePath(user.role) + '/users/' + row.original.id,
                             })
                         }}
                     >
-                        Thông tin
+                        Xem thông tin
                         <DropdownMenuShortcut>
                             <Search size={16} />
                         </DropdownMenuShortcut>
                     </DropdownMenuItem>
-                    <DropdownMenuSeparator />
+                    {/* <DropdownMenuSeparator />
                     <DropdownMenuItem
                         onClick={() => {
                             setCurrentRow(row.original)
@@ -61,7 +60,7 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
                         <DropdownMenuShortcut>
                             <Trash2 size={16} />
                         </DropdownMenuShortcut>
-                    </DropdownMenuItem>
+                    </DropdownMenuItem> */}
                 </DropdownMenuContent>
             </DropdownMenu>
         </>

@@ -1,6 +1,7 @@
 import React from 'react'
 import { Info } from 'lucide-react'
 import { MilestoneStatus } from '@/hooks/api/milestones'
+import { UserRole } from '@/hooks/api/users'
 
 interface MentorTalentStatusViewProps {
     status: MilestoneStatus
@@ -19,7 +20,7 @@ export const MentorTalentStatusView: React.FC<MentorTalentStatusViewProps> = ({
         switch (status) {
             case MilestoneStatus.PAID:
                 return 'Đã nhận tiền'
-            case MilestoneStatus.PENDING_DEPOSIT:
+            case MilestoneStatus.COMPLETED:
                 return 'Đang chờ duyệt'
             default:
                 return 'Đang chờ ký quỹ'
@@ -29,8 +30,8 @@ export const MentorTalentStatusView: React.FC<MentorTalentStatusViewProps> = ({
     const getDescription = () => {
         switch (status) {
             case MilestoneStatus.PAID:
-                return `Bạn đã nhận ${userRole === 'MENTOR' ? formatVND(mentorShare) : 'phần của mình'}.`
-            case MilestoneStatus.PENDING_DEPOSIT:
+                return `Bạn đã nhận ${userRole === UserRole.MENTOR ? formatVND(mentorShare) : 'phần của mình'}.`
+            case MilestoneStatus.COMPLETED:
                 return 'Doanh nghiệp đang xem xét.'
             default:
                 return 'Chờ doanh nghiệp nạp tiền.'
