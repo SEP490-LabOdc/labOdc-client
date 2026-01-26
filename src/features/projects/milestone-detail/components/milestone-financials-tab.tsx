@@ -29,7 +29,7 @@ interface MilestoneFinancialsTabProps {
 
 const getStatusInfo = (status: MilestoneStatus) => {
   switch (status) {
-    case MilestoneStatus.PENDING_DEPOSIT:
+    case MilestoneStatus.COMPLETED:
       return {
         label: 'Chưa ký quỹ',
         color: 'bg-orange-100 text-orange-800 border-orange-200',
@@ -43,7 +43,7 @@ const getStatusInfo = (status: MilestoneStatus) => {
         iconColor: 'text-blue-500',
         IconComponent: CheckCircle
       }
-    case MilestoneStatus.RELEASED:
+    case MilestoneStatus.DISTRIBUTED:
       return {
         label: 'Đã giải ngân',
         color: 'bg-green-100 text-green-800 border-green-200',
@@ -77,7 +77,7 @@ export const MilestoneFinancialsTab: React.FC<MilestoneFinancialsTabProps> = ({
   const statusInfo = getStatusInfo(status as MilestoneStatus)
   const StatusIcon = statusInfo?.IconComponent || null
 
-  if (isLoadingPreview && status === MilestoneStatus.PENDING_DEPOSIT) {
+  if (isLoadingPreview) {
     return (
       <div className="flex items-center justify-center py-12">
         <Loader2 className="h-8 w-8 animate-spin text-[#2a9d8f]" />
@@ -242,7 +242,7 @@ export const MilestoneFinancialsTab: React.FC<MilestoneFinancialsTabProps> = ({
                   Hướng dẫn và quản lý dự án
                 </div>
               )}
-              {status === MilestoneStatus.RELEASED && (
+              {status === MilestoneStatus.DISTRIBUTED && (
                 <div className="mt-3 flex items-center gap-1 text-xs text-green-600 bg-green-100 px-2 py-1 rounded">
                   <CheckCircle className="w-3 h-3" />
                   Đã chuyển về ví
@@ -293,7 +293,7 @@ export const MilestoneFinancialsTab: React.FC<MilestoneFinancialsTabProps> = ({
                   Thực hiện và phát triển
                 </div>
               )}
-              {status === MilestoneStatus.RELEASED && (
+              {status === MilestoneStatus.DISTRIBUTED && (
                 <div className="mt-3 flex items-center gap-1 text-xs text-green-600 bg-green-100 px-2 py-1 rounded">
                   <CheckCircle className="w-3 h-3" />
                   Đã chuyển về ví Leader

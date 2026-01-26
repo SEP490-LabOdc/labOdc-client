@@ -118,4 +118,16 @@ export interface ReportRecipient {
   avatar: string
 }
 
+export interface ProjectClosureRequest {
+  id: string
+  projectId: string
+  reason: string
+  summary: string
+  status: string
+  createdAt: string
+  createdBy: string
+  createdByName: string
+  createdByAvatar: string
+}
+
 

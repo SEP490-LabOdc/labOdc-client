@@ -34,7 +34,6 @@ import { useAddTalentToMilestone, useGetProjectMembers } from '@/hooks/api/proje
 
 interface MilestoneSidebarProps {
   milestone: Milestone
-  paymentStatus?: MilestoneStatus
   projectId: string
   onRefresh?: () => void
 }
@@ -328,7 +327,7 @@ export const MilestoneSidebar: React.FC<MilestoneSidebarProps> = ({
                     formatVND={formatVND}
                   />
                 ),
-                released: <ReleasedStatus />,
+                distributed: <ReleasedStatus />,
               }}
             </PaymentStatusRenderer>
           </div>
