@@ -5,7 +5,7 @@ import { UsersPrimaryButtons } from '@/features/users/components/users-primary-b
 import { UsersProvider } from '@/features/users/components/users-provider'
 import { UsersTable } from '@/features/users/components/users-table'
 import { useGetUsers } from '@/hooks/api/users'
-import { UsersImportButton } from '@/features/users/components/user-import-button'
+// import { UsersImportButton } from '@/features/users/components/user-import-button'
 
 const route = getRouteApi('/_authenticated/admin/users/')
 
@@ -45,7 +45,7 @@ export default function Users() {
                         </div>
                         <div className='flex gap-2'>
                             <UsersPrimaryButtons />
-                            <UsersImportButton />
+                            {/* <UsersImportButton /> */}
                         </div>
                     </div>
                     <div className='-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-y-0 lg:space-x-12'>

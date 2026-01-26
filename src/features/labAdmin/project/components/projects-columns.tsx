@@ -84,7 +84,7 @@ export const projectsColumns: ColumnDef<Project>[] = [
     {
         accessorKey: 'budget',
         header: ({ column }) => (
-            <DataTableColumnHeader column={column} title="Ngân sách (USD)" />
+            <DataTableColumnHeader column={column} title="Ngân sách (VND)" />
         ),
         cell: ({ row }) => {
             const value = row.getValue('budget') as string
