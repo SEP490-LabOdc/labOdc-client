@@ -19,19 +19,8 @@ import {
     SelectValue,
 } from '@/components/ui/select'
 import { Info } from 'lucide-react'
-
-export const BANKS = [
-    { value: 'vietcombank', label: 'Vietcombank - Ngân hàng Ngoại thương' },
-    { value: 'vietinbank', label: 'VietinBank - Ngân hàng Công thương' },
-    { value: 'bidv', label: 'BIDV - Ngân hàng Đầu tư và Phát triển' },
-    { value: 'agribank', label: 'Agribank - Ngân hàng Nông nghiệp' },
-    { value: 'techcombank', label: 'Techcombank - Ngân hàng Kỹ thương' },
-    { value: 'mbbank', label: 'MB Bank - Ngân hàng Quân đội' },
-    { value: 'acb', label: 'ACB - Ngân hàng Á Châu' },
-    { value: 'vpbank', label: 'VPBank - Ngân hàng Việt Nam Thịnh vượng' },
-    { value: 'tpbank', label: 'TPBank - Ngân hàng Tiên Phong' },
-    { value: 'sacombank', label: 'Sacombank - Ngân hàng TMCP Sài Gòn Thương Tín' },
-]
+import { useGetBanks } from '@/hooks/api/banks'
+import type { Bank } from '@/hooks/api/banks/types'
 
 export const bankAccountSchema = z.object({
     bankName: z.string().min(1, 'Vui lòng chọn ngân hàng'),
@@ -62,6 +51,7 @@ export const BankAccountForm: React.FC<BankAccountFormProps> = ({
     children,
     showPreview = true
 }) => {
+    const { data: bankRes, isLoading, isError } = useGetBanks();
     const form = useForm<BankAccountFormData>({
         resolver: zodResolver(bankAccountSchema),
         mode: 'onChange',
@@ -74,10 +64,16 @@ export const BankAccountForm: React.FC<BankAccountFormProps> = ({
     })
 
     React.useEffect(() => {
+        if (!bankRes?.data) return
+
         if (defaultValues) {
-            form.reset(defaultValues)
+            form.reset({
+                bankName: defaultValues.bankName ?? '',
+                accountNumber: defaultValues.accountNumber ?? '',
+                accountHolder: defaultValues.accountHolder ?? '',
+            })
         }
-    }, [defaultValues, form])
+    }, [bankRes, defaultValues, form])
 
     const bankName = form.watch('bankName')
     const accountNumber = form.watch('accountNumber')
@@ -112,16 +108,27 @@ export const BankAccountForm: React.FC<BankAccountFormProps> = ({
                             <Select
                                 value={field.value}
                                 onValueChange={field.onChange}
+                                disabled={isLoading || isError}
                             >
                                 <FormControl>
                                     <SelectTrigger>
-                                        <SelectValue placeholder="Chọn ngân hàng..." />
+                                        <SelectValue
+                                            placeholder={
+                                                isLoading
+                                                    ? 'Đang tải ngân hàng...'
+                                                    : 'Chọn ngân hàng...'
+                                            }
+                                        />
                                     </SelectTrigger>
                                 </FormControl>
-                                <SelectContent>
-                                    {BANKS.map((bank) => (
-                                        <SelectItem key={bank.value} value={bank.label}>
-                                            {bank.label}
+
+                                <SelectContent className="max-h-[300px] w-full">
+                                    {bankRes?.data.map((bank: Bank) => (
+                                        <SelectItem
+                                            key={bank.code}
+                                            value={bank.code}
+                                        >
+                                            {bank.shortName} – {bank.name}
                                         </SelectItem>
                                     ))}
                                 </SelectContent>
