@@ -15,6 +15,7 @@ export const useApproveWithdrawal = () => {
         mutationFn: async (payload: ApproveWithdrawalPayload) => {
             const { data } = await apiRequest.patch(
                 `/api/v1/admin/withdrawal-requests/${payload.withdrawalId}/approve`,
+                { adminNote: '' }
             )
             return data
         },

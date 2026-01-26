@@ -95,12 +95,6 @@ export const TeamFundPage: React.FC = () => {
 
                 <div className="grid grid-cols-12 gap-6 h-[calc(100%-80px)]">
                     <div className="col-span-12 lg:col-span-4 flex flex-col gap-4 h-full overflow-hidden">
-                        <SummaryCards
-                            remainingInHolding={heldBalance}
-                            totalDistributed={availableBalance}
-                            isLoading={isLoadingWallet}
-                        />
-
                         <MilestoneList
                             milestones={apiMilestones}
                             selectedMilestoneId={selectedMilestoneId}
