@@ -43,7 +43,7 @@ export const ReportDetailModal: React.FC<ReportDetailModalProps> = ({
     try {
       await reviewReport({
         reportId: report.id,
-        status: 'APPROVED',
+        status: ReportStatus.APPROVED,
         milestoneId: milestoneId
       })
       toast.success('Phê duyệt báo cáo thành công')
