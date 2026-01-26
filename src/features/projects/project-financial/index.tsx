@@ -7,7 +7,6 @@ import type { FinancialSummary, Transaction } from './components/financials-tab.
 import { useGetTransactionsByProjectId } from '@/hooks/api/transactions/queries'
 import type { Transaction as ApiTransaction } from '@/hooks/api/transactions/types'
 import { getRoleBasePath } from '@/lib/utils.ts'
-import { useUser } from '@/context/UserContext/UserContext.tsx'
 
 
 const ProjectFinancialPage: React.FC = () => {
@@ -75,7 +74,7 @@ const ProjectFinancialPage: React.FC = () => {
               variant="ghost"
               size="sm"
               className="hover:bg-muted text-muted-foreground hover:text-foreground"
-              onClick={() => navigate({ to: getRoleBasePath(user.role) + `/projects/${projectId}` })} // Quay lại trang chi tiết
+              onClick={() => navigate({ to: `${getRoleBasePath(currentUserRole)}/projects/${projectId}` })} // Quay lại trang chi tiết
             >
               <ArrowLeft className="w-5 h-5 mr-1" />
               Quay lại Dự án

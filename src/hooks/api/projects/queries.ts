@@ -324,6 +324,16 @@ export function useGetProjectClosureRequest(payload: {
   })
 }
 
+export function useGetProjectMentorAvailable(projectId: string) {
+    return useQuery({
+        queryKey: projectKeys.getProjectMentorAvailable(projectId),
+        queryFn: async () => {
+          const { data } = await apiRequest.get(`/api/v1/project-members/available-mentors/${projectId}`);
+          return data;
+        }
+    })
+}
+
 
 
 

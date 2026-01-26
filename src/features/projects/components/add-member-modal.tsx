@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import {
   Dialog,
   DialogContent,
@@ -17,7 +17,7 @@ import { Badge } from '@/components/ui/badge'
 import { Search, X, Users } from 'lucide-react'
 import { Label } from '@/components/ui/label'
 import { getAvatarUrl } from '@/lib/utils.ts'
-import { UserRole } from '@/hooks/api/users'
+import { UserRole } from '@/hooks/api/users/enums'
 
 interface SystemUser {
   projectMemberId: string
@@ -25,6 +25,7 @@ interface SystemUser {
   avatarUrl: string
   email: string
   roleName: string
+  userId?: string
 }
 
 interface AddMemberModalProps {
@@ -32,21 +33,31 @@ interface AddMemberModalProps {
   onClose: () => void
   onAddMembers: (selectedUserIds: string[]) => void
   projectMembers?: SystemUser[]
+  targetRole?: UserRole
 }
 
 export function AddMemberModal({
   isOpen,
   onClose,
   onAddMembers,
-  projectMembers = []
+  projectMembers = [],
+  targetRole = UserRole.TALENT
 }: AddMemberModalProps) {
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedUsers, setSelectedUsers] = useState<SystemUser[]>([])
 
-  // Lọc chỉ lấy các thành viên có roleName là TALENT
-  const talentMembers = projectMembers.filter(user => user.roleName === UserRole.TALENT)
+  useEffect(() => {
+    if (!isOpen) {
+      setSelectedUsers([])
+      setSearchQuery('')
+    }
+  }, [isOpen])
 
-  const filteredUsers = talentMembers.filter(user =>
+  // If the passed list is already filtered (which it is now in sidebar), we just use it.
+  // We can still filter by role just in case a mixed list is passed.
+  const availableMembers = projectMembers.filter(user => user.roleName === targetRole)
+
+  const filteredUsers = availableMembers.filter(user =>
     user.fullName.toLowerCase().includes(searchQuery.toLowerCase()) ||
     user.email.toLowerCase().includes(searchQuery.toLowerCase())
   )
@@ -68,9 +79,9 @@ export function AddMemberModal({
   const handleSubmit = () => {
     onAddMembers(selectedUsers.map(user => user.projectMemberId))
     onClose()
-    setSelectedUsers([])
-    setSearchQuery('')
   }
+
+  const roleLabel = targetRole === UserRole.MENTOR ? 'Mentor' : 'Talent'
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -78,10 +89,10 @@ export function AddMemberModal({
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-xl">
             <Users className="h-5 w-5" />
-            Thêm thành viên vào Milestone
+            Thêm {roleLabel} vào Milestone
           </DialogTitle>
           <DialogDescription>
-            Chọn Talent từ danh sách dự án để thêm vào milestone này.
+            Chọn {roleLabel} từ danh sách để thêm vào milestone này.
           </DialogDescription>
         </DialogHeader>
 
@@ -126,7 +137,7 @@ export function AddMemberModal({
           )}
 
           <Label className="text-sm font-medium">
-            Talent trong dự án ({talentMembers.length})
+            {roleLabel} ({availableMembers.length})
           </Label>
           <ScrollArea className="h-[250px] border rounded-md">
             <div className="p-4 space-y-3">
@@ -158,8 +169,8 @@ export function AddMemberModal({
               ) : (
                 <p className="text-sm text-gray-500 text-center py-4">
                   {searchQuery
-                    ? 'Không tìm thấy Talent nào.'
-                    : 'Dự án chưa có Talent nào.'}
+                    ? `Không tìm thấy ${roleLabel} nào.`
+                    : `Không có ${roleLabel} nào khả dụng để thêm.`}
                 </p>
               )}
             </div>

@@ -85,3 +85,27 @@ export function useUpdateExtensionRequest() {
         }
     })
 }
+
+export function useAddMentorIntoMilestone() {
+    const queryClient = useQueryClient()
+    return useMutation({
+        mutationFn: async (payload: {
+            milestoneId: string,
+            projectMemberIds: string[]
+        }) => {
+            const { data } = await apiRequest.post(`/api/v1/milestone-members/mentor`, {
+                milestoneId: payload.milestoneId,
+                projectMemberIds: payload.projectMemberIds
+            })
+            return data
+        },
+        onSuccess: (_, variables) => {
+            // Invalidate all extension request queries for this milestone
+            queryClient.invalidateQueries({
+                queryKey: [
+                    milestoneKeys.detail(variables.milestoneId)
+                ]
+            })
+        }
+    })
+}
