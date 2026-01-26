@@ -4,7 +4,6 @@ import { UsersDialogs } from '@/features/users/components/users-dialogs'
 import { UsersProvider } from '@/features/users/components/users-provider'
 import { UsersTable } from '@/features/users/components/users-table'
 import { useGetUsers } from '@/hooks/api/users'
-import { UsersImportButton } from '@/features/users/components/user-import-button'
 
 const route = getRouteApi('/_authenticated/lab-admin/users/')
 
