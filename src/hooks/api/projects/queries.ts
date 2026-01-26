@@ -310,6 +310,19 @@ export function useGetProjectsByCompanyId(companyId: string) {
   })
 }
 
+export function useGetProjectClosureRequest(payload: {
+  projectId: string
+  role: string
+}) {
+  return useQuery({
+    queryKey: projectKeys.getProjectClosureRequest(payload.projectId),
+    queryFn: async () => {
+      const { data } = await apiRequest.get(`/api/v1/projects/${payload.projectId}/closure-requests?role=${payload.role}`);
+      return data;
+    }
+  })
+}
+
 
 
 

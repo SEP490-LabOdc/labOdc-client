@@ -122,7 +122,7 @@ const ProjectDetailPage = () => {
             </TabsContent>
 
             <TabsContent value="activity" className="mt-6">
-              <ProjectActivityTab activities={projectData.activities || []} notes={projectData.notes || []} />
+              <ProjectActivityTab projectId={projectId as string} />
             </TabsContent>
           </Tabs>
         </div>

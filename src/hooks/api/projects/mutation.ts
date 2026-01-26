@@ -1,6 +1,7 @@
 import apiRequest from '@/config/request.ts'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { milestoneKeys } from '@/hooks/api/milestones'
+import { projectKeys } from './query-keys'
 
 // export function useCreateProject() {
 //   return useMutation({
@@ -333,6 +334,7 @@ export function useDeleteProjectDocument() {
 }
 
 export function useClosureRequests() {
+  const queryClient = useQueryClient()
   return useMutation({
     mutationFn: async (payload: {
       projectId: string
@@ -347,7 +349,84 @@ export function useClosureRequests() {
         }
       )
       return data
+    },
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: projectKeys.getProjectClosureRequest(variables.projectId)
+      })
     }
   })
 }
 
+export function useLabAdminReviewClosureRequest() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: async (payload: {
+      projectId: string
+      requestId: string
+      approved: boolean
+      comment: string
+    }) => {
+      const { data } = await apiRequest.put(
+        `/api/v1/projects/${payload.projectId}/closure-requests/${payload.requestId}/lab-admin-review`,
+        {
+          approved: payload.approved,
+          comment: payload.comment
+        }
+      )
+      return data
+    },
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: projectKeys.getProjectClosureRequest(variables.projectId)
+      })
+    }
+  })
+}
+
+export function useCancelClosureRequest() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: async (payload: {
+      projectId: string
+      requestId: string
+    }) => {
+      const { data } = await apiRequest.put(
+        `/api/v1/projects/${payload.projectId}/closure-requests/${payload.requestId}/cancel`
+      )
+      return data
+    },
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: projectKeys.getProjectClosureRequest(variables.projectId)
+      })
+    }
+  })
+}
+
+
+export function useCompanyReviewClosureRequest() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: async (payload: {
+      projectId: string
+      requestId: string
+      approved: boolean
+      comment: string
+    }) => {
+      const { data } = await apiRequest.put(
+        `/api/v1/projects/${payload.projectId}/closure-requests/${payload.requestId}/company-review`,
+        {
+          approved: payload.approved,
+          comment: payload.comment
+        }
+      )
+      return data
+    },
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: projectKeys.getProjectClosureRequest(variables.projectId)
+      })
+    }
+  })
+}
