@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Wallet, DollarSign, Clock, TrendingUp, CreditCard, Plus } from 'lucide-react'
+import { formatVND } from '@/helpers/currency'
 
 interface WalletBalanceCardProps {
     availableBalance: number
@@ -12,8 +13,6 @@ interface WalletBalanceCardProps {
     onDeposit?: () => void
     isCompany?: boolean
 }
-
-const formatVND = (v: number) => new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(v)
 
 export const WalletBalanceCard: React.FC<WalletBalanceCardProps> = ({
     availableBalance,
