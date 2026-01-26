@@ -11,7 +11,6 @@ import { getRoleBasePath } from '@/lib/utils.ts'
 
 const ProjectFinancialPage: React.FC = () => {
   const { projectId } = useParams({ strict: false })
-  const { user } = useUser();
   const navigate = useNavigate()
 
   // Pagination state
