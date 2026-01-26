@@ -1,11 +1,4 @@
-import { Plus, Download } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
 import { ProjectsTable } from "./components"
 import { useUser } from '@/context/UserContext'
 import { useGetMyProjects } from '@/hooks/api/projects'

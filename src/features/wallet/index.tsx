@@ -20,7 +20,6 @@ import { Main } from '@/components/layout/main'
 import { toast } from 'sonner'
 import { usePopUp } from '@/hooks/usePopUp'
 import { ROLE } from '@/const'
-import { formatVND } from '@/helpers/currency'
 
 
 export const MyWalletPage: React.FC = () => {

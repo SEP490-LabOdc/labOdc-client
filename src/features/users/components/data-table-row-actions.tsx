@@ -1,17 +1,15 @@
 import { DotsHorizontalIcon } from '@radix-ui/react-icons'
 import { type Row } from '@tanstack/react-table'
-import { Trash2, Search } from 'lucide-react'
+import { Search } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
-    DropdownMenuSeparator,
     DropdownMenuShortcut,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { type User } from '../data/schema'
-import { useUsers } from './users-provider'
 import { useNavigate } from '@tanstack/react-router'
 import { useUser } from '@/context/UserContext'
 import { getRoleBasePath } from '@/lib/utils'
