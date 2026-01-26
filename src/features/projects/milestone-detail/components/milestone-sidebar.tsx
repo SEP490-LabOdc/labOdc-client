@@ -9,7 +9,7 @@ import {
 import { getRoleBasePath } from '@/lib/utils'
 import { usePermission } from '@/hooks/usePermission'
 import { useNavigate } from '@tanstack/react-router'
-import type { Milestone } from '@/hooks/api/milestones'
+import { useAddMentorIntoMilestone, type Milestone } from '@/hooks/api/milestones'
 import { ConfirmReleaseDialog } from './confirm-release-dialog'
 import { MembersAvatarList } from '@/components/members-avatar-list'
 import { usePayMilestone } from '@/hooks/api/payment'
@@ -28,9 +28,12 @@ import { MentorTalentStatusView } from './mentor-talent-status-view'
 import { MilestoneStatus } from '@/hooks/api/milestones/enums'
 import { formatVND } from '@/helpers/currency'
 import { Button } from '@/components/ui/button'
-import { StatusRenderer } from '@/components'
 import { AddMemberModal } from '@/features/projects/components/add-member-modal'
-import { useAddTalentToMilestone, useGetProjectMembers } from '@/hooks/api/projects'
+import { 
+  useAddTalentToMilestone, 
+  useGetProjectMembers
+} from '@/hooks/api/projects'
+import { UserRole } from '@/hooks/api/users/enums'
 
 interface MilestoneSidebarProps {
   milestone: Milestone
@@ -43,7 +46,7 @@ export const MilestoneSidebar: React.FC<MilestoneSidebarProps> = ({
   projectId,
   onRefresh
 }) => {
-  const { isCompany, isMentor, user } = usePermission()
+  const { isCompany, isMentor, isLabAdmin, user } = usePermission()
   const navigate = useNavigate()
   const [isConfirmDepositOpen, setIsConfirmDepositOpen] = useState(false)
   const [isConfirmReleaseOpen, setIsConfirmReleaseOpen] = useState(false)
@@ -52,6 +55,7 @@ export const MilestoneSidebar: React.FC<MilestoneSidebarProps> = ({
   const executeDisbursement = useExecuteDisbursement()
   const [isAddMemberModalOpen, setIsAddMemberModalOpen] = useState(false)
   const [selectedMilestoneId, setSelectedMilestoneId] = useState<string | null>(null)
+  const [targetRole, setTargetRole] = useState<UserRole>(UserRole.TALENT)
 
   // Map talents to ProjectMember format
   const talents = useMemo(() => {
@@ -187,23 +191,52 @@ export const MilestoneSidebar: React.FC<MilestoneSidebarProps> = ({
     }
   }
 
-  const { data: projectMembersData } = useGetProjectMembers(
-    projectId,
-    selectedMilestoneId || undefined
-  )
-  const addTalentMutation = useAddTalentToMilestone()
+  // Fetch ALL project members (candidates for both Mentor and Talent)
+  const { data: projectMembersData } = useGetProjectMembers(projectId)
 
-  const projectMembers = projectMembersData?.data || []
+  const addTalentMutation = useAddTalentToMilestone()
+  const addMentorMutation = useAddMentorIntoMilestone()
+
+  // Filter out members who are already in the milestone
+  const filteredProjectMembers = useMemo(() => {
+    const isMentorTarget = targetRole === UserRole.MENTOR
+    
+    // Select source list
+    const sourceList = projectMembersData?.data || []
+
+    // Get current members in milestone to check against
+    const currentMilestoneMemberIds = isMentorTarget
+      ? mentors.map(m => m.userId)
+      : talents.map(t => t.userId)
+
+    // Return only those NOT in the current milestone AND NOT the current user
+    return sourceList.filter((candidate: any) => {
+      const candidateId = candidate.userId
+      
+      // Filter out the currently logged-in user
+      if (user?.userId === candidateId) return false;
+
+      return !currentMilestoneMemberIds.includes(candidateId)
+    })
+  }, [targetRole, projectMembersData, mentors, talents, user])
 
   const handleAddMembers = async (selectedUserIds: string[]) => {
     if (!selectedMilestoneId) return
 
     try {
-      await addTalentMutation.mutateAsync({
-        milestoneId: selectedMilestoneId,
-        projectMemberIds: selectedUserIds
-      })
-      toast.success('Thêm thành viên vào milestone thành công')
+      if (targetRole === UserRole.MENTOR) {
+        await addMentorMutation.mutateAsync({
+          milestoneId: selectedMilestoneId,
+          projectMemberIds: selectedUserIds
+        })
+      } else {
+        await addTalentMutation.mutateAsync({
+          milestoneId: selectedMilestoneId,
+          projectMemberIds: selectedUserIds
+        })
+      }
+      
+      toast.success(`Thêm ${targetRole === UserRole.MENTOR ? 'Mentor' : 'Talent'} vào milestone thành công`)
       onRefresh?.()
     } catch (error) {
       console.error(error)
@@ -211,9 +244,9 @@ export const MilestoneSidebar: React.FC<MilestoneSidebarProps> = ({
     }
   }
 
-
-  const openAddMemberModal = (milestoneId: string) => {
+  const openAddMemberModal = (milestoneId: string, role: UserRole) => {
     setSelectedMilestoneId(milestoneId)
+    setTargetRole(role)
     setIsAddMemberModalOpen(true)
   }
 
@@ -227,12 +260,25 @@ export const MilestoneSidebar: React.FC<MilestoneSidebarProps> = ({
 
         <div className="border-t border-border pt-4 space-y-4">
           {/* Mentors Section */}
-          {mentors.length > 0 && (
-            <div>
-              <div className="flex items-center gap-2 text-sm font-semibold mb-3">
+          <div>
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-2 text-sm font-semibold">
                 <Users className="h-4 w-4" />
                 <span>Mentors ({mentors.length})</span>
               </div>
+              {(isLabAdmin || isMentor) && (
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  className="h-8 w-8 p-0"
+                  onClick={() => openAddMemberModal(milestone.id, UserRole.MENTOR)}
+                >
+                  <UserPlus className="h-4 w-4" />
+                </Button>
+              )}
+            </div>
+            
+            {mentors.length > 0 ? (
               <MembersAvatarList
                 members={mentors}
                 size="md"
@@ -240,14 +286,28 @@ export const MilestoneSidebar: React.FC<MilestoneSidebarProps> = ({
                 showCount={false}
                 emptyMessage="Chưa có mentor"
               />
-            </div>
-          )}
+            ) : (
+              <p className="text-sm text-muted-foreground italic">Chưa có mentor</p>
+            )}
+          </div>
 
           {/* Talents Section */}
           <div>
-            <div className="flex items-center gap-2 text-sm font-semibold mb-3">
-              <Users className="h-4 w-4" />
-              <span>Talents ({talents.length})</span>
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-2 text-sm font-semibold">
+                <Users className="h-4 w-4" />
+                <span>Talents ({talents.length})</span>
+              </div>
+              {(isMentor || isLabAdmin) && (
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  className="h-8 w-8 p-0"
+                  onClick={() => openAddMemberModal(milestone.id, UserRole.TALENT)}
+                >
+                  <UserPlus className="h-4 w-4" />
+                </Button>
+              )}
             </div>
             <MembersAvatarList
               members={talents}
@@ -256,32 +316,6 @@ export const MilestoneSidebar: React.FC<MilestoneSidebarProps> = ({
               showCount={false}
               emptyMessage="Chưa có talent"
             />
-          </div>
-
-          <div className="flex justify-center">
-            {(() => {
-              const addMemberButton = isMentor ? (
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={() => openAddMemberModal(milestone.id)}
-                // disabled={isLoadingMembers}
-                >
-                  <UserPlus className="h-2 w-4 mr-1" />
-                  Thêm thành viên
-                </Button>
-              ) : null
-
-              return (
-                <StatusRenderer
-                  status={milestone.status}
-                  renderers={{
-                    ON_GOING: addMemberButton,
-                    PENDING_START: addMemberButton,
-                  }}
-                />
-              )
-            })()}
           </div>
 
           {/* Navigate to members page */}
@@ -378,7 +412,8 @@ export const MilestoneSidebar: React.FC<MilestoneSidebarProps> = ({
           setSelectedMilestoneId(null)
         }}
         onAddMembers={handleAddMembers}
-        projectMembers={projectMembers}
+        projectMembers={filteredProjectMembers}
+        targetRole={targetRole}
       />
     </Card>
   )
