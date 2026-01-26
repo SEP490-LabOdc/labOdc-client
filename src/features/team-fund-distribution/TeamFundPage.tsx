@@ -79,7 +79,7 @@ export const TeamFundPage: React.FC = () => {
                 <div className="mb-6">
                     <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
                         <Wallet className="h-8 w-8 text-[#2a9d8f]" />
-                        Quản lý Quỹ Nhóm
+                        Quản lý quỹ nhóm
                     </h1>
                     <p className="text-gray-600 mt-1">
                         Phân bổ và quản lý nguồn tiền cho các thành viên trong nhóm

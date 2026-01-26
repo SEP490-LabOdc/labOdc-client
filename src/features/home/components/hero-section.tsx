@@ -56,7 +56,28 @@ export function HeroSection() {
                                             className="w-10 h-10 bg-secondary rounded-full border-2 border-card flex items-center justify-center overflow-hidden"
                                         >
                                             {/* Giả lập avatar user */}
-                                            <div className="w-full h-full bg-gradient-to-br from-gray-200 to-gray-400"></div>
+                                            <div className="w-full h-full bg-gradient-to-br from-gray-200 to-gray-400">
+                                                {
+                                                    i == 1 && (
+                                                        <img src='https://tse3.mm.bing.net/th/id/OIP.TgBI7ji4aJUO7ttOfwKvTwHaHa?rs=1&pid=ImgDetMain&o=7&rm=3' />
+                                                    )
+                                                }
+                                                {
+                                                    i == 2 && (
+                                                        <img src='https://cdn.brandfetch.io/id-EgVmHPF/w/1876/h/1876/theme/dark/icon.jpeg?c=1bxid64Mup7aczewSAYMX&t=1745369140277' />
+                                                    )
+                                                }
+                                                {
+                                                    i == 3 && (
+                                                        <img src='https://tse1.mm.bing.net/th/id/OIP.J1vbnsxIafx4xEbWahooTgAAAA?w=400&h=400&rs=1&pid=ImgDetMain&o=7&rm=3' />
+                                                    )
+                                                }
+                                                {
+                                                    i == 4 && (
+                                                        <img src='https://tse4.mm.bing.net/th/id/OIP.efkVY5_7rv9Vf2uAyZWvIAHaHa?rs=1&pid=ImgDetMain&o=7&rm=3' />
+                                                    )
+                                                }
+                                            </div>
                                         </div>
                                     ))}
                                 </div>

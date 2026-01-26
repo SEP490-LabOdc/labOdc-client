@@ -78,7 +78,7 @@ export default function ProjectForm({
 
         const updatePromise = updateProjectStatus.mutateAsync({
             projectId: initialData.id,
-            status: PROJECT_STATUS.PENDING,
+            status: PROJECT_STATUS.UPDATE_REQUIRED,
             notes: requestNote,
         });
 

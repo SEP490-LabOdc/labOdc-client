@@ -12,6 +12,7 @@ import { useUser } from '@/context/UserContext'
 import { useGetUserNotifications } from '@/hooks/api/notifications'
 import { useGetMyProjects } from '@/hooks/api/projects'
 import ProjectsCard from './components/projects-card'
+import { getRoleBasePath } from '@/lib/utils'
 
 export default function Dashboard() {
     const { user } = useUser()
@@ -87,7 +88,7 @@ export default function Dashboard() {
                                 latestNotifications.map((item) => (
                                     <Link
                                         key={item.notificationRecipientId}
-                                        to={item.deepLink}
+                                        to={getRoleBasePath(user.role) + item.deepLink}
                                         className="block rounded-md border p-4 transition hover:bg-muted"
                                     >
                                         <div className="mb-1 flex items-center gap-2">

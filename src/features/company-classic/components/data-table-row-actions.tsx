@@ -62,7 +62,7 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
                                     })
                                 }}
                             >
-                                Chỉnh sửa
+                                Xem thông tin
                                 <DropdownMenuShortcut>
                                     <UserPen size={16} />
                                 </DropdownMenuShortcut>
@@ -70,7 +70,7 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
                         )
                     }
 
-                    <DropdownMenuSeparator />
+                    {/* <DropdownMenuSeparator /> */}
                     {/* <DropdownMenuItem
                         onClick={() => {
                             setCurrentRow(row.original)

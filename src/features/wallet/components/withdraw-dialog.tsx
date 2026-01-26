@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { AutoMoneyInput } from '@/components/v2/AutoMoneyInput'
@@ -15,34 +15,50 @@ import { toast } from 'sonner'
 import { formatVND } from '@/helpers/currency'
 import { CURRENCY_SUFFIX } from '@/const'
 
+interface BankAccount {
+    bankName: string
+    accountNumber: string
+    accountHolder: string
+}
+
 interface WithdrawDialogProps {
     isOpen: boolean
     onClose: () => void
     availableBalance: number
-    bankAccount?: {
-        bankName: string
-        accountNumber: string
-        accountHolder: string
-    }
-    onConfirm: (amount: number) => void
+    bankAccounts?: BankAccount[]
+    onConfirm: (payload: {
+        amount: number
+        bankAccount: BankAccount
+    }) => Promise<void>
 }
 
 export const WithdrawDialog: React.FC<WithdrawDialogProps> = ({
     isOpen,
     onClose,
     availableBalance,
-    bankAccount,
+    bankAccounts,
     onConfirm
 }) => {
     const [amount, setAmount] = useState<number>(0)
     const [isProcessing, setIsProcessing] = useState(false)
+    const [selectedAccountNumber, setSelectedAccountNumber] = useState<string | null>(null)
 
     const amountNum = amount || 0
     const minWithdraw = 50000
     const maxWithdraw = availableBalance
 
+    useEffect(() => {
+        if (bankAccounts?.length && !selectedAccountNumber) {
+            setSelectedAccountNumber(bankAccounts[0].accountNumber)
+        }
+    }, [bankAccounts])
+
+    const selectedBankAccount = bankAccounts?.find(
+        (b) => b.accountNumber === selectedAccountNumber
+    )
+
     const handleSubmit = async () => {
-        if (!bankAccount) {
+        if (!selectedBankAccount) {
             toast.error('Vui lòng liên kết tài khoản ngân hàng trước')
             return
         }
@@ -59,7 +75,10 @@ export const WithdrawDialog: React.FC<WithdrawDialogProps> = ({
 
         setIsProcessing(true)
         try {
-            await onConfirm(amountNum)
+            await onConfirm({
+                amount: amountNum,
+                bankAccount: selectedBankAccount
+            })
             toast.success('Yêu cầu rút tiền đã được gửi thành công')
             setAmount(0)
             onClose()
@@ -109,22 +128,47 @@ export const WithdrawDialog: React.FC<WithdrawDialogProps> = ({
                     </div>
 
                     {/* Bank Account Info */}
-                    {bankAccount ? (
-                        <div className="p-4 bg-green-50 border border-green-200 rounded-md">
-                            <div className="flex items-start gap-3">
-                                <CreditCard className="h-5 w-5 text-green-600 shrink-0 mt-0.5" />
-                                <div className="flex-1">
-                                    <p className="text-sm font-semibold text-green-900">
-                                        Tài khoản nhận tiền
-                                    </p>
-                                    <p className="text-sm text-green-800 mt-1">
-                                        {bankAccount.bankName} - {bankAccount.accountNumber}
-                                    </p>
-                                    <p className="text-xs text-green-700">
-                                        {bankAccount.accountHolder}
-                                    </p>
+                    {bankAccounts && bankAccounts.length > 0 ? (
+                        <div className="space-y-3">
+                            <Label>Tài khoản ngân hàng</Label>
+
+                            <select
+                                className="w-full border rounded-md p-2 text-sm"
+                                value={selectedAccountNumber ?? ''}
+                                onChange={(e) => setSelectedAccountNumber(e.target.value)}
+                            >
+                                <option value="" disabled>
+                                    Chọn tài khoản ngân hàng
+                                </option>
+
+                                {bankAccounts.map((bank) => (
+                                    <option
+                                        key={bank.accountNumber}
+                                        value={bank.accountNumber}
+                                    >
+                                        {bank.bankName} - {bank.accountNumber}
+                                    </option>
+                                ))}
+                            </select>
+
+                            {selectedBankAccount && (
+                                <div className="p-4 bg-green-50 border border-green-200 rounded-md">
+                                    <div className="flex items-start gap-3">
+                                        <CreditCard className="h-5 w-5 text-green-600 shrink-0 mt-0.5" />
+                                        <div className="flex-1">
+                                            <p className="text-sm font-semibold text-green-900">
+                                                Tài khoản nhận tiền
+                                            </p>
+                                            <p className="text-sm text-green-800 mt-1">
+                                                {selectedBankAccount.bankName} - {selectedBankAccount.accountNumber}
+                                            </p>
+                                            <p className="text-xs text-green-700">
+                                                {selectedBankAccount.accountHolder}
+                                            </p>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
+                            )}
                         </div>
                     ) : (
                         <div className="p-4 bg-orange-50 border border-orange-200 rounded-md">
@@ -152,7 +196,7 @@ export const WithdrawDialog: React.FC<WithdrawDialogProps> = ({
                             onChange={handleAmountChange}
                             min={minWithdraw}
                             max={maxWithdraw}
-                            disabled={!bankAccount}
+                            disabled={!selectedAccountNumber}
                             suffix={CURRENCY_SUFFIX}
                         />
 
@@ -163,7 +207,7 @@ export const WithdrawDialog: React.FC<WithdrawDialogProps> = ({
                                 variant="outline"
                                 size="sm"
                                 onClick={() => setQuickAmount(0.25)}
-                                disabled={!bankAccount}
+                                disabled={!selectedAccountNumber}
                                 className="flex-1"
                             >
                                 25%
@@ -173,7 +217,7 @@ export const WithdrawDialog: React.FC<WithdrawDialogProps> = ({
                                 variant="outline"
                                 size="sm"
                                 onClick={() => setQuickAmount(0.5)}
-                                disabled={!bankAccount}
+                                disabled={!selectedAccountNumber}
                                 className="flex-1"
                             >
                                 50%
@@ -183,7 +227,7 @@ export const WithdrawDialog: React.FC<WithdrawDialogProps> = ({
                                 variant="outline"
                                 size="sm"
                                 onClick={() => setQuickAmount(0.75)}
-                                disabled={!bankAccount}
+                                disabled={!selectedAccountNumber}
                                 className="flex-1"
                             >
                                 75%
@@ -193,7 +237,7 @@ export const WithdrawDialog: React.FC<WithdrawDialogProps> = ({
                                 variant="outline"
                                 size="sm"
                                 onClick={() => setQuickAmount(1)}
-                                disabled={!bankAccount}
+                                disabled={!selectedAccountNumber}
                                 className="flex-1"
                             >
                                 100%
@@ -234,7 +278,7 @@ export const WithdrawDialog: React.FC<WithdrawDialogProps> = ({
                     <Button
                         className="bg-[#2a9d8f] hover:bg-[#21867a]"
                         onClick={handleSubmit}
-                        disabled={!bankAccount || amountNum < minWithdraw || amountNum > maxWithdraw || isProcessing}
+                        disabled={!selectedBankAccount || amountNum < minWithdraw || amountNum > maxWithdraw || isProcessing}
                     >
                         {isProcessing ? (
                             'Đang xử lý...'
