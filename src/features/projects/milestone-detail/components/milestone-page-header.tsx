@@ -12,6 +12,8 @@ import { useQueryClient } from '@tanstack/react-query'
 import { milestoneKeys } from '@/hooks/api/milestones/query-keys'
 import { useNavigate } from '@tanstack/react-router'
 import { usePopUp } from '@/hooks/usePopUp'
+import { useUser } from '@/context/UserContext'
+import { getRoleBasePath } from '@/lib/utils'
 
 interface MilestonePageHeaderProps {
   milestone: MilestoneDetail
@@ -25,6 +27,7 @@ export const MilestonePageHeader: React.FC<MilestonePageHeaderProps> = ({ milest
   const navigate = useNavigate()
   const approveMutation = useApproveMilestone()
   const startMutation = useStartMilestone()
+  const { user } = useUser();
 
   const handleApprove = async () => {
     try {
@@ -64,7 +67,12 @@ export const MilestonePageHeader: React.FC<MilestonePageHeaderProps> = ({ milest
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => window.history.back()}
+            onClick={() => {
+              const basePath = getRoleBasePath(user?.role || '')
+              navigate({
+                to: `${basePath}/projects/${milestone.projectId}`,
+              })
+            }}
             className="hover:bg-muted text-muted-foreground hover:text-foreground"
           >
             <ChevronLeft className="h-4 w-4 mr-2" />
