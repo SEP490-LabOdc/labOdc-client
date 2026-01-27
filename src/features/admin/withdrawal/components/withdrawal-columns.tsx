@@ -3,7 +3,7 @@ import { cn } from '@/lib/utils'
 import { Badge } from '@/components/ui/badge'
 import { DataTableColumnHeader } from '@/components/data-table'
 import { formatVND } from '@/helpers/currency'
-import { formatDate } from '@/helpers/datetime'
+import { formatDate, formatDateOnly } from '@/helpers/datetime'
 import { type WithdrawalRequestItem, WITHDRAWAL_STATUS_LABEL } from '../data/schema'
 import { DataTableRowActions } from './data-table-row-actions'
 import { STATUS_COLORS } from '@/helpers/status'
@@ -108,7 +108,7 @@ export const withdrawalColumns: ColumnDef<WithdrawalRequestItem>[] = [
         ),
         cell: ({ row }) => {
             const date = row.getValue('scheduledAt') as string | null | undefined
-            return <div className='text-sm text-center'>{date ? formatDate(date) : '-'}</div>
+            return <div className='text-sm text-center'>{date ? formatDateOnly(date) : '-'}</div>
         },
         meta: { className: 'w-48' },
     },
