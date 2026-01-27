@@ -78,7 +78,7 @@ export const withdrawalColumns: ColumnDef<WithdrawalRequestItem>[] = [
         },
         meta: { className: 'w-64' },
     },
-    
+
     {
         accessorKey: 'createdAt',
         header: ({ column }) => (
@@ -98,6 +98,17 @@ export const withdrawalColumns: ColumnDef<WithdrawalRequestItem>[] = [
         cell: ({ row }) => {
             const date = row.getValue('processedAt') as string | null | undefined
             return <div className='text-sm'>{date ? formatDate(date) : '-'}</div>
+        },
+        meta: { className: 'w-48' },
+    },
+    {
+        accessorKey: 'scheduledAt',
+        header: ({ column }) => (
+            <DataTableColumnHeader column={column} title='Ngày dự kiến thanh toán' />
+        ),
+        cell: ({ row }) => {
+            const date = row.getValue('scheduledAt') as string | null | undefined
+            return <div className='text-sm text-center'>{date ? formatDate(date) : '-'}</div>
         },
         meta: { className: 'w-48' },
     },
