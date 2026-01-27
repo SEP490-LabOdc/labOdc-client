@@ -7,6 +7,7 @@ export const WITHDRAWAL_STATUS_LABEL: Record<string, string> = {
     [WithdrawalStatus.APPROVED]: 'Đã duyệt',
     [WithdrawalStatus.REJECTED]: 'Đã từ chối',
     [WithdrawalStatus.PROCESSED]: 'Đã xử lý',
+    [WithdrawalStatus.SUBMITTED]: 'Đã thanh toán',
 }
 
 export const WITHDRAWAL_STATUS_OPTIONS = Object.entries(WITHDRAWAL_STATUS_LABEL).map(
@@ -19,7 +20,7 @@ export const withdrawalRequestItemSchema = z.object({
     fullName: z.string(),
     email: z.string(),
     avatarUrl: z.string().nullable().optional(),
-    
+
     walletId: z.string().uuid(),
     amount: z.number(),
     bankInfo: z.object({
