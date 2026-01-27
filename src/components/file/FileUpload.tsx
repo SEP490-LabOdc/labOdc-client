@@ -167,6 +167,9 @@ export function FileUpload({
   const fileSize = getFileSize();
   const hasFile = !!(fileName || value);
   const showLoading = isUploading || !!selectedFile;
+  const displayFileName = fileName
+    ? shortenFileName(fileName)
+    : ''
 
   return (
     <div className={cn('w-full', className)}>
@@ -238,8 +241,8 @@ export function FileUpload({
             </div>
 
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-gray-900 truncate">
-                {fileName}
+              <p className="text-sm font-medium text-gray-900 truncate" title={fileName || ''}>
+                {displayFileName}
               </p>
               {fileSize && (
                 <p className="text-xs text-gray-500">{fileSize}</p>
@@ -305,4 +308,20 @@ export function FileUpload({
       )}
     </div>
   );
+}
+
+function shortenFileName(
+  name: string,
+  maxLength = 50
+) {
+  if (name.length <= maxLength) return name
+
+  const dotIndex = name.lastIndexOf('.')
+  const ext = dotIndex !== -1 ? name.slice(dotIndex) : ''
+  const base = dotIndex !== -1 ? name.slice(0, dotIndex) : name
+
+  const start = base.slice(0, Math.floor((maxLength - ext.length - 3) / 2))
+  const end = base.slice(-Math.floor((maxLength - ext.length - 3) / 2))
+
+  return `${start}...${end}${ext}`
 }

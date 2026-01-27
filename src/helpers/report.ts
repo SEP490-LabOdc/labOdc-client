@@ -19,6 +19,8 @@ export const REPORT_STATUS_LABEL: Record<ReportStatus, string> = {
     [ReportStatus.UNDER_REVIEW]: 'Đang xem xét',
     [ReportStatus.APPROVED]: 'Đã duyệt',
     [ReportStatus.REJECTED]: 'Từ chối',
+    [ReportStatus.LAB_ADMIN_APPROVED]: 'Lab Admin Đã duyệt',
+    [ReportStatus.LAB_ADMIN_REJECTED]: 'Lab Admin Từ chối',
     [ReportStatus.FINAL]: 'Cuối cùng',
     [ReportStatus.PENDING_ADMIN_CHECK]: 'Chờ Lab Admin kiểm tra',
     [ReportStatus.PENDING_COMPANY_REVIEW]: 'Chờ công ty xem xét',

@@ -12,6 +12,7 @@ import {
 import { AlertTriangle, Loader2 } from 'lucide-react'
 import { useReviewReport } from '@/hooks/api/projects/mutation'
 import { toast } from 'sonner'
+import { ReportStatus } from '@/hooks/api/report/enums'
 
 interface RejectReportModalProps {
   isOpen: boolean
@@ -37,7 +38,7 @@ export const RejectReportModal: React.FC<RejectReportModalProps> = ({
     try {
       await reviewReport({
         reportId,
-        status: 'REJECTED',
+        status: ReportStatus.REJECTED,
         feedback: feedbackInput.trim(),
         milestoneId: milestoneId
       })
@@ -45,7 +46,6 @@ export const RejectReportModal: React.FC<RejectReportModalProps> = ({
       onConfirm(feedbackInput)
       setFeedbackInput('')
     } catch (error) {
-      toast.error('Gửi yêu cầu thất bại')
       console.error(error)
     }
   }
