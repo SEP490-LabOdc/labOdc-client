@@ -22,7 +22,6 @@ import { FileUpload } from '@/components/file/FileUpload'
 import { getMilestoneStatusBadge } from '@/helpers/milestone'
 import type { MilestoneAttachment, MilestoneDetail } from '@/hooks/api/milestones/types'
 import { MilestoneStatus } from '@/hooks/api/milestones'
-import { UserRole } from '@/hooks/api/users'
 import { useUser } from '@/context/UserContext'
 import { getRoleBasePath } from '@/lib/utils'
 
