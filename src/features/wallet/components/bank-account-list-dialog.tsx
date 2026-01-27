@@ -20,6 +20,7 @@ import {
     AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
 import { ScrollArea } from '@/components/ui/scroll-area'
+import type { BankListResponse } from '@/hooks/api/banks/types'
 
 interface BankAccount {
     bankName: string
@@ -35,6 +36,7 @@ interface BankAccountListDialogProps {
     onEdit: (account: BankAccount) => void
     onDelete: (accountNumber: string) => void
     isDeleting?: boolean
+    bankRes: BankListResponse
 }
 
 export const BankAccountListDialog: React.FC<BankAccountListDialogProps> = ({
@@ -44,7 +46,8 @@ export const BankAccountListDialog: React.FC<BankAccountListDialogProps> = ({
     onAdd,
     onEdit,
     onDelete,
-    isDeleting = false
+    isDeleting = false,
+    bankRes
 }) => {
     const [deleteTarget, setDeleteTarget] = React.useState<string | null>(null)
 
@@ -63,6 +66,13 @@ export const BankAccountListDialog: React.FC<BankAccountListDialogProps> = ({
         if (accountNumber.length <= 4) return accountNumber
         const last4 = accountNumber.slice(-4)
         return `*****${last4}`
+    }
+
+    const getBankDisplayName = (code: string) => {
+        const bank = bankRes.data.find((b) => b.code === code)
+        if (!bank) return code
+
+        return `${bank.shortName} – ${bank.name}`
     }
 
     return (
@@ -107,7 +117,9 @@ export const BankAccountListDialog: React.FC<BankAccountListDialogProps> = ({
                                         >
                                             <div className="flex-1">
                                                 <div className="flex items-center gap-2 mb-2">
-                                                    <h4 className="font-semibold text-foreground">{account.bankName}</h4>
+                                                    <h4 className="font-semibold text-foreground">
+                                                        {getBankDisplayName(account.bankName)}
+                                                    </h4>
                                                 </div>
                                                 <div className="space-y-1 text-sm text-muted-foreground">
                                                     <div className="flex items-center gap-2">

@@ -14,6 +14,7 @@ export interface BankInfo {
     bankName: string
     accountNumber: string
     accountHolderName: string
+    bin: string
 }
 
 export type WalletResponse = ApiResponse<WalletData>
@@ -23,10 +24,12 @@ export interface WithdrawPayload {
     bankName: string
     accountNumber: string
     accountName: string
+    bin: string
 }
 
 export interface BankInfoPayload {
     bankName: string
     accountNumber: string
     accountHolderName: string
+    bin: string
 }
