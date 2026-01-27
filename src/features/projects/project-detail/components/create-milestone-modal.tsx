@@ -25,6 +25,8 @@ import { useCreateMilestone } from '@/hooks/api/projects/mutation'
 import { toast } from 'sonner'
 import { FileUpload } from '@/components/file/FileUpload'
 import type { ProjectDetail } from '@/hooks/api/projects/types'
+import { DatePicker } from '@/components/date-picker'
+import { toLocalISOString } from '@/helpers/datetime'
 
 const createMilestoneSchema = z.object({
   title: z.string().min(1, 'Tiêu đề không được để trống'),
@@ -110,6 +112,8 @@ export const CreateMilestoneModal: React.FC<CreateMilestoneModalProps> = ({
       toast.error('Ngân sách phân bổ vượt quá ngân sách còn lại')
       return
     }
+
+    console.log(data);
 
     try {
       await createMilestone.mutateAsync({
@@ -217,7 +221,7 @@ export const CreateMilestoneModal: React.FC<CreateMilestoneModalProps> = ({
               )}
             />
             <div className="grid grid-cols-2 gap-4">
-              <FormField
+              {/* <FormField
                 control={form.control}
                 name="startDate"
                 render={({ field }) => (
@@ -229,8 +233,47 @@ export const CreateMilestoneModal: React.FC<CreateMilestoneModalProps> = ({
                     <FormMessage />
                   </FormItem>
                 )}
-              />
+              /> */}
               <FormField
+                control={form.control}
+                name="startDate"
+                render={({ field }) => {
+                  // Tính minDate: sau 5 ngày từ hôm nay
+                  const today = new Date()
+                  today.setHours(0, 0, 0, 0)
+                  const minStartDate = new Date(today)
+                  // minStartDate.setDate(minStartDate.getDate() + )
+
+                  return (
+                    <FormItem>
+                      <FormLabel className="text-base font-medium">Ngày bắt đầu</FormLabel>
+                      <FormControl>
+                        <DatePicker
+                          selected={
+                            field.value
+                              ? new Date(field.value)
+                              : undefined
+                          }
+                          onSelect={(date) => {
+                            field.onChange(
+                              date
+                                ? toLocalISOString(date)
+                                : ''
+                            )
+                          }}
+                          placeholder="Chọn ngày bắt đầu"
+                          minDate={minStartDate}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                      <p className="text-xs text-gray-500 mt-1">
+                        Ngày bắt đầu không được chọn ngày quá khứ
+                      </p>
+                    </FormItem>
+                  )
+                }}
+              />
+              {/* <FormField
                 control={form.control}
                 name="endDate"
                 render={({ field }) => (
@@ -242,6 +285,52 @@ export const CreateMilestoneModal: React.FC<CreateMilestoneModalProps> = ({
                     <FormMessage />
                   </FormItem>
                 )}
+              /> */}
+              {/* --- NGÀY KẾT THÚC --- */}
+              <FormField
+                control={form.control}
+                name="endDate"
+                render={({ field }) => {
+                  // Tính minDate: sau ngày bắt đầu
+                  const startDate = form.watch('startDate')
+                  const minEndDate = startDate ? (() => {
+                    const min = new Date(startDate)
+                    min.setDate(min.getDate() + 1) // Phải sau ngày bắt đầu
+                    min.setHours(0, 0, 0, 0)
+                    return min
+                  })() : undefined
+
+                  return (
+                    <FormItem>
+                      <FormLabel className="text-base font-medium">Ngày kết thúc dự kiến</FormLabel>
+                      <FormControl>
+                        <DatePicker
+                          selected={
+                            field.value
+                              ? new Date(field.value)
+                              : undefined
+                          }
+                          onSelect={(date) => {
+                            field.onChange(
+                              date
+                                ? toLocalISOString(date)
+                                : ''
+                            )
+                          }}
+                          placeholder="Chọn ngày kết thúc"
+                          disabled={!startDate}
+                          minDate={minEndDate}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                      <p className="text-xs text-gray-500 mt-1">
+                        {startDate
+                          ? 'Ngày kết thúc phải sau ngày bắt đầu'
+                          : 'Vui lòng chọn ngày bắt đầu trước'}
+                      </p>
+                    </FormItem>
+                  )
+                }}
               />
             </div>
 
@@ -279,6 +368,6 @@ export const CreateMilestoneModal: React.FC<CreateMilestoneModalProps> = ({
           </form>
         </Form>
       </DialogContent>
-    </Dialog>
+    </Dialog >
   )
 }
