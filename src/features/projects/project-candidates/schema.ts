@@ -1,7 +1,7 @@
 export type AiScanResult = {
-  isCv: boolean
+  is_cv: boolean
   reason: string
-  matchScore: number
+  match_score: number
   summary: string
   pros: string[]
   cons: string[]

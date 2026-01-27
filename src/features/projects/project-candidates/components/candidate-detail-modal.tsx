@@ -158,7 +158,7 @@ export const CandidateDetailModal: React.FC<CandidateDetailModalProps> = ({
                             </Button>
                         </div>
 
-                        {aiScanResult && !aiScanResult.isCv && (
+                        {aiScanResult && !aiScanResult.is_cv && (
                             <Alert className="border-yellow-200 bg-yellow-50">
                                 <AlertTriangle className="h-4 w-4 text-yellow-600" />
                                 <AlertDescription className="text-sm text-yellow-800">
@@ -248,7 +248,7 @@ export const CandidateDetailModal: React.FC<CandidateDetailModalProps> = ({
                             <div className="flex flex-col sm:flex-row items-center gap-6 p-6 bg-white rounded-md border border-slate-200">
                                 <div className="shrink-0">
                                     <CircularProgress
-                                        value={aiScanResult.matchScore}
+                                        value={aiScanResult.match_score}
                                         size={120}
                                     />
                                 </div>
@@ -262,15 +262,15 @@ export const CandidateDetailModal: React.FC<CandidateDetailModalProps> = ({
                                     {/* Linear Progress Bar as additional visual */}
                                     <div className="space-y-2">
                                         <Progress
-                                            value={aiScanResult.matchScore}
+                                            value={aiScanResult.match_score}
                                             className="h-2"
                                         />
                                         <p className="text-xs text-gray-500">
-                                            {aiScanResult.matchScore >= 80 && 'Rất phù hợp'}
-                                            {aiScanResult.matchScore >= 60 &&
-                                                aiScanResult.matchScore < 80 &&
+                                            {aiScanResult.match_score >= 80 && 'Rất phù hợp'}
+                                            {aiScanResult.match_score >= 60 &&
+                                                aiScanResult.match_score < 80 &&
                                                 'Khá phù hợp'}
-                                            {aiScanResult.matchScore < 60 && 'Cần xem xét thêm'}
+                                            {aiScanResult.match_score < 60 && 'Cần xem xét thêm'}
                                         </p>
                                     </div>
                                 </div>
@@ -279,10 +279,10 @@ export const CandidateDetailModal: React.FC<CandidateDetailModalProps> = ({
                             {/* Is CV Check */}
                             <div className="flex items-start gap-3 p-4 rounded-md bg-white border border-slate-200">
                                 <div
-                                    className={`p-2 rounded-full ${aiScanResult.isCv ? 'bg-green-100' : 'bg-red-100'
+                                    className={`p-2 rounded-full ${aiScanResult.is_cv ? 'bg-green-100' : 'bg-red-100'
                                         }`}
                                 >
-                                    {aiScanResult.isCv ? (
+                                    {aiScanResult.is_cv ? (
                                         <CheckCircle2 className="h-5 w-5 text-green-600" />
                                     ) : (
                                         <XCircle className="h-5 w-5 text-red-600" />
@@ -293,7 +293,7 @@ export const CandidateDetailModal: React.FC<CandidateDetailModalProps> = ({
                                         Xác nhận CV
                                     </label>
                                     <p className="text-sm text-gray-600">
-                                        {aiScanResult.isCv
+                                        {aiScanResult.is_cv
                                             ? 'Đây là một CV hợp lệ'
                                             : 'Không phải CV hợp lệ'}
                                     </p>
