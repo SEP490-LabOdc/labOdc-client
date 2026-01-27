@@ -41,10 +41,12 @@ type DataTableProps = {
 export function WithdrawalTable({ data, search, navigate }: DataTableProps) {
     // Local UI-only states
     const [rowSelection, setRowSelection] = useState({})
-    
+
     // Updated: Initialize with empty object to show all columns by default
-    const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
-    
+    const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
+        processedAt: false
+    })
+
     const [sorting, setSorting] = useState<SortingState>([])
 
     // Synced with URL states
@@ -59,7 +61,7 @@ export function WithdrawalTable({ data, search, navigate }: DataTableProps) {
         navigate,
         pagination: { defaultPage: 1, defaultPageSize: 10 },
         globalFilter: { enabled: false },
-        columnFilters: [], 
+        columnFilters: [],
     })
 
     const table = useReactTable({
