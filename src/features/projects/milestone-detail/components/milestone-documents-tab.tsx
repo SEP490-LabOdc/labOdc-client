@@ -123,9 +123,9 @@ export const MilestoneDocumentsTab: React.FC<MilestoneDocumentsTabProps> = ({ mi
                         <DropdownMenuItem onClick={() => handleViewFile(document.fileUrl)}>
                           Xem tài liệu
                         </DropdownMenuItem>
-                        <DropdownMenuItem className="text-red-600">
+                        {/* <DropdownMenuItem className="text-red-600">
                           Xóa
-                        </DropdownMenuItem>
+                        </DropdownMenuItem> */}
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </div>

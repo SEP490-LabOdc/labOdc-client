@@ -23,6 +23,8 @@ import { getMilestoneStatusBadge } from '@/helpers/milestone'
 import type { MilestoneAttachment, MilestoneDetail } from '@/hooks/api/milestones/types'
 import { MilestoneStatus } from '@/hooks/api/milestones'
 import { UserRole } from '@/hooks/api/users'
+import { useUser } from '@/context/UserContext'
+import { getRoleBasePath } from '@/lib/utils'
 
 const updateMilestoneSchema = z.object({
     title: z.string().min(1, 'Tiêu đề không được để trống'),
@@ -60,6 +62,7 @@ export const UpdateMilestoneForm: React.FC<UpdateMilestoneFormProps> = ({
 }) => {
     const navigate = useNavigate()
     const updateMilestone = useUpdateMilestone()
+    const { user } = useUser();
 
     const form = useForm<UpdateMilestoneFormData>({
         resolver: zodResolver(updateMilestoneSchema),
@@ -108,7 +111,7 @@ export const UpdateMilestoneForm: React.FC<UpdateMilestoneFormProps> = ({
     }
 
     const handleCancel = () => {
-        const basePath = '/projects' // Adjust based on your routing structure
+        const basePath = `${getRoleBasePath(user.role)}/projects` // Adjust based on your routing structure
         navigate({
             to: `${basePath}/${projectId}/${milestoneId}`,
             params: { projectId, milestoneId },
@@ -132,7 +135,7 @@ export const UpdateMilestoneForm: React.FC<UpdateMilestoneFormProps> = ({
             onSuccess?.()
 
             // Navigate back to milestone detail
-            const basePath = `${UserRole.MENTOR}/projects` // Adjust based on your routing structure
+            const basePath = `${getRoleBasePath(user.role)}/projects` // Adjust based on your routing structure
             navigate({
                 to: `${basePath}/${projectId}/${milestoneId}`,
                 params: { projectId, milestoneId },

@@ -52,7 +52,7 @@ export const RejectReportModal: React.FC<RejectReportModalProps> = ({ isOpen, on
                 reportId: report.id,
                 milestoneId: report.milestoneId,
                 feedback: feedback,
-                status: ReportStatus.REJECTED,
+                status: ReportStatus.LAB_ADMIN_REJECTED,
             })
             toast.success('Từ chối báo cáo thành công')
             handlePopUpClose('confirmDialog')

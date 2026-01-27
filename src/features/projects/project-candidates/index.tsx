@@ -4,16 +4,19 @@ import { useGetProjectApplicants } from '@/hooks/api/projects/queries'
 import { CandidatesTable } from './components/candidate-table'
 import { Button } from '@/components/ui/button'
 import { ChevronLeft } from 'lucide-react'
+import { getRoleBasePath } from '@/lib/utils'
+import { useUser } from '@/context/UserContext'
 
 export const CandidateListPage: React.FC = () => {
   const { projectId } = useParams({ strict: false })
   const navigate = useNavigate()
+  const { user } = useUser();
 
   const { data, isLoading } = useGetProjectApplicants(projectId as string)
 
   const candidates = data?.data ?? []
 
-  const mockNavigate = () => {}
+  const mockNavigate = () => { }
 
   if (isLoading) {
     return (
@@ -32,7 +35,7 @@ export const CandidateListPage: React.FC = () => {
             <Button
               variant="ghost"
               className="text-gray-600"
-              onClick={() => navigate({ to: '/projects' })}
+              onClick={() => navigate({ to: getRoleBasePath(user.role) + '/projects/' + projectId })}
             >
               <ChevronLeft className="h-4 w-4 mr-2" />
               Quay lại Dự án

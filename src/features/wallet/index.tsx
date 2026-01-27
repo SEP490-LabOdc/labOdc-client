@@ -20,6 +20,8 @@ import { Main } from '@/components/layout/main'
 import { toast } from 'sonner'
 import { usePopUp } from '@/hooks/usePopUp'
 import { ROLE } from '@/const'
+import { useGetBanks } from '@/hooks/api/banks'
+import type { BankListResponse } from '@/hooks/api/banks/types'
 
 
 export const MyWalletPage: React.FC = () => {
@@ -61,6 +63,13 @@ export const MyWalletPage: React.FC = () => {
     const createBankInfoMutation = useCreateBankInfo()
     const deleteBankInfoMutation = useDeleteBankInfo()
     const withdrawMutation = useWithdraw()
+    const { data: bankRes } = useGetBanks();
+
+    const safeBankRes: BankListResponse = bankRes ?? {
+        code: '',
+        desc: '',
+        data: [],
+    }
 
     // Handle payment callback
     useEffect(() => {
@@ -112,7 +121,8 @@ export const MyWalletPage: React.FC = () => {
         return bankInfos.map(bankInfo => ({
             bankName: bankInfo.bankName,
             accountNumber: bankInfo.accountNumber,
-            accountHolder: bankInfo.accountHolderName // Map accountHolderName to accountHolder
+            accountHolder: bankInfo.accountHolderName, // Map accountHolderName to accountHolder
+            bin: bankInfo.bin
         }))
     }, [walletResponse?.data?.bankInfos])
 
@@ -122,6 +132,7 @@ export const MyWalletPage: React.FC = () => {
             bankName: string
             accountNumber: string
             accountHolder: string
+            bin: string
         }
     }) => {
         const { amount, bankAccount } = payload
@@ -131,7 +142,8 @@ export const MyWalletPage: React.FC = () => {
                 amount,
                 bankName: bankAccount.bankName,
                 accountNumber: bankAccount.accountNumber,
-                accountName: bankAccount.accountHolder
+                accountName: bankAccount.accountHolder,
+                bin: bankAccount.bin
             })
 
             toast.success('Yêu cầu rút tiền đã được gửi thành công')
@@ -155,11 +167,13 @@ export const MyWalletPage: React.FC = () => {
         bankName: string
         accountNumber: string
         accountHolder: string
+        bin: string
     }) => {
         await createBankInfoMutation.mutateAsync({
             bankName: account.bankName,
             accountNumber: account.accountNumber,
-            accountHolderName: account.accountHolder // Map accountHolder to accountHolderName
+            accountHolderName: account.accountHolder, // Map accountHolder to accountHolderName
+            bin: account.bin
         })
         // Refetch wallet data to get updated bankInfos
         refetchWallet()
@@ -300,6 +314,7 @@ export const MyWalletPage: React.FC = () => {
                 availableBalance={availableBalance}
                 bankAccounts={bankAccounts}
                 onConfirm={handleWithdraw}
+                bankRes={bankRes || safeBankRes}
             />
 
             {/* Bank Account List Dialog */}
@@ -317,6 +332,7 @@ export const MyWalletPage: React.FC = () => {
                 }}
                 onDelete={handleDeleteBankAccount}
                 isDeleting={deleteBankInfoMutation.isPending}
+                bankRes={bankRes || safeBankRes}
             />
 
             {/* Bank Account Dialog */}
@@ -325,6 +341,7 @@ export const MyWalletPage: React.FC = () => {
                 onClose={() => handlePopUpClose('bankAccount')}
                 currentAccount={popUp.bankAccount.data}
                 onSave={handleSaveBankAccount}
+                bankRes={bankRes || safeBankRes}
             />
 
             {/* Deposit Dialog - Only for Company */}

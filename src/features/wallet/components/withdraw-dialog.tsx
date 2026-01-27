@@ -14,11 +14,13 @@ import { Wallet, AlertTriangle, CheckCircle, CreditCard } from 'lucide-react'
 import { toast } from 'sonner'
 import { formatVND } from '@/helpers/currency'
 import { CURRENCY_SUFFIX } from '@/const'
+import type { BankListResponse } from '@/hooks/api/banks/types'
 
 interface BankAccount {
     bankName: string
     accountNumber: string
     accountHolder: string
+    bin: string
 }
 
 interface WithdrawDialogProps {
@@ -30,6 +32,7 @@ interface WithdrawDialogProps {
         amount: number
         bankAccount: BankAccount
     }) => Promise<void>
+    bankRes: BankListResponse
 }
 
 export const WithdrawDialog: React.FC<WithdrawDialogProps> = ({
@@ -37,7 +40,8 @@ export const WithdrawDialog: React.FC<WithdrawDialogProps> = ({
     onClose,
     availableBalance,
     bankAccounts,
-    onConfirm
+    onConfirm,
+    bankRes
 }) => {
     const [amount, setAmount] = useState<number>(0)
     const [isProcessing, setIsProcessing] = useState(false)
@@ -103,6 +107,13 @@ export const WithdrawDialog: React.FC<WithdrawDialogProps> = ({
         setAmount(value)
     }
 
+    const getBankDisplayName = (code: string) => {
+        const bank = bankRes.data.find((b) => b.code === code)
+        if (!bank) return code
+
+        return `${bank.shortName} – ${bank.name}`
+    }
+
     return (
         <Dialog open={isOpen} onOpenChange={handleClose}>
             <DialogContent className="max-w-lg">
@@ -160,11 +171,14 @@ export const WithdrawDialog: React.FC<WithdrawDialogProps> = ({
                                                 Tài khoản nhận tiền
                                             </p>
                                             <p className="text-sm text-green-800 mt-1">
-                                                {selectedBankAccount.bankName} - {selectedBankAccount.accountNumber}
+                                                {getBankDisplayName(selectedBankAccount.bankName)}
                                             </p>
-                                            <p className="text-xs text-green-700">
+                                            <p className="text-sm text-green-800 mt-1">
+                                                {selectedBankAccount.accountNumber}
+                                            </p>
+                                            {/* <p className="text-xs text-green-700">
                                                 {selectedBankAccount.accountHolder}
-                                            </p>
+                                            </p> */}
                                         </div>
                                     </div>
                                 </div>

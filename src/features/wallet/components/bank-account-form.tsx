@@ -19,8 +19,7 @@ import {
     SelectValue,
 } from '@/components/ui/select'
 import { Info } from 'lucide-react'
-import { useGetBanks } from '@/hooks/api/banks'
-import type { Bank } from '@/hooks/api/banks/types'
+import type { Bank, BankListResponse } from '@/hooks/api/banks/types'
 
 export const bankAccountSchema = z.object({
     bankName: z.string().min(1, 'Vui lòng chọn ngân hàng'),
@@ -34,6 +33,7 @@ export const bankAccountSchema = z.object({
         .string()
         .min(1, 'Vui lòng nhập tên chủ tài khoản')
         .max(50, 'Tên chủ tài khoản không được vượt quá 50 ký tự'),
+    bin: z.string()
 })
 
 export type BankAccountFormData = z.infer<typeof bankAccountSchema>
@@ -43,15 +43,17 @@ interface BankAccountFormProps {
     onSubmit: (data: BankAccountFormData) => void | Promise<void>
     children?: (form: ReturnType<typeof useForm<BankAccountFormData>>) => React.ReactNode
     showPreview?: boolean
+    bankRes: BankListResponse
 }
 
 export const BankAccountForm: React.FC<BankAccountFormProps> = ({
     defaultValues,
     onSubmit,
     children,
-    showPreview = true
+    showPreview = true,
+    bankRes
 }) => {
-    const { data: bankRes, isLoading, isError } = useGetBanks();
+
     const form = useForm<BankAccountFormData>({
         resolver: zodResolver(bankAccountSchema),
         mode: 'onChange',
@@ -64,20 +66,22 @@ export const BankAccountForm: React.FC<BankAccountFormProps> = ({
     })
 
     React.useEffect(() => {
-        if (!bankRes?.data) return
-
         if (defaultValues) {
             form.reset({
                 bankName: defaultValues.bankName ?? '',
                 accountNumber: defaultValues.accountNumber ?? '',
                 accountHolder: defaultValues.accountHolder ?? '',
+                bin: defaultValues.bin ?? ''
             })
         }
-    }, [bankRes, defaultValues, form])
+    }, [defaultValues, form])
 
     const bankName = form.watch('bankName')
     const accountNumber = form.watch('accountNumber')
     const accountHolder = form.watch('accountHolder')
+    const selectedBank = bankRes?.data.find(
+        (b) => b.code === bankName
+    )
 
     return (
         <Form {...form}>
@@ -107,17 +111,28 @@ export const BankAccountForm: React.FC<BankAccountFormProps> = ({
                             <FormLabel>Ngân hàng *</FormLabel>
                             <Select
                                 value={field.value}
-                                onValueChange={field.onChange}
-                                disabled={isLoading || isError}
+                                onValueChange={(value) => {
+                                    // set bank code
+                                    field.onChange(value)
+
+                                    // tìm bank tương ứng
+                                    const selectedBank = bankRes?.data.find(
+                                        (bank: Bank) => bank.code === value
+                                    )
+
+                                    // set shortName vào form
+                                    form.setValue(
+                                        'bin',
+                                        selectedBank?.bin ?? '',
+                                        { shouldValidate: true }
+                                    )
+                                }}
                             >
                                 <FormControl>
                                     <SelectTrigger>
                                         <SelectValue
-                                            placeholder={
-                                                isLoading
-                                                    ? 'Đang tải ngân hàng...'
-                                                    : 'Chọn ngân hàng...'
-                                            }
+                                            placeholder=
+                                            'Chọn ngân hàng...'
                                         />
                                     </SelectTrigger>
                                 </FormControl>
@@ -197,7 +212,10 @@ export const BankAccountForm: React.FC<BankAccountFormProps> = ({
                         </p>
                         <div className="space-y-1 text-sm">
                             <p className="text-green-900">
-                                <strong>Ngân hàng:</strong> {bankName}
+                                <strong>Ngân hàng:</strong> {' '}
+                                {selectedBank
+                                    ? `${selectedBank.shortName} – ${selectedBank.name}`
+                                    : ''}
                             </p>
                             <p className="text-green-900">
                                 <strong>Số TK:</strong> {accountNumber}

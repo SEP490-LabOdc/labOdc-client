@@ -11,6 +11,7 @@ import {
 import { CreditCard, CheckCircle } from 'lucide-react'
 import { toast } from 'sonner'
 import { BankAccountForm, type BankAccountFormData } from './bank-account-form'
+import type { BankListResponse } from '@/hooks/api/banks/types'
 
 interface BankAccountDialogProps {
     isOpen: boolean
@@ -19,12 +20,15 @@ interface BankAccountDialogProps {
         bankName: string
         accountNumber: string
         accountHolder: string
+        bin: string
     }
     onSave: (account: {
         bankName: string
         accountNumber: string
         accountHolder: string
+        bin: string
     }) => Promise<void>
+    bankRes: BankListResponse
 }
 
 
@@ -32,7 +36,8 @@ export const BankAccountDialog: React.FC<BankAccountDialogProps> = ({
     isOpen,
     onClose,
     currentAccount,
-    onSave
+    onSave,
+    bankRes
 }) => {
     const [isProcessing, setIsProcessing] = React.useState(false)
 
@@ -42,7 +47,8 @@ export const BankAccountDialog: React.FC<BankAccountDialogProps> = ({
             await onSave({
                 bankName: data.bankName,
                 accountNumber: data.accountNumber,
-                accountHolder: data.accountHolder.toUpperCase()
+                accountHolder: data.accountHolder.toUpperCase(),
+                bin: data.bin
             })
             toast.success(
                 currentAccount
@@ -80,10 +86,12 @@ export const BankAccountDialog: React.FC<BankAccountDialogProps> = ({
                                 bankName: currentAccount.bankName,
                                 accountNumber: currentAccount.accountNumber,
                                 accountHolder: currentAccount.accountHolder,
+                                bin: currentAccount.bin
                             }
                             : undefined
                     }
                     onSubmit={onSubmit}
+                    bankRes={bankRes}
                 >
                     {(form) => (
                         <DialogFooter>

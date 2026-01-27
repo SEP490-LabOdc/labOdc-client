@@ -215,7 +215,8 @@ export const MilestoneReportsTab: React.FC<Props> = ({ milestone }) => {
         isOpen={popUp.reportReject.isOpen}
         onClose={() => handlePopUpClose('reportReject')}
         onConfirm={() => handlePopUpClose('reportReject')}
-        reportId={popUp.reportReject.data?.reportId}
+        // reportId={popUp.reportReject.data?.reportId}
+        reportId={popUp.reportReject.data}
         milestoneId={milestone.id}
       />
 
